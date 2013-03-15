@@ -1,0 +1,180 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+         xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+    <modelVersion>4.0.0</modelVersion>
+
+
+    <!-- Information about this project -->
+    <groupId>amp</groupId>
+    <artifactId>amp</artifactId>
+    <version>3.1.0-SNAPSHOT</version>
+    <name>Advanced Modular Platform</name>
+    <packaging>pom</packaging>
+
+
+    <!-- Shared properties -->
+    <properties>
+        <bundle.vendor>Berico Technologies</bundle.vendor>
+        <cmf.version>3.1.0-SNAPSHOT</cmf.version>
+        <slf4j.version>1.6.4</slf4j.version>
+        <joda-time.version>2.1</joda-time.version>
+        <commons-codec.version>1.6</commons-codec.version>
+        <commons-lang.version>2.6</commons-lang.version>
+        <junit.version>4.11</junit.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+
+    <!-- Child modules -->
+    <modules>
+        <module>amp-bus</module>
+        <module>amp-bus-rabbit</module>
+        <module>amp-bus-security</module>
+        <module>amp-eventing</module>
+        <module>amp-examples</module>
+    </modules>
+
+
+    <!-- Shared dependencies -->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>cmf</groupId>
+                <artifactId>cmf.bus</artifactId>
+                <version>${cmf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cmf</groupId>
+                <artifactId>cmf.eventing</artifactId>
+                <version>${cmf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-codec</groupId>
+                <artifactId>commons-codec</artifactId>
+                <version>${commons-codec.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-lang</groupId>
+                <artifactId>commons-lang</artifactId>
+                <version>${commons-lang.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>joda-time</groupId>
+                <artifactId>joda-time</artifactId>
+                <version>${joda-time.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+
+    <!-- Managing Organization -->
+    <organization>
+        <name>Berico Technologies</name>
+        <url>http://www.bericotechnologies.com</url>
+    </organization>
+
+
+    <!-- Points of Contact, also list of people to blame :) -->
+    <developers>
+        <developer>
+            <name>Richard Clayton</name>
+            <organization>Berico Technologies</organization>
+            <email>rclayton@bericotechnologies.com</email>
+            <roles>
+                <role>Lead Developer</role>
+            </roles>
+            <timezone>-5</timezone>
+        </developer>
+        <developer>
+            <name>John Ruiz</name>
+            <organization>Berico Technologies</organization>
+            <email>jruiz@bericotechnologies.com</email>
+            <roles>
+                <role>Lead Developer</role>
+            </roles>
+            <timezone>-5</timezone>
+        </developer>
+        <developer>
+            <name>Asa Martin</name>
+            <organization>Palantir</organization>
+            <email>amartin@palantir.com</email>
+            <roles>
+                <role>Developer</role>
+            </roles>
+            <timezone>-5</timezone>
+        </developer>
+        <developer>
+            <name>Travis Camechis</name>
+            <organization>Berico Technologies</organization>
+            <email>tcamechis@bericotechnologies.com</email>
+            <roles>
+                <role>Developer</role>
+            </roles>
+            <timezone>-5</timezone>
+        </developer>
+    </developers>
+
+
+    <!-- Where we publish our binaries -->
+    <distributionManagement>
+        <repository>
+            <id>nexus.bericotechnologies.com</id>
+            <url>http://nexus.bericotechnologies.com/content/repositories/releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>nexus.bericotechnologies.com</id>
+            <url>http://nexus.bericotechnologies.com/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+
+    <!-- Extra maven repositories needed -->
+    <repositories>
+        <repository>
+            <id>nexus.bericotechnologies.com</id>
+            <name>Berico Technologies Nexus</name>
+            <url>http://nexus.bericotechnologies.com/content/groups/public</url>
+            <releases><enabled>true</enabled></releases>
+            <snapshots><enabled>true</enabled></snapshots>
+        </repository>
+    </repositories>
+
+
+    <!-- Where we keep our source -->
+    <scm>
+        <connection>scm:git:git@github.com:Berico-Technologies/AMP.git</connection>
+        <developerConnection>scm:git:git@github.com:Berico-Technologies/AMP.git</developerConnection>
+        <url>https://github.com/Berico-Technologies/AMP/tree/develop</url>
+    </scm>
+
+
+    <!-- Where to complain -->
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/Berico-Technologies/AMP/issues</url>
+    </issueManagement>
+
+
+    <!-- no public-facing CI at the moment, sorry!
+    <ciManagement>
+        <system>TeamCity</system>
+        <url>http://user:password@ci.bericotechnologies.com/</url>
+    </ciManagement>
+     -->
+
+    <url>https://github.com/Berico-Technologies/AMP</url>
+
+
+</project>
