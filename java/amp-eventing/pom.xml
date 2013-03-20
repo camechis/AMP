@@ -26,7 +26,11 @@
 
 
     <dependencies>
-
+        <dependency>
+            <groupId>${parent.groupId}</groupId>
+            <artifactId>amp.bus.security</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>

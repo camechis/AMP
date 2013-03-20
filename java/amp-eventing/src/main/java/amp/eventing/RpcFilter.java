@@ -41,7 +41,7 @@ public class RpcFilter implements IEventProcessor {
     public void processInbound(EventContext context, IContinuationCallback continuation) throws Exception {
 
         boolean ourOwnRequest = false;
-        cmf.bus.berico.EnvelopeHelper env = new cmf.bus.berico.EnvelopeHelper(context.getEnvelope());
+        EnvelopeHelper env = new EnvelopeHelper(context.getEnvelope());
 
         try {
             if (env.IsRequest()) {

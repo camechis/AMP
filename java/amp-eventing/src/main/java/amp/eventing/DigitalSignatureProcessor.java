@@ -4,9 +4,9 @@ package amp.eventing;
 import java.security.Signature;
 import java.security.cert.X509Certificate;
 
-import cmf.security.CredentialHolder;
-import cmf.security.ICertificateProvider;
-import cmf.security.IUserInfoRepository;
+import amp.bus.security.CredentialHolder;
+import amp.bus.security.ICertificateProvider;
+import amp.bus.security.IUserInfoRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

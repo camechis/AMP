@@ -1,4 +1,4 @@
-package amp.bus.rabbit.rabbit;
+package amp.bus.rabbit;
 
 
 import java.util.ArrayList;
@@ -15,13 +15,13 @@ import com.rabbitmq.client.Channel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import amp.bus.rabbit.IEnvelopeDispatcher;
-import amp.bus.rabbit.IEnvelopeReceivedCallback;
-import amp.bus.rabbit.ITransportProvider;
-import amp.bus.rabbit.rabbit.topology.Exchange;
-import amp.bus.rabbit.rabbit.topology.ITopologyService;
-import amp.bus.rabbit.rabbit.topology.RouteInfo;
-import amp.bus.rabbit.rabbit.topology.RoutingInfo;
+import amp.bus.IEnvelopeDispatcher;
+import amp.bus.IEnvelopeReceivedCallback;
+import amp.bus.ITransportProvider;
+import amp.bus.rabbit.topology.Exchange;
+import amp.bus.rabbit.topology.ITopologyService;
+import amp.bus.rabbit.topology.RouteInfo;
+import amp.bus.rabbit.topology.RoutingInfo;
 
 
 /**
