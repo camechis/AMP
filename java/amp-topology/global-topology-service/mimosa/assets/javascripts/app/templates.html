@@ -1,0 +1,215 @@
+<div>
+	<script type="text/x-handlebars" data-template-name="application">
+		<div class="container">
+			{{render "navbar"}}
+			<div class="row">
+				<div class="span12 main">{{ outlet }}</div>
+			</div>
+			<div class="footer">{{render "footer"}}</div>
+		</div>
+    </script>
+	
+	<script type="text/x-handlebars" data-template-name="navbar">
+		<div class="navbar">
+		  <div class="navbar-inner">
+			{{#view App.MenuItemView tagName="span"}}
+				{{#linkTo "index" class="brand"}}Global Topology Service{{/linkTo}}
+			{{/view}}
+		    <ul class="nav">
+				{{#view App.MenuItemView}}
+					{{#linkTo "status"}}Status{{/linkTo}}
+				{{/view}}
+				{{#view App.MenuItemView}}
+					{{#linkTo "routeInfos"}}Routes{{/linkTo}}
+				{{/view}}
+				{{#view App.MenuItemView}}
+					{{#linkTo "exchanges"}}Exchanges{{/linkTo}}
+				{{/view}}
+		    </ul>
+			<ul class="nav pull-right">
+				{{#view App.MenuItemView}}
+					{{#linkTo "history"}}History <em class="icon-time icon-white"></em>{{/linkTo}}
+				{{/view}}
+				<li class="dropdown">
+					<a class="dropdown-toggle" data-toggle="dropdown">
+						Settings <em class="icon-chevron-down icon-white"></em></a>
+					<ul class="dropdown-menu">
+						<li><a>Users and Roles</a></li>
+					</ul>
+				</li>
+			</ul>
+		  </div>
+		</div>
+	</script>
+	
+	<script type="text/x-handlebars" data-template-name="footer">
+		<a href="http://gts.beri.co">CMF: Global Topology Service</a>, 
+		developed by <a href="http://beri.co">Berico Technologies</a> 
+		for its partners in the Federal Community.  This software is
+		free and open source, licensed under the ASL 2.0.
+	</script>
+	
+	<script type="text/x-handlebars" data-template-name="exchanges">
+		{{outlet}}
+		<h3>Exchanges 
+			<small>Endpoint configurations for producing and/or consuming events.</small>
+			<div class="pull-right"><button class="btn btn-success btn-small" type="button">Add Exchange</button></div>
+		</h3>
+		<table class="table">
+			<tr>
+				<th></th>
+				<th>Description</th>
+				<th>Name</th>
+				<th>Broker</th>
+				<th>Type</th>
+				<th>Queue</th>
+				<th>Routing Key</th>
+				<th>Durable?</th>
+				<th>Auto Ack?</th>
+				<th></th>
+			</tr>
+		{{#each controller}}
+			<tr>
+				<td>
+					<button type="button" class="btn btn-primary btn-mini">
+						<em class="icon-pencil icon-white"></em>
+					</button>
+				</td>
+				<td>{{description}}</td>
+				<td>
+					{{#linkTo "exchange" this}}{{name}}{{/linkTo}}
+				</td>
+				<td>amqp://{{hostName}}:{{port}}{{virtualHost}}</td>
+				<td>{{exchangeType}}</td>
+				<td>{{queueName}}</td>
+				<td>{{routingKey}}</td>
+				<td>{{isDurable}}</td>
+				<td>{{isAutoDelete}}</td>
+				<td>
+					<button type="button" class="btn btn-danger btn-mini">
+						<em class="icon-trash icon-white"></em>
+					</button>
+				</td>
+			</tr>
+		{{/each}}
+		</table>
+    </script>
+
+	<script type="text/x-handlebars" data-template-name="exchange">
+		<h3>{{description}} <small>Change the exchange&#39;s settings.</small></h3>
+		<hr />
+		<form class="form-horizontal">
+			<div class="control-group">
+			  <label class="control-label">Description:</label>
+			  <div class="controls">
+			    <input type="text">
+			    <span class="help-inline"><small>Helpful description of this configuration.</small></span>
+			  </div>
+			</div>
+			<div class="control-group">
+			  <label class="control-label">Name:</label>
+			  <div class="controls">
+			    <input type="text">
+			    <span class="help-inline"><small>AMQP name of the Exchange.</small></span>
+			  </div>
+			</div>
+			<div class="control-group">
+			  <label class="control-label">Host Name:</label>
+			  <div class="controls">
+			    <input type="text">
+			    <span class="help-inline"><small>DNS name of the AMQP broker.</small></span>
+			  </div>
+			</div>
+			<div class="control-group">
+			  <label class="control-label">Port:</label>
+			  <div class="controls">
+			    <input type="text">
+			    <span class="help-inline"><small>Port of the AMQP broker.  Default is &quot;5672&quot;, &quot;5671&quot; for SSL.</small></span>
+			  </div>
+			</div>
+			<div class="control-group">
+			  <label class="control-label">Virtual Host:</label>
+			  <div class="controls">
+			    <input type="text">
+			    <span class="help-inline"><small>Virtual AMQP broker (a RabbitMQ-specific feature). Default is &quot;/&quot;.</small></span>
+			  </div>
+			</div>
+			<div class="control-group">
+			  <label class="control-label">Exchange Type:</label>
+			  <div class="controls">
+			    <select>
+				  <option>direct</option>
+				  <option>topic</option>
+				  <option>fanout</option>
+				  <option>headers</option>
+				</select>
+			    <span class="help-inline"><small>Either &quot;direct&quot;, &quot;topic&quot;, &quot;fanout&quot;, or &quot;headers&quot; 
+					(see <a href="../help.html#exchangeTypes" target="_blank">Exchange Types</a>).</small></span>
+			  </div>
+			</div>
+			<div class="control-group">
+			  <label class="control-label">Routing Key:</label>
+			  <div class="controls">
+			    <input type="text">
+			    <span class="help-inline"><small>(Consumption only) The expression used to bind the queue to the exchange.</small></span>
+			  </div>
+			</div>
+			<div class="control-group">
+			  <label class="control-label">Queue Name:</label>
+			  <div class="controls">
+			    <input type="text">
+			    <span class="help-inline"><small>(Consumption only) Name of queue.  Used only in load-balancing/task-queue scenarios.</small></span>
+			  </div>
+			</div>
+			<div class="control-group">
+			  <label class="control-label">Durable?:</label>
+			  <div class="controls">
+			    <label class="radio">
+					<input type="radio" name="optionsRadios" id="optionsRadios1" value="true"> Yes, persist messages before delivery.
+				</label>
+				<label class="radio">
+					<input type="radio" name="optionsRadios" id="optionsRadios2" value="false" checked> No, I can lose a message or two.
+				</label>
+			    <span class="help-inline"><small>(Consumption only) Should messages be persisted to disk, surviving if the broker fails?</small></span>
+			  </div>
+			</div>
+			<div class="control-group">
+			  <label class="control-label">Auto Acknowledge?:</label>
+			<div class="controls">
+				<label class="radio">
+					<input type="radio" name="optionsRadios" id="optionsRadios1" value="true"> Yes, auto delete messages.
+				</label>
+				<label class="radio">
+					<input type="radio" name="optionsRadios" id="optionsRadios2" value="false" checked> No, do not auto delete.
+				</label>
+			    <span class="help-inline"><small>(Consumption only) Should messages automatically be deleted after being deliverd to the client.</small></span>
+			  </div>
+			</div>
+			<div class="control-group">
+			  <label class="control-label">Arguments:</label>
+			  <div class="controls">
+			    <input type="text">
+			    <span class="help-inline"><small>AMQP-broker specific settings (Query-string syntax).</small></span>
+			  </div>
+			</div>
+			<div class="form-actions">
+			  <button type="submit" class="btn btn-primary">Save changes</button>
+			  <button type="button" class="btn">Cancel</button>
+			</div>
+		</form><br /><br />
+    </script>
+
+	<script type="text/x-handlebars" data-template-name="routeInfos">
+		{{#each controller}}
+			Clients: {{#each clients}}{{this}}{{/each}}
+		{{/each}}
+    </script>
+
+
+
+	<script type="text/x-handlebars" data-template-name="routeInfo">
+	Hello RouteInfo {{id}}
+    </script>
+
+
+</div>

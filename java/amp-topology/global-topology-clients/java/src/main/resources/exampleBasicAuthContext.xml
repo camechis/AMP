@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="httpClientProvider" class="amp.topology.client.BasicAuthHttpClientProvider"
+		c:hostname="gts" c:port="15677" c:username="App01" c:password="password" />
+
+	<bean id="serializer" class="amp.topology.client.JsonRoutingInfoSerializer" />
+
+	<bean id="routingInfoRetriever" class="amp.topology.client.HttpRoutingInfoRetriever" 
+		c:httpClientProvider-ref="httpClientProvider" c:serializer-ref="serializer"
+		c:urlExpression="http://gts:15677/service/topology/get-routing-info/%s" />
+	
+	<bean id="fallbackProvider" class="amp.topology.client.DefaultApplicationExchangeProvider" />
+	
+	<bean id="topologyService" class="amp.topology.client.GlobalTopologyService" 
+		c:routingInfoRetriever-ref="routingInfoRetriever" c:cacheExpiryTime="10000"
+		c:fallbackProvider-ref="fallbackProvider" />
+		
+</beans>

@@ -1,0 +1,68 @@
+package amp.topology.client;
+
+import java.util.ArrayList;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+import amp.bus.rabbit.topology.RouteInfo;
+import amp.bus.rabbit.topology.RoutingInfo;
+import amp.eventing.ISerializer;
+
+/**
+ * This is a fix until the Iterable is removed from RoutingInfo.
+ * 
+ * @author Richard Clayton (Berico Technologies)
+ */
+public class JsonRoutingInfoSerializer implements ISerializer {
+
+	Gson gson = new Gson();
+	
+	public JsonRoutingInfoSerializer(){}
+	
+	@Override
+	public <TYPE> TYPE byteDeserialize(byte[] payload, Class<TYPE> clazz) {
+		
+		return stringDeserialize(new String(payload), clazz);
+	}
+
+	@Override
+	public byte[] byteSerialize(Object objectToSerializer) {
+		
+		return stringSerialize(objectToSerializer).getBytes();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public <TYPE> TYPE stringDeserialize(String payload, Class<TYPE> clazz) {
+		
+		if (clazz == RoutingInfo.class){
+			
+			ArrayList<RouteInfo> routeInfos = new ArrayList<RouteInfo>();
+			
+			JsonParser parser = new JsonParser();
+			JsonObject o = (JsonObject)parser.parse(payload);
+			JsonArray routes = o.getAsJsonArray("routes");
+			
+			for(JsonElement route : routes){
+				
+				routeInfos.add(gson.fromJson(route, RouteInfo.class));
+			}
+			
+			return (TYPE) new RoutingInfo(routeInfos);
+		}
+		else {
+			
+			return gson.fromJson(payload, clazz);
+		}
+	}
+
+	@Override
+	public String stringSerialize(Object objectToSerializer) {
+		
+		return gson.toJson(objectToSerializer);
+	}	
+}
