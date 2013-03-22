@@ -7,7 +7,7 @@
     <!-- Information about this project -->
     <groupId>amp</groupId>
     <artifactId>amp</artifactId>
-    <version>3.1.0-SNAPSHOT</version>
+    <version>3.1.1-SNAPSHOT</version>
     <name>Advanced Modular Platform</name>
     <packaging>pom</packaging>
 
@@ -32,6 +32,7 @@
         <module>amp-bus-security</module>
         <module>amp-eventing</module>
         <module>amp-examples</module>
+        <module>services/global-topology-client</module>
     </modules>
 
 
@@ -108,7 +109,7 @@
         <developer>
             <name>Asa Martin</name>
             <organization>Palantir</organization>
-            <email>amartin@palantir.com</email>
+            <email>asa.m.martin@gmail.com</email>
             <roles>
                 <role>Developer</role>
             </roles>
