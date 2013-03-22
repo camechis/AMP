@@ -13,9 +13,9 @@
     </parent>
 
 
-    <groupId>${parent.groupId}</groupId>
+    <groupId>${project.parent.groupId}</groupId>
     <artifactId>amp.bus.security</artifactId>
-    <version>${parent.version}</version>
+    <version>${project.parent.version}</version>
     <name>AMP Security Implementations</name>
     <packaging>jar</packaging>
 
@@ -24,7 +24,7 @@
         <dependency>
             <groupId>amp</groupId>
             <artifactId>amp.bus</artifactId>
-            <version>${parent.version}</version>
+            <version>${project.parent.version}</version>
         </dependency>
 
         <dependency>
