@@ -7,7 +7,7 @@
     <!-- Information about this project -->
     <groupId>amp</groupId>
     <artifactId>amp</artifactId>
-    <version>3.1.1-SNAPSHOT</version>
+    <version>3.1.0</version>
     <name>Advanced Modular Platform</name>
     <packaging>pom</packaging>
 
