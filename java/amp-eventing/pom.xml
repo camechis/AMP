@@ -13,9 +13,9 @@
     </parent>
 
 
-    <groupId>${parent.groupId}</groupId>
+    <groupId>${project.parent.groupId}</groupId>
     <artifactId>amp.eventing</artifactId>
-    <version>${parent.version}</version>
+    <version>${project.parent.version}</version>
     <name>AMP implementation of the CMF Event Bus</name>
     <packaging>jar</packaging>
 
@@ -27,9 +27,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>${parent.groupId}</groupId>
+            <groupId>${project.parent.groupId}</groupId>
             <artifactId>amp.bus.security</artifactId>
-            <version>${parent.version}</version>
+            <version>${project.parent.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>

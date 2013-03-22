@@ -13,9 +13,9 @@
     </parent>
 
 
-    <groupId>${parent.groupId}</groupId>
+    <groupId>${project.parent.groupId}</groupId>
     <artifactId>amp.bus.rabbit</artifactId>
-    <version>${parent.version}</version>
+    <version>${project.parent.version}</version>
     <name>AMP RabbitMQ Transport Provider</name>
     <packaging>jar</packaging>
 
@@ -30,7 +30,7 @@
         <dependency>
             <groupId>amp</groupId>
             <artifactId>amp.bus</artifactId>
-            <version>${parent.version}</version>
+            <version>${project.parent.version}</version>
         </dependency>
         <dependency>
             <groupId>com.rabbitmq</groupId>
