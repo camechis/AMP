@@ -19,7 +19,6 @@
 
 
 	<properties>
-		<springframework.version>3.1.2.RELEASE</springframework.version>
 		<logback.version>1.0.6</logback.version>
 	</properties>
 
@@ -60,17 +59,14 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-beans</artifactId>
-			<version>${springframework.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
-			<version>${springframework.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>
-			<version>${springframework.version}</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>commons-logging</artifactId>
@@ -81,7 +77,6 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
-			<version>${springframework.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-logging</groupId>

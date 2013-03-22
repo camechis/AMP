@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
@@ -14,7 +13,7 @@
 
     <groupId>amp</groupId>
     <artifactId>amp.topology.client</artifactId>
-    <version>${project.parent.version}</version>
+    <version>3.1.1-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>AMP Global Topology Client</name>
     <url>http://labs.beri.co/cmf/topology</url>
@@ -22,7 +21,6 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <springframework.version>3.2.2.RELEASE</springframework.version>
     </properties>
 
 
@@ -78,7 +76,7 @@
         <dependency>
             <groupId>com.berico</groupId>
             <artifactId>test-utils</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>1.0.0</version>
             <scope>test</scope>
         </dependency>
 
@@ -91,7 +89,6 @@
                     <artifactId>commons-logging</artifactId>
                 </exclusion>
             </exclusions>
-            <version>${springframework.version}</version>
             <scope>test</scope>
         </dependency>
 
