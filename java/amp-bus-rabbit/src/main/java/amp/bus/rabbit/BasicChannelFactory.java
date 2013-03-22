@@ -1,12 +1,9 @@
 package amp.bus.rabbit;
 
 
-import java.io.IOException;
-
-import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.ConnectionFactory;
-
 import amp.bus.rabbit.topology.Exchange;
+
+import com.rabbitmq.client.ConnectionFactory;
 
 
 public class BasicChannelFactory extends BaseChannelFactory {
@@ -24,16 +21,11 @@ public class BasicChannelFactory extends BaseChannelFactory {
 	
 
 	@Override
-	public Connection getConnection(Exchange exchange) throws IOException {
+	protected void configureConnectionFactory(ConnectionFactory factory, Exchange exchange) throws Exception {
 		
-		ConnectionFactory factory = new ConnectionFactory();
         factory.setUsername(username);
         factory.setPassword(password);
-        factory.setHost(exchange.getHostName());
-        factory.setPort(exchange.getPort());
-        factory.setVirtualHost(exchange.getVirtualHost());
-        //factory.setRequestedHeartbeat(HEARTBEAT_INTERVAL);
-        
-        return factory.newConnection();
+
 	}
+
 }

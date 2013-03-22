@@ -1,6 +1,5 @@
 package amp.bus.rabbit;
 
-import java.io.IOException;
 import java.security.GeneralSecurityException;
 
 import javax.net.ssl.SSLContext;
@@ -8,42 +7,27 @@ import javax.net.ssl.TrustManager;
 
 import amp.bus.rabbit.topology.Exchange;
 
-import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.NullTrustManager;
 
-public class OneWaySSLChannelFactory extends BaseChannelFactory {
+public class OneWaySSLChannelFactory extends BasicChannelFactory {
 
 	private static final String DEFAULT_SSL_PROTOCOL = "TLSv1";
 	
-	protected String password;
-    protected String username;
-
     public OneWaySSLChannelFactory(String username, String password) {
-		super();
-		
-		this.username = username;
-		this.password = password;
+		super(username, password);
    }
 
 	@Override
-	public Connection getConnection(Exchange exchange) throws IOException {
+	protected void configureConnectionFactory(ConnectionFactory factory, Exchange exchange) throws Exception {
 		
-		ConnectionFactory factory = new ConnectionFactory();
-        factory.setUsername(username);
-        factory.setPassword(password);
-        factory.setHost(exchange.getHostName());
-        factory.setPort(exchange.getPort());
-        factory.setVirtualHost(exchange.getVirtualHost());
-        //factory.setRequestedHeartbeat(HEARTBEAT_INTERVAL);
-        
+		super.configureConnectionFactory(factory, exchange);
+		 
         try {
 			factory.setSocketFactory(getPermissiveSSLContext().getSocketFactory());
 		} catch (GeneralSecurityException e) {
 			throw new RuntimeException(e);
 		}
-        
-        return factory.newConnection();
 	}
 
 	private SSLContext getPermissiveSSLContext() throws GeneralSecurityException{

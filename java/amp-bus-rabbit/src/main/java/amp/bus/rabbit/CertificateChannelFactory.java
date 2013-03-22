@@ -27,7 +27,7 @@ public class CertificateChannelFactory extends BaseChannelFactory {
     }
 	
 	@Override
-	public Connection getConnection(Exchange exchange) throws Exception {
+	protected void configureConnectionFactory(ConnectionFactory factory, Exchange exchange) throws Exception {
 		
 		char[] keyPassphrase = password.toCharArray();
 
@@ -46,15 +46,10 @@ public class CertificateChannelFactory extends BaseChannelFactory {
         SSLContext c = SSLContext.getInstance("SSLv3");
         c.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);
 
-        ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost(exchange.getHostName());
-        factory.setPort(exchange.getPort());
-        factory.setVirtualHost(exchange.getVirtualHost());
         factory.setSaslConfig(DefaultSaslConfig.EXTERNAL);
         factory.useSslProtocol(c);
         //factory.setRequestedHeartbeat(HEARTBEAT_INTERVAL);
         
-        return factory.newConnection();
 	}
 
 }

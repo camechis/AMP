@@ -6,6 +6,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import cmf.bus.IDisposable;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
+import com.rabbitmq.client.ConnectionFactory;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,13 +44,27 @@ public abstract class BaseChannelFactory implements IRabbitChannelFactory, IDisp
 		HEARTBEAT_INTERVAL = interval;
 	}
 	
+	public Connection getConnection(Exchange exchange) throws Exception{
+		ConnectionFactory factory = new ConnectionFactory();
+        
+		factory.setHost(exchange.getHostName());
+        factory.setPort(exchange.getPort());
+        factory.setVirtualHost(exchange.getVirtualHost());
+        //factory.setRequestedHeartbeat(HEARTBEAT_INTERVAL);
+
+        configureConnectionFactory(factory, exchange);
+        
+        return factory.newConnection();
+	}
+
 	/**
-	 * Derived classes have the sole responsibility of providing connections
-	 * to this class (however that is done: username/password, certificates, etc.).
+	 * Derived classes must override this method to configure the authentication
+	 * mechanism for the connection.  (however that is done: username/password, 
+	 * certificates, etc.).
 	 * 
 	 * @return
 	 */
-	public abstract Connection getConnection(Exchange exchange) throws Exception;
+	protected abstract void configureConnectionFactory(ConnectionFactory factory, Exchange exchange) throws Exception;
 	
 	/**
 	 * Get the corresponding channel for the supplied Exchange.
