@@ -32,7 +32,8 @@
         <module>amp-bus-rabbit</module>
         <module>amp-bus-security</module>
         <module>amp-eventing</module>
-        <module>amp-examples</module>
+        <module>amp-examples/bus-gui-tester</module>
+		<module>amp-examples/user-notifications</module>
         <module>services/global-topology-client</module>
     </modules>
 

@@ -6,15 +6,15 @@
 	<parent>
 		<groupId>amp</groupId>
 		<artifactId>amp</artifactId>
-		<relativePath>../pom.xml</relativePath>
+		<relativePath>../../pom.xml</relativePath>
         <version>3.1.0</version>
 	</parent>
 
 	
 	<groupId>amp</groupId>
-	<artifactId>amp.examples</artifactId>
+	<artifactId>amp.examples.busguitester</artifactId>
 	<version>3.1.0</version>
-	<name>AMP Example Code</name>
+	<name>AMP Example - Bus GUI Tester</name>
     <packaging>jar</packaging>
 
 

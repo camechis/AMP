@@ -1,0 +1,18 @@
+------------------------------------------------------------------------
+
+Hey, this is a banner you can customize that will print to the console 
+when the application starts.  It's customary to put an awesome ASCII
+art logo or image, like the one below!
+ _____   ____  _      _      __    __  ____  _____   ____  ____   ___   
+|     | /    || |    | |    |  |__|  ||    ||     | /    ||    \ |   \  
+|   __||  o  || |    | |    |  |  |  | |  | |__/  ||  o  ||  D  )|    \ 
+|  |_  |     || |___ | |___ |  |  |  | |  | |   __||     ||    / |  D  |
+|   _] |  _  ||     ||     ||  `  '  | |  | |  /  ||  _  ||    \ |     |
+|  |   |  |  ||     ||     | \      /  |  | |     ||  |  ||  .  \|     |
+|__|   |__|__||_____||_____|  \_/\_/  |____||_____||__|__||__|\_||_____|
+                                                                        
+By Berico Technologies...
+
+You can generate your own here: http://patorjk.com/software/taag/
+
+------------------------------------------------------------------------

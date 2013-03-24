@@ -1,0 +1,1 @@
+# UserNotifications (Event Bus + Dropwizard example)

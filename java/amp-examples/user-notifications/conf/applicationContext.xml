@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd">    
+	
+	<!-- #### RECEIPT HANDLERS #################################################################### -->
+	
+	<bean id="receiptSpout" class="amp.examples.notifier.bus.NotificationReceiptSpout"
+		c:eventBus-ref="eventBus" />
+	
+	<util:list id="receiptHandlers" value-type="amp.examples.notifier.core.NotificationReceiptHandler">
+		<ref bean="receiptSpout" />
+	</util:list>
+	
+	<!-- #### NOTIFIERS ############################################################################ -->
+	
+	<bean id="notificationMailbox" class="amp.examples.notifier.core.notifiers.NotificationMailbox"
+		c:receiptHandlers-ref="receiptHandlers" />
+	
+	<bean id="consoleNotifier" class="amp.examples.notifier.core.notifiers.ConsoleNotifier" />
+	
+	<util:list id="notifiers" value-type="amp.examples.notifier.core.Notifier">
+		<ref bean="notificationMailbox" />
+		<ref bean="consoleNotifier" />
+	</util:list>
+	
+	<!-- #### EVENT SINKS (handles messages coming off the bus) #################################### -->
+	
+	<bean id="notificationSink" class="amp.examples.notifier.bus.UserNotificationSink" 
+		c:notifiers-ref="notifiers" c:eventBus-ref="eventBus" />
+	
+	<!-- #### REST SERVICES ######################################################################## -->
+	
+	<bean class="amp.examples.notifier.resources.NotificationMailboxResource" 
+		c:notificationMailbox-ref="notificationMailbox" />
+	
+	<!-- #### HEALTH CHECKS ######################################################################## -->
+	
+	<bean class="amp.examples.notifier.health.MailboxFullHealthCheck"
+		c:notificationMailbox-ref="notificationMailbox" />
+	
+	<bean class="amp.examples.notifier.health.MailboxMessageCountHealthCheck"
+		c:notificationMailbox-ref="notificationMailbox"  />
+	
+	<!-- #### TASKS ################################################################################ -->
+	
+	<bean class="amp.examples.notifier.tasks.ClearMailboxTask"
+		c:notificationMailbox-ref="notificationMailbox" />
+	
+	<!-- #### CLI COMMANDS ######################################################################### -->
+	
+	<bean class="amp.examples.notifier.cli.SendNotificationCommand" />
+	
+</beans>

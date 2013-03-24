@@ -1,0 +1,16 @@
+applicationContext: ['conf/applicationContext.xml', 'conf/basicAuthSecurityContext.xml', 'conf/eventBusContext.xml']
+
+useSpringSecurity: true
+
+logging:
+    level: INFO
+    console:
+        enabled: true
+        threshold: DEBUG
+        
+http:
+    port: 8080
+    adminPort: 8082
+    adminUsername: admin
+    adminPassword: admin
+    rootPath: /service/*
