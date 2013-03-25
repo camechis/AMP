@@ -10,5 +10,5 @@ else
 	   message="$message $3"
 	   shift
 	done
-	java -jar target/example-project-1.0.0-SNAPSHOT.jar send conf/server-basicAuth.yaml $from $to $message
+	java -jar target/amp.examples.usernotifications-3.1.0.jar send conf/server-basicAuth.yaml $from $to $message
 fi

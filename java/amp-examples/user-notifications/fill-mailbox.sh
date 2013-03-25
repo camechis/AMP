@@ -1,1 +1,0 @@
-java -jar target/example-project-1.0.0-SNAPSHOT.jar fill-mailbox conf/server-basicAuth.yaml
