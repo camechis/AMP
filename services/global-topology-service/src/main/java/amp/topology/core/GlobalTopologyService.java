@@ -38,10 +38,13 @@ public class GlobalTopologyService implements ITopologyService {
 					extendedRouteInfo.getProducerExchangeId())
 						.toExchange();
 			
-			Exchange consumerExchange =
+			ExtendedExchange consumerExtendedExchange =
 				this.topologyRepository.getExchange(
-					extendedRouteInfo.getConsumerExchangeId())
-						.toExchange();
+					extendedRouteInfo.getConsumerExchangeId());
+			
+			ensureValidQueue(consumerExtendedExchange, topic, client);
+			
+			Exchange consumerExchange = consumerExtendedExchange.toExchange();
 			
 			routeInfos.add(new RouteInfo(producerExchange, consumerExchange));
 		}
@@ -52,4 +55,29 @@ public class GlobalTopologyService implements ITopologyService {
 	@Override
 	public void dispose() {}
 
+	private static long QUEUE_COLLISION_INSURANCE_NUMBER = 0l;
+	
+	protected synchronized static long getQueueCollisionInsurance(){
+		
+		// In the rare event that we have somehow created 9 quintillion
+		// queues, we will rollover back to zero.  This was created
+		// to make John Ruiz feel better at night.
+		if (QUEUE_COLLISION_INSURANCE_NUMBER == Long.MAX_VALUE){
+			
+			QUEUE_COLLISION_INSURANCE_NUMBER = 0;
+		}
+		
+		return ++QUEUE_COLLISION_INSURANCE_NUMBER;
+	}
+	
+	protected void ensureValidQueue(ExtendedExchange exchange, String topic, String client){
+		
+		if (exchange.getQueueName() == null || exchange.getQueueName().equals("")){
+			
+			String queueName = String.format("%s#%03d#%s", client, getQueueCollisionInsurance(), topic);
+			
+			exchange.setQueueName(queueName);
+		}
+	}
+	
 }

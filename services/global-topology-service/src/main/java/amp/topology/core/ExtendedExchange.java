@@ -49,6 +49,11 @@ public class ExtendedExchange extends Exchange {
 	public String getDescription() {
 		return description;
 	}
+	
+	public void setQueueName(String queueName){
+		
+		this.queueName = queueName;
+	}
 
 	public Exchange toExchange(){
 		
