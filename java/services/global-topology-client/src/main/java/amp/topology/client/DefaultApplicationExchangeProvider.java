@@ -3,6 +3,7 @@ package amp.topology.client;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import amp.bus.rabbit.topology.Exchange;
 import amp.bus.rabbit.topology.RouteInfo;
@@ -21,11 +22,14 @@ import amp.bus.rabbit.topology.RoutingInfo;
  */
 public class DefaultApplicationExchangeProvider implements FallbackRoutingInfoProvider {
 
+	protected static long UNIQUE_PROCESS_ID = 0;
+	protected String clientName = UUID.randomUUID().toString();
 	protected String exchangeName = "amq.direct";
 	protected String hostname = "rabbit";
 	protected String vhost = "/";
 	protected int port = 5672;
 	protected String exchangeType = "direct";
+	protected String queueName = null;
 	protected boolean isDurable = false;
 	protected boolean isAutoDelete = false;
 	
@@ -47,9 +51,16 @@ public class DefaultApplicationExchangeProvider implements FallbackRoutingInfoPr
 	@Override
 	public RoutingInfo getFallbackRoute(String topic) {
 		
+		String queue = this.queueName;
+		
+		if (queueName == null){
+			
+			queue = String.format("%s#%03d#%s", this.clientName, ++UNIQUE_PROCESS_ID, topic);
+		}
+		
 		Exchange defaultExchange = new Exchange(
 				this.exchangeName, this.hostname, this.vhost, 
-				this.port, topic, null, this.exchangeType, 
+				this.port, topic, queue, this.exchangeType, 
 				this.isDurable, this.isAutoDelete, this.arguments);
 		
 		RouteInfo theOnlyRoute = new RouteInfo(defaultExchange, defaultExchange);
@@ -90,6 +101,14 @@ public class DefaultApplicationExchangeProvider implements FallbackRoutingInfoPr
 	public void setPort(int port) {
 		this.port = port;
 	}
+	
+	public String getClientName() {
+		return clientName;
+	}
+
+	public void setClientName(String clientName) {
+		this.clientName = clientName;
+	}
 
 	public String getExchangeType() {
 		return exchangeType;
@@ -97,6 +116,14 @@ public class DefaultApplicationExchangeProvider implements FallbackRoutingInfoPr
 
 	public void setExchangeType(String exchangeType) {
 		this.exchangeType = exchangeType;
+	}
+	
+	public String getQueueName() {
+		return queueName;
+	}
+
+	public void setQueueName(String queueName) {
+		this.queueName = queueName;
 	}
 
 	public boolean isDurable() {
