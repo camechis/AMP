@@ -33,7 +33,8 @@
         <module>amp-bus-security</module>
         <module>amp-eventing</module>
         <module>amp-examples/bus-gui-tester</module>
-		<module>amp-examples/user-notifications</module>
+        <module>amp-examples/user-notifications</module>
+        <module>amp-examples/service-adaptor</module>
         <module>services/global-topology-client</module>
     </modules>
 
