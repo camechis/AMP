@@ -142,4 +142,35 @@ public class MongoTopologyRepository extends BaseTopologyRepository implements I
 		mongoTemplate.dropCollection(ExtendedRouteInfo.class);
 	}
 
+	@Override
+	public List<ExtendedExchange> getExchangesByBroker(String host) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<ExtendedExchange> getExchangesByBroker(String host, int port) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<ExtendedExchange> getExchangesByBroker(String host, int port,
+			String vhost) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<ExtendedRouteInfo> getRoutesByTopic(String topic) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<ExtendedRouteInfo> getRoutesByClient(String client) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

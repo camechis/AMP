@@ -65,7 +65,8 @@ public class RouteInfoResource {
 		
 		topologyRepository.createRoute(route);
 		
-		return String.format("{ 'id': '%s' }", route.getId());
+		// JSON.parse will barf if you don't use double quotes
+		return String.format("{ \"id\": \"%s\" }", route.getId());
 	}
 	
 	@POST

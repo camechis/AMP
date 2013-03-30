@@ -64,7 +64,8 @@ public class ExchangeResource {
 		
 		topologyRepository.createExchange(exchange);
 		
-		return String.format("{ 'id': '%s' }", exchange.getId());
+		// JSON.parse will barf if you don't use double quotes
+		return String.format("{ \"id\": \"%s\" }", exchange.getId());
 	}
 	
 	@POST

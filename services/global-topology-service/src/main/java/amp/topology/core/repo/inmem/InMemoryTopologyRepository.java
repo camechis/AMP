@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.google.common.base.Predicates;
+
 import amp.topology.core.BaseTopologyRepository;
 import amp.topology.core.ExtendedExchange;
 import amp.topology.core.ExtendedRouteInfo;
@@ -90,11 +92,44 @@ public class InMemoryTopologyRepository extends BaseTopologyRepository implement
 	}
 
 	@Override
+	public List<ExtendedExchange> getExchangesByBroker(String host) {
+		
+		List<ExtendedExchange> matchingExchanges = new ArrayList<ExtendedExchange>();
+		
+		return matchingExchanges;
+	}
+
+	@Override
+	public List<ExtendedExchange> getExchangesByBroker(String host, int port) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<ExtendedExchange> getExchangesByBroker(String host, int port,
+			String vhost) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
 	public List<ExtendedRouteInfo> getRoutes() {
 		
 		return new ArrayList<ExtendedRouteInfo>(routes.values());
 	}
 
+	@Override
+	public List<ExtendedRouteInfo> getRoutesByTopic(String topic) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<ExtendedRouteInfo> getRoutesByClient(String client) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 	@Override
 	public void createExchange(ExtendedExchange exchange) {
 		

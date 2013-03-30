@@ -22,18 +22,14 @@
 	<bean id="routeInfoResource"
 		class="amp.topology.resources.RouteInfoResource"
 		c:topologyRepository-ref="topologyRepository" />
-		
-	<bean id="emExchangeResource" 
-		class="amp.topology.resources.EmExchangeResource" 
-		c:topologyRepository-ref="topologyRepository" />
-	
-	<bean id="emRouteInfoResource"
-		class="amp.topology.resources.EmRouteInfoResource"
-		c:topologyRepository-ref="topologyRepository" />
 	
 	<bean id="topologyServiceResource"
 		class="amp.topology.resources.TopologyServiceResource"
 		c:topologyService-ref="topologyService" />
+		
+	<bean id="missedTopicsResource"
+		class="amp.topology.resources.MissedTopicsResource"
+		c:noRouteForTopicListener-ref="noRouteInfoForTopicListener" />
 	
 	<bean id="noRouteInfoForTopicListener" 
 		class="amp.topology.core.repo.listeners.NoRouteInfoForTopicListener" />

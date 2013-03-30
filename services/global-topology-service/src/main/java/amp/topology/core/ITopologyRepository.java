@@ -10,7 +10,17 @@ public interface ITopologyRepository {
 	
 	List<ExtendedExchange> getExchanges();
 	
+	List<ExtendedExchange> getExchangesByBroker(String host);
+	
+	List<ExtendedExchange> getExchangesByBroker(String host, int port);
+	
+	List<ExtendedExchange> getExchangesByBroker(String host, int port, String vhost);
+	
 	List<ExtendedRouteInfo> getRoutes();
+	
+	List<ExtendedRouteInfo> getRoutesByTopic(String topic);
+	
+	List<ExtendedRouteInfo> getRoutesByClient(String client);
 	
 	void createExchange(ExtendedExchange exchange);
 	
