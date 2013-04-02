@@ -12,7 +12,7 @@ window.RouteListCtrl = ($scope, $http, $route, $location) ->
 		$location.path "/routes/#{routeId}/edit"
 	
 	$scope.create = ->
-		$location.path "/routes/new"
+		$location.path "/route/new"
 		
 	$scope.refresh = ->
 		$route.reload()

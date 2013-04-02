@@ -1,6 +1,6 @@
 package amp.topology.resources;
 
-import java.util.List;
+import java.util.Collection;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -47,8 +47,40 @@ public class ExchangeResource {
 	}
 	
 	@GET
+	@Path("/broker/{host}")
+	public Collection<ExtendedExchange> getExchangesByBroker(@PathParam("host") String host){
+		
+		logger.info("Getting exchange by broker: {}", host);
+		
+		return topologyRepository.getExchangesByBroker(host);
+	}
+	
+	@GET
+	@Path("/broker/{host}/port/{port}")
+	public Collection<ExtendedExchange> getExchangesByBroker(
+			@PathParam("host") String host, @PathParam("port") int port){
+		
+		logger.info("Getting exchange by broker: {}:{}", host, port);
+		
+		return topologyRepository.getExchangesByBroker(host, port);
+	}
+	
+	@GET
+	@Path("/broker/{host}/port/{port}/vhost/{vhost}")
+	public Collection<ExtendedExchange> getExchangesByBroker(
+			@PathParam("host") String host, @PathParam("port") int port, 
+			@PathParam("vhost") String vhost){
+		
+		String virtualHost = decodeSlashes(vhost);
+		
+		logger.info("Getting exchange by broker: {}:{}{}", new Object[]{ host, port, virtualHost });
+		
+		return topologyRepository.getExchangesByBroker(host, port, virtualHost);
+	}
+	
+	@GET
     @Timed
-	public List<ExtendedExchange> getExchanges(){
+	public Collection<ExtendedExchange> getExchanges(){
 		
 		logger.info("Getting exchanges.");
 		
@@ -91,5 +123,10 @@ public class ExchangeResource {
 		topologyRepository.removeExchange(id);
 		
 		return Response.ok().build();
+	}
+	
+	static String decodeSlashes(String string){
+		
+		return string.replace("%2F", "/");
 	}
 }

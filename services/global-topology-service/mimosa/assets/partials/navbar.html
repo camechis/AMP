@@ -3,16 +3,22 @@
 	<a class="nav brand" href="#">AMP - Global Topology</a>
     <ul class="nav">
 		<li ng-class="{active: activeRoute == '/'}"><a href="#/">Overview</a></li>
-		<li ng-class="{active: activeRoute == '/wizard'}"><a href="#/">Topology Wizard</a></li>  
+		<li ng-class="{active: activeRoute == '/wizard'}"><a href="#/">Wizard</a></li>  
 		<li class="dropdown">
 			<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-				Topology Management <b class="caret"></b>
+				Topology <b class="caret"></b>
 			</a>
 			<ul class="dropdown-menu">
 				<li  ng-class="{active: activeRoute == '/exchanges'}">
 					<a href="#/exchanges">Exchanges</a></li>
 				<li  ng-class="{active: activeRoute == '/routes'}">
 					<a href="#/routes">Routes</a></li>
+				<li class="divider"></li>
+				<li class="nav-header">Inspect Usage</li>
+				<li  ng-class="{active: activeRoute == '/topics'}">
+					<a href="#/topics">Topics</a></li>
+				<li  ng-class="{active: activeRoute == '/clients'}">
+					<a href="#/clients">Clients</a></li>
 			</ul>
 		</li>
     </ul>

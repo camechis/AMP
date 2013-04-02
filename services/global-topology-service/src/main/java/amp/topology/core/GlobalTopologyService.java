@@ -1,7 +1,7 @@
 package amp.topology.core;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
 
 import amp.bus.rabbit.topology.Exchange;
@@ -29,7 +29,7 @@ public class GlobalTopologyService implements ITopologyService {
 		
 		ArrayList<RouteInfo> routeInfos = new ArrayList<RouteInfo>();
 		
-		List<ExtendedRouteInfo> extendedRouteInfos = this.topologyRepository.find(topic, client);
+		Collection<ExtendedRouteInfo> extendedRouteInfos = this.topologyRepository.find(topic, client);
 		
 		for (ExtendedRouteInfo extendedRouteInfo : extendedRouteInfos){
 			

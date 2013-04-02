@@ -9,12 +9,17 @@
 		c:keystore="ssl/app01.jks" c:keystorePassword="password" c:port="15677" />
 
 	<bean id="serializer" class="amp.topology.client.JsonRoutingInfoSerializer" />
-
+	
 	<bean id="routingInfoRetriever" class="amp.topology.client.HttpRoutingInfoRetriever" 
 		c:httpClientProvider-ref="httpClientProvider" c:serializer-ref="serializer"
 		c:urlExpression="https://gts:15677/service/topology/get-routing-info/%s" />
 	
-	<bean id="fallbackProvider" class="amp.topology.client.DefaultApplicationExchangeProvider" />
+	<!-- Please keep in mind that if you use any of the default exchanges in RabbitMQ,
+	     they are all durable.  This means that if use a default exchange, you will need
+	     to make sure the settings of the exchange match the exchange specified in this
+	     fallback provider. -->
+	<bean id="fallbackProvider" class="amp.topology.client.DefaultApplicationExchangeProvider"
+		p:exchangeName="amp.apps" p:hostname="localhost" />
 	
 	<bean id="topologyService" class="amp.topology.client.GlobalTopologyService" 
 		c:routingInfoRetriever-ref="routingInfoRetriever" c:cacheExpiryTime="10000"

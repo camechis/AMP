@@ -23,6 +23,19 @@ angular.module("gts", ["filters"])
 				{ templateUrl: "partials/route-delete.html", controller: RouteDeleteCtrl })
 			.when("/route/new", 
 				{ templateUrl: "partials/route-edit.html", controller: RouteNewCtrl })
-			.otherwise({ redirectTo: "/exchanges" })
+			# TOPICS
+			.when("/topics", 
+				{ templateUrl: "partials/topic-list.html", controller: TopicListCtrl })
+			.when("/topics/:topicId", 
+				{ templateUrl: "partials/topic-view.html", controller: TopicViewCtrl })
+			# CLIENTS
+			.when("/clients", 
+				{ templateUrl: "partials/client-list.html", controller: ClientListCtrl })
+			.when("/clients/:clientId", 
+				{ templateUrl: "partials/client-view.html", controller: ClientViewCtrl })
+			# DEFAULT
+			.when("/", 
+				{ templateUrl: "partials/main.html", controller: MainCtrl })
+			.otherwise({ redirectTo: "/" })
 	])
 		

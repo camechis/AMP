@@ -1,6 +1,6 @@
 package amp.topology.resources;
 
-import java.util.List;
+import java.util.Collection;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -48,8 +48,28 @@ public class RouteInfoResource {
 	}
 	
 	@GET
+	@Path("/client/{client}")
     @Timed
-	public List<ExtendedRouteInfo> getRoutes(){
+	public Collection<ExtendedRouteInfo> getRoutesByClient(@PathParam("client") String client){
+		
+		logger.info("Getting routes by client: {}", client);
+		
+		return topologyRepository.getRoutesByClient(client);
+	}
+	
+	@GET
+	@Path("/topic/{topic}")
+    @Timed
+	public Collection<ExtendedRouteInfo> getRoutesByTopic(@PathParam("topic") String topic){
+		
+		logger.info("Getting routes by topic: {}", topic);
+		
+		return topologyRepository.getRoutesByTopic(topic);
+	}
+	
+	@GET
+    @Timed
+	public Collection<ExtendedRouteInfo> getRoutes(){
 		
 		logger.info("Getting routes");
 		

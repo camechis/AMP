@@ -18,7 +18,7 @@ exports.config = {
       "jpeg","gif","html","eot",
       "svg","ttf","woff","otf",
       "yaml","kml","ico","htc",
-      "htm"]
+      "htm", "gexf"]
   growl:
     onStartup: false
     onSuccess:

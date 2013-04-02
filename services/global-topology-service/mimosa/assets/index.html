@@ -14,7 +14,6 @@
 	#wrap > .container-fluid { padding-top: 60px; }
 	.container .copyright  { margin: 20px 0; }
 	</style>
-	<!-- Thanks guys! http://twitter.github.com/bootstrap/examples/sticky-footer-navbar.html -->
 	<link rel="stylesheet" href="/stylesheets/style.css" />
 	<link rel="stylesheet" href="/stylesheets/bootstrap-responsive.css" />
 	<!-- 
@@ -24,21 +23,26 @@
 	<script type="text/javascript" src="/javascripts/vendor/lodash.js"></script>
 	<script type="text/javascript" src="/javascripts/vendor/uuid.js"></script>
 	<script type="text/javascript" src="/javascripts/vendor/bootstrap.js"></script>	
+	<script type="text/javascript" src="/javascripts/vendor/async.js"></script>	
+	<script type="text/javascript" src="/javascripts/vendor/sigma.min.js"></script>	
+	<script type="text/javascript" src="/javascripts/vendor/sigma.forceatlas2.js"></script>	
     <script type="text/javascript" src="/javascripts/vendor/angular.min.js" ng:autobind></script>
-	<script type="text/javascript" src="/javascripts/exchanges.js"></script>
 	<script type="text/javascript" src="/javascripts/app/filters.js"></script>
+	<script type="text/javascript" src="/javascripts/app/controllers/main.js"></script>
+	<script type="text/javascript" src="/javascripts/app/controllers/breadcrumbs.js"></script>
 	<script type="text/javascript" src="/javascripts/app/controllers/navbar.js"></script>
 	<script type="text/javascript" src="/javascripts/app/controllers/exchange.js"></script>
 	<script type="text/javascript" src="/javascripts/app/controllers/route.js"></script>
+	<script type="text/javascript" src="/javascripts/app/controllers/topic.js"></script>
+	<script type="text/javascript" src="/javascripts/app/controllers/client.js"></script>
+	<script type="text/javascript" src="/javascripts/app/controllers/topograph.js"></script>
 	<script type="text/javascript" src="/javascripts/app/app.js"></script>
   </head>
   <body ng-app="gts">
 		<div id="wrap">
 			<div ng-include src="'partials/navbar.html'"></div>
 			<div class="container-fluid">
-				<div class="row fluid">
-					<div class="pull-right muted"><small>Signed in as <a href="#">rclayton</a>.</small></div>
-				</div>
+				<div ng-include src="'partials/breadcrumbs.html'"></div>
 				<div class="row-fluid" ng-view></div>
 			</div>
 		<div id="push"></div>

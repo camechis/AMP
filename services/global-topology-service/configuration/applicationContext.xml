@@ -31,6 +31,9 @@
 		class="amp.topology.resources.MissedTopicsResource"
 		c:noRouteForTopicListener-ref="noRouteInfoForTopicListener" />
 	
+	<bean id="userManagementResource"
+		class="amp.topology.resources.UserManagementResource" />
+	
 	<bean id="noRouteInfoForTopicListener" 
 		class="amp.topology.core.repo.listeners.NoRouteInfoForTopicListener" />
 	

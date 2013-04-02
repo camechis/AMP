@@ -2,7 +2,6 @@ package amp.topology.core.repo.listeners;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
@@ -24,7 +23,7 @@ public class NoRouteInfoForTopicListener implements ITopologyRepositoryEventList
 	@Override
 	public void routingInfoRetrieved(
 			String topic, String client,
-			List<ExtendedRouteInfo> routingInfo) {
+			Collection<ExtendedRouteInfo> routingInfo) {
 		
 		/**
 		 * No route info for topic!

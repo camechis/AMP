@@ -30,7 +30,7 @@ public class DefaultApplicationExchangeProvider implements FallbackRoutingInfoPr
 	protected int port = 5672;
 	protected String exchangeType = "direct";
 	protected String queueName = null;
-	protected boolean isDurable = false;
+	protected boolean isDurable = true;
 	protected boolean isAutoDelete = false;
 	
 	@SuppressWarnings("rawtypes")
