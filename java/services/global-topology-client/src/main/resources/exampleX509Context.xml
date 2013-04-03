@@ -6,7 +6,8 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
 	<bean id="httpClientProvider" class="amp.topology.client.SslHttpClientProvider"
-		c:keystore="ssl/app01.jks" c:keystorePassword="password" c:port="15677" />
+		c:keystore="ssl/app01.jks" c:keystorePassword="password" 
+		c:truststore="ssl/app01.jks" c:trustStorePassword="password" c:port="15677" />
 
 	<bean id="serializer" class="amp.topology.client.JsonRoutingInfoSerializer" />
 	
