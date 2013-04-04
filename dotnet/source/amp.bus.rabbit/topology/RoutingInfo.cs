@@ -5,7 +5,7 @@ using System.Text;
 
 namespace amp.bus.rabbit.topology
 {
-    public struct RoutingInfo
+    public class RoutingInfo
     {
         public IEnumerable<RouteInfo> Routes { get; private set; }
 

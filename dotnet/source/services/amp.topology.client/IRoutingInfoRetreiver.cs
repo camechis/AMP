@@ -11,9 +11,9 @@ namespace amp.topology.client
     /// for retrieving route info by Global Topology Service.              
     /// </summary>
     /// <author>John Ruiz (Berico Technologies)</author>
-    public interface IRoutingInfoRetreiver
+    public interface IRoutingInfoRetreiver : IDisposable
     {
-        RoutingInfo retrieveRoutingInfo(String topic);
+        RoutingInfo RetrieveRoutingInfo(String topic);
     }
 }
 

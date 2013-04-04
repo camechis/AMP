@@ -4,9 +4,9 @@ using amp.bus.rabbit.topology;
 
 namespace amp.topology.client
 {
-    public interface IFallbackRoutingInfoProvider
+    public interface IFallbackRoutingInfoProvider : IDisposable
     {
-        RoutingInfo getFallbackRoute(String topic);
+        RoutingInfo GetFallbackRoute(String topic);
     }
 }
 
