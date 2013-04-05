@@ -11,7 +11,6 @@ namespace amp.bus.rabbit.topology
 
 
         public RoutingInfo(IEnumerable<RouteInfo> routes)
-            : this()
         {
             this.Routes = routes;
         }
