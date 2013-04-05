@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.2.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">    
+	
+	
+	<bean id="task" class="amp.examples.adaptor.tasks.SendZipToLatLonRequestTask" />
+	
+	<bean id="resultsQueue" class="amp.examples.adaptor.integration.ResultsQueue" />
+	
+	<bean class="amp.examples.adaptor.resources.PublishResource"
+		c:envelopeBus-ref="envelopeBus" />
+	
+	<bean class="amp.examples.adaptor.resources.ResultsResource"
+		c:results-ref="resultsQueue" />
+	
+	<util:list id="resultsToWatchFor" value-type="java.lang.String">
+		<value>zipcode.to.latlon.Response</value>
+	</util:list>
+		
+	<bean class="amp.examples.adaptor.integration.ResultsMessageSink"
+		init-method="initialize"
+		c:envelopeBus-ref="envelopeBus" c:resultsQueue-ref="resultsQueue" 
+		c:resultsToWatch-ref="resultsToWatchFor" />
+	
+</beans>

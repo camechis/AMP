@@ -1,6 +1,6 @@
 package amp.topology.core;
 
-import java.util.List;
+import java.util.Collection;
 
 public interface ITopologyRepositoryEventListener {
 
@@ -16,5 +16,5 @@ public interface ITopologyRepositoryEventListener {
 	
 	void exchangeUpdated(ExtendedExchange oldExchange, ExtendedExchange newExchange);
 	
-	void routingInfoRetrieved(String topic, String client, List<ExtendedRouteInfo> routingInfo);
+	void routingInfoRetrieved(String topic, String client, Collection<ExtendedRouteInfo> routingInfo);
 }

@@ -1,6 +1,6 @@
 package amp.topology.core;
 
-import java.util.List;
+import java.util.Collection;
 
 public interface ITopologyRepository {
 	
@@ -8,9 +8,19 @@ public interface ITopologyRepository {
 	
 	ExtendedRouteInfo getRoute(String id);
 	
-	List<ExtendedExchange> getExchanges();
+	Collection<ExtendedExchange> getExchanges();
 	
-	List<ExtendedRouteInfo> getRoutes();
+	Collection<ExtendedExchange> getExchangesByBroker(String host);
+	
+	Collection<ExtendedExchange> getExchangesByBroker(String host, int port);
+	
+	Collection<ExtendedExchange> getExchangesByBroker(String host, int port, String vhost);
+	
+	Collection<ExtendedRouteInfo> getRoutes();
+	
+	Collection<ExtendedRouteInfo> getRoutesByTopic(String topic);
+	
+	Collection<ExtendedRouteInfo> getRoutesByClient(String client);
 	
 	void createExchange(ExtendedExchange exchange);
 	
@@ -26,7 +36,7 @@ public interface ITopologyRepository {
 	
 	void purge();
 	
-	List<ExtendedRouteInfo> find(String topic, String client);
+	Collection<ExtendedRouteInfo> find(String topic, String client);
 	
 	void addEventListener(ITopologyRepositoryEventListener listener);
 	

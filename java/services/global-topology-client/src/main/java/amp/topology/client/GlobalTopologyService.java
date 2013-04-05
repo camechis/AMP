@@ -69,7 +69,8 @@ public class GlobalTopologyService implements ITopologyService {
 			
 			routingInfo = this.routingInfoRetriever.retrieveRoutingInfo(topic);
 			
-			if (routingInfo == null && this.fallbackProvider != null) {
+			if (routingInfoAbsentOrNotValid(routingInfo)
+				&& this.fallbackProvider != null) {
 				
 				routingInfo = this.fallbackProvider.getFallbackRoute(topic);
 			}
@@ -86,6 +87,27 @@ public class GlobalTopologyService implements ITopologyService {
 		return routingInfo;
 	}
 
+	/**
+	 * Determine if the routing info is absent or invalid (i.e. no routes).
+	 * @param routingInfo RoutingInfo returned from Retreiver.
+	 * @return true is Absent or Invalid.
+	 */
+	protected boolean routingInfoAbsentOrNotValid(RoutingInfo routingInfo){
+		
+		if (routingInfo != null){
+			
+			if (routingInfo.getRoutes() != null){
+				
+				if (routingInfo.getRoutes().iterator().hasNext()){
+					
+					return true;
+				}
+			}
+		}
+		
+		return true;
+	}
+	
 	@Override
 	public void dispose() {}
 }

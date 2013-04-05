@@ -30,6 +30,7 @@ namespace amp.bus.rabbit
 
         public IConnection ConnectTo(Exchange exchange)
         {
+            _log.Debug("Getting connection for exchange: " + exchange.ToString());
             IConnection connection = null;
 
             // first, see if we have a cached connection

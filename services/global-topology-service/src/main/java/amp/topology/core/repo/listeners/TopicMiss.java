@@ -2,6 +2,7 @@ package amp.topology.core.repo.listeners;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -28,6 +29,16 @@ public class TopicMiss {
 	public long getLastMiss(String client){
 		
 		return this.userToLastRequestTimeMapping.get(client);
+	}
+	
+	public String getTopic(){
+		
+		return this.topic;
+	}
+	
+	public Map<String, Long> getUserToLastRequest(){
+		
+		return Collections.unmodifiableMap(this.userToLastRequestTimeMapping);
 	}
 	
 	public Collection<String> getClients(){

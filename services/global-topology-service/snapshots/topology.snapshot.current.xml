@@ -47,6 +47,7 @@
       <description>Security Routes</description>
       <clients>
         <string>App01</string>
+		<string>app01</string>
         <string>App02</string>
         <string>Topology Client</string>
       </clients>

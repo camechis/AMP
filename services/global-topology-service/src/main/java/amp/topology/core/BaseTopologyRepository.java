@@ -1,7 +1,6 @@
 package amp.topology.core;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
@@ -113,7 +112,7 @@ public abstract class BaseTopologyRepository implements ITopologyRepository {
 		}
 	}
 	
-	protected void fireRoutingInfoRetrieved(String topic, String client, List<ExtendedRouteInfo> routingInfo){
+	protected void fireRoutingInfoRetrieved(String topic, String client, Collection<ExtendedRouteInfo> routingInfo){
 		
 		logger.debug("fireRoutingInfoRetrieved({}, {}, has routes: {})", new Object[]{ topic, client, routingInfo.size() > 0 });
 		

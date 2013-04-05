@@ -1,15 +1,18 @@
 package amp.topology.core.repo.inmem;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+
+import javax.annotation.Nullable;
 
 import amp.topology.core.BaseTopologyRepository;
 import amp.topology.core.ExtendedExchange;
 import amp.topology.core.ExtendedRouteInfo;
 import amp.topology.core.ITopologyRepository;
 import amp.topology.core.ITopologyRepositoryEventListener;
+
+import com.google.common.base.Predicate;
+import com.google.common.collect.Maps;
 
 /**
  * The simplest Repository one could use (keeping everything in memory).
@@ -84,17 +87,82 @@ public class InMemoryTopologyRepository extends BaseTopologyRepository implement
 	}
 
 	@Override
-	public List<ExtendedExchange> getExchanges() {
+	public Collection<ExtendedExchange> getExchanges() {
 		
-		return new ArrayList<ExtendedExchange>(exchanges.values());
+		return exchanges.values();
 	}
 
 	@Override
-	public List<ExtendedRouteInfo> getRoutes() {
+	public Collection<ExtendedExchange> getExchangesByBroker(final String host) {
 		
-		return new ArrayList<ExtendedRouteInfo>(routes.values());
+		return this.filterExchanges(new Predicate<ExtendedExchange>(){
+			@Override
+			public boolean apply(@Nullable ExtendedExchange exchange) {
+				
+				return exchange.getHostName().equalsIgnoreCase(host);
+			}
+		});
 	}
 
+	@Override
+	public Collection<ExtendedExchange> getExchangesByBroker(final String host, final int port) {
+		
+		return this.filterExchanges(new Predicate<ExtendedExchange>(){
+			@Override
+			public boolean apply(@Nullable ExtendedExchange exchange) {
+				
+				return exchange.getHostName().equalsIgnoreCase(host) && exchange.getPort() == port;
+			}
+		});
+	}
+
+	@Override
+	public Collection<ExtendedExchange> getExchangesByBroker(
+			final String host, final int port, final String vhost) {
+		
+		return this.filterExchanges(new Predicate<ExtendedExchange>(){
+			@Override
+			public boolean apply(@Nullable ExtendedExchange exchange) {
+				
+				return exchange.getHostName().equalsIgnoreCase(host) 
+						&& exchange.getPort() == port
+						&& exchange.getVirtualHost().equalsIgnoreCase(vhost);
+			}
+		});
+	}
+	
+	@Override
+	public Collection<ExtendedRouteInfo> getRoutes() {
+		
+		return routes.values();
+	}
+
+	@Override
+	public Collection<ExtendedRouteInfo> getRoutesByTopic(final String topic) {
+		
+		return filterRoutes(new Predicate<ExtendedRouteInfo>(){
+
+			@Override
+			public boolean apply(@Nullable ExtendedRouteInfo route) {
+				
+				return route.getTopics().contains(topic);
+			}
+		});
+	}
+
+	@Override
+	public Collection<ExtendedRouteInfo> getRoutesByClient(final String client) {
+		
+		return filterRoutes(new Predicate<ExtendedRouteInfo>(){
+
+			@Override
+			public boolean apply(@Nullable ExtendedRouteInfo route) {
+				
+				return route.getClients().contains(client);
+			}
+		});
+	}
+	
 	@Override
 	public void createExchange(ExtendedExchange exchange) {
 		
@@ -159,28 +227,59 @@ public class InMemoryTopologyRepository extends BaseTopologyRepository implement
 		return routeInfo != null;
 	}
 
+	/**
+	 * Find all routes matching the supplied topic and client.
+	 * @param topic Name of the topic or route.
+	 * @param client Name of the client.
+	 * @return Routing info for that topic-client pair.
+	 */
 	@Override
-	public List<ExtendedRouteInfo> find(String topic, String client) {
+	public Collection<ExtendedRouteInfo> find(final String topic, final String client) {
 		
-		ArrayList<ExtendedRouteInfo> matchingRoutes = new ArrayList<ExtendedRouteInfo>();
-		
-		for (ExtendedRouteInfo route : routes.values()){
-			
-			if (route.getClients().contains(client) && route.getTopics().contains(topic)){
+		Collection<ExtendedRouteInfo> matchingRoutes = filterRoutes(new Predicate<ExtendedRouteInfo>(){
+
+			@Override
+			public boolean apply(@Nullable ExtendedRouteInfo route) {
 				
-				matchingRoutes.add(route);
+				return route.getClients().contains(client) && route.getTopics().contains(topic);
 			}
-		}
+			
+		});
 		
 		fireRoutingInfoRetrieved(topic, client, matchingRoutes);
 		
 		return matchingRoutes;
 	}
 
+	/**
+	 * Clear all topology information from the repository.
+	 */
 	@Override
 	public void purge() {
 		
 		this.exchanges.clear();
 		this.routes.clear();
+	}
+	
+	/**
+	 * A much easier way to perform half the filtering/query functions needed on the
+	 * ExtendedExchange in-memory collection.
+	 * @param predicate Predicate with the filter logic for ExtendedExchange.
+	 * @return A collection of matching ExtendedExchange objects.
+	 */
+	Collection<ExtendedExchange> filterExchanges(Predicate<ExtendedExchange> predicate){
+		
+		return Maps.filterValues(this.exchanges, predicate).values();
+	}
+	
+	/**
+	 * A much easier way to perform half the filtering/query functions needed on the
+	 * ExtendedRouteInfo in-memory collection.
+	 * @param predicate Predicate with the filter logic for ExtendedRouteInfo.
+	 * @return A collection of matching ExtendedRouteInfo objects.
+	 */
+	Collection<ExtendedRouteInfo> filterRoutes(Predicate<ExtendedRouteInfo> predicate){
+		
+		return Maps.filterValues(this.routes, predicate).values();
 	}
 }

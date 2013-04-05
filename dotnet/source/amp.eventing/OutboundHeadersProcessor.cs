@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 
 using cmf.bus;
+using cmf.eventing;
 using Common.Logging;
 
 namespace amp.eventing
