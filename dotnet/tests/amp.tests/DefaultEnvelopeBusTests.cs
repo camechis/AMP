@@ -8,9 +8,10 @@ using Moq;
 using NUnit.Framework;
 
 using cmf.bus;
+using cmf.bus.support;
 
 using amp.bus;
-using amp.bus.support;
+
 
 namespace amp.tests
 {
@@ -117,7 +118,7 @@ namespace amp.tests
         {
             // create an envelope and context
             Envelope env = new Envelope() { Payload = Encoding.UTF8.GetBytes("Test") };
-            EnvelopeContext ctx = new EnvelopeContext(env);
+            EnvelopeContext ctx = new EnvelopeContext(EnvelopeContext.Directions.In, env);
 
             // mock a transport provider and envelope processor
             Mock<ITransportProvider> txMock = _mocker.Create<ITransportProvider>();
@@ -142,7 +143,7 @@ namespace amp.tests
         {
             // create an envelope and context
             Envelope env = new Envelope() { Payload = Encoding.UTF8.GetBytes("Test") };
-            EnvelopeContext ctx = new EnvelopeContext(env);
+            EnvelopeContext ctx = new EnvelopeContext(EnvelopeContext.Directions.In, env);
 
             // mock a transport provider and envelope processor
             Mock<ITransportProvider> txMock = _mocker.Create<ITransportProvider>();

@@ -57,7 +57,7 @@ namespace amp.topology.client
                 WebRequest request = _webRequestFactory.CreateRequest(urlString);
             
                 // get some response to the request
-                using (Stream responseStream = request.GetRequestStream())
+                using (Stream responseStream = request.GetResponse().GetResponseStream())
                 {
                     routing = _serializer.DeserializeRouting(responseStream);
                 }
