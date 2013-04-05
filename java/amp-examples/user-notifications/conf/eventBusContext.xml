@@ -34,7 +34,7 @@
     		c:userInfoRepository-ref="userInfoRepository"  />
 	
 	<util:map id="userMapping" key-type="java.lang.String" value-type="java.lang.String">
-		<entry key="user" value="rclayton" />
+		<entry key="user" value="devexample" />
 	</util:map>
 	
     <bean id="userInfoRepository" class="amp.bus.security.InMemoryUserInfoRepository"
@@ -50,22 +50,22 @@
     		c:topologyService-ref="topologyService" c:channelFactory-ref="channelFactory" />
 
     <bean id="channelFactory" class="amp.bus.rabbit.BasicChannelFactory"
-    		c:username="guest" c:password="guest" />
+    		c:username="devexample" c:password="devexample" />
 
     <bean id="topologyService" class="amp.topology.client.GlobalTopologyService"
           c:routingInfoRetriever-ref="routingInfoRetriever" c:cacheExpiryTime="10000"
           c:fallbackProvider-ref="fallbackProvider" />
 
     <bean id="httpClientProvider" class="amp.topology.client.BasicAuthHttpClientProvider"
-          c:hostname="localhost" c:port="15677" c:username="app01" c:password="password" />
+          c:hostname="devexample.com" c:port="15677" c:username="devexample" c:password="devexample" />
 
     <bean id="routingSerializer" class="amp.topology.client.JsonRoutingInfoSerializer" />
 
     <bean id="routingInfoRetriever" class="amp.topology.client.HttpRoutingInfoRetriever"
           c:httpClientProvider-ref="httpClientProvider" c:serializer-ref="routingSerializer"
-          c:urlExpression="http://localhost:15677/service/topology/get-routing-info/%s" />
+          c:urlExpression="http://devexample.com:15677/service/topology/get-routing-info/%s" />
 
     <bean id="fallbackProvider" class="amp.topology.client.DefaultApplicationExchangeProvider"
-    		p:hostname="localhost" p:durable="true" />
+    		p:hostname="devexample.com" p:durable="true" />
 	
 </beans>

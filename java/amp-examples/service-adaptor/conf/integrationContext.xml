@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/integration"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:ws="http://www.springframework.org/schema/integration/ws"
+	xmlns:stream="http://www.springframework.org/schema/integration/stream"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util 
+		http://www.springframework.org/schema/util/spring-util-3.0.xsd
+		http://www.springframework.org/schema/integration
+		http://www.springframework.org/schema/integration/spring-integration.xsd
+		http://www.springframework.org/schema/integration/stream
+		http://www.springframework.org/schema/integration/stream/spring-integration-stream.xsd
+		http://www.springframework.org/schema/integration/ws
+		http://www.springframework.org/schema/integration/ws/spring-integration-ws.xsd">
+	
+	<channel id="inboundRequestChannel" />
+	
+	<beans:bean id="latLonMessageRequestSpout" init-method="initialize"
+		class="amp.examples.adaptor.integration.EnvelopeBusMessageSpout"
+		c:envelopeBus-ref="envelopeBus" c:messageChannel-ref="inboundRequestChannel"
+		c:topic="zipcode.to.latlon.Request" />
+
+	<chain input-channel="inboundRequestChannel" output-channel="zipToLatLonResponseChannel">
+	    <ws:header-enricher>
+			<ws:soap-action 
+				value="http://graphical.weather.gov/xml/DWMLgen/wsdl/ndfdXML.wsdl#LatLonListZipCode" />
+		</ws:header-enricher>
+		<ws:outbound-gateway uri="http://graphical.weather.gov/xml/SOAP_server/ndfdXMLserver.php" />
+	</chain>
+	
+	<beans:bean id="zipToLatLonResponseChannel" 
+		class="amp.examples.adaptor.integration.EnvelopeBusMessageSink" 
+		c:envelopBus-ref="envelopeBus" c:messageTopic="zipcode.to.latlon.Response" c:messageType="text/xml" />
+	
+</beans:beans>

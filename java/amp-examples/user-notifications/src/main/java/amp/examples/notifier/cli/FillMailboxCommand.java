@@ -63,10 +63,6 @@ public class FillMailboxCommand extends ConfiguredCommand<SpringConfiguration> {
 		
 		// Close the Spring context.
 		context.close();
-		
-		// Exit the application (this is necessary because Dropwizard is designed to
-		// stay running until terminated.
-		System.exit(0);
 	}
 
 }

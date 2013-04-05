@@ -1,6 +1,6 @@
 package amp.bus.rabbit;
 
-
+import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 
 import cmf.bus.IDisposable;
@@ -11,14 +11,13 @@ import org.slf4j.LoggerFactory;
 
 import amp.bus.rabbit.topology.Exchange;
 
-
 /**
  * Provides a lot of the boiler-plate functionality most Rabbit Connection Factories
  * would need to function properly. This base implementation imposes only one responsibility
  * on deriving classes: that they create and supply the connection to the broker (which
  * is where most configuration like authentication is done). 
  *  
- * @author rclayton
+ * @author Richard Clayton (Berico Technologies)
  *
  */
 public abstract class BaseChannelFactory implements IRabbitChannelFactory, IDisposable {
@@ -82,6 +81,11 @@ public abstract class BaseChannelFactory implements IRabbitChannelFactory, IDisp
 		return channel;
 	}
 	
+	/**
+	 * Remove the connection from the pool.
+	 * @param exchange Exchange of the active connection.
+	 * @return True if it was successfully removed.
+	 */
 	public boolean removeConnection(Exchange exchange){
 		
 		Connection connection = pooledConnections.remove(exchange);
@@ -89,6 +93,22 @@ public abstract class BaseChannelFactory implements IRabbitChannelFactory, IDisp
 		return connection != null;
 	}
 	
+	/**
+	 * Iterate over pooled connections, closing each connection.
+	 */
 	@Override
-	public void dispose() {}
+	public void dispose() {
+		
+		for (Connection connection : this.pooledConnections.values()){
+			
+			try {
+				
+				connection.close();
+				
+			} catch (IOException e) {
+				
+				logger.error("Problem closing connection: {}", e);
+			}
+		}
+	}
 }

@@ -12,6 +12,8 @@ import org.apache.commons.lang.StringUtils;
 
 public class SimpleTopologyService implements ITopologyService {
 
+	protected static long QUEUE_NUMBER = 0;
+	
     protected String clientProfile;
     protected String hostName;
     protected String name;
@@ -62,7 +64,7 @@ public class SimpleTopologyService implements ITopologyService {
                         virtualHost, // virtual host
                         port, // port
                         topic, // routing key
-                        String.format("%s#%s", clientProfile, topic), // queue name
+                        buildIdentifiableQueueName(topic), // queue name
                         "direct", // exchange type
                         false, // is durable
                         true, // is auto-delete
@@ -76,6 +78,12 @@ public class SimpleTopologyService implements ITopologyService {
         return new RoutingInfo(routingInfo);
     }
 
+    public String buildIdentifiableQueueName(String topic){
+    	
+    		return String.format("%s#%03d#%s", clientProfile, ++QUEUE_NUMBER, topic);
+    }
+    
+    
     public String getVirtualHost() {
         return virtualHost;
     }

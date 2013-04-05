@@ -1,7 +1,7 @@
 package amp.topology.core.repo.snapshot;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 import amp.topology.core.ExtendedExchange;
 import amp.topology.core.ExtendedRouteInfo;
@@ -18,8 +18,8 @@ public class TopologySnapshot {
 	public TopologySnapshot(){}
 	
 	public TopologySnapshot(
-			List<ExtendedExchange> exchanges,
-			List<ExtendedRouteInfo> routes) {
+			Collection<ExtendedExchange> exchanges,
+			Collection<ExtendedRouteInfo> routes) {
 		
 		this.exchanges.addAll(exchanges);
 		this.routes.addAll(routes);
@@ -27,8 +27,8 @@ public class TopologySnapshot {
 	
 	public TopologySnapshot(
 			long timestamp,
-			List<ExtendedExchange> exchanges,
-			List<ExtendedRouteInfo> routes) {
+			Collection<ExtendedExchange> exchanges,
+			Collection<ExtendedRouteInfo> routes) {
 		
 		this.timestamp = timestamp;
 		this.exchanges.addAll(exchanges);

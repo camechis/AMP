@@ -34,6 +34,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="cmf.eventing">
+      <HintPath>..\..\binaries\libraries\cmf.eventing.dll</HintPath>
+    </Reference>
     <Reference Include="Common.Logging">
       <HintPath>..\..\binaries\libraries\Common.Logging.dll</HintPath>
     </Reference>
@@ -87,10 +90,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\source\cmf.eventing\cmf.eventing.csproj">
-      <Project>{F468DDBA-2E1A-49F7-8A36-F362AC1A90F8}</Project>
-      <Name>cmf.eventing</Name>
-    </ProjectReference>
     <ProjectReference Include="..\amp.examples.messages\amp.examples.messages.csproj">
       <Project>{02D44D96-BA20-4A7C-B7E7-6DE88E0354A7}</Project>
       <Name>amp.examples.messages</Name>
