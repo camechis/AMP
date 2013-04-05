@@ -116,7 +116,10 @@ window.SnapshotCloneCtrl = ($scope, $http, $location, $routeParams, $dialog) ->
 		d.open().then (shouldMerge) ->
 			if shouldMerge
 				opts = getConfirmationOpts("Snapshot was merged successfully!")
-				$http.post("/service/snapshot/merge", { snapshot: $scope.content }).success ->
+				postOpts = 
+					headers: 
+						"Content-Type": "text/plain"
+				$http.post("/service/snapshot/merge", $scope.content, postOpts).success ->
 					$dialog.dialog(opts).open()
 
 	$scope.openImportDialog = ->
@@ -124,7 +127,10 @@ window.SnapshotCloneCtrl = ($scope, $http, $location, $routeParams, $dialog) ->
 		d.open().then (shouldImport) ->
 			if shouldImport
 				opts = getConfirmationOpts("Snapshot was imported successfully!")
-				$http.post("/service/snapshot/import", { snapshot: $scope.content }).success ->
+				postOpts = 
+					headers: 
+						"Content-Type": "text/plain"
+				$http.post("/service/snapshot/import", $scope.content, postOpts).success ->
 					$dialog.dialog(opts).open()
 
 exportModalOpts = 

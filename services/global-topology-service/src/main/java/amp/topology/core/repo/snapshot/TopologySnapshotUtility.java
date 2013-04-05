@@ -147,7 +147,7 @@ public class TopologySnapshotUtility {
 		
 		try {
 		
-			mergeFileIntoRepository( getFileOnSavedPath( getCurrentFilename() ) );
+			mergeFileIntoRepository( fileToLoad );
 		
 		} catch (IOException ex){
 			

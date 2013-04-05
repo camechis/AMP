@@ -13,3 +13,7 @@ http:
     adminUsername: admin
     adminPassword: admin123
     rootPath: /service/*
+
+assets:
+    overrides:
+        /: src/main/resources/assets/

@@ -3,7 +3,7 @@ package amp.topology.resources;
 import java.io.IOException;
 import java.util.Collection;
 
-import javax.ws.rs.FormParam;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -90,7 +90,8 @@ public class TopologySnapshotResource {
 	@POST
 	@Timed
 	@Path("/import")
-	public Response importSnapshotFromString(@FormParam("snapshot") String snapshot) throws IOException{
+	@Consumes(MediaType.TEXT_PLAIN)
+	public Response importSnapshotFromString(String snapshot) throws IOException{
 		
 		logger.info("Importing snapshot from form.");
 		
@@ -126,7 +127,7 @@ public class TopologySnapshotResource {
 	@POST
 	@Timed
 	@Path("/merge")
-	@Consumes("")
+	@Consumes(MediaType.TEXT_PLAIN)
 	public Response mergeSnapshotFromString(String snapshot) throws IOException{
 		
 		logger.info("Merging snapshot from form.");
