@@ -1,11 +1,13 @@
 package amp.topology.core.repo.inmem;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.Nullable;
 
 import amp.topology.core.BaseTopologyRepository;
+import amp.topology.core.Broker;
 import amp.topology.core.ExtendedExchange;
 import amp.topology.core.ExtendedRouteInfo;
 import amp.topology.core.ITopologyRepository;
@@ -281,5 +283,52 @@ public class InMemoryTopologyRepository extends BaseTopologyRepository implement
 	Collection<ExtendedRouteInfo> filterRoutes(Predicate<ExtendedRouteInfo> predicate){
 		
 		return Maps.filterValues(this.routes, predicate).values();
+	}
+
+	@Override
+	public Collection<Broker> getBrokers() {
+		
+		HashSet<Broker> brokers = new HashSet<Broker>();
+		
+		for (ExtendedExchange exchange : this.exchanges.values()){
+			
+			brokers.add(
+				new Broker(
+					exchange.getHostName(), exchange.getPort(), exchange.getVirtualHost()));
+		}
+		
+		return brokers;
+	}
+
+	@Override
+	public Collection<String> getTopics() {
+		
+		HashSet<String> topics = new HashSet<String>();
+		
+		for (ExtendedRouteInfo route : this.routes.values()){
+			
+			for (String topic : route.getTopics()){
+			
+				topics.add(topic);
+			}
+		}
+		
+		return topics;
+	}
+
+	@Override
+	public Collection<String> getClients() {
+		
+		HashSet<String> clients = new HashSet<String>();
+		
+		for (ExtendedRouteInfo route : this.routes.values()){
+			
+			for (String client : route.getClients()){
+			
+				clients.add(client);
+			}
+		}
+		
+		return clients;
 	}
 }

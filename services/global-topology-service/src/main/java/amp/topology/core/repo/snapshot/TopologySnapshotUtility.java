@@ -2,6 +2,10 @@ package amp.topology.core.repo.snapshot;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.joda.time.DateTime;
@@ -116,6 +120,20 @@ public class TopologySnapshotUtility {
 	 * 
 	 * If a failure occurs during importation, the original state will be restored.
 	 * 
+	 * @param filename Relative path of the specific serialized snapshot to import.
+	 * @throws IOException
+	 */
+	public void importFileIntoRepository(String filename) throws IOException {
+		
+		importFileIntoRepository( getFileOnSavedPath(filename) );
+	}
+	
+	/**
+	 * Import a serialized snapshot into the repository.  This will purge existing
+	 * entries in the repository, restoring the snapshot.
+	 * 
+	 * If a failure occurs during importation, the original state will be restored.
+	 * 
 	 * @param fileToLoad Relative path of the specific serialized snapshot to import.
 	 * @throws IOException
 	 */
@@ -137,6 +155,25 @@ public class TopologySnapshotUtility {
 			
 			// Rethrow!
 			throw new IOException(ex);
+		}
+	}
+	
+	/**
+	 * Import a serialized snapshot into the repository.
+	 * 
+	 * @param serializedSnapshot Serialized Snapshot content to load.
+	 */
+	public void importSerializedSnapshotIntoRepository(String serializedSnapshot){
+	
+		logger.info("Importing serialized snapshot into the repository");
+		
+		TopologySnapshot snapshot = this.serializer.deserialize(serializedSnapshot);
+		
+		if (snapshot != null){
+		
+			repository.purge();
+		
+			merge(snapshot);
 		}
 	}
 	
@@ -163,6 +200,22 @@ public class TopologySnapshotUtility {
 	 * entries found in the Topology Snapshot, use the 
 	 * "importFileIntoRepository" method.
 	 * 
+	 * @param filename 
+	 * @throws IOException
+	 */
+	public void mergeFileIntoRepository(String filename) throws IOException{
+		
+		mergeFileIntoRepository( getFileOnSavedPath( filename ) );
+	}
+	
+	/**
+	 * Merge the file (representing a serialized snapshot) with the repository.
+	 * This does not clear the existing state from the repository!
+	 * 
+	 * If you prefer to wipe the repository clean and only use the
+	 * entries found in the Topology Snapshot, use the 
+	 * "importFileIntoRepository" method.
+	 * 
 	 * @param fileToLoad File to merge.
 	 * @throws IOException
 	 */
@@ -170,11 +223,24 @@ public class TopologySnapshotUtility {
 		
 		logger.info("Merging {} into repository.", fileToLoad);
 		
-		String serializedSnapshot = FileUtils.readFileToString(fileToLoad, "UTF-8");
+		String serializedSnapshot = readSnapshotFileToString(fileToLoad);
+		
+		mergeSerializedSnapshotIntoRepository(serializedSnapshot);
+	}
+	
+	/**
+	 * Deserializes the snapshot and merges it into the repository.
+	 * 
+	 * @param serializedSnapshot Serialized version of the snapshot.
+	 */
+	public void mergeSerializedSnapshotIntoRepository(String serializedSnapshot) {
 		
 		TopologySnapshot snapshot = this.serializer.deserialize(serializedSnapshot);
 		
-		merge(snapshot);
+		if (snapshot != null) {
+		
+			merge(snapshot);
+		}
 	}
 	
 	/**
@@ -228,6 +294,62 @@ public class TopologySnapshotUtility {
 	}
 	
 	/**
+	 * Get a Snapshot file as a string.  This implementation will only read
+	 * non-hidden files in the "save directory" where snapshots are stored.
+	 * @param fileName
+	 * @return
+	 * @throws IOException
+	 */
+	public String getSnapshotFileContents(String fileName) throws IOException{
+		
+		File f = getFileOnSavedPath(fileName);
+		
+		if (f.exists() 
+			// This is a guard against a relative path:
+			// {saveDirectory}../../../../../etc/blah/blah
+			&& f.getParent().equals(this.saveDirectory.getAbsolutePath())
+			&& f.canRead() 
+			&& f.isFile() 
+			&& !f.isHidden()){
+			
+			return readSnapshotFileToString(f);
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * Get all snapshots in the snapshot directory.
+	 * @return Snapshots.
+	 */
+	public Collection<String> getSnapshotFiles(){
+		
+		List<String> snapshots = new ArrayList<String>();
+		
+		Iterator<File> snapshotIterator = 
+				FileUtils.iterateFiles(
+					this.saveDirectory, 
+					new String[]{ this.serializer.getExtension() }, 
+					false);
+		
+		while(snapshotIterator.hasNext()){
+			
+			snapshots.add(snapshotIterator.next().getName());
+		}
+		
+		return snapshots;
+	}
+	
+	/**
+	 * Get the acceptable format for snapshots.
+	 * @return Snapshot Format (e.g. xml, json)
+	 */
+	public String getSnapshotFileFormat(){
+		
+		return this.serializer.getExtension();
+	}
+	
+	/**
 	 * Write a snapshot to the file system using the provided serializer.
 	 * @param snapshot Snapshot to write to file system.
 	 * @param file Location on the file system where the file should be written.
@@ -267,6 +389,18 @@ public class TopologySnapshotUtility {
 		
 		this.lastPersisted = snapshot.getTimestamp();
 	}
+	
+	/**
+	 * Reads the snapshot file and returns a String.
+	 * @param fileToLoad File that represents the snapshot.
+	 * @return Snapshot as string
+	 * @throws IOException
+	 */
+	String readSnapshotFileToString(File fileToLoad) throws IOException{
+		
+		return FileUtils.readFileToString(fileToLoad, "UTF-8");
+	}
+	
 	
 	/**
 	 * Create a new snapshot of the repository.

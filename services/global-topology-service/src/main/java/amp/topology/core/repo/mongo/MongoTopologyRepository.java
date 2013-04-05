@@ -1,11 +1,13 @@
 package amp.topology.core.repo.mongo;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 import org.springframework.data.mongodb.core.MongoTemplate;
 
 import amp.topology.core.BaseTopologyRepository;
+import amp.topology.core.Broker;
 import amp.topology.core.ExtendedExchange;
 import amp.topology.core.ExtendedRouteInfo;
 import amp.topology.core.ITopologyRepository;
@@ -181,5 +183,36 @@ public class MongoTopologyRepository extends BaseTopologyRepository implements I
 		
 		mongoTemplate.dropCollection(ExtendedExchange.class);
 		mongoTemplate.dropCollection(ExtendedRouteInfo.class);
+	}
+
+	@Override
+	public Collection<Broker> getBrokers() {
+		
+		HashSet<Broker> brokers = new HashSet<Broker>();
+		
+		List<ExtendedExchange> exchanges = mongoTemplate.findAll(ExtendedExchange.class);
+		
+		for (ExtendedExchange exchange : exchanges){
+		
+			brokers.add(
+				new Broker(
+					exchange.getHostName(), exchange.getPort(), exchange.getVirtualHost()));
+		}
+		
+		return brokers;
+	}
+
+	@Override
+	public Collection<String> getTopics() {
+		
+		return MongoUtils.unwindArrayToUniqueElement(
+			mongoTemplate.getDb(), "extendedRouteInfo", "topics");
+	}
+
+	@Override
+	public Collection<String> getClients() {
+		
+		return MongoUtils.unwindArrayToUniqueElement(
+				mongoTemplate.getDb(), "extendedRouteInfo", "clients");
 	}
 }

@@ -58,6 +58,16 @@ public class RouteInfoResource {
 	}
 	
 	@GET
+	@Path("/clients")
+    @Timed
+	public Collection<String> getClients(){
+		
+		logger.info("Getting all registered clients.");
+		
+		return topologyRepository.getClients();
+	}
+    
+	@GET
 	@Path("/topic/{topic}")
     @Timed
 	public Collection<ExtendedRouteInfo> getRoutesByTopic(@PathParam("topic") String topic){
@@ -65,6 +75,16 @@ public class RouteInfoResource {
 		logger.info("Getting routes by topic: {}", topic);
 		
 		return topologyRepository.getRoutesByTopic(topic);
+	}
+	
+	@GET
+	@Path("/topics")
+    @Timed
+	public Collection<String> getTopics(){
+		
+		logger.info("Getting all registered topics.");
+		
+		return topologyRepository.getTopics();
 	}
 	
 	@GET
