@@ -71,6 +71,7 @@
     <Compile Include="topology\RouteInfo.cs" />
     <Compile Include="topology\RoutingInfo.cs" />
     <Compile Include="topology\SimpleTopologyService.cs" />
+    <Compile Include="topology\TopologyExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\amp.bus\amp.bus.csproj">

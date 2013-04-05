@@ -6,6 +6,8 @@ using System.Text;
 using Common.Logging;
 
 using cmf.bus;
+using cmf.eventing;
+
 using amp.bus;
 
 namespace amp.eventing
