@@ -6,7 +6,7 @@ using System.Windows.Forms;
 using Spring.Context;
 using Spring.Context.Support;
 
-namespace amp.examples.duplex
+namespace amp.examples.gui.duplex
 {
     static class Program
     {

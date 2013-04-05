@@ -8,8 +8,8 @@
     <ProjectGuid>{02D44D96-BA20-4A7C-B7E7-6DE88E0354A7}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>amp.examples.messages</RootNamespace>
-    <AssemblyName>amp.examples.messages</AssemblyName>
+    <RootNamespace>amp.examples.gui.messages</RootNamespace>
+    <AssemblyName>amp.examples.gui.messages</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

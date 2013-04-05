@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace amp.examples.duplex
+namespace amp.examples.gui.duplex
 {
     public static class Extensions
     {
