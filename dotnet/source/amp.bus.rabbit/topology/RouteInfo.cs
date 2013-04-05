@@ -5,14 +5,17 @@ using System.Text;
 
 namespace amp.bus.rabbit.topology
 {
-    public struct RouteInfo
+    public class RouteInfo
     {
-        public Exchange ProducerExchange { get; private set; }
-        public Exchange ConsumerExchange { get; private set; }
+        public Exchange ProducerExchange { get; set; }
+        public Exchange ConsumerExchange { get; set; }
 
+
+        public RouteInfo()
+        {
+        }
 
         public RouteInfo(Exchange producerExchange, Exchange consumerExchange)
-             : this()
         {
             this.ProducerExchange = producerExchange;
             this.ConsumerExchange = consumerExchange;

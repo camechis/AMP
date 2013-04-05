@@ -21,6 +21,9 @@ public class Exchange {
     protected String routingKey;
     protected String virtualHost;
 
+
+    public Exchange() {}
+
     @SuppressWarnings("rawtypes")
     public Exchange(String name, String hostName, String vHost, int port, String routingKey, String queueName,
                     String exchangeType, boolean isDurable, boolean autoDelete, Map arguments) {
@@ -78,43 +81,43 @@ public class Exchange {
     }
 
     @SuppressWarnings("rawtypes")
-    protected void setArguments(Map arguments) {
+    public void setArguments(Map arguments) {
         this.arguments = arguments;
     }
 
-    protected void setExchangeType(String exchangeType) {
+    public void setExchangeType(String exchangeType) {
         this.exchangeType = exchangeType;
     }
 
-    protected void setHostName(String hostName) {
+    public void setHostName(String hostName) {
         this.hostName = hostName;
     }
 
-    protected void setIsAutoDelete(boolean isAutoDelete) {
+    public void setIsAutoDelete(boolean isAutoDelete) {
         this.isAutoDelete = isAutoDelete;
     }
 
-    protected void setIsDurable(boolean isDurable) {
+    public void setIsDurable(boolean isDurable) {
         this.isDurable = isDurable;
     }
 
-    protected void setName(String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
-    protected void setPort(int port) {
+    public void setPort(int port) {
         this.port = port;
     }
 
-    protected void setQueueName(String queueName) {
+    public void setQueueName(String queueName) {
         this.queueName = queueName;
     }
 
-    protected void setRoutingKey(String routingKey) {
+    public void setRoutingKey(String routingKey) {
         this.routingKey = routingKey;
     }
 
-    protected void setVirtualHost(String virtualHost) {
+    public void setVirtualHost(String virtualHost) {
         this.virtualHost = virtualHost;
     }
 

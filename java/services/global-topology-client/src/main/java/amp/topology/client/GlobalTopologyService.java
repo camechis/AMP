@@ -3,13 +3,15 @@ package amp.topology.client;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import cmf.bus.EnvelopeHeaderConstants;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import amp.bus.rabbit.topology.ITopologyService;
 import amp.bus.rabbit.topology.RoutingInfo;
 
-import cmf.bus.EnvelopeHeaderConstants;
-
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
 
 /**
  * An implementation of ITopologyService that utilizes a central
@@ -24,7 +26,9 @@ import com.google.common.cache.CacheBuilder;
 public class GlobalTopologyService implements ITopologyService {
 
 	public static long CACHE_EXPIRY_TIME_IN_SECONDS = 1000;
-	
+
+    Logger log;
+
 	Cache<String, RoutingInfo> routingInfoCache;
 	
 	IRoutingInfoRetriever routingInfoRetriever;
@@ -39,7 +43,9 @@ public class GlobalTopologyService implements ITopologyService {
 	public GlobalTopologyService(
 		IRoutingInfoRetriever routingInfoRetriever, 
 		long cacheExpiryTime){
-		
+
+        this.log = LoggerFactory.getLogger(this.getClass());
+
 		this.routingInfoRetriever = routingInfoRetriever;
 		
 		this.routingInfoCache = 
@@ -53,7 +59,7 @@ public class GlobalTopologyService implements ITopologyService {
 		IRoutingInfoRetriever routingInfoRetriever, 
 		long cacheExpiryTime, 
 		FallbackRoutingInfoProvider fallbackProvider){
-		
+
 		this(routingInfoRetriever, cacheExpiryTime);
 		this.fallbackProvider = fallbackProvider;
 	}
