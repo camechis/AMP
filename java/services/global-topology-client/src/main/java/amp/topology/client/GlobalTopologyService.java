@@ -25,6 +25,8 @@ import amp.bus.rabbit.topology.RoutingInfo;
  */
 public class GlobalTopologyService implements ITopologyService {
 
+	private static final Logger logger = LoggerFactory.getLogger(GlobalTopologyService.class);
+	
 	public static long CACHE_EXPIRY_TIME_IN_SECONDS = 1000;
 
     Logger log;
@@ -69,9 +71,13 @@ public class GlobalTopologyService implements ITopologyService {
 		
 		String topic = routingHints.get(EnvelopeHeaderConstants.MESSAGE_TOPIC);
 		
+		logger.info("Getting routing info for topic: {}", topic);
+		
 		RoutingInfo routingInfo = this.routingInfoCache.getIfPresent(topic);
 		
 		if (routingInfo == null){
+			
+			logger.info("Routing info not in cache, going to the retriever.");
 			
 			routingInfo = this.routingInfoRetriever.retrieveRoutingInfo(topic);
 			
@@ -89,6 +95,10 @@ public class GlobalTopologyService implements ITopologyService {
 			
 			this.routingInfoCache.put(topic, routingInfo);
 		}
+		else {
+			
+			logger.debug("Found routing info in the cache.");
+		}
 		
 		return routingInfo;
 	}
@@ -100,13 +110,21 @@ public class GlobalTopologyService implements ITopologyService {
 	 */
 	protected boolean routingInfoAbsentOrNotValid(RoutingInfo routingInfo){
 		
+		logger.debug("Determining if Routing Info is absent or invalid.");
+		
 		if (routingInfo != null){
+			
+			logger.debug("Routing info is not null.");
 			
 			if (routingInfo.getRoutes() != null){
 				
+				logger.debug("Routes are not null.");
+				
 				if (routingInfo.getRoutes().iterator().hasNext()){
 					
-					return true;
+					logger.debug("Routes has next.");
+					
+					return false;
 				}
 			}
 		}

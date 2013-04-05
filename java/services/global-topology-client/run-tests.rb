@@ -1,6 +1,10 @@
 #!/usr/bin/ruby
 
-file = File.open("test.properties")
+fileToOpen = ARGV[0] ?  ARGV[0] : "test.properties"
+
+puts "Using #{fileToOpen}"
+
+file = File.open(fileToOpen)
 
 properties = ""
 
