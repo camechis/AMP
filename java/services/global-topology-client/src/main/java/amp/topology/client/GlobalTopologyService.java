@@ -3,13 +3,15 @@ package amp.topology.client;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import cmf.bus.EnvelopeHeaderConstants;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import amp.bus.rabbit.topology.ITopologyService;
 import amp.bus.rabbit.topology.RoutingInfo;
 
-import cmf.bus.EnvelopeHeaderConstants;
-
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
 
 /**
  * An implementation of ITopologyService that utilizes a central
@@ -23,8 +25,12 @@ import com.google.common.cache.CacheBuilder;
  */
 public class GlobalTopologyService implements ITopologyService {
 
-	public static long CACHE_EXPIRY_TIME_IN_SECONDS = 1000;
+	private static final Logger logger = LoggerFactory.getLogger(GlobalTopologyService.class);
 	
+	public static long CACHE_EXPIRY_TIME_IN_SECONDS = 1000;
+
+    Logger log;
+
 	Cache<String, RoutingInfo> routingInfoCache;
 	
 	IRoutingInfoRetriever routingInfoRetriever;
@@ -39,7 +45,9 @@ public class GlobalTopologyService implements ITopologyService {
 	public GlobalTopologyService(
 		IRoutingInfoRetriever routingInfoRetriever, 
 		long cacheExpiryTime){
-		
+
+        this.log = LoggerFactory.getLogger(this.getClass());
+
 		this.routingInfoRetriever = routingInfoRetriever;
 		
 		this.routingInfoCache = 
@@ -53,7 +61,7 @@ public class GlobalTopologyService implements ITopologyService {
 		IRoutingInfoRetriever routingInfoRetriever, 
 		long cacheExpiryTime, 
 		FallbackRoutingInfoProvider fallbackProvider){
-		
+
 		this(routingInfoRetriever, cacheExpiryTime);
 		this.fallbackProvider = fallbackProvider;
 	}
@@ -63,9 +71,13 @@ public class GlobalTopologyService implements ITopologyService {
 		
 		String topic = routingHints.get(EnvelopeHeaderConstants.MESSAGE_TOPIC);
 		
+		logger.info("Getting routing info for topic: {}", topic);
+		
 		RoutingInfo routingInfo = this.routingInfoCache.getIfPresent(topic);
 		
 		if (routingInfo == null){
+			
+			logger.info("Routing info not in cache, going to the retriever.");
 			
 			routingInfo = this.routingInfoRetriever.retrieveRoutingInfo(topic);
 			
@@ -83,6 +95,10 @@ public class GlobalTopologyService implements ITopologyService {
 			
 			this.routingInfoCache.put(topic, routingInfo);
 		}
+		else {
+			
+			logger.debug("Found routing info in the cache.");
+		}
 		
 		return routingInfo;
 	}
@@ -94,13 +110,21 @@ public class GlobalTopologyService implements ITopologyService {
 	 */
 	protected boolean routingInfoAbsentOrNotValid(RoutingInfo routingInfo){
 		
+		logger.debug("Determining if Routing Info is absent or invalid.");
+		
 		if (routingInfo != null){
+			
+			logger.debug("Routing info is not null.");
 			
 			if (routingInfo.getRoutes() != null){
 				
+				logger.debug("Routes are not null.");
+				
 				if (routingInfo.getRoutes().iterator().hasNext()){
 					
-					return true;
+					logger.debug("Routes has next.");
+					
+					return false;
 				}
 			}
 		}

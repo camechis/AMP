@@ -2,6 +2,9 @@ package amp.topology.client;
 
 import java.util.ArrayList;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -19,6 +22,9 @@ import amp.eventing.ISerializer;
  */
 public class JsonRoutingInfoSerializer implements ISerializer {
 
+	private static Logger logger = 
+		LoggerFactory.getLogger(JsonRoutingInfoSerializer.class);
+	
 	Gson gson = new Gson();
 	
 	public JsonRoutingInfoSerializer(){}
@@ -39,7 +45,11 @@ public class JsonRoutingInfoSerializer implements ISerializer {
 	@SuppressWarnings("unchecked")
 	public <TYPE> TYPE stringDeserialize(String payload, Class<TYPE> clazz) {
 		
+		logger.debug("deserializing object.");
+		
 		if (clazz == RoutingInfo.class){
+			
+			logger.debug("Is a routing info object.");
 			
 			ArrayList<RouteInfo> routeInfos = new ArrayList<RouteInfo>();
 			

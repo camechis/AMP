@@ -10,17 +10,22 @@ import javax.net.ssl.TrustManagerFactory;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.DefaultSaslConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import amp.bus.rabbit.topology.Exchange;
 
 
 public class CertificateChannelFactory extends BaseChannelFactory {
 
+    protected Logger log;
 	protected String password;
     protected String pathToClientCert;
     protected String pathToRemoteCertStore;
 
     public CertificateChannelFactory(String pathToClientCertificate, String password, String pathToRemoteCertStore) {
+
+        log = LoggerFactory.getLogger(this.getClass());
         pathToClientCert = pathToClientCertificate;
         this.password = password;
         this.pathToRemoteCertStore = pathToRemoteCertStore;
@@ -28,7 +33,9 @@ public class CertificateChannelFactory extends BaseChannelFactory {
 	
 	@Override
 	public Connection getConnection(Exchange exchange) throws Exception {
-		
+
+        log.debug("Getting connection for exchange: {}", exchange.toString());
+
 		char[] keyPassphrase = password.toCharArray();
 
         KeyStore clientCertStore = KeyStore.getInstance("PKCS12");

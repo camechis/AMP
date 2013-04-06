@@ -1,4 +1,4 @@
-﻿namespace amp.examples.duplex
+﻿namespace amp.examples.gui.duplex
 {
     partial class DuplexEventForm
     {
@@ -109,7 +109,7 @@
             this._typeBChk.Name = "_typeBChk";
             this._typeBChk.Size = new System.Drawing.Size(202, 17);
             this._typeBChk.TabIndex = 2;
-            this._typeBChk.Text = "amp.examples.messages.EventTypeB";
+            this._typeBChk.Text = "amp.examples.gui.messages.EventTypeB";
             this._typeBChk.UseVisualStyleBackColor = true;
             this._typeBChk.CheckStateChanged += new System.EventHandler(this._typeBChk_CheckStateChanged);
             // 
@@ -120,7 +120,7 @@
             this._typeAChk.Name = "_typeAChk";
             this._typeAChk.Size = new System.Drawing.Size(202, 17);
             this._typeAChk.TabIndex = 1;
-            this._typeAChk.Text = "amp.examples.messages.EventTypeA";
+            this._typeAChk.Text = "amp.examples.gui.messages.EventTypeA";
             this._typeAChk.UseVisualStyleBackColor = true;
             this._typeAChk.CheckedChanged += new System.EventHandler(this._typeAChk_CheckedChanged);
             // 
@@ -188,8 +188,8 @@
             this._eventTypeCbo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this._eventTypeCbo.FormattingEnabled = true;
             this._eventTypeCbo.Items.AddRange(new object[] {
-            "amp.examples.messages.EventTypeA",
-            "amp.examples.messages.EventTypeB"});
+            "amp.examples.gui.messages.EventTypeA",
+            "amp.examples.gui.messages.EventTypeB"});
             this._eventTypeCbo.Location = new System.Drawing.Point(121, 19);
             this._eventTypeCbo.Name = "_eventTypeCbo";
             this._eventTypeCbo.Size = new System.Drawing.Size(234, 21);

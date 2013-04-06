@@ -8,16 +8,16 @@ namespace amp.bus.rabbit.topology
 {
     public struct Exchange : IEquatable<Exchange>
     {
-        public string Name { get; private set; }
-        public string HostName { get; private set; }
-        public string VirtualHost { get; private set; }
-        public int Port { get; private set; }
-        public string RoutingKey { get; private set; }
-        public string QueueName { get; private set; }
-        public string ExchangeType { get; private set; }
-        public bool IsDurable { get; private set; }
-        public bool IsAutoDelete { get; private set; }
-        public IDictionary Arguments { get; private set; }
+        public string Name { get; set; }
+        public string HostName { get; set; }
+        public string VirtualHost { get; set; }
+        public int Port { get; set; }
+        public string RoutingKey { get; set; }
+        public string QueueName { get; set; }
+        public string ExchangeType { get; set; }
+        public bool IsDurable { get; set; }
+        public bool IsAutoDelete { get; set; }
+        public IDictionary Arguments { get; set; }
 
 
         public Exchange(

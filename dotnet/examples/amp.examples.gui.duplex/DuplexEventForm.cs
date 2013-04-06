@@ -11,9 +11,9 @@ using Common.Logging;
 
 using cmf.eventing;
 using cmf.eventing.patterns.rpc;
-using amp.examples.messages;
+using amp.examples.gui.messages;
 
-namespace amp.examples.duplex
+namespace amp.examples.gui.duplex
 {
     public partial class DuplexEventForm : Form
     {
@@ -159,10 +159,10 @@ namespace amp.examples.duplex
 
             switch (eventType)
             {
-                case "amp.examples.messages.EventTypeA":
+                case "amp.examples.gui.messages.EventTypeA":
                     eventMsg = new EventTypeA() { Message = message };
                     break;
-                case "amp.examples.messages.EventTypeB":
+                case "amp.examples.gui.messages.EventTypeB":
                     eventMsg = new EventTypeB() { Message = message };
                     break;
                 default:
