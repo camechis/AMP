@@ -36,6 +36,7 @@
         <module>amp-examples/user-notifications</module>
         <module>amp-examples/service-adaptor</module>
         <module>services/global-topology-client</module>
+		<module>archetypes/amp-quickstart</module>
     </modules>
 
 
