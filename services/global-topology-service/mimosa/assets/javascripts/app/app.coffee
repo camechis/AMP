@@ -1,4 +1,4 @@
-angular.module("gts", ["filters"])
+angular.module("gts", ["ui", "ui.bootstrap", "filters"])
 	.config(["$routeProvider", ($routeProvider) ->
 		$routeProvider
 			# EXCHANGES
@@ -33,6 +33,13 @@ angular.module("gts", ["filters"])
 				{ templateUrl: "partials/client-list.html", controller: ClientListCtrl })
 			.when("/clients/:clientId", 
 				{ templateUrl: "partials/client-view.html", controller: ClientViewCtrl })
+			# SNAPSHOTS
+			.when("/snapshots", 
+				{ templateUrl: "partials/snapshot-list.html", controller: SnapshotListCtrl })
+			.when("/snapshots/:snapshotId", 
+				{ templateUrl: "partials/snapshot-view.html", controller: SnapshotViewCtrl })
+			.when("/snapshots/:snapshotId/clone", 
+				{ templateUrl: "partials/snapshot-clone.html", controller: SnapshotCloneCtrl })
 			# DEFAULT
 			.when("/", 
 				{ templateUrl: "partials/main.html", controller: MainCtrl })

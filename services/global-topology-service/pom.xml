@@ -194,8 +194,6 @@
 		        </execution>
 		    </executions>
 		</plugin>
-		<!-- Commented out until UI is in a better place. -->
-		<!-- 
 		<plugin>
 	     <groupId>org.codehaus.mojo</groupId>
 	     <artifactId>exec-maven-plugin</artifactId>
@@ -212,13 +210,11 @@
 	        <workingDirectory>${basedir}/mimosa</workingDirectory>
 	        <arguments>
 	       <argument>build</argument>
-	       <argument>-mo</argument>
 	        </arguments>
 	      </configuration>
 	       </execution>
 	     </executions>
 	    </plugin>
-	     -->
   	</plugins>
   </build>
   

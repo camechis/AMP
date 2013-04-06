@@ -54,7 +54,11 @@
 			<artifactId>amp.bus.security</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
-
+        <dependency>
+            <groupId>${project.parent.groupId}</groupId>
+            <artifactId>amp.topology.client</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
 		<!-- Example Project's dependencies -->
 		<dependency>
 			<groupId>org.springframework</groupId>

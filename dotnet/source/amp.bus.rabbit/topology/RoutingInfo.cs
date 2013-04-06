@@ -7,8 +7,13 @@ namespace amp.bus.rabbit.topology
 {
     public class RoutingInfo
     {
-        public IEnumerable<RouteInfo> Routes { get; private set; }
+        public IEnumerable<RouteInfo> Routes { get; set; }
 
+
+        public RoutingInfo()
+        {
+            this.Routes = new List<RouteInfo>();
+        }
 
         public RoutingInfo(IEnumerable<RouteInfo> routes)
         {

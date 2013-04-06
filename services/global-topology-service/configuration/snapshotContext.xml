@@ -26,5 +26,8 @@
 		
 	<bean id="mergeSnapshotTask" class="amp.topology.tasks.MergeSnapshotTask" 
 		c:topologySnapshotUtility-ref="topologySnapshotUtility" />
-		
+	
+	<bean id="snapshotResource" class="amp.topology.resources.TopologySnapshotResource"
+		c:snapshotUtility-ref="topologySnapshotUtility" />
+	
 </beans>

@@ -16,6 +16,7 @@ import amp.topology.client.HttpClientProvider;
 import amp.topology.client.HttpRoutingInfoRetriever;
 import amp.topology.client.IRoutingInfoRetriever;
 import amp.topology.client.JsonRoutingInfoSerializer;
+import amp.topology.client.TestUtils;
 
 public class BasicAuthIntegrationTest {
 
@@ -54,7 +55,7 @@ public class BasicAuthIntegrationTest {
 		
 		RoutingInfo routingInfo = routingInfoRetriever.retrieveRoutingInfo(eventType);
 		
-		logger.info("Received the following RoutingInfo: {}", routingInfo);
+		TestUtils.dumpRoutingInfoToLogger(routingInfo);
 		
 		assertTrue(true);
 	}

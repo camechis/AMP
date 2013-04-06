@@ -41,6 +41,7 @@ namespace amp.eventing
 
             string senderIdentity = env.GetSenderIdentity();
             senderIdentity = string.IsNullOrEmpty(senderIdentity) ? UserPrincipal.Current.DistinguishedName.Replace(",", ", ") : senderIdentity;
+            senderIdentity = string.IsNullOrEmpty(senderIdentity) ? UserPrincipal.Current.Name : senderIdentity;
             env.SetSenderIdentity(senderIdentity);
 
             continueProcessing();

@@ -16,6 +16,7 @@ import javax.ws.rs.core.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import amp.topology.core.Broker;
 import amp.topology.core.ExtendedExchange;
 import amp.topology.core.ITopologyRepository;
 
@@ -47,6 +48,7 @@ public class ExchangeResource {
 	}
 	
 	@GET
+	@Timed
 	@Path("/broker/{host}")
 	public Collection<ExtendedExchange> getExchangesByBroker(@PathParam("host") String host){
 		
@@ -56,6 +58,7 @@ public class ExchangeResource {
 	}
 	
 	@GET
+	@Timed
 	@Path("/broker/{host}/port/{port}")
 	public Collection<ExtendedExchange> getExchangesByBroker(
 			@PathParam("host") String host, @PathParam("port") int port){
@@ -66,6 +69,7 @@ public class ExchangeResource {
 	}
 	
 	@GET
+	@Timed
 	@Path("/broker/{host}/port/{port}/vhost/{vhost}")
 	public Collection<ExtendedExchange> getExchangesByBroker(
 			@PathParam("host") String host, @PathParam("port") int port, 
@@ -76,6 +80,16 @@ public class ExchangeResource {
 		logger.info("Getting exchange by broker: {}:{}{}", new Object[]{ host, port, virtualHost });
 		
 		return topologyRepository.getExchangesByBroker(host, port, virtualHost);
+	}
+	
+	@GET
+	@Timed
+	@Path("/brokers")
+	public Collection<Broker> getBrokers(){
+		
+		logger.info("Getting brokers.");
+		
+		return topologyRepository.getBrokers();
 	}
 	
 	@GET

@@ -85,7 +85,7 @@
     <bean id="routingSerializer" class="amp.topology.client.JsonRoutingInfoSerializer" />
 
     <bean id="fallbackProvider" class="amp.topology.client.DefaultApplicationExchangeProvider"
-	      p:hostname="devexample" p:port="5672" />
+	      p:hostname="devexample.com" p:port="5672" p:durable="true" />
 	
     <!-- Configured to provide a route to the local Broker
     

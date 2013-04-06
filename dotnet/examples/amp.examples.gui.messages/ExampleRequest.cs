@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace amp.examples.messages
+namespace amp.examples.gui.messages
 {
     public class ExampleRequest
     {
