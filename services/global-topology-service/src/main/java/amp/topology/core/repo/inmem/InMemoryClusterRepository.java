@@ -20,6 +20,16 @@ public class InMemoryClusterRepository implements ClusterRepository {
 	
 	protected ConcurrentHashMap<String, Cluster> clusters = new ConcurrentHashMap<String, Cluster>();
 	
+	
+	public void setClusters(Collection<Cluster> clusters){
+		
+		for (Cluster cluster : clusters){
+			
+			this.clusters.put(cluster.getId(), cluster);
+		}
+	}
+	
+	
 	@Override
 	public Cluster get(String clusterId) {
 		

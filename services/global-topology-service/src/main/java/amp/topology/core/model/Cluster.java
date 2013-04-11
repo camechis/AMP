@@ -6,7 +6,7 @@ import java.util.Collection;
 
 public class Cluster extends TopologyModel {
 
-	protected ArrayList<ManagementEndpoint> managementEndpoints;
+	protected ArrayList<ManagementEndpoint> managementEndpoints = new ArrayList<ManagementEndpoint>();
 	
 	public Cluster() { super(); }
 

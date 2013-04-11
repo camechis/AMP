@@ -75,4 +75,21 @@ public class RmqExchangeRepository extends RmqBaseRepository implements Exchange
 		});
 	}
 
+	@Override
+	public Collection<Exchange> all(String clusterId, final String vhost)
+			throws ClusterDoesntExistException {
+		
+		logger.debug("Getting all exchanges on cluster {} and vhost {}.", clusterId, vhost);
+		
+		return this.execute(clusterId, new ManagementFunction<Collection<Exchange>>(){
+
+			@Override
+			public Collection<Exchange> perform(RabbitMgmtService mgmtService) throws Exception {
+				
+				return mgmtService.exchanges().allOnVHost(vhost);
+			}
+			
+		});
+	}
+
 }

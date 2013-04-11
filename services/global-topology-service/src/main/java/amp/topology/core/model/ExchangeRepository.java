@@ -13,4 +13,6 @@ public interface ExchangeRepository {
 	Exchange get(String clusterId, String vhost, String exchagneName) throws ClusterDoesntExistException;
 	
 	Collection<Exchange> all(String clusterId) throws ClusterDoesntExistException;
+	
+	Collection<Exchange> all(String clusterId, String vhost) throws ClusterDoesntExistException;
 }

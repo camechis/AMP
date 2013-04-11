@@ -67,6 +67,7 @@ public class RmqManagementFactory {
 				endpoint.getUsername(), endpoint.getPassword());
 		}
 		
-		return new RabbitMgmtService(endpoint.getHostname(), endpoint.getPort(), provider);
+		return new RabbitMgmtService(
+			endpoint.getHostname(), endpoint.getPort(), provider).initialize();
 	}
 }

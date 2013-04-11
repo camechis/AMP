@@ -11,6 +11,55 @@
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">    
 	
+	
+	<bean id="managementFactory" class="amp.topology.core.repo.rmq.RmqManagementFactory" 
+		c:clusterRepository-ref="clusterRepository" />
+	
+	<bean id="adminAtLocalhost" class="amp.topology.core.model.ManagementEndpoint"
+		c:id="admin@localhost" c:description="Local Cluster" c:hostname="localhost"
+		c:port="15672" c:username="guest" c:password="guest" />
+	
+	<bean id="clusterRepository" class="amp.topology.core.repo.inmem.InMemoryClusterRepository">
+		<property name="clusters">
+			<list value-type="amp.topology.core.model.Cluster">
+				<bean class="amp.topology.core.model.Cluster" 
+					c:id="broker@localhost" c:description="1 Node Localhost Cluster"
+					c:managementEndpoints-ref="adminAtLocalhost" />
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="exchangeRepository" class="amp.topology.core.repo.rmq.RmqExchangeRepository"
+		c:managementFactory-ref="managementFactory" />
+		
+	<bean id="queueRepository" class="amp.topology.core.repo.rmq.RmqQueueRepository"
+		c:managementFactory-ref="managementFactory" />
+	
+	<bean id="userRepository" class="amp.topology.core.repo.rmq.RmqUserRepository"
+		c:managementFactory-ref="managementFactory" />
+		
+	<bean id="clusterInfoRepository" class="amp.topology.core.repo.rmq.RmqClusterInfoRepository"
+		c:managementFactory-ref="managementFactory" />
+	
+	<bean id="clusterResource" class="amp.topology.resources.ClusterResource" 
+		c:clusterRepository-ref="clusterRepository" />
+		
+	<bean id="exchangeResource" class="amp.topology.resources.NExchangeResource" 
+		c:exchangeRepository-ref="exchangeRepository" />
+		
+	<bean id="queueResource" class="amp.topology.resources.QueueResource"
+		c:queueRepository-ref="queueRepository" />
+	
+	<bean id="clusterInfoResource" class="amp.topology.resources.ClusterInfoResource"
+		c:clusterInfoRepository-ref="clusterInfoRepository" />
+		
+	<bean id="permissionResource" class="amp.topology.resources.PermissionResource"
+		c:userRepository-ref="userRepository" />
+		
+	<bean id="userResource" class="amp.topology.resources.UserResource"
+		c:userRepository-ref="userRepository" />
+	
+	<!-- 
 	<bean id="topologyService"
 		class="amp.topology.core.GlobalTopologyService"
 		c:topologyRepository-ref="topologyRepository" />
@@ -48,5 +97,5 @@
 	<bean id="showTopicMissesTask"
 		class="amp.topology.tasks.ShowTopicMissesTask"
 		c:noRouteForTopicListener-ref="noRouteInfoForTopicListener" />
-	
+	 -->
 </beans>
