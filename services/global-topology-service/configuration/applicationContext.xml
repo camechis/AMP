@@ -16,15 +16,24 @@
 		c:clusterRepository-ref="clusterRepository" />
 	
 	<bean id="adminAtLocalhost" class="amp.topology.core.model.ManagementEndpoint"
-		c:id="admin@localhost" c:description="Local Cluster" c:hostname="localhost"
+		c:id="localhost" c:description="Local Cluster" c:hostname="localhost"
 		c:port="15672" c:username="guest" c:password="guest" />
+	
+	<bean id="adminAtDevexample" class="amp.topology.core.model.ManagementEndpoint"
+		c:id="devexample" c:description="Devadmin Cluster" c:hostname="devexample.com"
+		c:port="15672" c:username="devexample" c:password="devexample" />
+	
+	<!-- Repositories -->
 	
 	<bean id="clusterRepository" class="amp.topology.core.repo.inmem.InMemoryClusterRepository">
 		<property name="clusters">
 			<list value-type="amp.topology.core.model.Cluster">
 				<bean class="amp.topology.core.model.Cluster" 
-					c:id="broker@localhost" c:description="1 Node Localhost Cluster"
+					c:id="localhost" c:description="1 Node Localhost Cluster"
 					c:managementEndpoints-ref="adminAtLocalhost" />
+				<bean class="amp.topology.core.model.Cluster" 
+					c:id="devexample" c:description="1 Node Devexample Cluster"
+					c:managementEndpoints-ref="adminAtDevexample" />
 			</list>
 		</property>
 	</bean>
@@ -40,6 +49,11 @@
 		
 	<bean id="clusterInfoRepository" class="amp.topology.core.repo.rmq.RmqClusterInfoRepository"
 		c:managementFactory-ref="managementFactory" />
+	
+	<bean id="virtualHostRepository" class="amp.topology.core.repo.rmq.RmqVirtualHostRepository"
+		c:managementFactory-ref="managementFactory" />
+	
+	<!-- REST Endpoints -->
 	
 	<bean id="clusterResource" class="amp.topology.resources.ClusterResource" 
 		c:clusterRepository-ref="clusterRepository" />
@@ -58,6 +72,11 @@
 		
 	<bean id="userResource" class="amp.topology.resources.UserResource"
 		c:userRepository-ref="userRepository" />
+	
+	<bean id="virtualHostResource" class="amp.topology.resources.VirtualHostResource"
+		c:virtualHostRepository-ref="virtualHostRepository" />
+	
+	<bean id="whoAmIResource" class="amp.topology.resources.WhoAmIResource" />
 	
 	<!-- 
 	<bean id="topologyService"
@@ -79,9 +98,6 @@
 	<bean id="missedTopicsResource"
 		class="amp.topology.resources.MissedTopicsResource"
 		c:noRouteForTopicListener-ref="noRouteInfoForTopicListener" />
-	
-	<bean id="userManagementResource"
-		class="amp.topology.resources.UserManagementResource" />
 	
 	<bean id="noRouteInfoForTopicListener" 
 		class="amp.topology.core.repo.listeners.NoRouteInfoForTopicListener" />

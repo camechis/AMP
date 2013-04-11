@@ -14,4 +14,8 @@ public interface VirtualHostRepository {
 	Status getStatus(String clusterId, String vhost) throws ClusterDoesntExistException;
 	
 	Collection<Permission> getPermissions(String clusterId, String vhost) throws ClusterDoesntExistException;
+	
+	void setPermission(String clusterId, Permission permission) throws ClusterDoesntExistException;
+	
+	void removePermission(String clusterId, String vhost, String username) throws ClusterDoesntExistException;
 }

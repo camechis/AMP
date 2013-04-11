@@ -12,11 +12,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.yammer.dropwizard.auth.Auth;
 import com.yammer.metrics.annotation.Timed;
 
-@Path("/users")
+@Path("/whoami")
 @Produces(MediaType.APPLICATION_JSON)
-public class UserManagementResource {
+public class WhoAmIResource {
 
-	private static final Logger logger = LoggerFactory.getLogger(UserManagementResource.class);
+	private static final Logger logger = LoggerFactory.getLogger(WhoAmIResource.class);
 	
 	@GET
 	@Timed
