@@ -52,6 +52,9 @@
 	
 	<bean id="virtualHostRepository" class="amp.topology.core.repo.rmq.RmqVirtualHostRepository"
 		c:managementFactory-ref="managementFactory" />
+		
+	<bean id="bindingRepository" class="amp.topology.core.repo.rmq.RmqBindingRepository"
+		c:managementFactory-ref="managementFactory" />
 	
 	<!-- REST Endpoints -->
 	
@@ -75,6 +78,9 @@
 	
 	<bean id="virtualHostResource" class="amp.topology.resources.VirtualHostResource"
 		c:virtualHostRepository-ref="virtualHostRepository" />
+	
+	<bean id="bindingResource" class="amp.topology.resources.BindingResource"
+		c:bindingRepository-ref="bindingRepository" />
 	
 	<bean id="whoAmIResource" class="amp.topology.resources.WhoAmIResource" />
 	

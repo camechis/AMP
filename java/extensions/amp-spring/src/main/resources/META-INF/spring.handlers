@@ -1,0 +1,2 @@
+http\://www.bericotechnologies.com/schema/amp=amp.extensions.spring.AmpNamespaceHandler
+http\://www.bericotechnologies.com/schema/jaxbs=amp.extensions.jaxbs.JaxBsNamespaceHandler

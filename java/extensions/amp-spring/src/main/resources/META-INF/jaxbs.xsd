@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns="http://www.bericotechnologies.com/schema/jaxbs"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:beans="http://www.springframework.org/schema/beans"
+    targetNamespace="http://www.bericotechnologies.com/schema/jaxbs"
+    elementFormDefault="qualified"
+    attributeFormDefault="unqualified">
+
+   <xsd:import namespace="http://www.springframework.org/schema/beans"/>
+   
+   <xsd:element name="handler">
+      <xsd:complexType>
+         <xsd:complexContent>
+            <xsd:extension base="beans:identifiedType">
+               <xsd:attribute name="target-ref" type="xsd:string" use="required"/>
+               <xsd:attribute name="method" type="xsd:string" use="required"/>
+               <xsd:attribute name="respond-to-event" type="xsd:boolean" />
+            </xsd:extension>
+         </xsd:complexContent>
+      </xsd:complexType>
+   </xsd:element>
+   
+   <xsd:group name="handlersElements">
+		<xsd:sequence>
+			<xsd:choice minOccurs="0" maxOccurs="unbounded">
+				<xsd:element ref="handler"/>
+			</xsd:choice>
+		</xsd:sequence>
+	</xsd:group>
+   
+   <xsd:element name="handlers">
+      <xsd:complexType>
+         <xsd:complexContent>
+            <xsd:extension base="beans:identifiedType">
+            	   <xsd:group ref="handlersElements" />
+               <xsd:attribute name="registrations" type="xsd:string"/>
+               <xsd:attribute name="strategies" type="xsd:string" />
+               <xsd:attribute name="injects" type="xsd:string" />
+               <xsd:attribute name="rpcEventBus-ref" type="xsd:string" />
+               <xsd:attribute name="envelopeBus-ref" type="xsd:string" />
+            </xsd:extension>
+         </xsd:complexContent>
+      </xsd:complexType>
+   </xsd:element>
+
+</xsd:schema>

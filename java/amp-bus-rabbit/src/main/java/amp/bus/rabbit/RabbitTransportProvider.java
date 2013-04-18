@@ -179,7 +179,7 @@ public class RabbitTransportProvider implements ITransportProvider {
                 throw e;
             } 
         }
-
+        
         log.debug("Leave Send");
     }
 

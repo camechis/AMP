@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns="http://www.bericotechnologies.com/schema/amp"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:beans="http://www.springframework.org/schema/beans"
+	targetNamespace="http://www.bericotechnologies.com/schema/amp"
+	elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+	<xsd:import 
+		namespace="http://www.springframework.org/schema/beans" 
+		schemaLocation="http://www.springframework.org/schema/beans" />
+
+	<xsd:element name="inbound-env-processor">
+		<xsd:complexType>
+			<xsd:attribute name="ref" type="xsd:string" />
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="outbound-env-processor">
+		<xsd:complexType>
+			<xsd:attribute name="ref" type="xsd:string" />
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="transport-rabbitmq">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="beans:identifiedType">
+					<xsd:sequence>
+						<xsd:element ref="gts" maxOccurs="1" minOccurs="0"></xsd:element>
+					</xsd:sequence>
+					<xsd:attribute name="topology-service-ref" type="xsd:string" />
+					<xsd:attribute name="channel-factory-ref" type="xsd:string" />
+					<xsd:attribute name="username" type="xsd:string" />
+					<xsd:attribute name="password" type="xsd:string" />
+					<xsd:attribute name="keystore" type="xsd:string" />
+					<xsd:attribute name="keystorePassword" type="xsd:string" />
+					<xsd:attribute name="truststore" type="xsd:string" />
+					<xsd:attribute name="truststorePassword" type="xsd:string" />
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="fallback">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="beans:identifiedType">
+					<xsd:attribute name="exchange" type="xsd:string" />
+					<xsd:attribute name="host" type="xsd:string" />
+					<xsd:attribute name="vhost" type="xsd:string" />
+					<xsd:attribute name="port" type="xsd:int" />
+					<xsd:attribute name="clientName" type="xsd:string" />
+					<xsd:attribute name="exchange-type" type="xsd:string" />
+					<xsd:attribute name="queue" type="xsd:string" />
+					<xsd:attribute name="durable" type="xsd:boolean" />
+					<xsd:attribute name="auto-delete" type="xsd:boolean" />
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="gts">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="beans:identifiedType">
+					<xsd:sequence>
+						<xsd:element ref="fallback" maxOccurs="1" minOccurs="0"></xsd:element>
+					</xsd:sequence>
+					<xsd:attribute name="url" type="xsd:string" use="required" />
+					<xsd:attribute name="username" type="xsd:string" />
+					<xsd:attribute name="password" type="xsd:string" />
+					<xsd:attribute name="keystore" type="xsd:string" />
+					<xsd:attribute name="keystorePassword" type="xsd:string" />
+					<xsd:attribute name="truststore" type="xsd:string" />
+					<xsd:attribute name="truststorePassword" type="xsd:string" />
+					<xsd:attribute name="expiryTimeMillis" type="xsd:long" />
+					<xsd:attribute name="fallback-ref" type="xsd:string" />
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+</xsd:schema>

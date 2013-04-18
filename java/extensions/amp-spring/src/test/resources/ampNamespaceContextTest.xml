@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:amp="http://www.bericotechnologies.com/schema/amp"
+	xmlns:jaxbs="http://www.bericotechnologies.com/schema/jaxbs"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.bericotechnologies.com/schema/amp http://www.bericotechnologies.com/schema/amp/amp.xsd
+	http://www.bericotechnologies.com/schema/jaxbs http://www.bericotechnologies.com/schema/jaxbs/jaxbs.xsd">
+	
+	<!--   
+	<amp:gts url="http://devexample.com:15677/service/topology/get-routing-info/%s" 
+			username="devexample" password="devexample" fallback-ref="fallbackProvider" />
+	-->
+	
+	<amp:transport-rabbitmq username="devexample" password="devexample">
+		<amp:gts 
+		    url="http://devexample.com:15677/service/topology/get-routing-info/%s" 
+			username="devexample" password="devexample">
+			<amp:fallback host="devexample.com" exchange="test-exchange" durable="true" />
+		</amp:gts>
+	</amp:transport-rabbitmq>
+	
+	
+	
+	<bean id="messageService" class="amp.extensions.spring.MessageService" />
+	
+	<jaxbs:handlers>
+		<jaxbs:handler target-ref="messageService" method="deliverMessage" />
+		<jaxbs:handler target-ref="messageService" method="printReply" />
+	</jaxbs:handlers>
+	
+	<!-- 
+	<amp:gts id="sslGts"
+			url="http://devexample.com:15677/service/topology/get-routing-info/%s" 
+			keystore="ssl/keystore.jks" keystorePassword="password"
+			truststore="ssl/keystore.jks" truststorePassword="password" />
+	 -->
+</beans>
