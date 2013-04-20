@@ -7,7 +7,7 @@ import rabbitmq.mgmt.model.Permission;
 import rabbitmq.mgmt.model.Status;
 import rabbitmq.mgmt.model.VirtualHost;
 import amp.topology.core.model.ClusterDoesntExistException;
-import amp.topology.core.model.VirtualHostRepository;
+import amp.topology.core.repo.VirtualHostRepository;
 
 public class RmqVirtualHostRepository extends RmqBaseRepository implements VirtualHostRepository {
 

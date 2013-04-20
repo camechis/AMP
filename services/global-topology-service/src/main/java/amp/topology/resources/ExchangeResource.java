@@ -5,7 +5,6 @@ import java.util.Collection;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -16,131 +15,84 @@ import javax.ws.rs.core.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import amp.topology.core.Broker;
-import amp.topology.core.ExtendedExchange;
-import amp.topology.core.ITopologyRepository;
+import rabbitmq.mgmt.model.Exchange;
 
 import com.yammer.metrics.annotation.Timed;
 
-@Path("/exchange")
+import amp.topology.core.model.ClusterDoesntExistException;
+import amp.topology.core.repo.ExchangeRepository;
+
+@Path("/clusters/{cluster}/vhost/{vhost}/exchanges")
 @Produces(MediaType.APPLICATION_JSON)
 public class ExchangeResource {
 
 	private static final Logger logger = LoggerFactory.getLogger(ExchangeResource.class);
 	
-	private ITopologyRepository topologyRepository;
+	ExchangeRepository exchangeRepository;
 	
-	public ExchangeResource(ITopologyRepository topologyRepository) {
+	public ExchangeResource(ExchangeRepository exchangeRepository){
 		
-		this.topologyRepository = topologyRepository;
-		
-		logger.info("Instantiated with repo {}.", topologyRepository.getClass().getCanonicalName());
-	}
-
-	@GET
-	@Path("/{id}")
-    @Timed
-	public ExtendedExchange getExchangeById(@PathParam("id") String id){
-		
-		logger.info("Getting exchange by Id: {}", id);
-		
-		return topologyRepository.getExchange(id);
-	}
-	
-	@GET
-	@Timed
-	@Path("/broker/{host}")
-	public Collection<ExtendedExchange> getExchangesByBroker(@PathParam("host") String host){
-		
-		logger.info("Getting exchange by broker: {}", host);
-		
-		return topologyRepository.getExchangesByBroker(host);
-	}
-	
-	@GET
-	@Timed
-	@Path("/broker/{host}/port/{port}")
-	public Collection<ExtendedExchange> getExchangesByBroker(
-			@PathParam("host") String host, @PathParam("port") int port){
-		
-		logger.info("Getting exchange by broker: {}:{}", host, port);
-		
-		return topologyRepository.getExchangesByBroker(host, port);
-	}
-	
-	@GET
-	@Timed
-	@Path("/broker/{host}/port/{port}/vhost/{vhost}")
-	public Collection<ExtendedExchange> getExchangesByBroker(
-			@PathParam("host") String host, @PathParam("port") int port, 
-			@PathParam("vhost") String vhost){
-		
-		String virtualHost = decodeSlashes(vhost);
-		
-		logger.info("Getting exchange by broker: {}:{}{}", new Object[]{ host, port, virtualHost });
-		
-		return topologyRepository.getExchangesByBroker(host, port, virtualHost);
-	}
-	
-	@GET
-	@Timed
-	@Path("/brokers")
-	public Collection<Broker> getBrokers(){
-		
-		logger.info("Getting brokers.");
-		
-		return topologyRepository.getBrokers();
+		this.exchangeRepository = exchangeRepository;
 	}
 	
 	@GET
     @Timed
-	public Collection<ExtendedExchange> getExchanges(){
+	public Collection<Exchange> getExchanges(
+		@PathParam("cluster") String cluster, @PathParam("vhost") String vhost) 
+			throws ClusterDoesntExistException{
 		
-		logger.info("Getting exchanges.");
+		logger.info("Getting all exchanges on {} at vhost {}.", cluster, vhost);
 		
-		return topologyRepository.getExchanges();
+		if (vhost.equals("*")){
+			
+			return this.exchangeRepository.all(cluster);
+		} 
+		
+		return this.exchangeRepository.all(cluster, vhost);
 	}
+	
+	
+	@GET
+	@Path("/{name}")
+    @Timed
+	public Exchange getExchange(
+		@PathParam("cluster") String cluster, @PathParam("vhost") String vhost, @PathParam("name") String name) 
+			throws ClusterDoesntExistException{
+		
+		logger.info("Getting exchange on {} vhost {} with name {}.", new Object[]{ cluster, vhost, name });
+		
+		return this.exchangeRepository.get(cluster, vhost, name);
+	}
+	
 	
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Timed
-	public String createExchange(ExtendedExchange exchange){
+	public Response createExchange(
+		@PathParam("cluster") String cluster, Exchange exchange)
+			throws ClusterDoesntExistException{
 		
-		logger.info("Creating exchange: {}", exchange);
+		logger.info("Creating exchange with name {} on cluster {} vhost {}.", 
+			new Object[]{ exchange.getName(), exchange.getVhost(), cluster });
 		
-		topologyRepository.createExchange(exchange);
-		
-		// JSON.parse will barf if you don't use double quotes
-		return String.format("{ \"id\": \"%s\" }", exchange.getId());
-	}
-	
-	@POST
-	@Path("/{id}")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Timed
-	public Response updateExchange(ExtendedExchange exchange){
-		
-		logger.info("Updating exchange: {}", exchange);
-		
-		topologyRepository.updateExchange(exchange);
+		this.exchangeRepository.create(cluster, exchange);
 		
 		return Response.ok().build();
 	}
 	
 	@DELETE
-	@Path("/{id}")
+	@Path("/{name}")
     @Timed
-	public Response removeExchange(@PathParam("id") String id){
+	public Response deleteExchange(
+		@PathParam("cluster") String cluster, @PathParam("vhost") String vhost, @PathParam("name") String name) 
+			throws ClusterDoesntExistException{
 		
-		logger.info("Deleting exchange by Id: {}", id);
+		logger.info("Deleting exchange with name {} on cluster {} vhost {}.", 
+			new Object[]{ name, cluster, vhost });
 		
-		topologyRepository.removeExchange(id);
+		this.exchangeRepository.delete(cluster, vhost, name);
 		
 		return Response.ok().build();
 	}
 	
-	static String decodeSlashes(String string){
-		
-		return string.replace("%2F", "/");
-	}
 }

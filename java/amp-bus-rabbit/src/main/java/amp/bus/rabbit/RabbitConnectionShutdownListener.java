@@ -6,7 +6,7 @@ import com.rabbitmq.client.ShutdownSignalException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import amp.bus.rabbit.topology.Exchange;
+import amp.bus.rabbit.BaseChannelFactory.ConnectionContext;
 
 
 public class RabbitConnectionShutdownListener implements ShutdownListener {
@@ -15,24 +15,24 @@ public class RabbitConnectionShutdownListener implements ShutdownListener {
 	
 	protected BaseChannelFactory channelFactory;
 	
-	protected Exchange exchange;
+	protected ConnectionContext context;
 	
 	public RabbitConnectionShutdownListener(
 			BaseChannelFactory channelFactory,
-			Exchange exchange) {
+			ConnectionContext context) {
 	
 		this.channelFactory = channelFactory;
-		this.exchange = exchange;
+		this.context = context;
 	}
 
 	@Override
 	public void shutdownCompleted(ShutdownSignalException ex) {
 		
-		boolean removed = this.channelFactory.removeConnection(exchange);
+		boolean removed = this.channelFactory.removeConnection(context);
 		
 		if (removed == false){
 			
-			logger.warn("Could not find Channel for exchange '{}' in the pool.", exchange.getName());
+			logger.warn("Could not find Connection for context '{}' in the pool.", context);
 		}
 	}
 

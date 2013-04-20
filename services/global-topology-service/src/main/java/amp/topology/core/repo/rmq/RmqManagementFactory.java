@@ -8,8 +8,8 @@ import rabbitmq.httpclient.HttpClientProvider;
 import rabbitmq.httpclient.SslWithBasicAuthHttpClientProvider;
 import rabbitmq.mgmt.RabbitMgmtService;
 import amp.topology.core.model.Cluster;
-import amp.topology.core.model.ClusterRepository;
 import amp.topology.core.model.ManagementEndpoint;
+import amp.topology.core.repo.ClusterRepository;
 
 /**
  * Factory for retrieving the management interface to RabbitMQ.

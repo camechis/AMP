@@ -2,19 +2,23 @@ package amp.topology.client.integration;
 
 import static org.junit.Assert.*;
 
+import java.util.HashMap;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import cmf.bus.EnvelopeHeaderConstants;
+
 import com.berico.test.RequireProperties;
 import com.berico.test.TestProperties;
 
 import amp.bus.rabbit.topology.RoutingInfo;
+import amp.eventing.GsonSerializer;
 import amp.topology.client.HttpClientProvider;
 import amp.topology.client.HttpRoutingInfoRetriever;
 import amp.topology.client.IRoutingInfoRetriever;
-import amp.topology.client.JsonRoutingInfoSerializer;
 import amp.topology.client.SslHttpClientProvider;
 
 public class SslAuthIntegrationTest {
@@ -45,12 +49,16 @@ public class SslAuthIntegrationTest {
 		HttpClientProvider provider = 
 			new SslHttpClientProvider(keystoreLocation, keystorePassword, port);
 		
-		JsonRoutingInfoSerializer serializer = new JsonRoutingInfoSerializer();
+		GsonSerializer serializer = new GsonSerializer();
 		
 		IRoutingInfoRetriever routingInfoRetriever = 
 			new HttpRoutingInfoRetriever(provider, serviceUrlExpression, serializer);
 		
-		RoutingInfo routingInfo = routingInfoRetriever.retrieveRoutingInfo(eventType);
+		HashMap<String, String> routingHints = new HashMap<String, String>();
+		
+		routingHints.put(EnvelopeHeaderConstants.MESSAGE_TOPIC, eventType);
+		
+		RoutingInfo routingInfo = routingInfoRetriever.retrieveRoutingInfo(routingHints);
 		
 		logger.info("Received the following RoutingInfo: {}", routingInfo);
 		

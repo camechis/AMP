@@ -1,5 +1,7 @@
 package amp.topology.client;
 
+import java.util.Map;
+
 import amp.bus.rabbit.topology.RoutingInfo;
 
 /**
@@ -13,5 +15,5 @@ import amp.bus.rabbit.topology.RoutingInfo;
  */
 public interface IRoutingInfoRetriever {
 
-	RoutingInfo retrieveRoutingInfo(String topic);
+	RoutingInfo retrieveRoutingInfo(Map<String, String> routingHints);
 }

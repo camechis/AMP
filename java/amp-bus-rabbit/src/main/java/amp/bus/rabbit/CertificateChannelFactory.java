@@ -13,7 +13,10 @@ import com.rabbitmq.client.DefaultSaslConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import amp.bus.rabbit.topology.Exchange;
+import amp.bus.rabbit.topology.BaseRoute;
+import amp.bus.rabbit.topology.Broker;
+import amp.bus.rabbit.topology.ConsumingRoute;
+import amp.bus.rabbit.topology.ProducingRoute;
 
 
 public class CertificateChannelFactory extends BaseChannelFactory {
@@ -22,6 +25,7 @@ public class CertificateChannelFactory extends BaseChannelFactory {
 	protected String password;
     protected String pathToClientCert;
     protected String pathToRemoteCertStore;
+    protected String passwordToRemoteCertStore = null;
 
     public CertificateChannelFactory(String pathToClientCertificate, String password, String pathToRemoteCertStore) {
 
@@ -30,11 +34,18 @@ public class CertificateChannelFactory extends BaseChannelFactory {
         this.password = password;
         this.pathToRemoteCertStore = pathToRemoteCertStore;
     }
-	
-	@Override
-	public Connection getConnection(Exchange exchange) throws Exception {
+    
+    public CertificateChannelFactory(
+    		String pathToClientCertificate, String password, 
+    		String pathToRemoteCertStore, String passwordToRemoteCertStore) {
 
-        log.debug("Getting connection for exchange: {}", exchange.toString());
+        this(pathToClientCertificate, password, pathToRemoteCertStore);
+        this.passwordToRemoteCertStore = passwordToRemoteCertStore;
+    }
+	
+	Connection createConnection(Broker broker, BaseRoute route) throws Exception {
+
+        log.debug("Getting connection for broker: {}", broker);
 
 		char[] keyPassphrase = password.toCharArray();
 
@@ -45,7 +56,9 @@ public class CertificateChannelFactory extends BaseChannelFactory {
         kmf.init(clientCertStore, keyPassphrase);
 
         KeyStore remoteCertStore = KeyStore.getInstance("JKS");
-        remoteCertStore.load(new FileInputStream(pathToRemoteCertStore), null);
+        remoteCertStore.load(new FileInputStream(pathToRemoteCertStore), 
+        		(this.passwordToRemoteCertStore != null)? 
+        				this.passwordToRemoteCertStore.toCharArray() : null);
 
         TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");
         tmf.init(remoteCertStore);
@@ -54,14 +67,32 @@ public class CertificateChannelFactory extends BaseChannelFactory {
         c.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);
 
         ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost(exchange.getHostName());
-        factory.setPort(exchange.getPort());
-        factory.setVirtualHost(exchange.getVirtualHost());
+        factory.setHost(broker.getHostname());
+        factory.setPort(broker.getPort());
+        factory.setVirtualHost(route.getExchange().getVirtualHost());
         factory.setSaslConfig(DefaultSaslConfig.EXTERNAL);
         factory.useSslProtocol(c);
         //factory.setRequestedHeartbeat(HEARTBEAT_INTERVAL);
         
         return factory.newConnection();
+	}
+
+	@Override
+	public ConnectionContext getConnection(Broker broker, ProducingRoute route)
+			throws Exception {
+		
+		Connection connection = createConnection(broker, route);
+		
+		return new ConnectionContext(broker, route, connection);
+	}
+
+	@Override
+	public ConnectionContext getConnection(Broker broker, ConsumingRoute route)
+			throws Exception {
+		
+		Connection connection = createConnection(broker, route);
+		
+		return new ConnectionContext(broker, route, connection);
 	}
 
 }

@@ -47,7 +47,7 @@ public class ConnectionRemediator extends Thread {
 			
 			try {
 				
-				channel = this.channelFactory.getChannelFor(listener.getExchange());
+				channel = this.channelFactory.getChannelFor(listener.getConsumingRoute());
 				
 				listener.start(channel);
 				

@@ -4,8 +4,8 @@ import java.util.Collection;
 
 import rabbitmq.mgmt.RabbitMgmtService;
 import rabbitmq.mgmt.model.Binding;
-import amp.topology.core.model.BindingRepository;
 import amp.topology.core.model.ClusterDoesntExistException;
+import amp.topology.core.repo.BindingRepository;
 
 public class RmqBindingRepository extends RmqBaseRepository implements BindingRepository {
 	

@@ -5,7 +5,7 @@ import java.util.Collection;
 import rabbitmq.mgmt.RabbitMgmtService;
 import rabbitmq.mgmt.model.Queue;
 import amp.topology.core.model.ClusterDoesntExistException;
-import amp.topology.core.model.QueueRepository;
+import amp.topology.core.repo.QueueRepository;
 
 public class RmqQueueRepository extends RmqBaseRepository implements QueueRepository {
 

@@ -1,7 +1,5 @@
 package amp.topology.core.repo.snapshot;
 
-import amp.topology.core.ExtendedExchange;
-import amp.topology.core.ExtendedRouteInfo;
 
 import com.thoughtworks.xstream.XStream;
 
@@ -21,8 +19,8 @@ public class XmlTopologySnapshotSerializer implements ITopologySnapshotSerialize
 		// Alias Exchange and RouteInfo classes so they are
 		// not tedious to write in XML.
 		this.xstream.alias("topology", TopologySnapshot.class);
-		this.xstream.alias("exchange", ExtendedExchange.class);
-		this.xstream.alias("route", ExtendedRouteInfo.class);
+		//this.xstream.alias("exchange", ExtendedExchange.class);
+		//this.xstream.alias("route", ExtendedRouteInfo.class);
 	}
 	
 	public XmlTopologySnapshotSerializer(XStream xstream){

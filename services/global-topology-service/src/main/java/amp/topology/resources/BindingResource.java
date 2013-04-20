@@ -18,8 +18,8 @@ import rabbitmq.mgmt.model.Binding;
 
 import com.yammer.metrics.annotation.Timed;
 
-import amp.topology.core.model.BindingRepository;
 import amp.topology.core.model.ClusterDoesntExistException;
+import amp.topology.core.repo.BindingRepository;
 
 @Path("/clusters/{cluster}")
 @Produces(MediaType.APPLICATION_JSON)

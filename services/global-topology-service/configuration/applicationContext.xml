@@ -61,7 +61,7 @@
 	<bean id="clusterResource" class="amp.topology.resources.ClusterResource" 
 		c:clusterRepository-ref="clusterRepository" />
 		
-	<bean id="exchangeResource" class="amp.topology.resources.NExchangeResource" 
+	<bean id="exchangeResource" class="amp.topology.resources.ExchangeResource" 
 		c:exchangeRepository-ref="exchangeRepository" />
 		
 	<bean id="queueResource" class="amp.topology.resources.QueueResource"
@@ -84,40 +84,6 @@
 	
 	<bean id="whoAmIResource" class="amp.topology.resources.WhoAmIResource" />
 	
-	<!-- 
-	<bean id="topologyService"
-		class="amp.topology.core.GlobalTopologyService"
-		c:topologyRepository-ref="topologyRepository" />
+	<bean id="topologyServiceResource" class="amp.topology.resources.TopologyServiceResource" />
 	
-	<bean id="exchangeResource" 
-		class="amp.topology.resources.ExchangeResource" 
-		c:topologyRepository-ref="topologyRepository" />
-	
-	<bean id="routeInfoResource"
-		class="amp.topology.resources.RouteInfoResource"
-		c:topologyRepository-ref="topologyRepository" />
-	
-	<bean id="topologyServiceResource"
-		class="amp.topology.resources.TopologyServiceResource"
-		c:topologyService-ref="topologyService" />
-		
-	<bean id="missedTopicsResource"
-		class="amp.topology.resources.MissedTopicsResource"
-		c:noRouteForTopicListener-ref="noRouteInfoForTopicListener" />
-	
-	<bean id="noRouteInfoForTopicListener" 
-		class="amp.topology.core.repo.listeners.NoRouteInfoForTopicListener" />
-	
-	<bean id="repositoryHealthCheck"
-		class="amp.topology.health.RepositoryHealthCheck"
-		c:topologyRepository-ref="topologyRepository" />
-	
-	<bean id="topicMissHealthCheck"
-		class="amp.topology.health.TopicMissHealthCheck"
-		c:noRouteForTopicListener-ref="noRouteInfoForTopicListener" />
-	
-	<bean id="showTopicMissesTask"
-		class="amp.topology.tasks.ShowTopicMissesTask"
-		c:noRouteForTopicListener-ref="noRouteInfoForTopicListener" />
-	 -->
 </beans>

@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import rabbitmq.mgmt.model.User;
 import amp.topology.core.model.ClusterDoesntExistException;
-import amp.topology.core.model.UserRepository;
+import amp.topology.core.repo.UserRepository;
 
 import com.yammer.metrics.annotation.Timed;
 

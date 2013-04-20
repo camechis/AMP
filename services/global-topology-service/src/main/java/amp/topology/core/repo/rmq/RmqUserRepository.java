@@ -6,7 +6,7 @@ import rabbitmq.mgmt.RabbitMgmtService;
 import rabbitmq.mgmt.model.Permission;
 import rabbitmq.mgmt.model.User;
 import amp.topology.core.model.ClusterDoesntExistException;
-import amp.topology.core.model.UserRepository;
+import amp.topology.core.repo.UserRepository;
 
 public class RmqUserRepository extends RmqBaseRepository implements UserRepository {
 	

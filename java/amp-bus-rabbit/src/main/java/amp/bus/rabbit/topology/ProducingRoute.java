@@ -4,22 +4,28 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
+/**
+ * Represents the information required by the transport to produce
+ * a message.
+ * 
+ * @author Richard Clayton (Berico Technologies)
+ */
 public class ProducingRoute extends BaseRoute {
 	
 	public ProducingRoute() { super(); }
 
-	public ProducingRoute(ArrayList<Broker> brokers, NExchange exchange, String routingKey) {
+	public ProducingRoute(ArrayList<Broker> brokers, Exchange exchange, Collection<String> routingKeys) {
 		
-		super(brokers, exchange, routingKey);
+		super(brokers, exchange, routingKeys);
 	}
 	
 	@Override
 	public String toString() {
 		return "ProducingRoute [brokers=" + brokers + ", exchange=" + exchange
-				+ ", routingKey=" + routingKey + "]";
+				+ ", routingKey=" + routingKeys + "]";
 	}
 	
-	public static ProducingRouteBuilder build(){
+	public static ProducingRouteBuilder builder(){
 		
 		return new ProducingRouteBuilder();
 	}
@@ -28,7 +34,7 @@ public class ProducingRoute extends BaseRoute {
 		
 		ProducingRoute producingRoute = new ProducingRoute();
 		
-		public ProducingRouteBuilder exchange(NExchange exchange){
+		public ProducingRouteBuilder exchange(Exchange exchange){
 			
 			this.producingRoute.setExchange(exchange);
 			
@@ -49,14 +55,21 @@ public class ProducingRoute extends BaseRoute {
 			return this;
 		}
 		
-		public ProducingRouteBuilder routingKey(String routingKey){
+		public ProducingRouteBuilder routingKeys(String... routingKeys){
 			
-			this.producingRoute.setRoutingKey(routingKey);
+			this.producingRoute.setRoutingKeys(Arrays.asList(routingKeys));
 			
 			return this;
 		}
 		
-		public ProducingRoute done(){
+		public ProducingRouteBuilder routingKeys(Collection<String> routingKeys){
+			
+			this.producingRoute.setRoutingKeys(routingKeys);
+			
+			return this;
+		}
+		
+		public ProducingRoute build(){
 			
 			return this.producingRoute;
 		}

@@ -3,6 +3,7 @@ package amp.bus.rabbit;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -22,7 +23,7 @@ import org.slf4j.LoggerFactory;
 
 import amp.bus.EnvelopeHelper;
 import amp.bus.IEnvelopeReceivedCallback;
-import amp.bus.rabbit.topology.Exchange;
+import amp.bus.rabbit.topology.ConsumingRoute;
 
 
 public class RabbitListener implements IDisposable, Runnable {
@@ -48,46 +49,46 @@ public class RabbitListener implements IDisposable, Runnable {
     		= new ArrayList<IOnConnectionErrorCallback>();
     
     protected Channel channel;
-    protected Exchange exchange;
+    protected ConsumingRoute consumingRoute;
     protected Logger log;
     protected IRegistration registration;
     protected boolean shouldContinue;
     protected Thread threadImRunningOn = null;
 
     /**
-     * Initialize the Listener with the Registration and Exchange
+     * Initialize the Listener with the Registration and ConsumingRoute
      * @param registration
-     * @param exchange
+     * @param consumingRoute
      */
-    public RabbitListener(IRegistration registration, Exchange exchange) {
+    public RabbitListener(IRegistration registration, ConsumingRoute consumingRoute) {
 
         this.registration = registration;
-        this.exchange = exchange;
+        this.consumingRoute = consumingRoute;
 
         log = LoggerFactory.getLogger(this.getClass());
     }
     
     /**
-     * Initialize the Listener with the Registration, Exchange, and Channel
+     * Initialize the Listener with the Registration, ConsumingRoute, and Channel
      * @param registration
-     * @param exchange
+     * @param consumingRoute
      * @param channel
      */
-    public RabbitListener(IRegistration registration, Exchange exchange, Channel channel) {
+    public RabbitListener(IRegistration registration, ConsumingRoute consumingRoute, Channel channel) {
 
         this.registration = registration;
-        this.exchange = exchange;
+        this.consumingRoute = consumingRoute;
         this.channel = channel;
 
         log = LoggerFactory.getLogger(this.getClass());
     }
 
     /**
-     * Get the Exchange this listener is listening to.
-     * @return AMQP Exchange
+     * The routing info for this Listener
+     * @return ConsumingRoute
      */
-    public Exchange getExchange(){
-    		return this.exchange;
+    public ConsumingRoute getConsumingRoute(){
+    		return this.consumingRoute;
     }
     
     /**
@@ -143,11 +144,16 @@ public class RabbitListener implements IDisposable, Runnable {
 		}
     }
     
-    public void bind(IRegistration registration, Exchange exchange) {
+    /**
+     * 
+     * @param registration
+     * @param route
+     */
+    public void bind(ConsumingRoute route) {
     	
 		try {
 
-			this.createBinding(exchange.getRoutingKey());
+			this.createBinding(route.getRoutingKeys());
     			
 		} catch (IOException e) {
 			
@@ -157,33 +163,40 @@ public class RabbitListener implements IDisposable, Runnable {
     
     /**
      * Bind the channel to the Routing and Exchange configuration
-     * @param routingKey
+     * @param routingKeys
      * @throws IOException
      */
-    @SuppressWarnings("unchecked")
-	public void createBinding(String routingKey) throws IOException {
+	public void createBinding(Collection<String> routingKeys) throws IOException {
 		
-		log.debug("Creating binding for {}", routingKey);
+		if (consumingRoute.getExchange().shouldDeclare()){
+			
+			channel.exchangeDeclare(
+				consumingRoute.getExchange().getName(), 
+				consumingRoute.getExchange().getExchangeType(), 
+				consumingRoute.getExchange().isDurable(),
+				consumingRoute.getExchange().isAutoDelete(), 
+				consumingRoute.getExchange().getArguments());
+		}
 		
-		channel.exchangeDeclare(
-        		this.exchange.getName(), 
-        		this.exchange.getExchangeType(), 
-        		this.exchange.getIsDurable(),
-        		this.exchange.getIsAutoDelete(), 
-        		this.exchange.getArguments());
-        
-        channel.queueDeclare(
-        		this.exchange.getQueueName(), 
-        		this.exchange.getIsDurable(), 
-        		false, 
-        		this.exchange.getIsAutoDelete(),            
-        		this.exchange.getArguments());
-        
-        channel.queueBind(
-        		this.exchange.getQueueName(), 
-        		this.exchange.getName(), 
-        		routingKey,
-        		this.exchange.getArguments());
+		if (consumingRoute.getQueue().shouldDeclare()){
+			
+			channel.queueDeclare(
+				consumingRoute.getQueue().getName(), 
+				consumingRoute.getQueue().isDurable(), 
+				consumingRoute.getQueue().isExclusive(), 
+	        		consumingRoute.getQueue().isAutoDelete(),            
+	        		consumingRoute.getQueue().getArguments());
+		}
+		
+		for (String routingKey : routingKeys){
+		
+			log.debug("Creating binding for {}", routingKey);
+
+			channel.queueBind(
+				consumingRoute.getQueue().getName(),
+				consumingRoute.getExchange().getName(),
+				routingKey);
+		}
 	}
     
     /**
@@ -285,16 +298,16 @@ public class RabbitListener implements IDisposable, Runnable {
 
         try {
     		// first, declare the exchange and queue
-            this.bind(this.registration, this.exchange);
+            this.bind(this.consumingRoute);
 
             // next(), create a basic consumer
             QueueingConsumer consumer = new QueueingConsumer(channel);
 
             // and tell it to start consuming messages, storing the consumer tag
-            String consumerTag = channel.basicConsume(exchange.getQueueName(), false, consumer);
+            String consumerTag = channel.basicConsume(consumingRoute.getQueue().getName(), false, consumer);
 
-            log.debug("Will now continuously listen for events using routing key: {}",
-            		exchange.getRoutingKey());
+            log.debug("Will now continuously listen for events using routing keys: {}",
+            		this.consumingRoute.getRoutingKeys());
             
             // Loop until told to stop.
             while (shouldContinue) {

@@ -102,7 +102,7 @@ public class Broker {
 		return true;
 	}
 
-	public static BrokerBuilder build(){
+	public static BrokerBuilder builder(){
 		
 		return new BrokerBuilder();
 	}
@@ -144,7 +144,7 @@ public class Broker {
 			return this;
 		}
 		
-		public Broker done(){
+		public Broker build(){
 			
 			return this.broker;
 		}

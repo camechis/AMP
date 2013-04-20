@@ -4,14 +4,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
+/**
+ * Represents the information needed to consume messages by the transport provider.
+ * 
+ * @author Richard Clayton (Berico Technologies)
+ */
 public class ConsumingRoute extends BaseRoute {
 
 	Queue queue;
 
 	public ConsumingRoute(){}
 	
-	public ConsumingRoute(ArrayList<Broker> brokers, NExchange exchange, Queue queue, String routingKey) {
-		super(brokers, exchange, routingKey);
+	public ConsumingRoute(ArrayList<Broker> brokers, Exchange exchange, Queue queue, Collection<String> routingKeys) {
+		super(brokers, exchange, routingKeys);
 		
 		this.queue = queue;
 	}
@@ -27,10 +32,10 @@ public class ConsumingRoute extends BaseRoute {
 	@Override
 	public String toString() {
 		return "ConsumingRoute [queue=" + queue + ", brokers=" + brokers
-				+ ", exchange=" + exchange + ", routingKey=" + routingKey + "]";
+				+ ", exchange=" + exchange + ", routingKey=" + routingKeys + "]";
 	}
 
-	public static ConsumingRouteBuilder build(){
+	public static ConsumingRouteBuilder builder(){
 		
 		return new ConsumingRouteBuilder();
 	}
@@ -53,7 +58,7 @@ public class ConsumingRoute extends BaseRoute {
 			return this;
 		}
 		
-		public ConsumingRouteBuilder exchange(NExchange exchange){
+		public ConsumingRouteBuilder exchange(Exchange exchange){
 			
 			consumingRoute.setExchange(exchange);
 			
@@ -67,14 +72,21 @@ public class ConsumingRoute extends BaseRoute {
 			return this;
 		}
 		
-		public ConsumingRouteBuilder routingkey(String routingkey){
+		public ConsumingRouteBuilder routingkeys(String... routingkeys){
 			
-			consumingRoute.setRoutingKey(routingkey);
+			consumingRoute.setRoutingKeys(Arrays.asList(routingkeys));
 			
 			return this;
 		}
 		
-		public ConsumingRoute done(){
+		public ConsumingRouteBuilder routingkeys(Collection<String> routingkeys){
+			
+			consumingRoute.setRoutingKeys(routingkeys);
+			
+			return this;
+		}
+		
+		public ConsumingRoute build(){
 			
 			return this.consumingRoute;
 		}

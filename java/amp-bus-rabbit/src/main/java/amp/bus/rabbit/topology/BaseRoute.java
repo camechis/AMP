@@ -3,22 +3,27 @@ package amp.bus.rabbit.topology;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class BaseRoute {
+/**
+ * Represents the common behavior between Producing and Consuming Routes.
+ * 
+ * @author Richard Clayton (Berico Technologies)
+ */
+public abstract class BaseRoute {
 
 	ArrayList<Broker> brokers = new ArrayList<Broker>();
 	
-	NExchange exchange;
+	Exchange exchange;
 	
-	String routingKey;
+	ArrayList<String> routingKeys = new ArrayList<String>();
 	
 	public BaseRoute(){}
 	
-	public BaseRoute(ArrayList<Broker> brokers, NExchange exchange,
-			String routingKey) {
+	public BaseRoute(ArrayList<Broker> brokers, Exchange exchange,
+			Collection<String> routingKeys) {
 		
 		this.brokers = brokers;
 		this.exchange = exchange;
-		this.routingKey = routingKey;
+		this.routingKeys.addAll(routingKeys);
 	}
 	
 	public void setBrokers(Collection<Broker> brokers){
@@ -31,24 +36,24 @@ public class BaseRoute {
 		return this.brokers;
 	}
 	
-	public void setExchange(NExchange exchange){
+	public void setExchange(Exchange exchange){
 		
 		this.exchange = exchange;
 	}
 	
-	public NExchange getExchange(){
+	public Exchange getExchange(){
 		
 		return this.exchange;
 	}
 	
-	public void setRoutingKey(String routingKey){
+	public void setRoutingKeys(Collection<String> routingKeys){
 		
-		this.routingKey = routingKey;
+		this.routingKeys.addAll(routingKeys);
 	}
 	
-	public String getRoutingKey(){
+	public Collection<String> getRoutingKeys(){
 		
-		return this.routingKey;
+		return this.routingKeys;
 	}
 
 	@Override
@@ -59,7 +64,7 @@ public class BaseRoute {
 		result = prime * result
 				+ ((exchange == null) ? 0 : exchange.hashCode());
 		result = prime * result
-				+ ((routingKey == null) ? 0 : routingKey.hashCode());
+				+ ((routingKeys == null) ? 0 : routingKeys.hashCode());
 		return result;
 	}
 
@@ -82,10 +87,10 @@ public class BaseRoute {
 				return false;
 		} else if (!exchange.equals(other.exchange))
 			return false;
-		if (routingKey == null) {
-			if (other.routingKey != null)
+		if (routingKeys == null) {
+			if (other.routingKeys != null)
 				return false;
-		} else if (!routingKey.equals(other.routingKey))
+		} else if (!routingKeys.equals(other.routingKeys))
 			return false;
 		return true;
 	}

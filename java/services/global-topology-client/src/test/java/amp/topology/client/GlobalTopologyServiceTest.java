@@ -2,6 +2,8 @@ package amp.topology.client;
 
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
+
+import java.util.HashMap;
 //import static org.junit.Assert.*;
 
 import org.junit.Rule;
@@ -10,7 +12,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import amp.bus.rabbit.topology.RoutingInfo;
-import amp.topology.client.integration.BasicAuthIntegrationTest;
+import amp.eventing.GsonSerializer;
+
+import cmf.bus.EnvelopeHeaderConstants;
 
 import com.berico.test.RequireProperties;
 import com.berico.test.TestProperties;
@@ -29,7 +33,11 @@ public class GlobalTopologyServiceTest {
 		
 		GlobalTopologyService gts = new GlobalTopologyService(retriever);
 		
-		gts.getRoutingInfo(TestUtils.buildRoutingHints("A nonexistent topic!"));
+		HashMap<String, String> routingHints = new HashMap<String, String>();
+		
+		routingHints.put(EnvelopeHeaderConstants.MESSAGE_TOPIC, "A nonexistent topic!");
+		
+		gts.getRoutingInfo(routingHints);
 	}
 	
 	@Test
@@ -55,25 +63,27 @@ public class GlobalTopologyServiceTest {
 		HttpClientProvider provider = 
 				new BasicAuthHttpClientProvider(hostname, port, username, password);
 		
-		JsonRoutingInfoSerializer serializer = new JsonRoutingInfoSerializer();
+		GsonSerializer serializer = new GsonSerializer();
 		
 		IRoutingInfoRetriever routingInfoRetriever = 
 			new HttpRoutingInfoRetriever(provider, serviceUrlExpression, serializer);
 		
-		DefaultApplicationExchangeProvider fallback = new DefaultApplicationExchangeProvider();
+		DefaultApplicationExchangeProvider fallback = new DefaultApplicationExchangeProvider("my-client", hostname, port);
 		
-		fallback.setHostname(hostname);
-		fallback.setPort(port);
-		fallback.setDurable(false);
-		fallback.setAutoDelete(false);
 		fallback.setExchangeName("amp.fallback");
+		fallback.getExchangePrototype().setDurable(false);
+		fallback.getExchangePrototype().setAutoDelete(false);
 		
 		GlobalTopologyService gts = new GlobalTopologyService(
 			routingInfoRetriever, 10 * 60 * 1000, fallback);
 		
-		RoutingInfo routingInfo = gts.getRoutingInfo(TestUtils.buildRoutingHints(eventType));
+		HashMap<String, String> routingHints = new HashMap<String, String>();
 		
-		TestUtils.dumpRoutingInfoToLogger(routingInfo);
+		routingHints.put(EnvelopeHeaderConstants.MESSAGE_TOPIC, eventType);
+		
+		RoutingInfo routingInfo = gts.getRoutingInfo(routingHints);
+		
+		logger.info("Routing Info: {}", routingInfo);
 		
 		assertTrue(true);
 	}

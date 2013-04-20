@@ -1,6 +1,8 @@
-package amp.topology.core.model;
+package amp.topology.core.repo;
 
 import java.util.Collection;
+
+import amp.topology.core.model.ClusterDoesntExistException;
 
 import rabbitmq.mgmt.model.ExchangeType;
 import rabbitmq.mgmt.model.ListenerContext;

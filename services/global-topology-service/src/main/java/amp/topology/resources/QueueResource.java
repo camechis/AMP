@@ -20,7 +20,7 @@ import rabbitmq.mgmt.model.Queue;
 import com.yammer.metrics.annotation.Timed;
 
 import amp.topology.core.model.ClusterDoesntExistException;
-import amp.topology.core.model.QueueRepository;
+import amp.topology.core.repo.QueueRepository;
 
 @Path("/clusters/{cluster}/vhost/{vhost}/queues")
 @Produces(MediaType.APPLICATION_JSON)

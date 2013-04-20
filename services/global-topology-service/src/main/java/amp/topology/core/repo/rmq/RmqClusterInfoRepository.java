@@ -8,7 +8,7 @@ import rabbitmq.mgmt.model.ListenerContext;
 import rabbitmq.mgmt.model.Node;
 import rabbitmq.mgmt.model.Overview;
 import amp.topology.core.model.ClusterDoesntExistException;
-import amp.topology.core.model.ClusterInfoRepository;
+import amp.topology.core.repo.ClusterInfoRepository;
 
 public class RmqClusterInfoRepository extends RmqBaseRepository implements ClusterInfoRepository {
 

@@ -5,7 +5,7 @@ import java.util.Collection;
 import rabbitmq.mgmt.RabbitMgmtService;
 import rabbitmq.mgmt.model.Exchange;
 import amp.topology.core.model.ClusterDoesntExistException;
-import amp.topology.core.model.ExchangeRepository;
+import amp.topology.core.repo.ExchangeRepository;
 
 public class RmqExchangeRepository extends RmqBaseRepository implements ExchangeRepository {
 	

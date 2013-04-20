@@ -4,8 +4,6 @@ import java.util.Arrays;
 
 import org.springframework.data.mongodb.core.MongoTemplate;
 
-import amp.topology.core.ExtendedExchange;
-import amp.topology.core.ExtendedRouteInfo;
 //import static org.springframework.data.mongodb.core.query.Criteria.where;
 //import static org.springframework.data.mongodb.core.query.Query.query;
 
@@ -19,7 +17,7 @@ public class MongoSeed {
 	}
 	
 	public void seed(){
-		
+		/*
 		mongoTemplate.dropCollection(ExtendedExchange.class);
 		mongoTemplate.dropCollection(ExtendedRouteInfo.class);
 		
@@ -43,6 +41,7 @@ public class MongoSeed {
 			securityExchange.getId());
 		
 		mongoTemplate.save(route);
+		*/
 	}
 
 }

@@ -21,7 +21,7 @@ import rabbitmq.mgmt.model.Status;
 import rabbitmq.mgmt.model.VirtualHost;
 
 import amp.topology.core.model.ClusterDoesntExistException;
-import amp.topology.core.model.VirtualHostRepository;
+import amp.topology.core.repo.VirtualHostRepository;
 
 @Path("/clusters/{cluster}/vhosts")
 @Produces(MediaType.APPLICATION_JSON)

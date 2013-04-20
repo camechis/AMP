@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import amp.topology.core.model.Cluster;
-import amp.topology.core.model.ClusterRepository;
+import amp.topology.core.repo.ClusterRepository;
 
 /**
  * In-Memory implementation of the ClusterRepository.

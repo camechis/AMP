@@ -1,33 +1,30 @@
 package amp.bus.rabbit;
 
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
-import cmf.bus.Envelope;
-import cmf.bus.IRegistration;
-import com.rabbitmq.client.AMQP.BasicProperties;
-import com.rabbitmq.client.Channel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import amp.bus.IEnvelopeDispatcher;
 import amp.bus.IEnvelopeReceivedCallback;
 import amp.bus.ITransportProvider;
-import amp.bus.rabbit.topology.Exchange;
+import amp.bus.rabbit.topology.ConsumingRoute;
 import amp.bus.rabbit.topology.ITopologyService;
-import amp.bus.rabbit.topology.RouteInfo;
+import amp.bus.rabbit.topology.ProducingRoute;
 import amp.bus.rabbit.topology.RoutingInfo;
+import cmf.bus.Envelope;
+import cmf.bus.IRegistration;
 
+import com.rabbitmq.client.AMQP.BasicProperties;
+import com.rabbitmq.client.Channel;
 
 /**
  * AMQP Implementation of the Transport Provider using the RabbitMQ Client.
  * 
- * @author rclayton
+ * @author John Ruiz and Richard Clayton (Berico Technologies)
  */
 public class RabbitTransportProvider implements ITransportProvider {
 
@@ -62,33 +59,25 @@ public class RabbitTransportProvider implements ITransportProvider {
         // first, get the topology based on the registration info
         RoutingInfo routing = topologyService.getRoutingInfo(registration.getRegistrationInfo());
 
-        // next, pull out all the producer exchanges
-        List<Exchange> exchanges = new ArrayList<Exchange>();
-        
-        for (RouteInfo route : routing.getRoutes()) {
-        
-        		exchanges.add(route.getConsumerExchange());
-        }
-
-        for (Exchange exchange : exchanges) {
+        for (ConsumingRoute route : routing.getConsumingRoutes()){
+        	
+        		RabbitListener listener = createListener(registration, route);
         		
-            RabbitListener listener = createListener(registration, exchange);
-
-            // store the listener
-            listeners.put(registration, listener);
+        		// store the listener
+                listeners.put(registration, listener);
         }
 
         log.debug("Leave Register");
     }
 
     protected RabbitListener createListener(
-			IRegistration registration, Exchange exchange) throws Exception {
+			IRegistration registration, ConsumingRoute route) throws Exception {
     	
     		// create a channel
-        Channel channel = channelFactory.getChannelFor(exchange);
+        Channel channel = channelFactory.getChannelFor(route);
 
         // create a listener
-        RabbitListener listener = this.getListener(registration, exchange);
+        RabbitListener listener = this.getListener(registration, route);
 
         // hook into the listener's events
         listener.onEnvelopeReceived(new IEnvelopeReceivedCallback() {
@@ -122,17 +111,16 @@ public class RabbitTransportProvider implements ITransportProvider {
      * to make testing a little easier.
      * 
      * @param registration Handlers and hints
-     * @param exchange Routing Information
+     * @param route Routing Information
      * @return Listener that will pull messages from the broker and call the handlers
      * on the registration.
      */
-    protected RabbitListener getListener(IRegistration registration, Exchange exchange){
+    protected RabbitListener getListener(IRegistration registration, ConsumingRoute route){
     		
-    		return new RabbitListener(registration, exchange);
+    		return new RabbitListener(registration, route);
     }
     
     @Override
-    @SuppressWarnings({ "deprecation", "unchecked" })
     public void send(Envelope env) throws Exception {
     	
         log.debug("Enter Send");
@@ -140,44 +128,40 @@ public class RabbitTransportProvider implements ITransportProvider {
         // first, get the topology based on the headers
         RoutingInfo routing = topologyService.getRoutingInfo(env.getHeaders());
 
-        // next, pull out all the producer exchanges
-        List<Exchange> exchanges = new ArrayList<Exchange>();
-        
-        for (RouteInfo route : routing.getRoutes()) {
+        for (ProducingRoute route : routing.getProducingRoutes()){
         	
-            exchanges.add(route.getProducerExchange());
-        }
-
-        // for each exchange, send the envelope
-        for (Exchange ex : exchanges) {
-            log.info("Sending to exchange: " + ex.toString());
-
-            Channel channel = null;
-            
-            try {
-                channel = channelFactory.getChannelFor(ex);
-
-                BasicProperties props = new BasicProperties.Builder().build();
-                
-                Map<String, Object> headers = new HashMap<String, Object>();
-                
-                for (Entry<String, String> entry : env.getHeaders().entrySet()) {
-                
-                		headers.put(entry.getKey(), entry.getValue());
-                }
-                
-                props.setHeaders(headers);
-                
-                channel.exchangeDeclare(
-                		ex.getName(), ex.getExchangeType(), ex.getIsDurable(), 
-                		ex.getIsAutoDelete(), ex.getArguments());
-                
-                channel.basicPublish(ex.getName(), ex.getRoutingKey(), props, env.getPayload());
-                
-            } catch (Exception e) {
-                log.error("Failed to send an envelope", e);
-                throw e;
-            } 
+        		log.info("Sending to exchange: " + route.getExchange().getName());
+        		
+        		Channel channel = null;
+        		
+        		try {
+        			
+        			channel = channelFactory.getChannelFor(route);
+        			
+        			BasicProperties props = 
+        				new BasicProperties.Builder()
+        					.headers(
+        						new HashMap<String, Object>(env.getHeaders()))
+        					.build();
+        			
+        			if (route.getExchange().shouldDeclare()){
+        				
+        				channel.exchangeDeclare(
+        					route.getExchange().getName(), route.getExchange().getExchangeType(), 
+        					route.getExchange().isDurable(), route.getExchange().isAutoDelete(), 
+        					route.getExchange().getArguments());
+        			}
+        			
+        			for (String routingKey : route.getRoutingKeys()){
+        				
+        				channel.basicPublish(route.getExchange().getName(), routingKey, props, env.getPayload());
+        			}
+        			
+        		} catch (Exception e) {
+        			
+             	log.error("Failed to send an envelope", e);
+             	throw e;
+             } 
         }
         
         log.debug("Leave Send");

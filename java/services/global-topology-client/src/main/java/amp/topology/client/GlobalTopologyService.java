@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import cmf.bus.EnvelopeHeaderConstants;
+
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import org.slf4j.Logger;
@@ -69,31 +70,31 @@ public class GlobalTopologyService implements ITopologyService {
 	@Override
 	public RoutingInfo getRoutingInfo(Map<String, String> routingHints) {
 		
-		String topic = routingHints.get(EnvelopeHeaderConstants.MESSAGE_TOPIC);
+		logger.debug("Getting routing info for hints: {}", routingHints);
 		
-		logger.info("Getting routing info for topic: {}", topic);
+		String routingHintsHash = getRoutingHintsCompositeKey(routingHints);
 		
-		RoutingInfo routingInfo = this.routingInfoCache.getIfPresent(topic);
+		RoutingInfo routingInfo = this.routingInfoCache.getIfPresent(routingHintsHash);
 		
 		if (routingInfo == null){
 			
 			logger.info("Routing info not in cache, going to the retriever.");
 			
-			routingInfo = this.routingInfoRetriever.retrieveRoutingInfo(topic);
+			routingInfo = this.routingInfoRetriever.retrieveRoutingInfo(routingHints);
 			
 			if (routingInfoAbsentOrNotValid(routingInfo)
 				&& this.fallbackProvider != null) {
 				
-				routingInfo = this.fallbackProvider.getFallbackRoute(topic);
+				routingInfo = this.fallbackProvider.getFallbackRoute(routingHints);
 			}
 			
 			// If the RoutingInfo is still null, end this program's life!
 			if (routingInfo == null){
 				
-				throw new RoutingInfoNotFoundException(topic);
+				throw new RoutingInfoNotFoundException(routingHints);
 			}
 			
-			this.routingInfoCache.put(topic, routingInfo);
+			this.routingInfoCache.put(routingHintsHash, routingInfo);
 		}
 		else {
 			
@@ -116,13 +117,15 @@ public class GlobalTopologyService implements ITopologyService {
 			
 			logger.debug("Routing info is not null.");
 			
-			if (routingInfo.getRoutes() != null){
+			if (routingInfo.getProducingRoutes() != null 
+				|| routingInfo.getConsumingRoutes() != null){
 				
 				logger.debug("Routes are not null.");
 				
-				if (routingInfo.getRoutes().iterator().hasNext()){
+				if (routingInfo.getProducingRoutes().size() > 0 
+					|| routingInfo.getConsumingRoutes().size() > 0){
 					
-					logger.debug("Routes has next.");
+					logger.debug("Routes are not empty.");
 					
 					return false;
 				}
@@ -130,6 +133,19 @@ public class GlobalTopologyService implements ITopologyService {
 		}
 		
 		return true;
+	}
+	
+	/**
+	 * Generates a key for referring to topology objects in the cache.
+	 * @param routingHints Set of routing hints.
+	 * @return key for caching purposes.
+	 */
+	public String getRoutingHintsCompositeKey(Map<String, String> routingHints){
+		
+		String topic   = routingHints.get(EnvelopeHeaderConstants.MESSAGE_TOPIC);
+		String pattern = routingHints.get(EnvelopeHeaderConstants.MESSAGE_PATTERN);
+		
+		return String.format("%s#%s", topic, (pattern != null)? pattern : "");
 	}
 	
 	@Override
