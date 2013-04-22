@@ -4,12 +4,11 @@
 	<parent>
         <groupId>amp</groupId>
         <artifactId>amp</artifactId>
-        <version>3.1.0</version>
+        <version>3.2.0-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 	<groupId>amp.archetypes</groupId>
 	<artifactId>quickstart</artifactId>
-	<version>3.1.0</version>
 	<packaging>jar</packaging>
 	<name>AMP Archetypes - Quickstart</name>
     <url>http://labs.beri.co/amp/archetypes/quickstart</url>
