@@ -2,6 +2,7 @@ package amp.extensions.spring;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
@@ -11,12 +12,13 @@ import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
+import amp.bus.rabbit.topology.Broker;
+import amp.eventing.GsonSerializer;
 import amp.topology.client.BasicAuthHttpClientProvider;
 import amp.topology.client.DefaultApplicationExchangeProvider;
 import amp.topology.client.GlobalTopologyService;
 import amp.topology.client.HttpClientProvider;
 import amp.topology.client.HttpRoutingInfoRetriever;
-import amp.topology.client.JsonRoutingInfoSerializer;
 import amp.topology.client.SslHttpClientProvider;
 
 public class GtsBeanDefinitionParser extends BaseBeanDefinitionParser {
@@ -63,7 +65,7 @@ public class GtsBeanDefinitionParser extends BaseBeanDefinitionParser {
 			throw new RuntimeException("'gts:url' is not a valid URI.");
 		}
 		
-		JsonRoutingInfoSerializer serializer = new JsonRoutingInfoSerializer();
+		GsonSerializer serializer = new GsonSerializer();
 		
 		HttpClientProvider provider = null;
 		
@@ -125,8 +127,12 @@ public class GtsBeanDefinitionParser extends BaseBeanDefinitionParser {
 			
 			DefaultApplicationExchangeProvider fallback = new DefaultApplicationExchangeProvider();
 			
-			fallback.setHostname(uri.getHost());
-			fallback.setDurable(true);
+			Broker broker = new Broker();
+			broker.setHostname(uri.getHost());
+			
+			fallback.setBrokers(Arrays.asList(broker));
+			
+			fallback.getExchangePrototype().setDurable(true);
 			
 			bean.addConstructorArgValue(fallback);
 		}
