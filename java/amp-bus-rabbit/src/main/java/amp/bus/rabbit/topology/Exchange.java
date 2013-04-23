@@ -21,7 +21,6 @@ import java.util.Map;
 public class Exchange extends AmqpModelBase {
 	
     protected String exchangeType = "direct";
-    protected String virtualHost = "/";
     
     public Exchange(){}
     
@@ -29,7 +28,7 @@ public class Exchange extends AmqpModelBase {
 			boolean isAutoDelete, boolean isDurable, boolean shouldDeclare,
 			String virtualHost, Map<String, Object> arguments) {
 		
-    		super(exchangeName, isAutoDelete, isDurable, shouldDeclare, arguments);
+    		super(exchangeName, isAutoDelete, isDurable, shouldDeclare, virtualHost, arguments);
     		
 		this.exchangeType = exchangeType;
 		this.virtualHost = virtualHost;
@@ -43,47 +42,7 @@ public class Exchange extends AmqpModelBase {
 	public void setExchangeType(String exchangeType) {
 		this.exchangeType = exchangeType;
 	}
-
-	public String getVirtualHost() {
-		return virtualHost;
-	}
-
-	public void setVirtualHost(String virtualHost) {
-		this.virtualHost = virtualHost;
-	}
 	
-    @Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result
-				+ ((exchangeType == null) ? 0 : exchangeType.hashCode());
-		result = prime * result
-				+ ((virtualHost == null) ? 0 : virtualHost.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (!super.equals(obj))
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Exchange other = (Exchange) obj;
-		if (exchangeType == null) {
-			if (other.exchangeType != null)
-				return false;
-		} else if (!exchangeType.equals(other.exchangeType))
-			return false;
-		if (virtualHost == null) {
-			if (other.virtualHost != null)
-				return false;
-		} else if (!virtualHost.equals(other.virtualHost))
-			return false;
-		return true;
-	}
 
 	@Override
 	public String toString() {

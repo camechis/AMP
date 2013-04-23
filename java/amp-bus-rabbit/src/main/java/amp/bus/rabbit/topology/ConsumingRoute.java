@@ -15,7 +15,7 @@ public class ConsumingRoute extends BaseRoute {
 
 	public ConsumingRoute(){}
 	
-	public ConsumingRoute(ArrayList<Broker> brokers, Exchange exchange, Queue queue, Collection<String> routingKeys) {
+	public ConsumingRoute(Collection<Broker> brokers, Exchange exchange, Queue queue, Collection<String> routingKeys) {
 		super(brokers, exchange, routingKeys);
 		
 		this.queue = queue;

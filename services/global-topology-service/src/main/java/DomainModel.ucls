@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class-diagram version="1.1.2" icons="true" automaticImage="PNG" always-add-relationships="true" generalizations="true" 
+  realizations="true" associations="true" dependencies="true" nesting-relationships="false">  
+  <class id="1" language="java" name="amp.topology.core.model.definitions.ConsumingRouteDefinition" 
+    project="amp.topology.service" 
+    file="/amp.topology.service/src/main/java/amp/topology/core/model/definitions/ConsumingRouteDefinition.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="170" width="851" x="1697" y="619"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="2" language="java" name="amp.topology.core.model.ManagementEndpoint" project="amp.topology.service" 
+    file="/amp.topology.service/src/main/java/amp/topology/core/model/ManagementEndpoint.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="548" width="483" x="3714" y="619"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="3" language="java" name="amp.topology.core.model.Client" project="amp.topology.service" 
+    file="/amp.topology.service/src/main/java/amp/topology/core/model/Client.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="260" width="265" x="212" y="319"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="4" language="java" name="amp.topology.core.model.ClusterRegistration" project="amp.topology.service" 
+    file="/amp.topology.service/src/main/java/amp/topology/core/model/ClusterRegistration.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="152" width="393" x="3405" y="319"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="5" language="java" name="amp.topology.core.model.TopologyModel" project="amp.topology.service" 
+    file="/amp.topology.service/src/main/java/amp/topology/core/model/TopologyModel.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="242" width="186" x="3405" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="6" language="java" name="amp.topology.core.model.ClusterDoesntExistException" 
+    project="amp.topology.service" 
+    file="/amp.topology.service/src/main/java/amp/topology/core/model/ClusterDoesntExistException.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="98" width="225" x="1590" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="7" language="java" name="amp.topology.core.model.Topic" project="amp.topology.service" 
+    file="/amp.topology.service/src/main/java/amp/topology/core/model/Topic.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="116" width="131" x="41" y="319"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="8" language="java" name="amp.topology.core.factory.model.Subtopology" project="amp.topology.service" 
+    file="/amp.topology.service/src/main/java/amp/topology/core/factory/model/Subtopology.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="116" width="357" x="3859" y="319"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="9" language="java" name="amp.topology.core.model.definitions.ProducingRouteDefinition" 
+    project="amp.topology.service" 
+    file="/amp.topology.service/src/main/java/amp/topology/core/model/definitions/ProducingRouteDefinition.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="116" width="693" x="2588" y="619"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="10" language="java" name="amp.topology.core.model.definitions.BaseRouteDefinition" 
+    project="amp.topology.service" 
+    file="/amp.topology.service/src/main/java/amp/topology/core/model/definitions/BaseRouteDefinition.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="224" width="665" x="2679" y="319"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="11" language="java" name="amp.topology.core.model.RoutingContext" project="amp.topology.service" 
+    file="/amp.topology.service/src/main/java/amp/topology/core/model/RoutingContext.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="152" width="200" x="3344" y="1207"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="12" language="java" name="amp.topology.core.model.definitions.RoutingInfoDefinition" 
+    project="amp.topology.service" 
+    file="/amp.topology.service/src/main/java/amp/topology/core/model/definitions/RoutingInfoDefinition.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="386" width="978" x="4237" y="619"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="13" language="java" name="amp.topology.core.factory.FactoryReference" project="amp.topology.service" 
+    file="/amp.topology.service/src/main/java/amp/topology/core/factory/FactoryReference.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="224" width="253" x="3051" y="1207"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="14" language="java" name="amp.bus.rabbit.topology.Queue" project="amp.bus.rabbit" 
+    file="/amp.bus.rabbit/src/main/java/amp/bus/rabbit/topology/Queue.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="224" width="406" x="1697" y="1207"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="false" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="15" language="java" name="amp.bus.rabbit.topology.Exchange.ExchangeBuilder" project="amp.bus.rabbit" 
+    file="/amp.bus.rabbit/src/main/java/amp/bus/rabbit/topology/Exchange.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="224" width="297" x="1020" y="619"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="false" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="16" language="java" name="amp.bus.rabbit.topology.Broker.BrokerBuilder" project="amp.bus.rabbit" 
+    file="/amp.bus.rabbit/src/main/java/amp/bus/rabbit/topology/Broker.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="170" width="194" x="321" y="619"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="false" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="17" language="java" name="amp.bus.rabbit.topology.ProducingRoute.ProducingRouteBuilder" 
+    project="amp.bus.rabbit" file="/amp.bus.rabbit/src/main/java/amp/bus/rabbit/topology/ProducingRoute.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="188" width="331" x="980" y="319"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="false" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="18" language="java" name="amp.bus.rabbit.topology.RoutingInfo" project="amp.bus.rabbit" 
+    file="/amp.bus.rabbit/src/main/java/amp/bus/rabbit/topology/RoutingInfo.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="152" width="423" x="517" y="319"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="false" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="19" language="java" name="amp.bus.rabbit.topology.Broker" project="amp.bus.rabbit" 
+    file="/amp.bus.rabbit/src/main/java/amp/bus/rabbit/topology/Broker.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="278" width="201" x="536" y="1207"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="false" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="20" language="java" name="amp.bus.rabbit.topology.Queue.QueueBuilder" project="amp.bus.rabbit" 
+    file="/amp.bus.rabbit/src/main/java/amp/bus/rabbit/topology/Queue.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="206" width="279" x="1378" y="619"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="false" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="21" language="java" name="amp.bus.rabbit.topology.ProducingRoute" project="amp.bus.rabbit" 
+    file="/amp.bus.rabbit/src/main/java/amp/bus/rabbit/topology/ProducingRoute.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="134" width="383" x="576" y="619"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="false" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="22" language="java" name="amp.bus.rabbit.topology.Exchange" project="amp.bus.rabbit" 
+    file="/amp.bus.rabbit/src/main/java/amp/bus/rabbit/topology/Exchange.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="206" width="446" x="1211" y="1207"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="false" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <dependency id="23">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="22"/>  
+  </dependency>  
+  <generalization id="24">    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="5"/>  
+  </generalization>  
+  <association id="25">    
+    <bendpoint x="3311" y="619"/>    
+    <end type="SOURCE" refId="10" navigable="false">      
+      <attribute id="26" name="exchangeReference"/>      
+      <multiplicity id="27" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="13" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="28">    
+    <end type="SOURCE" refId="17" navigable="false">      
+      <attribute id="29" name="producingRoute"/>      
+      <multiplicity id="30" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="21" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <dependency id="31">    
+    <bendpoint x="1347" y="619"/>    
+    <end type="SOURCE" refId="10"/>    
+    <end type="TARGET" refId="22"/>  
+  </dependency>  
+  <generalization id="32">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="5"/>  
+  </generalization>  
+  <dependency id="33">    
+    <end type="SOURCE" refId="9"/>    
+    <end type="TARGET" refId="11"/>  
+  </dependency>  
+  <dependency id="34">    
+    <end type="SOURCE" refId="9"/>    
+    <end type="TARGET" refId="22"/>  
+  </dependency>  
+  <generalization id="35">    
+    <end type="SOURCE" refId="9"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <association id="36">    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="37" name="queueReference"/>      
+      <multiplicity id="38" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="13" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <dependency id="39">    
+    <end type="SOURCE" refId="9"/>    
+    <end type="TARGET" refId="13"/>  
+  </dependency>  
+  <association id="40">    
+    <end type="SOURCE" refId="20" navigable="false">      
+      <attribute id="41" name="queue"/>      
+      <multiplicity id="42" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="14" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <dependency id="43">    
+    <end type="SOURCE" refId="21"/>    
+    <end type="TARGET" refId="19"/>  
+  </dependency>  
+  <association id="44">    
+    <end type="SOURCE" refId="4" navigable="false">      
+      <attribute id="45" name="managementEndpoints"/>      
+      <multiplicity id="46" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="2" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="47">    
+    <end type="SOURCE" refId="8" navigable="false">      
+      <attribute id="48" name="definitions"/>      
+      <multiplicity id="49" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="12" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <dependency id="50">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="11"/>  
+  </dependency>  
+  <dependency id="51">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="14"/>  
+  </dependency>  
+  <association id="52">    
+    <bendpoint x="3332" y="619"/>    
+    <end type="SOURCE" refId="10" navigable="false">      
+      <attribute id="53" name="routingKeys"/>      
+      <multiplicity id="54" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="13" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="55">    
+    <end type="SOURCE" refId="16" navigable="false">      
+      <attribute id="56" name="broker"/>      
+      <multiplicity id="57" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="19" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="58">    
+    <bendpoint x="4246" y="319"/>    
+    <end type="SOURCE" refId="12"/>    
+    <end type="TARGET" refId="5"/>  
+  </generalization>  
+  <dependency id="59">    
+    <bendpoint x="545" y="619"/>    
+    <end type="SOURCE" refId="17"/>    
+    <end type="TARGET" refId="19"/>  
+  </dependency>  
+  <association id="60">    
+    <end type="SOURCE" refId="15" navigable="false">      
+      <attribute id="61" name="exchange"/>      
+      <multiplicity id="62" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="22" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="63">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="5"/>  
+  </generalization>  
+  <generalization id="64">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="65">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="5"/>  
+  </generalization>  
+  <dependency id="66">    
+    <bendpoint x="989" y="619"/>    
+    <end type="SOURCE" refId="17"/>    
+    <end type="TARGET" refId="22"/>  
+  </dependency>  
+  <dependency id="67">    
+    <end type="SOURCE" refId="21"/>    
+    <end type="TARGET" refId="22"/>  
+  </dependency>  
+  <generalization id="68">    
+    <bendpoint x="3374" y="619"/>    
+    <bendpoint x="3374" y="319"/>    
+    <end type="SOURCE" refId="11"/>    
+    <end type="TARGET" refId="5"/>  
+  </generalization>  
+  <generalization id="69">    
+    <bendpoint x="3828" y="319"/>    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="5"/>  
+  </generalization>  
+  <dependency id="70">    
+    <bendpoint x="3353" y="619"/>    
+    <end type="SOURCE" refId="10"/>    
+    <end type="TARGET" refId="11"/>  
+  </dependency>  
+  <association id="71">    
+    <end type="SOURCE" refId="18" navigable="false">      
+      <attribute id="72" name="producingRoutes"/>      
+      <multiplicity id="73" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="21" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="74">    
+    <end type="SOURCE" refId="10"/>    
+    <end type="TARGET" refId="5"/>  
+  </generalization>  
+  <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+    accessors="false" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true"/>    
+    <operations public="true" package="true" protected="true" private="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>

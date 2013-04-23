@@ -18,10 +18,10 @@ public abstract class BaseRoute {
 	
 	public BaseRoute(){}
 	
-	public BaseRoute(ArrayList<Broker> brokers, Exchange exchange,
+	public BaseRoute(Collection<Broker> brokers, Exchange exchange,
 			Collection<String> routingKeys) {
 		
-		this.brokers = brokers;
+		this.brokers.addAll(brokers);
 		this.exchange = exchange;
 		this.routingKeys.addAll(routingKeys);
 	}

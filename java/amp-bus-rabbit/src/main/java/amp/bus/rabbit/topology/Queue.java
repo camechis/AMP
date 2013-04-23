@@ -24,9 +24,10 @@ public class Queue extends AmqpModelBase {
 	
 	public Queue(
 			String name, boolean isAutoDelete, boolean isDurable, 
-			boolean isExclusive, boolean shouldDeclare, Map<String, Object> arguments) {
+			boolean isExclusive, boolean shouldDeclare, String virtualHost,
+			Map<String, Object> arguments) {
 		
-		super(name, isAutoDelete, isDurable, shouldDeclare, arguments);
+		super(name, isAutoDelete, isDurable, shouldDeclare, virtualHost, arguments);
 		
 		this.isExclusive = isExclusive;
 	}
@@ -60,20 +61,19 @@ public class Queue extends AmqpModelBase {
 			return false;
 		return true;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "Queue [isExclusive=" + isExclusive + ", name=" + name
 				+ ", isAutoDelete=" + isAutoDelete + ", isDurable=" + isDurable
-				+ ", shouldDeclare=" + shouldDeclare + ", arguments="
-				+ arguments + "]";
+				+ ", shouldDeclare=" + shouldDeclare + ", virtualHost="
+				+ virtualHost + ", arguments=" + arguments + "]";
 	}
 
 	public static QueueBuilder builder(){
 		
 		return new QueueBuilder();
 	}
-	
 	
 	public static class QueueBuilder {
 		
@@ -110,6 +110,13 @@ public class Queue extends AmqpModelBase {
 		public QueueBuilder declare(boolean trueIfShouldDeclare){
 			
 			this.queue.setShouldDeclare(trueIfShouldDeclare);
+			
+			return this;
+		}
+		
+		public QueueBuilder vhost(String virtualHost){
+			
+			this.queue.setVirtualHost(virtualHost);
 			
 			return this;
 		}

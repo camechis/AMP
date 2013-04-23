@@ -15,18 +15,20 @@ public abstract class AmqpModelBase {
     protected boolean isAutoDelete = false;
     protected boolean isDurable = false;
     protected boolean shouldDeclare = true;
+    protected String virtualHost = "/";
 	protected Map<String, Object> arguments;
 	
 	public AmqpModelBase(){}
 	
 	public AmqpModelBase(
 			String name, boolean isAutoDelete, boolean isDurable, 
-			boolean shouldDeclare, Map<String, Object> arguments) {
+			boolean shouldDeclare, String virtualHost, Map<String, Object> arguments) {
 		
 		this.name = name;
 		this.isAutoDelete = isAutoDelete;
 		this.isDurable = isDurable;
 		this.shouldDeclare = shouldDeclare;
+		this.virtualHost = virtualHost;
 		this.arguments = arguments;
 	}
 
@@ -62,6 +64,14 @@ public abstract class AmqpModelBase {
 		this.shouldDeclare = shouldDeclare;
 	}
 
+	public String getVirtualHost() {
+		return virtualHost;
+	}
+
+	public void setVirtualHost(String virtualHost) {
+		this.virtualHost = virtualHost;
+	}
+	
 	public Map<String, Object> getArguments() {
 		return arguments;
 	}
@@ -80,6 +90,8 @@ public abstract class AmqpModelBase {
 		result = prime * result + (isDurable ? 1231 : 1237);
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + (shouldDeclare ? 1231 : 1237);
+		result = prime * result
+				+ ((virtualHost == null) ? 0 : virtualHost.hashCode());
 		return result;
 	}
 
@@ -107,6 +119,11 @@ public abstract class AmqpModelBase {
 		} else if (!name.equals(other.name))
 			return false;
 		if (shouldDeclare != other.shouldDeclare)
+			return false;
+		if (virtualHost == null) {
+			if (other.virtualHost != null)
+				return false;
+		} else if (!virtualHost.equals(other.virtualHost))
 			return false;
 		return true;
 	}

@@ -14,7 +14,7 @@ public class ProducingRoute extends BaseRoute {
 	
 	public ProducingRoute() { super(); }
 
-	public ProducingRoute(ArrayList<Broker> brokers, Exchange exchange, Collection<String> routingKeys) {
+	public ProducingRoute(Collection<Broker> brokers, Exchange exchange, Collection<String> routingKeys) {
 		
 		super(brokers, exchange, routingKeys);
 	}

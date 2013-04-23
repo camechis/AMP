@@ -3,32 +3,22 @@ package amp.topology.core.model;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import amp.bus.rabbit.topology.Broker;
 
 public class Cluster extends TopologyModel {
-
-	protected ArrayList<ManagementEndpoint> managementEndpoints = new ArrayList<ManagementEndpoint>();
 	
-	public Cluster() { super(); }
-
-	public Cluster(String id, String description) {
-		
-		super(id, description);
-	}
+	protected ArrayList<Broker> brokers = new ArrayList<Broker>();
 	
-	public Cluster(String id, String description, Collection<ManagementEndpoint> managementEndpoints) {
+	public Cluster(){ super(); }
+	
+	public Cluster(String id, String description, Collection<Broker> brokers) {
 		
 		super(id, description);
 		
-		setManagementEndpoints(managementEndpoints);
+		this.brokers.addAll(brokers);
 	}
 
-	public Collection<ManagementEndpoint> getManagementEndpoints() {
-		return managementEndpoints;
-	}
-
-	public void setManagementEndpoints(
-			Collection<ManagementEndpoint> managementEndpoints) {
-		
-		this.managementEndpoints.addAll(managementEndpoints);
+	public Collection<Broker> getBrokers() {
+		return brokers;
 	}
 }

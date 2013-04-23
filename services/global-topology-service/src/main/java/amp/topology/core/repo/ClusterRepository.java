@@ -3,17 +3,12 @@ package amp.topology.core.repo;
 import java.util.Collection;
 
 import amp.topology.core.model.Cluster;
-
+import amp.topology.core.model.ClusterDoesntExistException;
 
 public interface ClusterRepository {
 
-	public Cluster get(String clusterId);
+	Collection<Cluster> all();
 	
-	public void create(Cluster cluster);
+	Cluster get(String cluster) throws ClusterDoesntExistException;
 	
-	public void delete(String clusterId);
-	
-	public void update(Cluster cluster);
-	
-	public Collection<Cluster> all();
 }
