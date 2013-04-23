@@ -23,4 +23,16 @@ public class QueueDefinition extends BaseAmqpModelDefinition {
 	public String getIsExclusiveExpression() {
 		return isExclusiveExpression;
 	}
+
+	@Override
+	public String toString() {
+		return "QueueDefinition [isExclusiveExpression="
+				+ isExclusiveExpression + ", nameExpression=" + nameExpression
+				+ ", isAutoDeleteExpression=" + isAutoDeleteExpression
+				+ ", isDurableExpression=" + isDurableExpression
+				+ ", shouldDeclareExpression=" + shouldDeclareExpression
+				+ ", virtualHostExpression=" + virtualHostExpression
+				+ ", argumentExpressions=" + argumentExpressions + ", id=" + id
+				+ ", description=" + description + "]";
+	}
 }
