@@ -8,7 +8,7 @@ import amp.topology.core.factory.impl.BaseChainedTopologyFactory;
 
 public abstract class EvaluatingChainedTopologyFactory<T>  extends BaseChainedTopologyFactory<T> {
 
-	private ExpressionEvaluator evaluator;
+	protected ExpressionEvaluator evaluator;
 	
 	public EvaluatingChainedTopologyFactory(ExpressionEvaluator evaluator){
 		

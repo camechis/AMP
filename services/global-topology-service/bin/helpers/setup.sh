@@ -1,0 +1,2 @@
+sudo easy_install requests
+sudo easy_install PyYaml

@@ -14,7 +14,7 @@ public class RmqCompositeKey {
 		this.name = name;
 		this.type = type;
 	}
-
+	
 	public String getCluster() {
 		return cluster;
 	}

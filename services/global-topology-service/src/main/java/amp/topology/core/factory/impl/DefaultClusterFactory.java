@@ -1,4 +1,4 @@
-package amp.topology.core.factory.rmq;
+package amp.topology.core.factory.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,13 +8,13 @@ import amp.topology.core.model.Cluster;
 import amp.topology.core.model.ClusterDoesntExistException;
 import amp.topology.core.repo.ClusterRepository;
 
-public class RmqClusterFactory implements TopologyFactory<Cluster> {
+public class DefaultClusterFactory implements TopologyFactory<Cluster> {
 
-	private static final Logger logger = LoggerFactory.getLogger(RmqClusterFactory.class);
+	private static final Logger logger = LoggerFactory.getLogger(DefaultClusterFactory.class);
 	
 	ClusterRepository clusterRepository;
 	
-	public RmqClusterFactory(ClusterRepository clusterRepository){
+	public DefaultClusterFactory(ClusterRepository clusterRepository){
 		
 		this.clusterRepository = clusterRepository;
 	}

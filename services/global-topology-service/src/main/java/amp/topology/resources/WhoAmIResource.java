@@ -20,8 +20,7 @@ public class WhoAmIResource {
 	
 	@GET
 	@Timed
-	@Path("/who-am-i")
-	public String getRoutingInfo(@Auth UserDetails client){
+	public String whoAmI(@Auth UserDetails client){
 	
 		logger.info("Who Am I? Request from {}.", client.getUsername());
 		

@@ -1,0 +1,5 @@
+host: localhost
+port: 15677
+creds:
+  username: admin
+  password: admin

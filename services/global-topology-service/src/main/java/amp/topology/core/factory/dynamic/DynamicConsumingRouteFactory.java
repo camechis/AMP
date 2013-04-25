@@ -6,17 +6,19 @@ import amp.bus.rabbit.topology.ConsumingRoute;
 import amp.bus.rabbit.topology.Exchange;
 import amp.bus.rabbit.topology.Queue;
 import amp.topology.core.factory.dynamic.repo.DefinitionRepository;
-import amp.topology.core.factory.impl.BaseChainedTopologyFactory;
 import amp.topology.core.model.Cluster;
 import amp.topology.core.model.RoutingContext;
 import amp.topology.core.model.definitions.ConsumingRouteDefinition;
 
-public class DynamicConsumingRouteFactory extends BaseChainedTopologyFactory<ConsumingRoute> {
+public class DynamicConsumingRouteFactory extends EvaluatingChainedTopologyFactory<ConsumingRoute> {
 
 	DefinitionRepository<ConsumingRouteDefinition> repository;
 	
 	public DynamicConsumingRouteFactory(
-		DefinitionRepository<ConsumingRouteDefinition> repository){
+			ExpressionEvaluator evaluator,
+			DefinitionRepository<ConsumingRouteDefinition> repository) {
+		
+		super(evaluator);
 		
 		this.repository = repository;
 	}
@@ -39,7 +41,7 @@ public class DynamicConsumingRouteFactory extends BaseChainedTopologyFactory<Con
 				.exchange(exchange)
 				.queue(queue)
 				.brokers(cluster.getBrokers())
-				.routingkeys( Utils.asRoutingKeys(routingContexts))
+				.routingkeys( Utils.asRoutingKeys(routingContexts, this.evaluator) )
 				.build();
 	}
 

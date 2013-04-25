@@ -18,11 +18,11 @@ import amp.topology.core.repo.ClusterRegistrationRepository;
  */
 public class RmqManagementFactory {
 
-	ClusterRegistrationRepository clusterRepository;
+	ClusterRegistrationRepository clusterRegistrationRepository;
 	
-	public RmqManagementFactory(ClusterRegistrationRepository clusterRepository){
+	public RmqManagementFactory(ClusterRegistrationRepository clusterRegistrationRepository){
 		
-		this.clusterRepository = clusterRepository;
+		this.clusterRegistrationRepository = clusterRegistrationRepository;
 	}
 	
 	/**
@@ -33,7 +33,7 @@ public class RmqManagementFactory {
 	 */
 	public Collection<RabbitMgmtService> getInstances(String clusterId){
 		
-		ClusterRegistration cluster = this.clusterRepository.get(clusterId);
+		ClusterRegistration cluster = this.clusterRegistrationRepository.get(clusterId);
 		
 		ArrayList<RabbitMgmtService> mgmtServices = new ArrayList<RabbitMgmtService>();
 		

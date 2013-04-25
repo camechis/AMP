@@ -6,6 +6,8 @@ public class QueueDefinition extends BaseAmqpModelDefinition {
 
 	protected String isExclusiveExpression;
 	
+	public QueueDefinition(){ super(); }
+	
 	public QueueDefinition(String id, String description,
 			String nameExpression, String isAutoDeleteExpression,
 			String isDurableExpression, String shouldDeclareExpression,
