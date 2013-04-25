@@ -7,7 +7,7 @@ public class EventManager {
 
 	cmf.bus.IEnvelopeBus bus = null;
 
-	public SubscriptionToken subscribe(Subscription subscription) {
+	public IRegistration subscribe(Subscription subscription) {
 		IRegistration registration = subscription.getRegistration();
 		try {
 			bus.register(registration);
@@ -15,11 +15,10 @@ public class EventManager {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return new SubscriptionToken(subscription);
+		return registration;
 	}
 
-	public void unsubscribe(SubscriptionToken token) {
-		IRegistration registration = token.getSubscription().getRegistration();
+	public void unsubscribe(IRegistration registration) {
 		try {
 			bus.unregister(registration);
 		} catch (Exception e) {

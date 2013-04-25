@@ -2,20 +2,21 @@ package amp.esp;
 
 //import org.apache.commons.logging.Log;
 //import org.apache.commons.logging.LogFactory;
+import amp.esp.publish.Publisher;
+import amp.esp.publish.PublishingService;
+import cmf.bus.IRegistration;
+
 import java.util.Collection;
 import java.util.Date;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pegasus.eventbus.client.WrappedEnvelope;
 import pegasus.eventbus.client.EnvelopeHandler;
 import pegasus.eventbus.client.EventManager;
 import pegasus.eventbus.client.EventResult;
 import pegasus.eventbus.client.Subscription;
-import pegasus.eventbus.client.SubscriptionToken;
-import amp.esp.publish.Publisher;
-import amp.esp.publish.PublishingService;
+import pegasus.eventbus.client.WrappedEnvelope;
 
 import com.espertech.esper.client.Configuration;
 import com.espertech.esper.client.EPAdministrator;
@@ -41,12 +42,11 @@ public class EventStreamProcessor {
 
     private EPServiceProvider epService;
 
-    private SubscriptionToken token;
-
     private EventMonitorRepository repository;
 
     private final String espKey = this.getClass().getCanonicalName();
     private Collection<Publisher> publishers = Lists.newArrayList();
+    private IRegistration registration;
 
     /**
      * This is a wrapper class around an EventMonitor to allow it to receive events
@@ -184,13 +184,13 @@ public class EventStreamProcessor {
         Subscription subscription = new Subscription(envelopeHandler);
         // EventHandler<?> evtmp = null;
         // Subscription subscription = new Subscription(evtmp );
-        token = eventManager.subscribe(subscription);
+        registration = eventManager.subscribe(subscription);
     }
 
     public void detachFromEventBus() {
         if (eventManager != null) {
-            eventManager.unsubscribe(token);
-            token = null;
+            eventManager.unsubscribe(registration);
+            registration = null;
             eventManager = null;
         }
     }
