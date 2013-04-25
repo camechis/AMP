@@ -121,11 +121,6 @@ public class EventStreamProcessor {
             eventStreamProcessor.sendEvent(envelope);
             return EventResult.Handled;
         }
-
-        @Override
-        public String getEventSetName() {
-            return "All";
-        }
     }
 
 
