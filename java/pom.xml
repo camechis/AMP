@@ -37,6 +37,7 @@
         <module>amp-examples/service-adaptor</module>
         <module>extensions/amp-commons</module>
         <module>services/global-topology-client</module>
+        <module>services/global-event-log</module>
 		<module>archetypes/amp-quickstart</module>
     </modules>
 
