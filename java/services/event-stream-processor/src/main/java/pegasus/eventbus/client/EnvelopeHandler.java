@@ -2,7 +2,7 @@ package pegasus.eventbus.client;
 
 public interface EnvelopeHandler {
 
-	EventResult handleEnvelope(Envelope envelope);
+	EventResult handleEnvelope(WrappedEnvelope envelope);
 
 	String getEventSetName();
 

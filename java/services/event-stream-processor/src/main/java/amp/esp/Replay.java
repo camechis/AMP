@@ -23,7 +23,7 @@ import amp.esp.monitors.InferredEventCatcher;
 import amp.esp.monitors.InferredEventPrinter;
 import amp.esp.monitors.StorageRepository;
 import amp.esp.monitors.UnauthorizedAccessAttemptsDetector;
-import pegasus.eventbus.client.Envelope;
+import pegasus.eventbus.client.WrappedEnvelope;
 
 import com.google.common.collect.Lists;
 
@@ -83,7 +83,7 @@ public class Replay {
         for (String line : lines) {
             count++;
             // instantiate an envelope from JSON version
-            Envelope env = EnvelopeUtils.fromJson(line);
+            WrappedEnvelope env = EnvelopeUtils.fromJson(line);
             // TODO: use timestamps in envelope to reproduce delays
             // send envelope into ESP
             esp.sendEvent(env);

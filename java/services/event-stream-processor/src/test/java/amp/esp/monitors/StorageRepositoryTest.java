@@ -14,7 +14,7 @@ import amp.esp.monitors.DocumentCollectionWithHitFrequencySearchResultsDetector;
 import amp.esp.monitors.EventTypeDetector;
 import amp.esp.monitors.UnauthorizedAccessAttemptsDetector;
 
-import pegasus.eventbus.client.Envelope;
+import pegasus.eventbus.client.WrappedEnvelope;
 
 public class StorageRepositoryTest extends AbstractDetectorTest {
 
@@ -44,7 +44,7 @@ public class StorageRepositoryTest extends AbstractDetectorTest {
 
         // Send a signoff notification, since we have no event monitors that match on  that,
         // no inferred events will occur
-        Envelope signoff = TestUtils.makeEnvelope(signoffString, null, null,
+        WrappedEnvelope signoff = TestUtils.makeEnvelope(signoffString, null, null,
                 "Say goodnight Gracie", "George Burns");
         clearAndSend(signoff);
         assertNoDetectedEvents(UnauthorizedAccessAttemptsDetector.INFERRED_TYPE);
@@ -63,7 +63,7 @@ public class StorageRepositoryTest extends AbstractDetectorTest {
 
         // Send a second signoff notification after adding a monitor for it; we should detect
         // the second event, but not the first
-        Envelope signoff2 = TestUtils.makeEnvelope(signoffString, null, null,
+        WrappedEnvelope signoff2 = TestUtils.makeEnvelope(signoffString, null, null,
                 "And that's the way it is.", "Walter Cronkite");
         clearAndSend(signoff2);
         assertNoDetectedEvents(UnauthorizedAccessAttemptsDetector.INFERRED_TYPE);
@@ -87,7 +87,7 @@ public class StorageRepositoryTest extends AbstractDetectorTest {
         //**********************************************************************
         // Send a signoff notification, since we have no event monitors that match on  that,
         // no inferred events will occur
-        Envelope signoff = TestUtils.makeEnvelope("Signoff", null, null,
+        WrappedEnvelope signoff = TestUtils.makeEnvelope("Signoff", null, null,
                 "Say goodnight Gracie", "Gracie Allen");
         clearAndSend(signoff);
         assertNoDetectedEvents(UnauthorizedAccessAttemptsDetector.INFERRED_TYPE);
@@ -99,7 +99,7 @@ public class StorageRepositoryTest extends AbstractDetectorTest {
         //**********************************************************************
 
         // Send a request (that will be granted); there should be a 'Request' inferred event
-        Envelope reqMS1 = TestUtils.makeAuthRequest("Maxwell Smart", "Shoe Phone", "MS1");
+        WrappedEnvelope reqMS1 = TestUtils.makeAuthRequest("Maxwell Smart", "Shoe Phone", "MS1");
         clearAndSend(reqMS1);
         assertNoDetectedEvents(UnauthorizedAccessAttemptsDetector.INFERRED_TYPE);
         assertNoDetectedEvents(ConsensusSearchDetector.INFERRED_TYPE);
@@ -110,7 +110,7 @@ public class StorageRepositoryTest extends AbstractDetectorTest {
         assertNoDetectedEvents(responseMonitor.getInferredType());
 
         // Send a request (that will be denied); there should be a 'Request' inferred event
-        Envelope reqPW1 = TestUtils.makeAuthRequest("Peewee Herman", "sat 1 imagery", "PW1");
+        WrappedEnvelope reqPW1 = TestUtils.makeAuthRequest("Peewee Herman", "sat 1 imagery", "PW1");
         clearAndSend(reqPW1);
         assertNoDetectedEvents(UnauthorizedAccessAttemptsDetector.INFERRED_TYPE);
         assertNoDetectedEvents(ConsensusSearchDetector.INFERRED_TYPE);
@@ -122,7 +122,7 @@ public class StorageRepositoryTest extends AbstractDetectorTest {
 
         // Send a granted response; there should be a response inferred event and a correlated
         // request-response inferred event
-        Envelope responseMS1 = TestUtils.makeAuthResponse(true, "MS1");
+        WrappedEnvelope responseMS1 = TestUtils.makeAuthResponse(true, "MS1");
         clearAndSend(responseMS1);
         assertNoDetectedEvents(UnauthorizedAccessAttemptsDetector.INFERRED_TYPE);
         assertNoDetectedEvents(ConsensusSearchDetector.INFERRED_TYPE);
@@ -136,7 +136,7 @@ public class StorageRepositoryTest extends AbstractDetectorTest {
 
         // Send a denied response; there should be a response inferred event and a correlated
         // request-response inferred event
-        Envelope responsePW1 = TestUtils.makeAuthResponse(false, "PW1");
+        WrappedEnvelope responsePW1 = TestUtils.makeAuthResponse(false, "PW1");
         clearAndSend(responsePW1);
         assertNoDetectedEvents(UnauthorizedAccessAttemptsDetector.INFERRED_TYPE);
         assertNoDetectedEvents(ConsensusSearchDetector.INFERRED_TYPE);
@@ -149,7 +149,7 @@ public class StorageRepositoryTest extends AbstractDetectorTest {
         assertInferredEventReferences(event4b, responsePW1);
 
         // Send a request (that will be denied); there should be a 'Request' inferred event
-        Envelope reqPW2 = TestUtils.makeAuthRequest("Peewee Herman", "sat 2 imagery", "PW2");
+        WrappedEnvelope reqPW2 = TestUtils.makeAuthRequest("Peewee Herman", "sat 2 imagery", "PW2");
         clearAndSend(reqPW2);
         assertNoDetectedEvents(UnauthorizedAccessAttemptsDetector.INFERRED_TYPE);
         assertNoDetectedEvents(ConsensusSearchDetector.INFERRED_TYPE);
@@ -160,7 +160,7 @@ public class StorageRepositoryTest extends AbstractDetectorTest {
         assertNoDetectedEvents(responseMonitor.getInferredType());
 
         // Send a request (that will be granted); there should be a 'Request' inferred event
-        Envelope reqJB1 = TestUtils.makeAuthRequest("James Bond", "Dr No personnel file", "JB1");
+        WrappedEnvelope reqJB1 = TestUtils.makeAuthRequest("James Bond", "Dr No personnel file", "JB1");
         clearAndSend(reqJB1);
         assertNoDetectedEvents(UnauthorizedAccessAttemptsDetector.INFERRED_TYPE);
         assertNoDetectedEvents(ConsensusSearchDetector.INFERRED_TYPE);
@@ -171,7 +171,7 @@ public class StorageRepositoryTest extends AbstractDetectorTest {
         assertNoDetectedEvents(responseMonitor.getInferredType());
 
         // Send a request (that will be granted); there should be a 'Request' inferred event
-        Envelope reqJB2 = TestUtils.makeAuthRequest("James Bond", "Kill Authorization", "JB2");
+        WrappedEnvelope reqJB2 = TestUtils.makeAuthRequest("James Bond", "Kill Authorization", "JB2");
         clearAndSend(reqJB2);
         assertNoDetectedEvents(UnauthorizedAccessAttemptsDetector.INFERRED_TYPE);
         assertNoDetectedEvents(ConsensusSearchDetector.INFERRED_TYPE);
@@ -183,7 +183,7 @@ public class StorageRepositoryTest extends AbstractDetectorTest {
 
         // Send a denied response; there should be a response inferred event and a correlated
         // request-response inferred event
-        Envelope responsePW2 = TestUtils.makeAuthResponse(false, "PW2");
+        WrappedEnvelope responsePW2 = TestUtils.makeAuthResponse(false, "PW2");
         clearAndSend(responsePW2);
         assertNoDetectedEvents(UnauthorizedAccessAttemptsDetector.INFERRED_TYPE);
         assertNoDetectedEvents(ConsensusSearchDetector.INFERRED_TYPE);
@@ -196,7 +196,7 @@ public class StorageRepositoryTest extends AbstractDetectorTest {
         assertInferredEventReferences(event8b, responsePW2);
 
         // Send a request (that will be denied); there should be a 'Request' inferred event
-        Envelope reqPW3 = TestUtils.makeAuthRequest("Peewee Herman", "sat 3 imagery", "PW3");
+        WrappedEnvelope reqPW3 = TestUtils.makeAuthRequest("Peewee Herman", "sat 3 imagery", "PW3");
         clearAndSend(reqPW3);
         assertNoDetectedEvents(UnauthorizedAccessAttemptsDetector.INFERRED_TYPE);
         assertNoDetectedEvents(ConsensusSearchDetector.INFERRED_TYPE);
@@ -209,7 +209,7 @@ public class StorageRepositoryTest extends AbstractDetectorTest {
         // Send a denied response (third for user; there should be a response inferred event,
         // a correlated  request-response inferred event, and an UnauthorizedAccessAttempts
         // inferred event
-        Envelope responsePW3 = TestUtils.makeAuthResponse(false, "PW3");
+        WrappedEnvelope responsePW3 = TestUtils.makeAuthResponse(false, "PW3");
         clearAndSend(responsePW3);
         assertOneDetectedEvent(UnauthorizedAccessAttemptsDetector.INFERRED_TYPE);
         assertNoDetectedEvents(ConsensusSearchDetector.INFERRED_TYPE);
@@ -223,7 +223,7 @@ public class StorageRepositoryTest extends AbstractDetectorTest {
 
         // Send a granted response; there should be a response inferred event and a correlated
         // request-response inferred event
-        Envelope responseJB1 = TestUtils.makeAuthResponse(true, "JB1");
+        WrappedEnvelope responseJB1 = TestUtils.makeAuthResponse(true, "JB1");
         clearAndSend(responseJB1);
         assertNoDetectedEvents(UnauthorizedAccessAttemptsDetector.INFERRED_TYPE);
         assertNoDetectedEvents(ConsensusSearchDetector.INFERRED_TYPE);
@@ -236,7 +236,7 @@ public class StorageRepositoryTest extends AbstractDetectorTest {
         assertInferredEventReferences(event11b, responseJB1);
 
         // Send a request (that will be granted); there should be a 'Request' inferred event
-        Envelope reqJB3 = TestUtils.makeAuthRequest("James Bond", "Underwater car", "JB3");
+        WrappedEnvelope reqJB3 = TestUtils.makeAuthRequest("James Bond", "Underwater car", "JB3");
         clearAndSend(reqJB3);
         assertNoDetectedEvents(UnauthorizedAccessAttemptsDetector.INFERRED_TYPE);
         assertNoDetectedEvents(ConsensusSearchDetector.INFERRED_TYPE);
@@ -248,7 +248,7 @@ public class StorageRepositoryTest extends AbstractDetectorTest {
 
         // Send a granted response; there should be a response inferred event and a correlated
         // request-response inferred event
-        Envelope responseJB2 = TestUtils.makeAuthResponse(true, "JB2");
+        WrappedEnvelope responseJB2 = TestUtils.makeAuthResponse(true, "JB2");
         clearAndSend(responseJB2);
         assertNoDetectedEvents(UnauthorizedAccessAttemptsDetector.INFERRED_TYPE);
         assertNoDetectedEvents(ConsensusSearchDetector.INFERRED_TYPE);
@@ -261,7 +261,7 @@ public class StorageRepositoryTest extends AbstractDetectorTest {
         assertInferredEventReferences(event13b, responseJB2);
 
         // Send a granted response (third for user); there should be a response inferred event
-        Envelope responseJB3 = TestUtils.makeAuthResponse(true, "JB3");
+        WrappedEnvelope responseJB3 = TestUtils.makeAuthResponse(true, "JB3");
         clearAndSend(responseJB3);
         assertNoDetectedEvents(UnauthorizedAccessAttemptsDetector.INFERRED_TYPE);
         assertNoDetectedEvents(ConsensusSearchDetector.INFERRED_TYPE);

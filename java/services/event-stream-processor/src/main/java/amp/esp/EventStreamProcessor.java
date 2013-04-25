@@ -8,7 +8,7 @@ import java.util.Date;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pegasus.eventbus.client.Envelope;
+import pegasus.eventbus.client.WrappedEnvelope;
 import pegasus.eventbus.client.EnvelopeHandler;
 import pegasus.eventbus.client.EventManager;
 import pegasus.eventbus.client.EventResult;
@@ -101,11 +101,11 @@ public class EventStreamProcessor {
 
     class EventbusListener implements EnvelopeHandler {
 
-        private void addHeader(Envelope env, String label, String val) {
+        private void addHeader(WrappedEnvelope env, String label, String val) {
             env.getHeaders().put(label, val);
         }
 
-        private void addHeader(Envelope env, String label, Date now) {
+        private void addHeader(WrappedEnvelope env, String label, Date now) {
             addHeader(env, label, now.getTime() + "");
         }
 
@@ -116,7 +116,7 @@ public class EventStreamProcessor {
         }
 
         @Override
-        public EventResult handleEnvelope(Envelope envelope) {
+        public EventResult handleEnvelope(WrappedEnvelope envelope) {
             addHeader(envelope, espKey + ":" + "TimeReceived", new Date());
             eventStreamProcessor.sendEvent(envelope);
             return EventResult.Handled;
@@ -154,7 +154,7 @@ public class EventStreamProcessor {
         Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
 
         Configuration configuration = new Configuration();
-        configuration.addEventType("Envelope", Envelope.class);
+        configuration.addEventType("Envelope", WrappedEnvelope.class);
         configuration.addEventType("InferredEvent", InferredEvent.class);
         EPServiceProvider epService = EPServiceProviderManager.getProvider(engineURI, configuration);
         epService.initialize();
@@ -233,7 +233,7 @@ public class EventStreamProcessor {
     }
 
     @VisibleForTesting
-    public void sendEvent(Envelope envelope) {
+    public void sendEvent(WrappedEnvelope envelope) {
         LOG.debug(" --> Event: " + envelope);
         epService.getEPRuntime().sendEvent(envelope);
 

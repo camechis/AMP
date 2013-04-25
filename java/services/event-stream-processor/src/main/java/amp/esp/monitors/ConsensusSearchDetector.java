@@ -12,7 +12,7 @@ import amp.esp.InferredEvent;
 import amp.esp.InferredEventList;
 import amp.esp.publish.Publisher;
 
-import pegasus.eventbus.client.Envelope;
+import pegasus.eventbus.client.WrappedEnvelope;
 
 import com.espertech.esper.client.EventBean;
 import com.google.common.base.Predicate;
@@ -54,7 +54,7 @@ public class ConsensusSearchDetector extends EventMonitor {
         }
 
         public InferredEventList receive(EventBean eventBean) {
-            Envelope env = (Envelope) eventBean.get(fieldToSplit);
+            WrappedEnvelope env = (WrappedEnvelope) eventBean.get(fieldToSplit);
             InferredEventList events = new InferredEventList();
             String userid = env.getReplyTo();
             String topic = env.getTopic();

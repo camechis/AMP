@@ -20,7 +20,7 @@ import amp.esp.datastreams.ValueStreamsDataProvider;
 import amp.esp.publish.Publisher;
 import amp.esp.publish.TopNMetricPublisher;
 
-import pegasus.eventbus.client.Envelope;
+import pegasus.eventbus.client.WrappedEnvelope;
 
 import com.espertech.esper.client.EventBean;
 import com.google.common.collect.Lists;
@@ -36,10 +36,10 @@ public class EnvelopeCounter extends EventMonitor {
             };
 
     public interface EnvelopeRetriever {
-        public String retrieve(Envelope e);
+        public String retrieve(WrappedEnvelope e);
         public String key();
         public int[] periods();
-        public int getValue(String type, Envelope env);
+        public int getValue(String type, WrappedEnvelope env);
     }
 
     Collection<EnvelopeRetriever> metrics = Lists.newArrayList();
@@ -69,28 +69,28 @@ public class EnvelopeCounter extends EventMonitor {
 
     private void setupMetrics() {
         metrics.add(new EnvelopeRetriever() {
-            public String retrieve(Envelope e) { return e.getEventType(); }
+            public String retrieve(WrappedEnvelope e) { return e.getEventType(); }
             public String key() { return "Event Type"; }
             public int[] periods() { return defaultperiods; }
-            public int getValue(String type, Envelope env) { return 1; }
+            public int getValue(String type, WrappedEnvelope env) { return 1; }
         });
 
         metrics.add(new EnvelopeRetriever() {
-            public String retrieve(Envelope e) { return "BodyLength"; }
+            public String retrieve(WrappedEnvelope e) { return "BodyLength"; }
             public String key() { return "Total Body Length"; }
             public int[] periods() { return defaultperiods; }
-            public int getValue(String type, Envelope env) { return env.getBody().length; }
+            public int getValue(String type, WrappedEnvelope env) { return env.getBody().length; }
         });
 
         metrics.add(new EnvelopeRetriever() {
-            public String retrieve(Envelope e) { return e.getEventType(); }
+            public String retrieve(WrappedEnvelope e) { return e.getEventType(); }
             public String key() { return "Total Body Length by Type"; }
             public int[] periods() { return defaultperiods; }
-            public int getValue(String type, Envelope env) { return env.getBody().length; }
+            public int getValue(String type, WrappedEnvelope env) { return env.getBody().length; }
         });
 
         metrics.add(new EnvelopeRetriever() {
-            public String retrieve(Envelope e) {
+            public String retrieve(WrappedEnvelope e) {
                 if (e.getEventType().equals("pegasus.core.search.event.TextSearchEvent")) {
                     return EnvelopeUtils.getBodyValue(e, "queryText");
                 }
@@ -98,11 +98,11 @@ public class EnvelopeCounter extends EventMonitor {
             }
             public String key() { return "Search Query"; }
             public int[] periods() { return defaultperiods; }
-            public int getValue(String type, Envelope env) { return 1; }
+            public int getValue(String type, WrappedEnvelope env) { return 1; }
         });
 
         metrics.add(new EnvelopeRetriever() {
-            public String retrieve(Envelope e) {
+            public String retrieve(WrappedEnvelope e) {
                 if (e.getEventType().equals("pegasus.core.search.event.TextSearchEvent")) {
                     String query = EnvelopeUtils.getBodyValue(e, "queryText");
                     String terms = EnvelopeUtils.makeSearchTermList(query);
@@ -112,18 +112,18 @@ public class EnvelopeCounter extends EventMonitor {
             }
             public String key() { return "*Individual Search Terms"; }
             public int[] periods() { return defaultperiods; }
-            public int getValue(String type, Envelope env) { return 1; }
+            public int getValue(String type, WrappedEnvelope env) { return 1; }
         });
     }
 
     @Override
     public InferredEvent receive(EventBean eventBean) {
-        Envelope env = (Envelope) eventBean.get("env");
+        WrappedEnvelope env = (WrappedEnvelope) eventBean.get("env");
         recordValues(env);
         return null;
     }
 
-    private void recordValues(Envelope env) {
+    private void recordValues(WrappedEnvelope env) {
         Date timestamp = env.getTimestamp();
         // If the envelope doesn't have a timestamp, use the current time
         if (timestamp == null) timestamp = new Date();

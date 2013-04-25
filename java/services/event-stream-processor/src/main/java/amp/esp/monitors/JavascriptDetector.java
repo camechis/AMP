@@ -19,7 +19,7 @@ import amp.esp.EventStreamProcessor;
 import amp.esp.InferredEvent;
 import amp.esp.publish.Publisher;
 
-import pegasus.eventbus.client.Envelope;
+import pegasus.eventbus.client.WrappedEnvelope;
 
 import com.espertech.esper.client.EventBean;
 
@@ -49,7 +49,7 @@ public class JavascriptDetector extends EventMonitor {
 
     @Override
     public InferredEvent receive(EventBean eventBean) {
-        Envelope env = (Envelope) eventBean.get("env");
+        WrappedEnvelope env = (WrappedEnvelope) eventBean.get("env");
 		Object[] args = {env};
 		InferredEvent ie =
 				(InferredEvent) unwrap(ScriptableObject.callMethod(eventMonitor, "receive", args));

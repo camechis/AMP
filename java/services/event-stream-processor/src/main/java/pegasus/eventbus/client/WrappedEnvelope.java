@@ -1,44 +1,50 @@
 package pegasus.eventbus.client;
 
+import cmf.bus.Envelope;
+
 import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
 
 
-public class Envelope {
+public class WrappedEnvelope {
 
-	cmf.bus.Envelope cmfenv = null;
+	Envelope envelope = null;
 
-	// Constructor for testing
-	public Envelope() {
+	public Envelope getEnvelope() {
+        return envelope;
+    }
+
+    // Constructor for testing
+	public WrappedEnvelope() {
 		super();
-		cmfenv = new cmf.bus.Envelope();
+		envelope = new Envelope();
 	}
 
-	public Envelope(cmf.bus.Envelope cmfenv) {
+	public WrappedEnvelope(Envelope cmfenv) {
 		super();
-		this.cmfenv = cmfenv;
+		this.envelope = cmfenv;
 	}
 
 	// ===================
 	public byte[] getBody() {
-		return cmfenv.getPayload();
+		return envelope.getPayload();
 	}
 
 	public void setBody(byte[] bytes) {
-		cmfenv.setPayload(bytes);
+		envelope.setPayload(bytes);
 	}
 
 
 
 	// ===================
 	private String get(String key) {
-		return cmfenv.getHeader(key);
+		return envelope.getHeader(key);
 	}
 
 	private void set(String key, String value) {
 		// TODO Auto-generated method stub
-		cmfenv.setHeader(key, value);
+		envelope.setHeader(key, value);
 	}
 
 	// ===================
@@ -113,7 +119,7 @@ public class Envelope {
 
 	// ===================
 	public Map<String, String> getHeaders() {
-		return cmfenv.getHeaders();
+		return envelope.getHeaders();
 	}
 
 }

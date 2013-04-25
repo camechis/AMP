@@ -6,7 +6,7 @@ import amp.esp.InferredEvent;
 import amp.esp.TestUtils;
 import amp.esp.monitors.DocumentCollectionWithHitFrequencySearchResultsDetector;
 
-import pegasus.eventbus.client.Envelope;
+import pegasus.eventbus.client.WrappedEnvelope;
 
 public class DocumentCollectionWithHitFrequencySearchResultDetectorTest extends AbstractDetectorTest {
 
@@ -19,10 +19,10 @@ public class DocumentCollectionWithHitFrequencySearchResultDetectorTest extends 
     public void testMatchingDocCollAndHitFreq() {
         testRepository.addMonitor(new DocumentCollectionWithHitFrequencySearchResultsDetector());
 
-        Envelope dc1 = TestUtils.createDocumentCollection("red");
+        WrappedEnvelope dc1 = TestUtils.createDocumentCollection("red");
         sendAndExpectNo(dc1, DOCUMENT_COLLECTION_WITH_HIT_FREQUENCY_SEARCH_RESULT);
 
-        Envelope hf1 = TestUtils.createHitFrequency("red");
+        WrappedEnvelope hf1 = TestUtils.createHitFrequency("red");
         InferredEvent event =
                 sendAndExpect(hf1, 1, DOCUMENT_COLLECTION_WITH_HIT_FREQUENCY_SEARCH_RESULT).get(0);
         assertInferredEventReferences(event, dc1);
@@ -33,10 +33,10 @@ public class DocumentCollectionWithHitFrequencySearchResultDetectorTest extends 
     public void testMatchingHitFreqAndDocColl() {
         testRepository.addMonitor(new DocumentCollectionWithHitFrequencySearchResultsDetector());
 
-        Envelope hf1 = TestUtils.createHitFrequency("red");
+        WrappedEnvelope hf1 = TestUtils.createHitFrequency("red");
         sendAndExpectNo(hf1, DOCUMENT_COLLECTION_WITH_HIT_FREQUENCY_SEARCH_RESULT);
 
-        Envelope dc1 = TestUtils.createDocumentCollection("red");
+        WrappedEnvelope dc1 = TestUtils.createDocumentCollection("red");
         InferredEvent event =
                 sendAndExpect(dc1, 1, DOCUMENT_COLLECTION_WITH_HIT_FREQUENCY_SEARCH_RESULT).get(0);
         assertInferredEventReferences(event, dc1);
@@ -47,10 +47,10 @@ public class DocumentCollectionWithHitFrequencySearchResultDetectorTest extends 
     public void testNonMatchingDocCollAndHitFreq() {
         testRepository.addMonitor(new DocumentCollectionWithHitFrequencySearchResultsDetector());
 
-        Envelope dc1 = TestUtils.createDocumentCollection("red");
+        WrappedEnvelope dc1 = TestUtils.createDocumentCollection("red");
         sendAndExpectNo(dc1, DOCUMENT_COLLECTION_WITH_HIT_FREQUENCY_SEARCH_RESULT);
 
-        Envelope hf1 = TestUtils.createHitFrequency("green");
+        WrappedEnvelope hf1 = TestUtils.createHitFrequency("green");
         sendAndExpectNo(hf1, DOCUMENT_COLLECTION_WITH_HIT_FREQUENCY_SEARCH_RESULT);
     }
 
@@ -58,10 +58,10 @@ public class DocumentCollectionWithHitFrequencySearchResultDetectorTest extends 
     public void testNonMatchingHitFreqAndDocColl() {
         testRepository.addMonitor(new DocumentCollectionWithHitFrequencySearchResultsDetector());
 
-        Envelope hf1 = TestUtils.createHitFrequency("red");
+        WrappedEnvelope hf1 = TestUtils.createHitFrequency("red");
         sendAndExpectNo(hf1, DOCUMENT_COLLECTION_WITH_HIT_FREQUENCY_SEARCH_RESULT);
 
-        Envelope dc1 = TestUtils.createDocumentCollection("green");
+        WrappedEnvelope dc1 = TestUtils.createDocumentCollection("green");
         sendAndExpectNo(dc1, DOCUMENT_COLLECTION_WITH_HIT_FREQUENCY_SEARCH_RESULT);
     }
 
@@ -69,13 +69,13 @@ public class DocumentCollectionWithHitFrequencySearchResultDetectorTest extends 
     public void testNonAndMatchingDocCollAndHitFreq() {
         testRepository.addMonitor(new DocumentCollectionWithHitFrequencySearchResultsDetector());
 
-        Envelope dc1 = TestUtils.createDocumentCollection("red");
+        WrappedEnvelope dc1 = TestUtils.createDocumentCollection("red");
         sendAndExpectNo(dc1, DOCUMENT_COLLECTION_WITH_HIT_FREQUENCY_SEARCH_RESULT);
 
-        Envelope hf1 = TestUtils.createHitFrequency("green");
+        WrappedEnvelope hf1 = TestUtils.createHitFrequency("green");
         sendAndExpectNo(hf1, DOCUMENT_COLLECTION_WITH_HIT_FREQUENCY_SEARCH_RESULT);
 
-        Envelope hf2 = TestUtils.createHitFrequency("red");
+        WrappedEnvelope hf2 = TestUtils.createHitFrequency("red");
         InferredEvent event =
                 sendAndExpect(hf2, 1, DOCUMENT_COLLECTION_WITH_HIT_FREQUENCY_SEARCH_RESULT).get(0);
         assertInferredEventReferences(event, dc1);
@@ -86,13 +86,13 @@ public class DocumentCollectionWithHitFrequencySearchResultDetectorTest extends 
     public void testNonAndMatchingHitFreqAndDocColl() {
         testRepository.addMonitor(new DocumentCollectionWithHitFrequencySearchResultsDetector());
 
-        Envelope hf1 = TestUtils.createHitFrequency("red");
+        WrappedEnvelope hf1 = TestUtils.createHitFrequency("red");
         sendAndExpectNo(hf1, DOCUMENT_COLLECTION_WITH_HIT_FREQUENCY_SEARCH_RESULT);
 
-        Envelope dc1 = TestUtils.createDocumentCollection("green");
+        WrappedEnvelope dc1 = TestUtils.createDocumentCollection("green");
         sendAndExpectNo(dc1, DOCUMENT_COLLECTION_WITH_HIT_FREQUENCY_SEARCH_RESULT);
 
-        Envelope dc2 = TestUtils.createDocumentCollection("red");
+        WrappedEnvelope dc2 = TestUtils.createDocumentCollection("red");
         InferredEvent event =
                 sendAndExpect(dc2, 1, DOCUMENT_COLLECTION_WITH_HIT_FREQUENCY_SEARCH_RESULT).get(0);
         assertInferredEventReferences(event, dc2);

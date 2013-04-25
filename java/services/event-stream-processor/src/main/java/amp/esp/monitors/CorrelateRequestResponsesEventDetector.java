@@ -8,7 +8,7 @@ import amp.esp.EventStreamProcessor;
 import amp.esp.InferredEvent;
 import amp.esp.publish.Publisher;
 
-import pegasus.eventbus.client.Envelope;
+import pegasus.eventbus.client.WrappedEnvelope;
 
 import com.espertech.esper.client.EventBean;
 
@@ -18,8 +18,8 @@ public class CorrelateRequestResponsesEventDetector extends EventMonitor {
 
     @Override
     public InferredEvent receive(EventBean eventBean) {
-        Envelope req = (Envelope) eventBean.get("request");
-        Envelope resp = (Envelope) eventBean.get("response");
+        WrappedEnvelope req = (WrappedEnvelope) eventBean.get("request");
+        WrappedEnvelope resp = (WrappedEnvelope) eventBean.get("response");
         return makeInferredEvent().addEnvelope(req).addEnvelope(resp);
     }
 

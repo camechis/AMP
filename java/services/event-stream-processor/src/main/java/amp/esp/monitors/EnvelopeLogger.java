@@ -13,7 +13,7 @@ import amp.esp.EventStreamProcessor;
 import amp.esp.InferredEvent;
 import amp.esp.publish.Publisher;
 
-import pegasus.eventbus.client.Envelope;
+import pegasus.eventbus.client.WrappedEnvelope;
 
 import com.espertech.esper.client.EventBean;
 
@@ -84,7 +84,7 @@ public class EnvelopeLogger extends EventMonitor {
     @Override
     public InferredEvent receive(EventBean eventBean) {
         if (logdir != null) {
-            Envelope env = (Envelope) eventBean.get("resp");
+            WrappedEnvelope env = (WrappedEnvelope) eventBean.get("resp");
             if (env.getEventType().startsWith("dashboard.server.metric")) return null;
             fprint(logFile, EnvelopeUtils.envelopeToReadableJson(env));
             fprint(jsonFile, EnvelopeUtils.toJson(env));

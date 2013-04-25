@@ -21,7 +21,7 @@ public class Subscription {
 
 			@Override
 			public Object handle(Envelope env) throws Exception {
-				pegasus.eventbus.client.Envelope pegenv = new pegasus.eventbus.client.Envelope(env);
+				pegasus.eventbus.client.WrappedEnvelope pegenv = new pegasus.eventbus.client.WrappedEnvelope(env);
 				return envelopeHandler.handleEnvelope(pegenv);
 			}
 

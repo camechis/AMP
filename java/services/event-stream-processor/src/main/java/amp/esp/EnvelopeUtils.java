@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import pegasus.eventbus.client.Envelope;
+import pegasus.eventbus.client.WrappedEnvelope;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
@@ -35,7 +35,7 @@ public class EnvelopeUtils {
         return gson.fromJson(line, HashMap.class);
     }
 
-    public static String getBodyValue(Envelope env, String key) {
+    public static String getBodyValue(WrappedEnvelope env, String key) {
         try {
             String bodyJson = new String(env.getBody(), "UTF-8");
             HashMap map = EnvelopeUtils.toMapJson(bodyJson);
@@ -46,15 +46,15 @@ public class EnvelopeUtils {
         }
     }
 
-    public static String toJson(Envelope env) {
-        return gson.toJson(env, Envelope.class);
+    public static String toJson(WrappedEnvelope env) {
+        return gson.toJson(env, WrappedEnvelope.class);
     }
 
-    public static String toPrettyJson(Envelope env) {
-        return gson_pp.toJson(env, Envelope.class);
+    public static String toPrettyJson(WrappedEnvelope env) {
+        return gson_pp.toJson(env, WrappedEnvelope.class);
     }
 
-    public static String envelopeToReadableJson(Envelope env) {
+    public static String envelopeToReadableJson(WrappedEnvelope env) {
         byte[] body = env.getBody();
         String bodyJson = "";
         try {
@@ -79,8 +79,8 @@ public class EnvelopeUtils {
         return json.end().toString();
     }
 
-    public static Envelope fromJson(String line) {
-        Envelope envelope = gson.fromJson(line, Envelope.class);
+    public static WrappedEnvelope fromJson(String line) {
+        WrappedEnvelope envelope = gson.fromJson(line, WrappedEnvelope.class);
         return envelope;
     }
 
