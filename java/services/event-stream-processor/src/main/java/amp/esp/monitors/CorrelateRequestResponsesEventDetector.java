@@ -18,8 +18,8 @@ public class CorrelateRequestResponsesEventDetector extends EventMonitor {
 
     @Override
     public InferredEvent receive(EventBean eventBean) {
-        WrappedEnvelope req = (WrappedEnvelope) eventBean.get("request");
-        WrappedEnvelope resp = (WrappedEnvelope) eventBean.get("response");
+        WrappedEnvelope req = getEnvelopeFromBean(eventBean, "request");
+        WrappedEnvelope resp = getEnvelopeFromBean(eventBean, "response");
         return makeInferredEvent().addEnvelope(req).addEnvelope(resp);
     }
 

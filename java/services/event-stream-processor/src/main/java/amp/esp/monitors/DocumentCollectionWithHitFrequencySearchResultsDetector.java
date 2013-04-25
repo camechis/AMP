@@ -18,8 +18,8 @@ public class DocumentCollectionWithHitFrequencySearchResultsDetector extends Eve
 
     @Override
     public InferredEvent receive(EventBean eventBean) {
-        WrappedEnvelope docs = (WrappedEnvelope) eventBean.get("docs");
-        WrappedEnvelope freq = (WrappedEnvelope) eventBean.get("freq");
+        WrappedEnvelope docs = getEnvelopeFromBean(eventBean, "docs");
+        WrappedEnvelope freq = getEnvelopeFromBean(eventBean, "freq");
         InferredEvent resultingEvent = makeInferredEvent();
         resultingEvent.addEnvelope(docs).addEnvelope(freq);
         return resultingEvent;

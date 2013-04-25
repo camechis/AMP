@@ -84,7 +84,7 @@ public class EnvelopeLogger extends EventMonitor {
     @Override
     public InferredEvent receive(EventBean eventBean) {
         if (logdir != null) {
-            WrappedEnvelope env = (WrappedEnvelope) eventBean.get("resp");
+            WrappedEnvelope env = getEnvelopeFromBean(eventBean, "resp");
             if (env.getEventType().startsWith("dashboard.server.metric")) return null;
             fprint(logFile, EnvelopeUtils.envelopeToReadableJson(env));
             fprint(jsonFile, EnvelopeUtils.toJson(env));

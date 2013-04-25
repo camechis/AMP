@@ -54,7 +54,7 @@ public class ConsensusSearchDetector extends EventMonitor {
         }
 
         public InferredEventList receive(EventBean eventBean) {
-            WrappedEnvelope env = (WrappedEnvelope) eventBean.get(fieldToSplit);
+            WrappedEnvelope env = getEnvelopeFromBean(eventBean, fieldToSplit);
             InferredEventList events = new InferredEventList();
             String userid = env.getReplyTo();
             String topic = env.getTopic();

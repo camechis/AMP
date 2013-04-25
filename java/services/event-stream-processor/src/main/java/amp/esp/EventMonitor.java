@@ -1,11 +1,13 @@
 package amp.esp;
 
+import amp.esp.publish.Publisher;
+
 import java.util.Collection;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import amp.esp.publish.Publisher;
+import pegasus.eventbus.client.WrappedEnvelope;
 
 import com.espertech.esper.client.EventBean;
 
@@ -34,6 +36,10 @@ public abstract class EventMonitor {
         String inferredType = getInferredType();
         String label = getLabel();
         return new InferredEvent(inferredType, label);
+    }
+
+    public WrappedEnvelope getEnvelopeFromBean(EventBean eventBean, String reference) {
+        return (WrappedEnvelope) eventBean.get(reference);
     }
 
     public String getLabel() {

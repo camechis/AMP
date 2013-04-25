@@ -1,5 +1,10 @@
 package amp.esp.monitors;
 
+import amp.esp.EventMonitor;
+import amp.esp.EventStreamProcessor;
+import amp.esp.InferredEvent;
+import amp.esp.publish.Publisher;
+
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -12,12 +17,6 @@ import org.mozilla.javascript.NativeJavaObject;
 import org.mozilla.javascript.NativeObject;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
-import org.mozilla.javascript.Undefined;
-
-import amp.esp.EventMonitor;
-import amp.esp.EventStreamProcessor;
-import amp.esp.InferredEvent;
-import amp.esp.publish.Publisher;
 
 import pegasus.eventbus.client.WrappedEnvelope;
 
@@ -49,7 +48,7 @@ public class JavascriptDetector extends EventMonitor {
 
     @Override
     public InferredEvent receive(EventBean eventBean) {
-        WrappedEnvelope env = (WrappedEnvelope) eventBean.get("env");
+        WrappedEnvelope env = getEnvelopeFromBean(eventBean, "env");
 		Object[] args = {env};
 		InferredEvent ie =
 				(InferredEvent) unwrap(ScriptableObject.callMethod(eventMonitor, "receive", args));

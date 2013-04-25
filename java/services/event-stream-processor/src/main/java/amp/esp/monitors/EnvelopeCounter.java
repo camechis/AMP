@@ -118,7 +118,7 @@ public class EnvelopeCounter extends EventMonitor {
 
     @Override
     public InferredEvent receive(EventBean eventBean) {
-        WrappedEnvelope env = (WrappedEnvelope) eventBean.get("env");
+        WrappedEnvelope env = getEnvelopeFromBean(eventBean, "env");
         recordValues(env);
         return null;
     }

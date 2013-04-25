@@ -22,7 +22,7 @@ public class EventTypeDetector extends EventMonitor {
 
     @Override
     public InferredEvent receive(EventBean eventBean) {
-        WrappedEnvelope env = (WrappedEnvelope) eventBean.get("resp");
+        WrappedEnvelope env = getEnvelopeFromBean(eventBean, "resp");
         return makeInferredEvent().addEnvelope(env);
     }
 
