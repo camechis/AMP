@@ -8,9 +8,6 @@
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
 
-	<!-- <bean id="command" class="amp.gel.cli.ExampleCommand" /> -->
-	<!-- <bean id="task" class="amp.gel.tasks.ExampleTask" /> -->
-	<!-- <bean id="managed" class="amp.gel.managed.ExampleManaged" /> -->
 	<bean id="resource" class="amp.gel.resources.ExampleResource" />
 
 	<bean id="ampHealthCheck" class="amp.gel.health.AmpHealthCheck" />
