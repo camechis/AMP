@@ -17,11 +17,14 @@ localCluster = ClusterDefinition("localhost", description="Local Cluster")
 
 print gts.addClusterDefinition(localCluster)
 
-defaultExchange = ExchangeDefinition("amp.default", description="Default Exchange")
+defaultExchange = ExchangeDefinition(
+    "amp.default", description="Default Exchange")
 
 print gts.addExchangeDefinition(defaultExchange)
 
-clientQueue = QueueDefinition(name='@{clientName}#@{increment}#@{eventType}', description="Unique Client Queue")
+clientQueue = QueueDefinition(
+    description="Unique Client Queue",
+    name='@{clientName}#@{increment}#@{eventType}')
 
 print gts.addQueueDefinition(clientQueue)
 

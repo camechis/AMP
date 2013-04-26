@@ -7,6 +7,10 @@ def ID():
 def getRef(Obj):
   return Obj.getRef() if hasattr(Obj, "getRef") else Obj
 
+'''
+  Realized Model Classes
+'''
+
 class RoutingContext(Referable):
   
   def __init__(self, value, id=None, description=None):
@@ -15,6 +19,74 @@ class RoutingContext(Referable):
     self.description = description
     self.value = value
     self.refFn = RCRef
+
+'''
+  RabbitMQ Model Classes
+'''
+
+class User(Referable):
+
+  def __init__(self, name, password, tags):
+
+    self.name = name
+    self.password = password
+    self.tags = tags
+
+class Permission(Referable):
+
+  def __init__(self, user, vhost="/", configure=".*", read=".*", write=".*"):
+
+    self.user = user
+    self.vhost = vhost
+    self.configure = configure
+    self.read = read
+    self.write = write
+
+class Exchange(Referable):
+  
+  def __init__(self, name, etype="direct", vhost="/", durable=True, autoDelete=False, internal=False, arguments={}):
+    
+    self.name = name
+    self.type = etype
+    self.vhost = vhost
+    self.durable = durable
+    self.autoDelete = autoDelete
+    self.internal = internal
+    self.arguments = arguments
+    self.refFn = ExRef
+
+class Queue(Referable):
+
+  def __init__(self, name, vhost="/", exclusive=False, durable=True, autoDelete=False, arguments={}):
+
+    self.name = name
+    self.vhost = vhost
+    self.durable = durable
+    self.autoDelete = autoDelete
+    self.exclusive = exclusive
+    self.arguments = arguments
+    self.refFn = QRef
+
+class Binding(Referable):
+
+  def __init__(self, source, destination, routingKey, destinationType="queue", vhost="/", arguments={}):
+
+    self.source = source
+    self.destination = destination
+    self.destinationType = destinationType
+    self.routingKey = routingKey
+    self.vhost = vhost
+    self.arguments = arguments
+
+class VirtualHost(Referable):
+
+  def __init__(self, name):
+
+    self.name = name
+
+'''
+  Definition Model Classes
+'''
 
 class RoutingContextDefinition(Referable):
   
@@ -112,6 +184,9 @@ class RoutingInfoDefinition(Referable):
   def addConsumingRouteReference(self, consumingRouteReference):
     self.consumingRouteReferences.append(consumingRouteReference)
 
+'''
+  Helper methods for constructing generic references (Cluster Key or Factory References)
+'''
 
 def CK(cluster, vhost, otype, name):
   """Generate a cluster key refering to some topology object."""
@@ -122,7 +197,9 @@ def FR(factoryName, context):
   contextStr = context if type(context) == str else json.dumps(context)
   return { "factoryName": factoryName, "context": contextStr }
 
-
+'''
+  Helpers for constructing references to Exchanges (either real or definition)
+'''
 
 def ExRef(cluster, vhost, name):
   """Generate a factory reference to an exchange object"""
@@ -132,7 +209,9 @@ def ExRef(cluster, vhost, name):
 def ExDefRef(id):
   return FR("amp.topology.core.factory.dynamic.DynamicExchangeFactory", id)
 
-
+'''
+  Helpers for constructing references to Queues (either real or definition)
+'''
 
 def QRef(cluster, vhost, name):
   """Generate a factory reference to an queue object"""
@@ -142,7 +221,9 @@ def QRef(cluster, vhost, name):
 def QDefRef(id):
   return FR("amp.topology.core.factory.dynamic.DynamicQueueFactory", id)
 
-
+'''
+  Helpers for constructing references to RoutingContexts (either real or definition)
+'''
 
 def RCRef(id):
   return FR("amp.topology.core.factory.impl.DefaultRoutingContextFactory", id)
@@ -151,6 +232,9 @@ def RCDefRef(id):
   return FR("amp.topology.core.factory.dynamic.DynamicRoutingContextFactory", id)
 
 
+'''
+  Helpers for constructing references to Clusters (either real or definition)
+'''
 
 def ClRef(id):
   return FR("amp.topology.core.factory.impl.DefaultClusterFactory", id)
@@ -158,7 +242,9 @@ def ClRef(id):
 def ClDefRef(id):
   return FR("amp.topology.core.factory.dynamic.DynamicClusterFactory", id)
 
-
+'''
+  Helpers for constructing references for Routes and RoutingInfo definitions
+'''
 
 def PRouteDefRef(id):
   return FR("amp.topology.core.factory.dynamic.DynamicProducingRouteFactory", id)

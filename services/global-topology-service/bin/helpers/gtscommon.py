@@ -4,8 +4,6 @@ def objectToJson(Obj):
   else:
     raise TypeError, "Could not turn object into JSON"
 
-
-
 class Jsonable:
   def toJson(self):
     noFunctions = dict((k, v) for k, v in self.__dict__.items() if not hasattr(v, '__call__'))
