@@ -1,4 +1,4 @@
-applicationContext: ['conf/applicationContext.xml', 'conf/basicAuthSecurityContext.xml']
+applicationContext: ['conf/cmf-context.xml', 'conf/applicationContext.xml', 'conf/basicAuthSecurityContext.xml']
 
 useSpringSecurity: true
 

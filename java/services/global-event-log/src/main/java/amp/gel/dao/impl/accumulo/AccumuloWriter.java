@@ -1,6 +1,5 @@
 package amp.gel.dao.impl.accumulo;
 
-
 import java.util.List;
 
 import org.apache.accumulo.core.client.BatchWriter;
@@ -11,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 
 import amp.gel.dao.DatastoreWriter;
-
 import cmf.bus.Envelope;
 
 public class AccumuloWriter implements DatastoreWriter, InitializingBean {
@@ -53,6 +51,7 @@ public class AccumuloWriter implements DatastoreWriter, InitializingBean {
 
 	public void initialize() throws Exception {
 		// do nothing
+		logger.info("Initialized AccumuloWriter.");
 	}
 
 	public void write(Envelope envelope) throws Exception {
@@ -64,6 +63,8 @@ public class AccumuloWriter implements DatastoreWriter, InitializingBean {
 		if (batchWriter != null) {
 			try {
 				batchWriter.close();
+
+				logger.info("Closed AccumuloWriter.");
 			} catch (MutationsRejectedException e) {
 				logger.error("Unable to close batch writer!", e);
 			}

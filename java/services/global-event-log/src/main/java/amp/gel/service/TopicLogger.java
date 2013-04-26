@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 
 import amp.gel.dao.DatastoreWriter;
-
 import cmf.bus.Envelope;
 import cmf.bus.EnvelopeHeaderConstants;
 import cmf.bus.IEnvelopeBus;
@@ -93,6 +92,8 @@ public class TopicLogger implements EnvelopeLogger, IRegistration,
 	public void start() throws Exception {
 		datastoreWriter.initialize();
 		envelopeBus.register(this);
+
+		logger.info("Started TopicLogger.");
 	}
 
 	/*
@@ -103,6 +104,8 @@ public class TopicLogger implements EnvelopeLogger, IRegistration,
 	public void stop() throws Exception {
 		envelopeBus.unregister(this);
 		datastoreWriter.close();
+
+		logger.info("Stopped TopicLogger.");
 	}
 
 	public void afterPropertiesSet() throws Exception {
