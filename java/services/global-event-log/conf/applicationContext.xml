@@ -2,11 +2,13 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:c="http://www.springframework.org/schema/c"
 	xmlns:context="http://www.springframework.org/schema/context" xmlns:p="http://www.springframework.org/schema/p"
-	xmlns:task="http://www.springframework.org/schema/task" xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:util="http://www.springframework.org/schema/util" xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:security="http://www.springframework.org/schema/security"
 	xsi:schemaLocation="http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.2.xsd
 		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd">
 
 	<bean id="resource" class="amp.gel.resources.ExampleResource" />
 
@@ -14,10 +16,18 @@
 	<bean id="accumuloHealthCheck" class="amp.gel.health.AccumuloHealthCheck" />
 
 	<bean id="connectorFactory" class="amp.gel.dao.impl.accumulo.ConnectorFactoryImpl">
-		<property name="instanceName" value="gel" />
-		<property name="zooKeepers" value="10.1.30.133" />
-		<property name="user" value="root" />
-		<property name="password" value="root" />
+		<property name="instanceName">
+			<util:property-path path="dropwizard.configuration.connector.instanceName"></util:property-path>
+		</property>
+		<property name="zooKeepers">
+			<util:property-path path="dropwizard.configuration.connector.zooKeepers"></util:property-path>
+		</property>
+		<property name="user">
+			<util:property-path path="dropwizard.configuration.connector.user"></util:property-path>
+		</property>
+		<property name="password">
+			<util:property-path path="dropwizard.configuration.connector.password"></util:property-path>
+		</property>
 	</bean>
 
 	<bean id="connector" factory-bean="connectorFactory"
@@ -33,7 +43,9 @@
 	<bean id="batchWriterFactory" class="amp.gel.dao.impl.accumulo.BatchWriterFactoryImpl">
 		<property name="connector" ref="connector" />
 		<property name="tableOperations" ref="tableOperations" />
-		<property name="tableName" value="events" />
+		<property name="tableName">
+			<util:property-path path="dropwizard.configuration.tableName"></util:property-path>
+		</property>
 	</bean>
 
 	<bean id="batchWriter" factory-bean="batchWriterFactory"

@@ -14,7 +14,7 @@ public class TopicLoggerDemo {
 
 	public static void main(String[] args) {
 		ApplicationContext appContext = new FileSystemXmlApplicationContext(
-				"conf/cmf-context.xml");
+				"src/test/resources/cmf-test-context.xml");
 		IEventBus eventBus = appContext.getBean("eventBus", IEventBus.class);
 
 		long counter = 0;

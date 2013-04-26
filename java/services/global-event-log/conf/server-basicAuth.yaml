@@ -2,7 +2,20 @@ applicationContext: ['conf/cmf-context.xml', 'conf/applicationContext.xml', 'con
 
 useSpringSecurity: true
 
-exampleProperty: This was your example property
+tableName: events
+
+connector:
+    instanceName: gel
+    zooKeepers: 10.1.30.133
+    user: root
+    password: root
+    
+topologyService:
+    clientProfile: 
+    name: gel
+    hostname: devexample.com
+    vhost: /
+    port: 5672
 
 logging:
     level: INFO
