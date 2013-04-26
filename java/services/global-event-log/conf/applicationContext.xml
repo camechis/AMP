@@ -9,12 +9,12 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
 
 	<!-- <bean id="command" class="amp.gel.cli.ExampleCommand" /> -->
-	<!-- <bean id="healthCheck" class="amp.gel.health.ExampleHealthCheck" /> -->
 	<!-- <bean id="task" class="amp.gel.tasks.ExampleTask" /> -->
 	<!-- <bean id="managed" class="amp.gel.managed.ExampleManaged" /> -->
 	<bean id="resource" class="amp.gel.resources.ExampleResource" />
 
-	<!-- <import resource="classpath:/cmf-context.xml" /> -->
+	<bean id="ampHealthCheck" class="amp.gel.health.AmpHealthCheck" />
+	<bean id="accumuloHealthCheck" class="amp.gel.health.AccumuloHealthCheck" />
 
 	<bean id="connectorFactory" class="amp.gel.dao.impl.accumulo.ConnectorFactoryImpl">
 		<property name="instanceName" value="gel" />
@@ -52,8 +52,7 @@
 	<bean id="topicLogger" class="amp.gel.service.TopicLogger">
 		<property name="envelopeBus" ref="envelopeBus" />
 		<property name="datastoreWriter" ref="accumuloWriter" />
-		<property name="topic"
-			value="amp.gel.service.TopicLoggerIntegrationTest.SimplePojo" />
+		<property name="topic" value="amp.gel.service.TopicLoggerDemo.SimplePojo" />
 	</bean>
 
 	<bean id="topicLoggerManager" class="amp.gel.managed.TopicLoggerManager">

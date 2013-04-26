@@ -2,16 +2,15 @@ package amp.gel.health;
 
 import com.yammer.metrics.core.HealthCheck;
 
-public class ExampleHealthCheck extends HealthCheck {
+public class AmpHealthCheck extends HealthCheck {
 
-	public ExampleHealthCheck() {
-		
-		super("example");
+	public AmpHealthCheck() {
+		super("amp");
 	}
 
 	@Override
 	protected Result check() throws Exception {
-		
+		// TODO: real health check
 		return Result.healthy();
 	}
 }

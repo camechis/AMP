@@ -6,6 +6,8 @@ exampleProperty: This was your example property
 
 logging:
     level: INFO
+    loggers:
+        "amp.bus.rabbit": WARN
     console:
         enabled: true
         threshold: DEBUG
