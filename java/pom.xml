@@ -17,6 +17,7 @@
         <bundle.vendor>Berico Technologies</bundle.vendor>
         <cmf.version>3.1.0</cmf.version>
         <slf4j.version>1.6.4</slf4j.version>
+        <logback.version>1.0.12</logback.version>
         <joda-time.version>2.1</joda-time.version>
         <commons-codec.version>1.6</commons-codec.version>
         <commons-lang.version>2.6</commons-lang.version>
@@ -38,6 +39,7 @@
         <module>extensions/amp-commons</module>
         <module>services/global-topology-client</module>
         <module>services/global-event-log</module>
+        <module>services/actor-services</module>
 		<module>archetypes/amp-quickstart</module>
     </modules>
 
@@ -59,6 +61,16 @@
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
                 <version>${slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${logback.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-core</artifactId>
+                <version>${logback.version}</version>
             </dependency>
             <dependency>
                 <groupId>commons-codec</groupId>
