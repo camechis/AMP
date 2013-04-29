@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.2.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+
+	<!-- <bean id="derbyHealthCheck" class="amp.gel.health.DerbyHealthCheck" 
+		/> -->
+
+	<context:component-scan base-package="amp.gel.dao.impl.derby" />
+
+	<bean id="datastoreWriter" class="amp.gel.dao.impl.derby.DerbyWriter" />
+
+	<!-- Hibernate Configuration -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName"
+			value="${db.driver:org.apache.derby.jdbc.EmbeddedDriver}" />
+		<property name="url" value="${db.url:jdbc:derby:gel;create=true}" />
+		<property name="username" value="${db.username:root}" />
+		<property name="password" value="${db.password:root}" />
+	</bean>
+
+	<bean id="entityManagerFactory"
+		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="packagesToScan" value="amp.gel.dao.impl.derby" />
+		<property name="jpaVendorAdapter">
+			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
+		</property>
+		<property name="persistenceProviderClass" value="org.hibernate.ejb.HibernatePersistence" />
+		<property name="jpaProperties">
+			<props>
+				<prop key="hibernate.dialect">${jpa.dialect:org.hibernate.dialect.DerbyDialect}
+				</prop>
+				<prop key="hibernate.show_sql">${jpa.show_sql:false}</prop>
+				<prop key="hibernate.format_sql">${jpa.format_sql:false}</prop>
+				<prop key="hibernate.hbm2ddl.auto">${jpa.auto_ddl:create-drop}</prop>
+			</props>
+		</property>
+	</bean>
+
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory" />
+	</bean>
+
+	<tx:annotation-driven transaction-manager="transactionManager" />
+
+</beans>
