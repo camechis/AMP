@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.2.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+
+	<bean id="accumuloHealthCheck" class="amp.gel.health.AccumuloHealthCheck" />
+
+	<bean id="connectorFactory" class="amp.gel.dao.impl.accumulo.ConnectorFactoryImpl">
+		<property name="instanceName" value="${accumulo.instance}" />
+		<property name="zooKeepers" value="${accumulo.zookeepers}" />
+		<property name="user" value="${accumulo.user}" />
+		<property name="password" value="${accumulo.password}" />
+	</bean>
+
+	<bean id="connector" factory-bean="connectorFactory"
+		factory-method="createConnector" />
+
+	<bean id="tableOperationsFactory" class="amp.gel.dao.impl.accumulo.TableOperationsFactoryImpl">
+		<property name="connector" ref="connector" />
+	</bean>
+
+	<bean id="tableOperations" factory-bean="tableOperationsFactory"
+		factory-method="createTableOperations" />
+
+	<bean id="batchWriterFactory" class="amp.gel.dao.impl.accumulo.BatchWriterFactoryImpl">
+		<property name="connector" ref="connector" />
+		<property name="tableOperations" ref="tableOperations" />
+		<property name="tableName" value="${accumulo.tableName}" />
+	</bean>
+
+	<bean id="batchWriter" factory-bean="batchWriterFactory"
+		factory-method="createBatchWriter" />
+
+	<bean id="mutationsGenerator" class="amp.gel.dao.impl.accumulo.DefaultMutationsGenerator" />
+
+	<bean id="datastoreWriter" class="amp.gel.dao.impl.accumulo.AccumuloWriter">
+		<property name="batchWriter" ref="batchWriter" />
+		<property name="mutationsGenerator" ref="mutationsGenerator" />
+	</bean>
+
+</beans>
