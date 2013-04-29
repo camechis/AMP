@@ -119,6 +119,8 @@ public class BatchWriterFactoryImpl implements BatchWriterFactory,
 				tableOperations.setProperty(tableName,
 						"table.iterator.majc.vers.opt.maxVersions",
 						MAX_VERSIONS);
+
+				logger.info("Created Accumulo table '" + tableName + "'");
 			}
 
 			BatchWriter writer = connector.createBatchWriter(tableName,
