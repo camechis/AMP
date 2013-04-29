@@ -13,26 +13,14 @@
 		c:topologyService-ref="topologyService" c:channelFactory-ref="channelFactory" />
 
 	<bean id="channelFactory" class="amp.bus.rabbit.BasicChannelFactory"
-		c:username="devexample" c:password="devexample" />
+		c:username="${event.bus.username}" c:password="${event.bus.password}" />
 
 	<bean id="topologyService" class="amp.bus.rabbit.topology.SimpleTopologyService">
-		<constructor-arg name="clientProfile">
-			<util:property-path
-				path="dropwizard.configuration.topologyService.clientProfile"></util:property-path>
-		</constructor-arg>
-		<constructor-arg name="name">
-			<util:property-path path="dropwizard.configuration.topologyService.name"></util:property-path>
-		</constructor-arg>
-		<constructor-arg name="hostname">
-			<util:property-path
-				path="dropwizard.configuration.topologyService.hostname"></util:property-path>
-		</constructor-arg>
-		<constructor-arg name="vhost">
-			<util:property-path path="dropwizard.configuration.topologyService.vhost"></util:property-path>
-		</constructor-arg>
-		<constructor-arg name="port">
-			<util:property-path path="dropwizard.configuration.topologyService.port"></util:property-path>
-		</constructor-arg>
+		<constructor-arg name="clientProfile" value="" />
+		<constructor-arg name="name" value="gel" />
+		<constructor-arg name="hostname" value="${event.bus.host:rabbit}" />
+		<constructor-arg name="vhost" value="${event.bus.virtualhost:/}" />
+		<constructor-arg name="port" value="${event.bus.port:5671}" />
 	</bean>
 
 	<!-- The following components are for the Event Bus -->

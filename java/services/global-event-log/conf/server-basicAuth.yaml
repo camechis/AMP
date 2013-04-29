@@ -1,21 +1,6 @@
-applicationContext: ['conf/cmf-context.xml', 'conf/applicationContext.xml', 'conf/basicAuthSecurityContext.xml']
+applicationContext: ['conf/applicationContext.xml', 'conf/basicAuthSecurityContext.xml']
 
 useSpringSecurity: true
-
-tableName: events
-
-connector:
-    instanceName: gel
-    zooKeepers: 10.1.30.133
-    user: root
-    password: root
-    
-topologyService:
-    clientProfile: 
-    name: gel
-    hostname: devexample.com
-    vhost: /
-    port: 5672
 
 logging:
     level: INFO

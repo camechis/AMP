@@ -3,8 +3,7 @@ package amp.gel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import amp.gel.fallwizard.SpringService;
-
+import com.berico.fallwizard.SpringService;
 import com.yammer.dropwizard.config.Bootstrap;
 
 public class TopicLoggerService extends SpringService<TopicLoggerConfiguration> {
