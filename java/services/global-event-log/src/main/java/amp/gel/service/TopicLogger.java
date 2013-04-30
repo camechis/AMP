@@ -81,7 +81,8 @@ public class TopicLogger implements EnvelopeLogger, IRegistration,
 
 	public Object handleFailed(Envelope envelope, Exception ex)
 			throws Exception {
-		return ex;
+		logger.info("Handling failed envelope: " + envelope, ex);
+		return null;
 	}
 
 	/*
