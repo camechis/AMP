@@ -12,6 +12,9 @@
 	<!-- <bean id="derbyHealthCheck" class="amp.gel.health.DerbyHealthCheck" 
 		/> -->
 
+	<bean id="derbyNetworkServer" class="amp.gel.dao.impl.derby.DerbyNetworkServer"
+		destroy-method="destroy" />
+
 	<context:component-scan base-package="amp.gel.dao.impl.derby" />
 
 	<bean id="datastoreWriter" class="amp.gel.dao.impl.derby.DerbyWriter" />

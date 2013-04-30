@@ -178,6 +178,16 @@
 			<artifactId>derby</artifactId>
 			<version>${apache.derby.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.derby</groupId>
+			<artifactId>derbyclient</artifactId>
+			<version>${apache.derby.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.derby</groupId>
+			<artifactId>derbynet</artifactId>
+			<version>${apache.derby.version}</version>
+		</dependency>
 
 		<!-- Test -->
 		<dependency>
