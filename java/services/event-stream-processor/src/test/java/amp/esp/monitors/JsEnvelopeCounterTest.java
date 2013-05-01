@@ -1,14 +1,12 @@
 package amp.esp.monitors;
 
+import amp.esp.InferredEvent;
+import amp.esp.TestUtils;
+
 import javax.script.ScriptException;
 
 import org.junit.Assert;
 import org.junit.Test;
-
-import amp.esp.EnvelopeUtils;
-import amp.esp.InferredEvent;
-import amp.esp.TestUtils;
-import amp.esp.monitors.JsEnvelopeCounter;
 
 import pegasus.eventbus.client.WrappedEnvelope;
 

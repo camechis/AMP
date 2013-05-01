@@ -2,17 +2,10 @@ package amp.esp.monitors;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-
-import org.junit.Test;
-
-import amp.esp.EnvelopeUtils;
 import amp.esp.InferredEvent;
 import amp.esp.TestUtils;
-import amp.esp.monitors.ConsensusSearchDetector;
-import amp.esp.monitors.CorrelateRequestResponsesEventDetector;
-import amp.esp.monitors.DocumentCollectionWithHitFrequencySearchResultsDetector;
-import amp.esp.monitors.EventTypeDetector;
-import amp.esp.monitors.UnauthorizedAccessAttemptsDetector;
+
+import org.junit.Test;
 
 import pegasus.eventbus.client.WrappedEnvelope;
 

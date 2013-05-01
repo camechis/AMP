@@ -3,8 +3,6 @@ package amp.esp.datastreams;
 import java.util.ArrayList;
 import java.util.List;
 
-import amp.esp.datastreams.StreamRange.TimeValFunc;
-
 
 public class Stream {
     private String name;

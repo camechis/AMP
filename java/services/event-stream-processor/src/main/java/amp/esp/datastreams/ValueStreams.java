@@ -1,10 +1,8 @@
 package amp.esp.datastreams;
 
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 public class ValueStreams {

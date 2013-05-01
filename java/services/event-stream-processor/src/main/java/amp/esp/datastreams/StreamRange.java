@@ -1,6 +1,5 @@
 package amp.esp.datastreams;
 
-import amp.esp.datastreams.StreamRange.TimeValFunc;
 
 /**
  * A {@link StreamRange} is an entity on top of a full stream with
@@ -38,7 +37,8 @@ public class StreamRange {
 			newEntry.insertAfter(last);
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 	    TimeValFunc<String> makeString = new TimeValFunc<String>() {
 
 	        StringBuffer sb = new StringBuffer();

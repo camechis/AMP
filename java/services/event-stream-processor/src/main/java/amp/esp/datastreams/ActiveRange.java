@@ -1,6 +1,5 @@
 package amp.esp.datastreams;
 
-import amp.esp.datastreams.StreamRange.TimeValFunc;
 
 /*
  * An ActiveRange is a range of a stream that represents an interval with a

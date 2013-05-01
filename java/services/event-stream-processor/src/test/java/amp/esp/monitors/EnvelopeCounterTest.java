@@ -1,12 +1,8 @@
 package amp.esp.monitors;
 
-import static org.junit.Assert.*;
+import amp.esp.TestUtils;
 
 import org.junit.Test;
-
-import amp.esp.EnvelopeUtils;
-import amp.esp.TestUtils;
-import amp.esp.monitors.EnvelopeCounter;
 
 public class EnvelopeCounterTest extends AbstractDetectorTest {
 

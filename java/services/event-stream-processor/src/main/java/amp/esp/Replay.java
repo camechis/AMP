@@ -1,37 +1,21 @@
 package amp.esp;
 
+import amp.esp.monitors.EnvelopeCounter;
+import amp.esp.monitors.EnvelopeLogger;
+import amp.esp.monitors.StorageRepository;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Set;
 
-import org.junit.Before;
-
-import amp.esp.datastreams.ActiveRange;
-import amp.esp.datastreams.Stream;
-import amp.esp.datastreams.ValueStreams;
-import amp.esp.monitors.ConsensusSearchDetector;
-import amp.esp.monitors.CorrelateRequestResponsesEventDetector;
-import amp.esp.monitors.DocumentCollectionWithHitFrequencySearchResultsDetector;
-import amp.esp.monitors.EnvelopeCounter;
-import amp.esp.monitors.EnvelopeLogger;
-import amp.esp.monitors.EventTypeDetector;
-import amp.esp.monitors.InferredEventCatcher;
-import amp.esp.monitors.InferredEventPrinter;
-import amp.esp.monitors.StorageRepository;
-import amp.esp.monitors.UnauthorizedAccessAttemptsDetector;
 import pegasus.eventbus.client.WrappedEnvelope;
-
-import com.google.common.collect.Lists;
 
 /**
  * Utility program to test envelope handling by reading JSON versions of envelopes from
  * a text file (see {@link EnvelopeLogger} for an Event Monitor that saves traffic to
  * a file) and replays those envelopes.
- * 
+ *
  * @author israel
  *
  */
