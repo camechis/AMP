@@ -7,8 +7,7 @@ public class EventManager {
 
 	cmf.bus.IEnvelopeBus bus = null;
 
-	public IRegistration subscribe(Subscription subscription) {
-		IRegistration registration = subscription.getRegistration();
+	public IRegistration subscribe(IRegistration registration) {
 		try {
 			bus.register(registration);
 		} catch (Exception e) {

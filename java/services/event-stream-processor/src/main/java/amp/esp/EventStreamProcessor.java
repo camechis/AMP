@@ -5,18 +5,13 @@ package amp.esp;
 import amp.esp.publish.Publisher;
 import amp.esp.publish.PublishingService;
 import cmf.bus.Envelope;
+import cmf.bus.IEnvelopeBus;
 import cmf.bus.IRegistration;
 
 import java.util.Collection;
-import java.util.Date;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import pegasus.eventbus.client.EnvelopeHandler;
-import pegasus.eventbus.client.EventManager;
-import pegasus.eventbus.client.EventResult;
-import pegasus.eventbus.client.Subscription;
 
 import com.espertech.esper.client.Configuration;
 import com.espertech.esper.client.EPAdministrator;
@@ -36,8 +31,6 @@ public class EventStreamProcessor {
     public static final String engineURI = "EventStreamProcessor";
     private static final Logger LOG = LoggerFactory.getLogger(EventStreamProcessor.class);
 
-    private EventManager eventManager;
-
     private PublishingService publishingService;
 
     private EPServiceProvider epService;
@@ -45,6 +38,8 @@ public class EventStreamProcessor {
     private final String espKey = this.getClass().getCanonicalName();
     private Collection<Publisher> publishers = Lists.newArrayList();
     private IRegistration registration;
+
+    IEnvelopeBus bus;
 
     /**
      * This is a wrapper class around an EventMonitor to allow it to receive events
@@ -97,32 +92,6 @@ public class EventStreamProcessor {
         }
     }
 
-    class EventbusListener implements EnvelopeHandler {
-
-        private void addHeader(Envelope env, String label, String val) {
-            env.getHeaders().put(label, val);
-        }
-
-        private void addHeader(Envelope env, String label, Date now) {
-            addHeader(env, label, now.getTime() + "");
-        }
-
-        private EventStreamProcessor eventStreamProcessor;
-
-        public EventbusListener(EventStreamProcessor eventStreamProcessor) {
-            this.eventStreamProcessor = eventStreamProcessor;
-        }
-
-        @Override
-        public EventResult handleEnvelope(Envelope envelope) {
-            addHeader(envelope, espKey + ":" + "TimeReceived", new Date());
-            eventStreamProcessor.sendEvent(envelope);
-            return EventResult.Handled;
-        }
-    }
-
-
-
     public EventStreamProcessor() {
         epService = createEventProcessor();
     }
@@ -157,33 +126,24 @@ public class EventStreamProcessor {
         return epService;
     }
 
-    public void setEventManager(EventManager eventManager) {
-        try {
-            attachToEventBus(eventManager);
-        } catch (RuntimeException e) {
-            System.err.println("@@@@ Error attaching to EB:");
-            e.printStackTrace();
-            throw e;
+    public void attachToEventBus(IEnvelopeBus bus) throws Exception {
+        if (this.bus != null) {
+            try {
+                detachFromEventBus();
+            } catch (Exception e) {
+                // ignore
+            }
         }
+        this.bus = bus;
+        registration = new ESPRegistration(this);
+        bus.register(registration);
     }
 
-    public void attachToEventBus(EventManager eventManager) {
-        if (this.eventManager != null) {
-            detachFromEventBus();
-        }
-        this.eventManager = eventManager;
-        EnvelopeHandler envelopeHandler = new EventbusListener(this);
-        Subscription subscription = new Subscription(envelopeHandler);
-        // EventHandler<?> evtmp = null;
-        // Subscription subscription = new Subscription(evtmp );
-        registration = eventManager.subscribe(subscription);
-    }
-
-    public void detachFromEventBus() {
-        if (eventManager != null) {
-            eventManager.unsubscribe(registration);
-            registration = null;
-            eventManager = null;
+    public void detachFromEventBus() throws Exception {
+        if (bus != null) {
+            bus.unregister(registration);
+            this.bus = null;
+            this.registration = null;
         }
     }
 
