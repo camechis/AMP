@@ -16,13 +16,15 @@
     <properties>
         <bundle.vendor>Berico Technologies</bundle.vendor>
         <cmf.version>3.1.0</cmf.version>
-        <slf4j.version>1.6.4</slf4j.version>
-        <joda-time.version>2.1</joda-time.version>
         <commons-codec.version>1.6</commons-codec.version>
         <commons-lang.version>2.6</commons-lang.version>
+        <gson.version>2.2.2</gson.version>
+        <guava.version>14.0.1</guava.version>
+        <joda-time.version>2.1</joda-time.version>
         <junit.version>4.11</junit.version>
-        <springframework.version>3.2.2.RELEASE</springframework.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <slf4j.version>1.6.4</slf4j.version>
+        <springframework.version>3.2.2.RELEASE</springframework.version>
     </properties>
 
 
@@ -32,6 +34,8 @@
         <module>amp-bus-rabbit</module>
         <module>amp-bus-security</module>
         <module>amp-eventing</module>
+        <module>amp-commanding</module>
+        <module>amp-commanding-rabbit</module>
         <module>amp-examples/bus-gui-tester</module>
         <module>amp-examples/user-notifications</module>
         <module>amp-examples/service-adaptor</module>
@@ -71,6 +75,11 @@
                 <version>${commons-lang.version}</version>
             </dependency>
             <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>joda-time</groupId>
                 <artifactId>joda-time</artifactId>
                 <version>${joda-time.version}</version>
@@ -94,6 +103,11 @@
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-test</artifactId>
                 <version>${springframework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.code.gson</groupId>
+                <artifactId>gson</artifactId>
+                <version>${gson.version}</version>
             </dependency>
             <dependency>
                 <groupId>junit</groupId>
