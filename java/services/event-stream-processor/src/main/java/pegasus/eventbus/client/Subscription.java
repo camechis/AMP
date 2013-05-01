@@ -1,10 +1,10 @@
 package pegasus.eventbus.client;
 
-import java.util.Map;
-
 import cmf.bus.Envelope;
 import cmf.bus.IEnvelopeFilterPredicate;
 import cmf.bus.IRegistration;
+
+import java.util.Map;
 
 public class Subscription {
 
@@ -21,8 +21,7 @@ public class Subscription {
 
 			@Override
 			public Object handle(Envelope env) throws Exception {
-				pegasus.eventbus.client.WrappedEnvelope pegenv = new pegasus.eventbus.client.WrappedEnvelope(env);
-				return envelopeHandler.handleEnvelope(pegenv);
+				return envelopeHandler.handleEnvelope(env);
 			}
 
 			@Override

@@ -11,14 +11,13 @@ import amp.esp.datastreams.ValueStreams;
 import amp.esp.datastreams.ValueStreamsDataProvider;
 import amp.esp.publish.Publisher;
 import amp.esp.publish.TopNMetricPublisher;
+import cmf.bus.Envelope;
 
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
-import pegasus.eventbus.client.WrappedEnvelope;
 
 import com.espertech.esper.client.EventBean;
 import com.google.common.collect.Lists;
@@ -34,10 +33,10 @@ public class EnvelopeCounter extends EventMonitor {
             };
 
     public interface EnvelopeRetriever {
-        public String retrieve(WrappedEnvelope e);
+        public String retrieve(Envelope e);
         public String key();
         public int[] periods();
-        public int getValue(String type, WrappedEnvelope env);
+        public int getValue(String type, Envelope env);
     }
 
     Collection<EnvelopeRetriever> metrics = Lists.newArrayList();
@@ -68,41 +67,41 @@ public class EnvelopeCounter extends EventMonitor {
     private void setupMetrics() {
         metrics.add(new EnvelopeRetriever() {
             @Override
-            public String retrieve(WrappedEnvelope e) { return WEUtils.getEventType(e.getEnvelope()); }
+            public String retrieve(Envelope e) { return WEUtils.getEventType(e); }
             @Override
             public String key() { return "Event Type"; }
             @Override
             public int[] periods() { return defaultperiods; }
             @Override
-            public int getValue(String type, WrappedEnvelope env) { return 1; }
+            public int getValue(String type, Envelope env) { return 1; }
         });
 
         metrics.add(new EnvelopeRetriever() {
             @Override
-            public String retrieve(WrappedEnvelope e) { return "BodyLength"; }
+            public String retrieve(Envelope e) { return "BodyLength"; }
             @Override
             public String key() { return "Total Body Length"; }
             @Override
             public int[] periods() { return defaultperiods; }
             @Override
-            public int getValue(String type, WrappedEnvelope env) { return WEUtils.getBody(env.getEnvelope()).length; }
+            public int getValue(String type, Envelope env) { return WEUtils.getBody(env).length; }
         });
 
         metrics.add(new EnvelopeRetriever() {
             @Override
-            public String retrieve(WrappedEnvelope e) { return WEUtils.getEventType(e.getEnvelope()); }
+            public String retrieve(Envelope e) { return WEUtils.getEventType(e); }
             @Override
             public String key() { return "Total Body Length by Type"; }
             @Override
             public int[] periods() { return defaultperiods; }
             @Override
-            public int getValue(String type, WrappedEnvelope env) { return WEUtils.getBody(env.getEnvelope()).length; }
+            public int getValue(String type, Envelope env) { return WEUtils.getBody(env).length; }
         });
 
         metrics.add(new EnvelopeRetriever() {
             @Override
-            public String retrieve(WrappedEnvelope e) {
-                if (WEUtils.getEventType(e.getEnvelope()).equals("pegasus.core.search.event.TextSearchEvent")) {
+            public String retrieve(Envelope e) {
+                if (WEUtils.getEventType(e).equals("pegasus.core.search.event.TextSearchEvent")) {
                     return EnvelopeUtils.getBodyValue(e, "queryText");
                 }
                 return null;
@@ -112,13 +111,13 @@ public class EnvelopeCounter extends EventMonitor {
             @Override
             public int[] periods() { return defaultperiods; }
             @Override
-            public int getValue(String type, WrappedEnvelope env) { return 1; }
+            public int getValue(String type, Envelope env) { return 1; }
         });
 
         metrics.add(new EnvelopeRetriever() {
             @Override
-            public String retrieve(WrappedEnvelope e) {
-                if (WEUtils.getEventType(e.getEnvelope()).equals("pegasus.core.search.event.TextSearchEvent")) {
+            public String retrieve(Envelope e) {
+                if (WEUtils.getEventType(e).equals("pegasus.core.search.event.TextSearchEvent")) {
                     String query = EnvelopeUtils.getBodyValue(e, "queryText");
                     String terms = EnvelopeUtils.makeSearchTermList(query);
                     return terms;
@@ -130,19 +129,19 @@ public class EnvelopeCounter extends EventMonitor {
             @Override
             public int[] periods() { return defaultperiods; }
             @Override
-            public int getValue(String type, WrappedEnvelope env) { return 1; }
+            public int getValue(String type, Envelope env) { return 1; }
         });
     }
 
     @Override
     public InferredEvent receive(EventBean eventBean) {
-        WrappedEnvelope env = getEnvelopeFromBean(eventBean, "env");
+        Envelope env = getEnvelopeFromBean(eventBean, "env");
         recordValues(env);
         return null;
     }
 
-    private void recordValues(WrappedEnvelope env) {
-        Date timestamp = WEUtils.getTimestamp(env.getEnvelope());
+    private void recordValues(Envelope env) {
+        Date timestamp = WEUtils.getTimestamp(env);
         // If the envelope doesn't have a timestamp, use the current time
         if (timestamp == null) timestamp = new Date();
         long time = timestamp.getTime();

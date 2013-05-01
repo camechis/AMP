@@ -1,24 +1,20 @@
 package amp.esp.monitors;
 
-import org.junit.Test;
-
 import amp.esp.InferredEvent;
 import amp.esp.TestUtils;
-import amp.esp.monitors.EventTypeDetector;
+import cmf.bus.Envelope;
 
-import pegasus.eventbus.client.WrappedEnvelope;
+import org.junit.Test;
 
 public class EventTypeDetectorTest extends AbstractDetectorTest {
 
     private static final String RESPONSE = "Response";
 
-
-
     @Test
     public void testEvents() {
         testRepository.addMonitor(new EventTypeDetector(RESPONSE));
 
-        WrappedEnvelope e;
+        Envelope e;
 
         e = TestUtils.makeRequest("red");
         sendAndExpectNoResult(e);
@@ -62,7 +58,7 @@ public class EventTypeDetectorTest extends AbstractDetectorTest {
 
 
 
-    private void sendAndExpectNoResult(WrappedEnvelope env) {
+    private void sendAndExpectNoResult(Envelope env) {
         sendAndExpectNo(env, RESPONSE);
     }
 }

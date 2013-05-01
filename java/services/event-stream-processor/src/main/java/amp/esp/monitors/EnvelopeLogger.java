@@ -7,14 +7,13 @@ import amp.esp.EventStreamProcessor;
 import amp.esp.InferredEvent;
 import amp.esp.WEUtils;
 import amp.esp.publish.Publisher;
+import cmf.bus.Envelope;
 
 import java.io.File;
 import java.util.Collection;
 import java.util.Date;
 
 import org.joda.time.DateTime;
-
-import pegasus.eventbus.client.WrappedEnvelope;
 
 import com.espertech.esper.client.EventBean;
 
@@ -76,8 +75,8 @@ public class EnvelopeLogger extends EventMonitor {
     @Override
     public InferredEvent receive(EventBean eventBean) {
         if (logdir != null) {
-            WrappedEnvelope env = getEnvelopeFromBean(eventBean, "resp");
-            if (WEUtils.getEventType(env.getEnvelope()).startsWith("dashboard.server.metric")) return null;
+            Envelope env = getEnvelopeFromBean(eventBean, "resp");
+            if (WEUtils.getEventType(env).startsWith("dashboard.server.metric")) return null;
             fprint(logFile, EnvelopeUtils.envelopeToReadableJson(env));
             fprint(jsonFile, EnvelopeUtils.toJson(env));
         }

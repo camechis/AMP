@@ -1,12 +1,12 @@
 package amp.esp;
 
+import cmf.bus.Envelope;
+
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
-
-import pegasus.eventbus.client.WrappedEnvelope;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
@@ -34,9 +34,9 @@ public class EnvelopeUtils {
     }
 
     @SuppressWarnings("rawtypes")
-    public static String getBodyValue(WrappedEnvelope env, String key) {
+    public static String getBodyValue(Envelope env, String key) {
         try {
-            String bodyJson = new String(WEUtils.getBody(env.getEnvelope()), "UTF-8");
+            String bodyJson = new String(WEUtils.getBody(env), "UTF-8");
             HashMap map = EnvelopeUtils.toMapJson(bodyJson);
             Object queryText = map.get(key);
             return "" + queryText;
@@ -45,16 +45,16 @@ public class EnvelopeUtils {
         }
     }
 
-    public static String toJson(WrappedEnvelope env) {
-        return gson.toJson(env, WrappedEnvelope.class);
+    public static String toJson(Envelope env) {
+        return gson.toJson(env, Envelope.class);
     }
 
-    public static String toPrettyJson(WrappedEnvelope env) {
-        return gson_pp.toJson(env, WrappedEnvelope.class);
+    public static String toPrettyJson(Envelope env) {
+        return gson_pp.toJson(env, Envelope.class);
     }
 
-    public static String envelopeToReadableJson(WrappedEnvelope env) {
-        byte[] body = WEUtils.getBody(env.getEnvelope());
+    public static String envelopeToReadableJson(Envelope env) {
+        byte[] body = WEUtils.getBody(env);
         String bodyJson = "";
         try {
             bodyJson = new String(body, "UTF-8");
@@ -63,13 +63,13 @@ public class EnvelopeUtils {
         }
         String bodyformatted = toFormattedJson(bodyJson);
         JsonString json = new JsonString().start()
-                .add("EVENT_TYPE", WEUtils.getEventType(env.getEnvelope()))
-                .add("REPLYTO", WEUtils.getReplyTo(env.getEnvelope()))
-                .add("TOPIC", WEUtils.getTopic(env.getEnvelope()))
-                .add("ID", WEUtils.getId(env.getEnvelope()))
-                .add("CORRELATION_ID", WEUtils.getCorrelationId(env.getEnvelope()))
-                .add("TIMESTAMP", WEUtils.getTimestamp(env.getEnvelope()))
-                .add("HEADERS", env.getEnvelope().getHeaders())
+                .add("EVENT_TYPE", WEUtils.getEventType(env))
+                .add("REPLYTO", WEUtils.getReplyTo(env))
+                .add("TOPIC", WEUtils.getTopic(env))
+                .add("ID", WEUtils.getId(env))
+                .add("CORRELATION_ID", WEUtils.getCorrelationId(env))
+                .add("TIMESTAMP", WEUtils.getTimestamp(env))
+                .add("HEADERS", env.getHeaders())
                 .add("BODY_SIZE", body.length)
                 .add("BODY_SRC", body)
                 .add("BODY_JSON", bodyJson)
@@ -78,8 +78,8 @@ public class EnvelopeUtils {
         return json.end().toString();
     }
 
-    public static WrappedEnvelope fromJson(String line) {
-        WrappedEnvelope envelope = gson.fromJson(line, WrappedEnvelope.class);
+    public static Envelope fromJson(String line) {
+        Envelope envelope = gson.fromJson(line, Envelope.class);
         return envelope;
     }
 

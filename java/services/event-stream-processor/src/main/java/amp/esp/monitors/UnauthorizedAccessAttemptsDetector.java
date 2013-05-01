@@ -50,7 +50,7 @@ public class UnauthorizedAccessAttemptsDetector extends EventMonitor {
                         ).getPattern();
 
         String createUA = "insert into UnauthorizedAccesses " +
-                "select request.getEnvelope().getHeader(" + quote("ReplyTo") + ") as userid, request, response " +
+                "select request.getHeader(" + quote("ReplyTo") + ") as userid, request, response " +
                 "from pattern [ " + ipattern2 +  " ]";
 
         String createUAF = "insert into UnauthorizedAccessesFreq " +

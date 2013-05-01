@@ -5,11 +5,10 @@ import amp.esp.EventMonitor;
 import amp.esp.EventStreamProcessor;
 import amp.esp.InferredEvent;
 import amp.esp.publish.Publisher;
+import cmf.bus.Envelope;
 
 import java.util.Collection;
 import java.util.HashSet;
-
-import pegasus.eventbus.client.WrappedEnvelope;
 
 import com.espertech.esper.client.EventBean;
 
@@ -19,8 +18,8 @@ public class DocumentCollectionWithHitFrequencySearchResultsDetector extends Eve
 
     @Override
     public InferredEvent receive(EventBean eventBean) {
-        WrappedEnvelope docs = getEnvelopeFromBean(eventBean, "docs");
-        WrappedEnvelope freq = getEnvelopeFromBean(eventBean, "freq");
+        Envelope docs = getEnvelopeFromBean(eventBean, "docs");
+        Envelope freq = getEnvelopeFromBean(eventBean, "freq");
         InferredEvent resultingEvent = makeInferredEvent();
         resultingEvent.addEnvelope(docs).addEnvelope(freq);
         return resultingEvent;

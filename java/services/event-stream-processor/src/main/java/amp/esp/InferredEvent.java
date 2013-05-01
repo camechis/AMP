@@ -1,9 +1,9 @@
 package amp.esp;
 
+import cmf.bus.Envelope;
+
 import java.util.ArrayList;
 import java.util.Map;
-
-import pegasus.eventbus.client.WrappedEnvelope;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -25,12 +25,12 @@ public class InferredEvent {
         return type;
     }
 
-    public ArrayList<WrappedEnvelope> getReferencedEvents() {
+    public ArrayList<Envelope> getReferencedEvents() {
         return referencedEvents;
     }
 
     private String type;
-    private ArrayList<WrappedEnvelope> referencedEvents = Lists.newArrayList();
+    private ArrayList<Envelope> referencedEvents = Lists.newArrayList();
     private Map<String, String> eventInfo = Maps.newHashMap();
     private String label;
 
@@ -39,7 +39,7 @@ public class InferredEvent {
         this.label = label;
     }
 
-    public InferredEvent addEnvelope(WrappedEnvelope env) {
+    public InferredEvent addEnvelope(Envelope env) {
         referencedEvents.add(env);
         return this;
     }

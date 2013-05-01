@@ -1,11 +1,11 @@
 package amp.esp;
 
 
+import cmf.bus.Envelope;
+
 import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
-
-import pegasus.eventbus.client.WrappedEnvelope;
 
 import com.google.common.collect.Maps;
 
@@ -14,39 +14,39 @@ public class TestUtils {
 
 	private static final String SEARCH_EVENT = "pegasus.core.search.event.TextSearchEvent";
 
-    public static WrappedEnvelope makeRequest(String requestReferenceID) {
+    public static Envelope makeRequest(String requestReferenceID) {
         return TestUtils.makeEnvelope("Request", requestReferenceID, null,
                 "Request topic for " + requestReferenceID, "requester");
     }
 
-    public static WrappedEnvelope makeResponse(String responseReferenceID) {
+    public static Envelope makeResponse(String responseReferenceID) {
         return TestUtils.makeEnvelope("Response", null, responseReferenceID,
                 "Response topic for " + responseReferenceID, "responder");
     }
 
-    public static WrappedEnvelope makeAuthRequest(String user, String resource, String reqID) {
-        WrappedEnvelope env = TestUtils.makeEnvelope("Request", reqID, null, resource, user);
+    public static Envelope makeAuthRequest(String user, String resource, String reqID) {
+        Envelope env = TestUtils.makeEnvelope("Request", reqID, null, resource, user);
         return env;
     }
 
-    public static WrappedEnvelope makeAuthResponse(boolean allowed, String reqID) {
+    public static Envelope makeAuthResponse(boolean allowed, String reqID) {
         String approval = allowed ? "APPROVED" : "Unauthorized Access";
-        WrappedEnvelope env = TestUtils.makeEnvelope("Response", null, reqID, approval,
+        Envelope env = TestUtils.makeEnvelope("Response", null, reqID, approval,
                 "Resource Allocation Server");
         return env;
     }
 
-    public static WrappedEnvelope makeSearchRequest(String user, String resource, String reqID) {
-        WrappedEnvelope env = TestUtils.makeEnvelope(SEARCH_EVENT, reqID, null, resource, user);
+    public static Envelope makeSearchRequest(String user, String resource, String reqID) {
+        Envelope env = TestUtils.makeEnvelope(SEARCH_EVENT, reqID, null, resource, user);
         return env;
     }
 
-    public static WrappedEnvelope createDocumentCollection(String reqID) {
+    public static Envelope createDocumentCollection(String reqID) {
         return TestUtils.makeEnvelope("DocumentCollectionSearchResult", null, reqID,
                 reqID + " documents", "librarian");
     }
 
-    public static WrappedEnvelope createHitFrequency(String reqID) {
+    public static Envelope createHitFrequency(String reqID) {
         return TestUtils.makeEnvelope("HitFrequencySearchResult", null, reqID,
                 reqID + " hit frequency", "hit freq counter");
     }
@@ -56,20 +56,20 @@ public class TestUtils {
     private static long testTime = 12104;
     private static long timeIncr = 2000;
 
-    public static WrappedEnvelope makeEnvelope(String type, String idsymbol, String correlationIdsymbol,
+    public static Envelope makeEnvelope(String type, String idsymbol, String correlationIdsymbol,
             String topic, String replyTo) {
-        WrappedEnvelope e = new WrappedEnvelope();
-        WEUtils.setEventType(e.getEnvelope(), type);
-        WEUtils.setId(e.getEnvelope(), symIdToRealId(idsymbol));
+        Envelope e = new Envelope();
+        WEUtils.setEventType(e, type);
+        WEUtils.setId(e, symIdToRealId(idsymbol));
         if (correlationIdsymbol != null) {
-            WEUtils.setCorrelationId(e.getEnvelope(), symIdToRealId(correlationIdsymbol));
+            WEUtils.setCorrelationId(e, symIdToRealId(correlationIdsymbol));
         }
-        WEUtils.setTopic(e.getEnvelope(), topic);
-        WEUtils.setReplyTo(e.getEnvelope(), replyTo);
+        WEUtils.setTopic(e, topic);
+        WEUtils.setReplyTo(e, replyTo);
         Date timestamp = new Date(testTime);
         testTime += timeIncr;
-        WEUtils.setTimestamp(e.getEnvelope(), timestamp);
-        WEUtils.setBody(e.getEnvelope(), (type + topic).getBytes());
+        WEUtils.setTimestamp(e, timestamp);
+        WEUtils.setBody(e, (type + topic).getBytes());
         return e;
     }
 

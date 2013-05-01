@@ -85,7 +85,7 @@ public class EventMatcher {
     }
 
     public static String referenceValue(String envel, String header) {
-        return String.format("%s.getEnvelope().getHeader(%s)", envel, quote(header));
+        return String.format("%s.getHeader(%s)", envel, quote(header));
     }
 
     public EventMatcher matchingRef(String header, String env2, String header2) {

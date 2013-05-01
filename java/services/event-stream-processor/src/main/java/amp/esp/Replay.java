@@ -3,13 +3,12 @@ package amp.esp;
 import amp.esp.monitors.EnvelopeCounter;
 import amp.esp.monitors.EnvelopeLogger;
 import amp.esp.monitors.StorageRepository;
+import cmf.bus.Envelope;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-
-import pegasus.eventbus.client.WrappedEnvelope;
 
 /**
  * Utility program to test envelope handling by reading JSON versions of envelopes from
@@ -67,7 +66,7 @@ public class Replay {
         for (String line : lines) {
             count++;
             // instantiate an envelope from JSON version
-            WrappedEnvelope env = EnvelopeUtils.fromJson(line);
+            Envelope env = EnvelopeUtils.fromJson(line);
             // TODO: use timestamps in envelope to reproduce delays
             // send envelope into ESP
             esp.sendEvent(env);

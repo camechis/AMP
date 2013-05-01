@@ -4,6 +4,7 @@ package amp.esp;
 //import org.apache.commons.logging.LogFactory;
 import amp.esp.publish.Publisher;
 import amp.esp.publish.PublishingService;
+import cmf.bus.Envelope;
 import cmf.bus.IRegistration;
 
 import java.util.Collection;
@@ -16,7 +17,6 @@ import pegasus.eventbus.client.EnvelopeHandler;
 import pegasus.eventbus.client.EventManager;
 import pegasus.eventbus.client.EventResult;
 import pegasus.eventbus.client.Subscription;
-import pegasus.eventbus.client.WrappedEnvelope;
 
 import com.espertech.esper.client.Configuration;
 import com.espertech.esper.client.EPAdministrator;
@@ -99,11 +99,11 @@ public class EventStreamProcessor {
 
     class EventbusListener implements EnvelopeHandler {
 
-        private void addHeader(WrappedEnvelope env, String label, String val) {
-            env.getEnvelope().getHeaders().put(label, val);
+        private void addHeader(Envelope env, String label, String val) {
+            env.getHeaders().put(label, val);
         }
 
-        private void addHeader(WrappedEnvelope env, String label, Date now) {
+        private void addHeader(Envelope env, String label, Date now) {
             addHeader(env, label, now.getTime() + "");
         }
 
@@ -114,7 +114,7 @@ public class EventStreamProcessor {
         }
 
         @Override
-        public EventResult handleEnvelope(WrappedEnvelope envelope) {
+        public EventResult handleEnvelope(Envelope envelope) {
             addHeader(envelope, espKey + ":" + "TimeReceived", new Date());
             eventStreamProcessor.sendEvent(envelope);
             return EventResult.Handled;
@@ -146,7 +146,7 @@ public class EventStreamProcessor {
         Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
 
         Configuration configuration = new Configuration();
-        configuration.addEventType("Envelope", WrappedEnvelope.class);
+        configuration.addEventType("Envelope", Envelope.class);
         configuration.addEventType("InferredEvent", InferredEvent.class);
         EPServiceProvider epService = EPServiceProviderManager.getProvider(engineURI, configuration);
         epService.initialize();
@@ -225,7 +225,7 @@ public class EventStreamProcessor {
     }
 
     @VisibleForTesting
-    public void sendEvent(WrappedEnvelope envelope) {
+    public void sendEvent(Envelope envelope) {
         LOG.debug(" --> Event: " + envelope);
         epService.getEPRuntime().sendEvent(envelope);
 
@@ -240,6 +240,7 @@ public class EventStreamProcessor {
         EPAdministrator administrator = epService.getEPAdministrator();
         EPStatement stmt;
         LOG.debug("Creating " + (isEPL ? "EPL" : "pattern") + ": " + pattern);
+        dbg("Creating " + (isEPL ? "EPL" : "pattern") + ": " + pattern);
         try {
             if (isEPL) {
                 stmt = administrator.createEPL(pattern);
@@ -248,6 +249,7 @@ public class EventStreamProcessor {
             }
         } catch (EPException e) {
             System.err.println("Error creating " + (isEPL ? "EPL" : "Pattern") + " statement: " + pattern);
+            dbg("\nError creating " + (isEPL ? "EPL" : "Pattern") + " statement: " + pattern + "\n" + e);
             e.printStackTrace();
             throw e;
         }
@@ -284,5 +286,26 @@ public class EventStreamProcessor {
         };
 
         return ip;
+    }
+
+    public static void dbg(String str) { fprint("/tmp/DEBUG", str); }
+
+    /**
+     *  Write debugging output to a file
+     *
+     * @param fname the file to be written to
+     * @param data The debug string to be written
+     **/
+
+    public static void fprint(String fname, String data) {
+      java.io.PrintWriter file;
+      boolean append = true;
+      try {
+        file = new java.io.PrintWriter(new java.io.FileOutputStream(fname, append));
+      } catch (Exception exc) {
+        return;
+      }
+      file.print(data + "\n");
+      file.close();
     }
 }

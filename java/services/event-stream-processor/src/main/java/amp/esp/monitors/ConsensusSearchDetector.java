@@ -8,11 +8,10 @@ import amp.esp.InferredEvent;
 import amp.esp.InferredEventList;
 import amp.esp.WEUtils;
 import amp.esp.publish.Publisher;
+import cmf.bus.Envelope;
 
 import java.util.Collection;
 import java.util.HashSet;
-
-import pegasus.eventbus.client.WrappedEnvelope;
 
 import com.espertech.esper.client.EventBean;
 
@@ -36,7 +35,8 @@ public class ConsensusSearchDetector extends EventMonitor {
      */
     class TermSplitter extends EventMonitor {
 
-        private EventMatcher matcher = EventMatcher.selectEnvelope("search").matching("EventType", SEARCH);
+//        private EventMatcher matcher = EventMatcher.selectEnvelope("search").matching("EventType", SEARCH);
+        private EventMatcher matcher = EventMatcher.everyEnvelope("search").matching("EventType", SEARCH);
 
         private String fieldToSplit = "search";
         private String inferredType = "Search Term";
@@ -47,10 +47,10 @@ public class ConsensusSearchDetector extends EventMonitor {
 
         @Override
         public InferredEventList receive(EventBean eventBean) {
-            WrappedEnvelope env = getEnvelopeFromBean(eventBean, fieldToSplit);
+            Envelope env = getEnvelopeFromBean(eventBean, fieldToSplit);
             InferredEventList events = new InferredEventList();
-            String userid = WEUtils.getReplyTo(env.getEnvelope());
-            String topic = WEUtils.getTopic(env.getEnvelope());
+            String userid = WEUtils.getReplyTo(env);
+            String topic = WEUtils.getTopic(env);
             Iterable<String> searchTerms = EnvelopeUtils.getSearchTerms(topic);
             for (String term : searchTerms) {
                 InferredEvent event = makeInferredEvent();

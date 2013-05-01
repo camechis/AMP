@@ -2,6 +2,9 @@ package amp.esp.monitors;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import amp.esp.EventStreamProcessor;
+import amp.esp.InferredEvent;
+import cmf.bus.Envelope;
 
 import java.util.ArrayList;
 
@@ -9,13 +12,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.After;
 import org.junit.Before;
-
-import amp.esp.EventStreamProcessor;
-import amp.esp.InferredEvent;
-import amp.esp.monitors.InferredEventCatcher;
-import amp.esp.monitors.StorageRepository;
-
-import pegasus.eventbus.client.WrappedEnvelope;
 
 import com.google.common.collect.Lists;
 
@@ -50,11 +46,11 @@ public abstract class AbstractDetectorTest {
     public void tearDown() throws Exception {
     }
 
-    protected ArrayList<InferredEvent> sendAndExpectNo(WrappedEnvelope e, String type) {
+    protected ArrayList<InferredEvent> sendAndExpectNo(Envelope e, String type) {
         return sendAndExpect(e, 0, type);
     }
 
-    protected ArrayList<InferredEvent> sendAndExpect(WrappedEnvelope e, int count, String type) {
+    protected ArrayList<InferredEvent> sendAndExpect(Envelope e, int count, String type) {
         clearAndSend(e);
         ArrayList<InferredEvent> detected = assertDetectedEvents(count, type);
         return detected;
@@ -75,12 +71,12 @@ public abstract class AbstractDetectorTest {
         return assertDetectedEvents(1, type).get(0);
     }
 
-    protected void assertInferredEventReferences(InferredEvent event, WrappedEnvelope env) {
+    protected void assertInferredEventReferences(InferredEvent event, Envelope env) {
         assertTrue("Checking to see if " + event + " references " + env,
                 event.getReferencedEvents().contains(env));
     }
 
-    protected void clearAndSend(WrappedEnvelope e) {
+    protected void clearAndSend(Envelope e) {
         envelopesDetected.clear();
         // log a separator for each event in the unit tests
         logger.info("============================================================================================");
@@ -88,7 +84,7 @@ public abstract class AbstractDetectorTest {
         send(e);
     }
 
-    protected void send(WrappedEnvelope e) {
+    protected void send(Envelope e) {
         esp.sendEvent(e);
     }
 
