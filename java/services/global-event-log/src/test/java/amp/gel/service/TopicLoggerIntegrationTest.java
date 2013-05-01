@@ -22,8 +22,6 @@ import amp.gel.dao.impl.accumulo.BatchWriterFactoryImpl;
 import amp.gel.dao.impl.accumulo.DefaultMutationsGenerator;
 import amp.gel.dao.impl.accumulo.MockConnectorFactoryImpl;
 import amp.gel.dao.impl.accumulo.TableOperationsFactoryImpl;
-import amp.gel.service.TopicLogger;
-
 import cmf.bus.IEnvelopeBus;
 import cmf.eventing.IEventBus;
 

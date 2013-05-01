@@ -2,6 +2,7 @@ package amp.gel.service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
 
 import cmf.bus.Envelope;
 import cmf.bus.EnvelopeHeaderConstants;
@@ -21,10 +22,10 @@ public class TopicCounter implements IRegistration {
 		this.topic = topic;
 	}
 
-	private volatile long count = 0;
+	private AtomicLong count = new AtomicLong();
 
 	public long getCount() {
-		return count;
+		return count.longValue();
 	}
 
 	public IEnvelopeFilterPredicate getFilterPredicate() {
@@ -38,7 +39,7 @@ public class TopicCounter implements IRegistration {
 	}
 
 	public Object handle(Envelope envelope) throws Exception {
-		count++;
+		count.incrementAndGet();
 		return true;
 	}
 
