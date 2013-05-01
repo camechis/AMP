@@ -21,16 +21,19 @@ public class EnvelopeUtils {
     private final static Gson gson_pp = new GsonBuilder().setPrettyPrinting().create();
     private final static Gson gson = new Gson();
 
+    @SuppressWarnings("rawtypes")
     public static String toFormattedJson(String line) {
         HashMap map = toMapJson(line);
         String mapstr = gson_pp.toJson(map);
         return mapstr;
     }
 
+    @SuppressWarnings("rawtypes")
     public static HashMap toMapJson(String line) {
         return gson.fromJson(line, HashMap.class);
     }
 
+    @SuppressWarnings("rawtypes")
     public static String getBodyValue(WrappedEnvelope env, String key) {
         try {
             String bodyJson = new String(env.getBody(), "UTF-8");

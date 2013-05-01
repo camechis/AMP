@@ -43,7 +43,6 @@ public class ActiveRange extends StreamRange {
     }
 
     public String getTrendDesc() {
-        String res;
         int curtotal = getTotal();
         if (prev == null) { return item + ": No previous value"; }
         if (curtotal == 0) { return item + ": No current value"; }
@@ -77,7 +76,6 @@ public class ActiveRange extends StreamRange {
     }
 
     private TimeEntry updateEnd(TimeEntry stopEntry) {
-        long timestamp = stopEntry.getTimestamp();
         while (lastEnd.getNext() != stopEntry) {
             lastEnd = lastEnd.getNext();
             total += lastEnd.getValue();

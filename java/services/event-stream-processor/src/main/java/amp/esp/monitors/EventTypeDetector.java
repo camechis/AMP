@@ -29,12 +29,7 @@ public class EventTypeDetector extends EventMonitor {
 
     @Override
     public Collection<Publisher> registerPatterns(EventStreamProcessor esp) {
-        String envref = "resp";
-        EventMatcher em = EventMatcher.selectEnvelope("resp").matching("EventType", eventType);
-//        String pattern2 = select(envref, matching("EventType", eventType));
-//        String pattern = selectEnvelope(envref) + " where " + checkHeader(envref, "EventType", eventType);
-//        esp.monitor(true, pattern2, this);
-        esp.monitor(em, this);
+        esp.monitor(EventMatcher.selectEnvelope("resp").matching("EventType", eventType), this);
 
         // @todo = this needs to be integrated
         return new HashSet<Publisher>();

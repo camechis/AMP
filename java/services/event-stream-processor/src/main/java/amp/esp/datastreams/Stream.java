@@ -8,6 +8,10 @@ public class Stream {
     private String name;
     private StreamRange streamref;
     private List<ActiveRange> activeRanges = new ArrayList<ActiveRange>();
+    public long getLastTick() {
+        return lastTick;
+    }
+
     private long lastTick;
 
     public Stream(String name) {

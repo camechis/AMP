@@ -37,8 +37,6 @@ public class TestUtils {
     }
 
     public static WrappedEnvelope makeSearchRequest(String user, String resource, String reqID) {
-        String typex = SEARCH_EVENT;
-        String old_search = "Search";
         WrappedEnvelope env = TestUtils.makeEnvelope(SEARCH_EVENT, reqID, null, resource, user);
         return env;
     }

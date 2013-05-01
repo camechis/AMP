@@ -186,7 +186,6 @@ public class EnvelopeCounter extends EventMonitor {
     public void displayStats() {
         Map<String, ValueStreams> streamsMap = getStreamsMap();
         for (ValueStreams vs : streamsMap.values()) {
-            String name = vs.getName();
             for (String range : vs.getActiveRanges()) {
                 System.out.println("Stats for " + range + ":");
                 for (String val : vs.getValues()) {

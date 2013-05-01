@@ -4,7 +4,11 @@ public class EventResult {
 
 	private String name;
 
-	private EventResult(String name) {
+	public String getName() {
+        return name;
+    }
+
+    private EventResult(String name) {
 		this.name = name;
 	}
 
