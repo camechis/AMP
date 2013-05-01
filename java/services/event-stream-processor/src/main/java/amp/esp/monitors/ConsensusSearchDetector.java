@@ -1,24 +1,19 @@
 package amp.esp.monitors;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
 import amp.esp.EnvelopeUtils;
+import amp.esp.EventMatcher;
 import amp.esp.EventMonitor;
 import amp.esp.EventStreamProcessor;
 import amp.esp.InferredEvent;
 import amp.esp.InferredEventList;
 import amp.esp.publish.Publisher;
 
+import java.util.Collection;
+import java.util.HashSet;
+
 import pegasus.eventbus.client.WrappedEnvelope;
 
 import com.espertech.esper.client.EventBean;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 
 public class ConsensusSearchDetector extends EventMonitor {
 
@@ -31,28 +26,25 @@ public class ConsensusSearchDetector extends EventMonitor {
 
     /**
      * Catch a search event and split it into multiple search term events. This normalizes case to lower-case and removes stop words.
-     * 
+     *
      * e.g. when there's a event like Search("JackRyan", "Europe Satellite Imagery For Sunday") this class will generate the events SearchTerm("JackRyan", 'europe') SearchTerm("JackRyan", 'satellite')
      * SearchTerm("JackRyan", 'imagery') SearchTerm("JackRyan", 'sunday')
-     * 
+     *
      * @author israel
-     * 
+     *
      */
     class TermSplitter extends EventMonitor {
 
-        boolean isEPL = true;
-        String pattern = "select search from Envelope as search where eventType = 'Search'";
-        private String fieldToSplit;
-        private String inferredType;
+        private EventMatcher matcher = EventMatcher.selectEnvelope("search").matching("EventType", SEARCH);
 
-        public TermSplitter(boolean isEPL, String pattern, String fieldToSplit, String inferredType) {
+        private String fieldToSplit = "search";
+        private String inferredType = "Search Term";
+
+        public TermSplitter() {
             super();
-            this.inferredType = inferredType;
-            this.isEPL = isEPL;
-            this.pattern = pattern;
-            this.fieldToSplit = fieldToSplit;
         }
 
+        @Override
         public InferredEventList receive(EventBean eventBean) {
             WrappedEnvelope env = getEnvelopeFromBean(eventBean, fieldToSplit);
             InferredEventList events = new InferredEventList();
@@ -70,7 +62,7 @@ public class ConsensusSearchDetector extends EventMonitor {
 
         @Override
         public Collection<Publisher> registerPatterns(EventStreamProcessor esp) {
-            esp.monitor(isEPL, pattern, this);
+            esp.monitor(matcher, this);
 
             // @todo = this needs to be integrated
             return new HashSet<Publisher>();
@@ -91,6 +83,7 @@ public class ConsensusSearchDetector extends EventMonitor {
         this.timeLimit = timeLimit;
     }
 
+    @Override
     public InferredEvent receive(EventBean eventBean) {
         InferredEvent event = makeInferredEvent();
         String term = (String) eventBean.get("term");
@@ -112,32 +105,29 @@ public class ConsensusSearchDetector extends EventMonitor {
         // 4. filter the terms with q frequency count at least the minimumn specified
         // frequency count.
 
-        String findSearches = "select search from Envelope as search where eventType = '" +
-        		SEARCH +
-        		"'";
-        EventMonitor termSplitter = new TermSplitter(true, findSearches, "search", "Search Term");
-
-        String createUT = "insert into UserTerms " + "select event.getData('" + TERM_KEY + "') as term, event.getData('" + USER_KEY + "') as user from InferredEvent.win:time(" + timeLimit
-                + ") as event where type='Search Term'";
-
-        // TODO: have frequency counts based on unique user requests
-
-        String createSTF = "insert into SearchTermFreq select term, count(*) as freq " + "from UserTerms.win:time(" + timeLimit + ") group by term";
-
-        String getSTF = "select * from SearchTermFreq.win:time(" + timeLimit + ") where freq >= " + minFreq;
-
         // extract search terms and add multiple inferred events (one for each)
-        esp.monitor(true, findSearches, termSplitter);
+        EventMonitor termSplitter = new TermSplitter();
+        termSplitter.registerPatterns(esp);
 
         // extract out the search term and and user from the search term stream within the
         // time period
-        esp.monitor(true, createUT, null);
+        String createUT = "insert into UserTerms " +
+                "select event.getData('" + TERM_KEY + "')  as term," +
+                " event.getData('" + USER_KEY + "') as user" +
+                " from InferredEvent.win:time(" + timeLimit + ") as event" +
+                " where type='Search Term'";
+//        esp.monitor(true, createUT, null);
+        esp.monitor(EventMatcher.matcher(true, createUT), null);
+
+        // TODO: have frequency counts based on unique user requests
 
         // extract frequency count by search term
-        esp.monitor(true, createSTF, null);
+        String createSTF = "insert into SearchTermFreq select term, count(*) as freq " + "from UserTerms.win:time(" + timeLimit + ") group by term";
+        esp.monitor(EventMatcher.matcher(true, createSTF), null);
 
         // filter out search terms with at least the desired minimum frequency
-        esp.monitor(true, getSTF, this);
+        String getSTF = "select * from SearchTermFreq.win:time(" + timeLimit + ") where freq >= " + minFreq;
+        esp.monitor(EventMatcher.matcher(true, getSTF), this);
 
         // TODO: enable for multiple instantiations
         // this will run into problems if multiple CSDs are created; e.g.

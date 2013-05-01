@@ -1,16 +1,7 @@
 package amp.esp.monitors;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.joda.time.DateTime;
-
 import amp.esp.EnvelopeUtils;
+import amp.esp.EventMatcher;
 import amp.esp.EventMonitor;
 import amp.esp.EventStreamProcessor;
 import amp.esp.InferredEvent;
@@ -19,6 +10,12 @@ import amp.esp.datastreams.ValueStreams;
 import amp.esp.datastreams.ValueStreamsDataProvider;
 import amp.esp.publish.Publisher;
 import amp.esp.publish.TopNMetricPublisher;
+
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import pegasus.eventbus.client.WrappedEnvelope;
 
@@ -69,39 +66,56 @@ public class EnvelopeCounter extends EventMonitor {
 
     private void setupMetrics() {
         metrics.add(new EnvelopeRetriever() {
+            @Override
             public String retrieve(WrappedEnvelope e) { return e.getEventType(); }
+            @Override
             public String key() { return "Event Type"; }
+            @Override
             public int[] periods() { return defaultperiods; }
+            @Override
             public int getValue(String type, WrappedEnvelope env) { return 1; }
         });
 
         metrics.add(new EnvelopeRetriever() {
+            @Override
             public String retrieve(WrappedEnvelope e) { return "BodyLength"; }
+            @Override
             public String key() { return "Total Body Length"; }
+            @Override
             public int[] periods() { return defaultperiods; }
+            @Override
             public int getValue(String type, WrappedEnvelope env) { return env.getBody().length; }
         });
 
         metrics.add(new EnvelopeRetriever() {
+            @Override
             public String retrieve(WrappedEnvelope e) { return e.getEventType(); }
+            @Override
             public String key() { return "Total Body Length by Type"; }
+            @Override
             public int[] periods() { return defaultperiods; }
+            @Override
             public int getValue(String type, WrappedEnvelope env) { return env.getBody().length; }
         });
 
         metrics.add(new EnvelopeRetriever() {
+            @Override
             public String retrieve(WrappedEnvelope e) {
                 if (e.getEventType().equals("pegasus.core.search.event.TextSearchEvent")) {
                     return EnvelopeUtils.getBodyValue(e, "queryText");
                 }
                 return null;
             }
+            @Override
             public String key() { return "Search Query"; }
+            @Override
             public int[] periods() { return defaultperiods; }
+            @Override
             public int getValue(String type, WrappedEnvelope env) { return 1; }
         });
 
         metrics.add(new EnvelopeRetriever() {
+            @Override
             public String retrieve(WrappedEnvelope e) {
                 if (e.getEventType().equals("pegasus.core.search.event.TextSearchEvent")) {
                     String query = EnvelopeUtils.getBodyValue(e, "queryText");
@@ -110,8 +124,11 @@ public class EnvelopeCounter extends EventMonitor {
                 }
                 return null;
             }
+            @Override
             public String key() { return "*Individual Search Terms"; }
+            @Override
             public int[] periods() { return defaultperiods; }
+            @Override
             public int getValue(String type, WrappedEnvelope env) { return 1; }
         });
     }
@@ -161,12 +178,8 @@ public class EnvelopeCounter extends EventMonitor {
 
     @Override
     public Collection<Publisher> registerPatterns(EventStreamProcessor esp) {
-        esp.monitor(true, getPattern(), this);
+        esp.monitor(EventMatcher.selectEnvelope("env"), this);
         return publishers;
-    }
-
-    private String getPattern() {
-        return "select env from Envelope as env";
     }
 
     // TODO: generalize the publishing code to replace this to return stats for testing

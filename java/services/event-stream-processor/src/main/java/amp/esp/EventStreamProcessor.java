@@ -234,7 +234,12 @@ public class EventStreamProcessor {
 
     }
 
-    public void monitor(boolean isEPL, String pattern, EventMonitor monitor) {
+    public void monitor(EventMatcher matcher, EventMonitor monitor) {
+        monitor(matcher.isEPL(), matcher.getPattern(), monitor);
+    }
+
+    public
+    void monitor(boolean isEPL, String pattern, EventMonitor monitor) {
         EPAdministrator administrator = epService.getEPAdministrator();
         EPStatement stmt;
         LOG.debug("Creating " + (isEPL ? "EPL" : "pattern") + ": " + pattern);

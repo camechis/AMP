@@ -1,12 +1,13 @@
 package amp.esp.monitors;
 
-import java.util.Collection;
-import java.util.HashSet;
-
+import amp.esp.EventMatcher;
 import amp.esp.EventMonitor;
 import amp.esp.EventStreamProcessor;
 import amp.esp.InferredEvent;
 import amp.esp.publish.Publisher;
+
+import java.util.Collection;
+import java.util.HashSet;
 
 import pegasus.eventbus.client.WrappedEnvelope;
 
@@ -26,10 +27,24 @@ public class CorrelateRequestResponsesEventDetector extends EventMonitor {
     @Override
     public Collection<Publisher> registerPatterns(EventStreamProcessor esp) {
 
-        String pattern = "every request=Envelope(eventType='Request')" +
-                " -> response=Envelope(eventType='Response' and " +
-                "correlationId=request.id)";
-        esp.monitor(false, pattern, this);
+//        matching("EventType", eventType)
+
+//        String pattern2 = "every request=Envelope(eventType='Request')" +
+//                " -> response=Envelope(eventType='Response' and " +
+//                "correlationId=request.id)";
+//        String pattern = "every request=Envelope(request." +
+//                matching("EventType", "Request") +
+//        		")" +
+//                " -> response=Envelope(response." +
+//                matching("EventType", "Response") +
+//                " and " + "correlationId=request.id)";
+//        esp.monitor(false, pattern, this);
+
+        EventMatcher em = EventMatcher.everyEnvelope("request").matching("EventType", "Request")
+                .followedBy(EventMatcher.everyEnvelope("response")
+                        .matching("EventType", "Response")
+                        .matchingRef("CorrelationId", "request", "Id"));
+        esp.monitor(em, this);
 
         // @todo = this needs to be integrated
         return new HashSet<Publisher>();

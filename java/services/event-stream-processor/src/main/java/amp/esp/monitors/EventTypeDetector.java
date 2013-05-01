@@ -1,12 +1,13 @@
 package amp.esp.monitors;
 
-import java.util.Collection;
-import java.util.HashSet;
-
+import amp.esp.EventMatcher;
 import amp.esp.EventMonitor;
 import amp.esp.EventStreamProcessor;
 import amp.esp.InferredEvent;
 import amp.esp.publish.Publisher;
+
+import java.util.Collection;
+import java.util.HashSet;
 
 import pegasus.eventbus.client.WrappedEnvelope;
 
@@ -28,7 +29,12 @@ public class EventTypeDetector extends EventMonitor {
 
     @Override
     public Collection<Publisher> registerPatterns(EventStreamProcessor esp) {
-        esp.monitor(true, "select resp from Envelope as resp where eventType = '" + eventType + "'", this);
+        String envref = "resp";
+        EventMatcher em = EventMatcher.selectEnvelope("resp").matching("EventType", eventType);
+//        String pattern2 = select(envref, matching("EventType", eventType));
+//        String pattern = selectEnvelope(envref) + " where " + checkHeader(envref, "EventType", eventType);
+//        esp.monitor(true, pattern2, this);
+        esp.monitor(em, this);
 
         // @todo = this needs to be integrated
         return new HashSet<Publisher>();
