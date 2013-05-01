@@ -36,7 +36,7 @@ public class EnvelopeUtils {
     @SuppressWarnings("rawtypes")
     public static String getBodyValue(WrappedEnvelope env, String key) {
         try {
-            String bodyJson = new String(env.getBody(), "UTF-8");
+            String bodyJson = new String(WEUtils.getBody(env.getEnvelope()), "UTF-8");
             HashMap map = EnvelopeUtils.toMapJson(bodyJson);
             Object queryText = map.get(key);
             return "" + queryText;
@@ -54,7 +54,7 @@ public class EnvelopeUtils {
     }
 
     public static String envelopeToReadableJson(WrappedEnvelope env) {
-        byte[] body = env.getBody();
+        byte[] body = WEUtils.getBody(env.getEnvelope());
         String bodyJson = "";
         try {
             bodyJson = new String(body, "UTF-8");
@@ -63,13 +63,13 @@ public class EnvelopeUtils {
         }
         String bodyformatted = toFormattedJson(bodyJson);
         JsonString json = new JsonString().start()
-                .add("EVENT_TYPE", env.getEventType())
-                .add("REPLYTO", env.getReplyTo())
-                .add("TOPIC", env.getTopic())
-                .add("ID", env.getId())
-                .add("CORRELATION_ID", env.getCorrelationId())
-                .add("TIMESTAMP", env.getTimestamp())
-                .add("HEADERS", env.getHeaders())
+                .add("EVENT_TYPE", WEUtils.getEventType(env.getEnvelope()))
+                .add("REPLYTO", WEUtils.getReplyTo(env.getEnvelope()))
+                .add("TOPIC", WEUtils.getTopic(env.getEnvelope()))
+                .add("ID", WEUtils.getId(env.getEnvelope()))
+                .add("CORRELATION_ID", WEUtils.getCorrelationId(env.getEnvelope()))
+                .add("TIMESTAMP", WEUtils.getTimestamp(env.getEnvelope()))
+                .add("HEADERS", env.getEnvelope().getHeaders())
                 .add("BODY_SIZE", body.length)
                 .add("BODY_SRC", body)
                 .add("BODY_JSON", bodyJson)

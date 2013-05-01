@@ -50,7 +50,7 @@ public class UnauthorizedAccessAttemptsDetector extends EventMonitor {
                         ).getPattern();
 
         String createUA = "insert into UnauthorizedAccesses " +
-                "select request.replyTo as userid, request, response " +
+                "select request.getEnvelope().getHeader(" + quote("ReplyTo") + ") as userid, request, response " +
                 "from pattern [ " + ipattern2 +  " ]";
 
         String createUAF = "insert into UnauthorizedAccessesFreq " +
@@ -65,6 +65,10 @@ public class UnauthorizedAccessAttemptsDetector extends EventMonitor {
 
         // @todo = this needs to be integrated
         return new HashSet<Publisher>();
+    }
+
+    private String quote(String str) {
+        return String.format("\"%s\"", str);
     }
 
     @Override

@@ -100,7 +100,7 @@ public class EventStreamProcessor {
     class EventbusListener implements EnvelopeHandler {
 
         private void addHeader(WrappedEnvelope env, String label, String val) {
-            env.getHeaders().put(label, val);
+            env.getEnvelope().getHeaders().put(label, val);
         }
 
         private void addHeader(WrappedEnvelope env, String label, Date now) {

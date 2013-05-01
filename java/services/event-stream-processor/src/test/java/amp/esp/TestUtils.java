@@ -59,17 +59,17 @@ public class TestUtils {
     public static WrappedEnvelope makeEnvelope(String type, String idsymbol, String correlationIdsymbol,
             String topic, String replyTo) {
         WrappedEnvelope e = new WrappedEnvelope();
-        e.setEventType(type);
-        e.setId(symIdToRealId(idsymbol));
+        WEUtils.setEventType(e.getEnvelope(), type);
+        WEUtils.setId(e.getEnvelope(), symIdToRealId(idsymbol));
         if (correlationIdsymbol != null) {
-            e.setCorrelationId(symIdToRealId(correlationIdsymbol));
+            WEUtils.setCorrelationId(e.getEnvelope(), symIdToRealId(correlationIdsymbol));
         }
-        e.setTopic(topic);
-        e.setReplyTo(replyTo);
+        WEUtils.setTopic(e.getEnvelope(), topic);
+        WEUtils.setReplyTo(e.getEnvelope(), replyTo);
         Date timestamp = new Date(testTime);
         testTime += timeIncr;
-        e.setTimestamp(timestamp);
-        e.setBody((type + topic).getBytes());
+        WEUtils.setTimestamp(e.getEnvelope(), timestamp);
+        WEUtils.setBody(e.getEnvelope(), (type + topic).getBytes());
         return e;
     }
 

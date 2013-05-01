@@ -5,6 +5,7 @@ import amp.esp.EventMatcher;
 import amp.esp.EventMonitor;
 import amp.esp.EventStreamProcessor;
 import amp.esp.InferredEvent;
+import amp.esp.WEUtils;
 import amp.esp.publish.Publisher;
 
 import java.io.File;
@@ -76,7 +77,7 @@ public class EnvelopeLogger extends EventMonitor {
     public InferredEvent receive(EventBean eventBean) {
         if (logdir != null) {
             WrappedEnvelope env = getEnvelopeFromBean(eventBean, "resp");
-            if (env.getEventType().startsWith("dashboard.server.metric")) return null;
+            if (WEUtils.getEventType(env.getEnvelope()).startsWith("dashboard.server.metric")) return null;
             fprint(logFile, EnvelopeUtils.envelopeToReadableJson(env));
             fprint(jsonFile, EnvelopeUtils.toJson(env));
         }

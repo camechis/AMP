@@ -6,6 +6,7 @@ import amp.esp.EventMonitor;
 import amp.esp.EventStreamProcessor;
 import amp.esp.InferredEvent;
 import amp.esp.InferredEventList;
+import amp.esp.WEUtils;
 import amp.esp.publish.Publisher;
 
 import java.util.Collection;
@@ -48,8 +49,8 @@ public class ConsensusSearchDetector extends EventMonitor {
         public InferredEventList receive(EventBean eventBean) {
             WrappedEnvelope env = getEnvelopeFromBean(eventBean, fieldToSplit);
             InferredEventList events = new InferredEventList();
-            String userid = env.getReplyTo();
-            String topic = env.getTopic();
+            String userid = WEUtils.getReplyTo(env.getEnvelope());
+            String topic = WEUtils.getTopic(env.getEnvelope());
             Iterable<String> searchTerms = EnvelopeUtils.getSearchTerms(topic);
             for (String term : searchTerms) {
                 InferredEvent event = makeInferredEvent();
