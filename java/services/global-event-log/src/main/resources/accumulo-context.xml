@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
+<beans profile="production" xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:c="http://www.springframework.org/schema/c"
 	xmlns:context="http://www.springframework.org/schema/context" xmlns:p="http://www.springframework.org/schema/p"
 	xmlns:security="http://www.springframework.org/schema/security"
@@ -11,10 +11,10 @@
 	<bean id="accumuloHealthCheck" class="amp.gel.health.AccumuloHealthCheck" />
 
 	<bean id="connectorFactory" class="amp.gel.dao.impl.accumulo.ConnectorFactoryImpl">
-		<property name="instanceName" value="${accumulo.instance}" />
-		<property name="zooKeepers" value="${accumulo.zookeepers}" />
-		<property name="user" value="${accumulo.user}" />
-		<property name="password" value="${accumulo.password}" />
+		<property name="instanceName" value="${accumulo.instance:gel}" />
+		<property name="zooKeepers" value="${accumulo.zookeepers:localhost}" />
+		<property name="user" value="${accumulo.user:root}" />
+		<property name="password" value="${accumulo.password:root}" />
 	</bean>
 
 	<bean id="connector" factory-bean="connectorFactory"
@@ -30,7 +30,7 @@
 	<bean id="batchWriterFactory" class="amp.gel.dao.impl.accumulo.BatchWriterFactoryImpl">
 		<property name="connector" ref="connector" />
 		<property name="tableOperations" ref="tableOperations" />
-		<property name="tableName" value="${accumulo.tableName}" />
+		<property name="tableName" value="${accumulo.tableName:envelope}" />
 	</bean>
 
 	<bean id="batchWriter" factory-bean="batchWriterFactory"

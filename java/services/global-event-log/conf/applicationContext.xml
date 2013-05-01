@@ -5,12 +5,12 @@
 	xmlns:security="http://www.springframework.org/schema/security"
 	xsi:schemaLocation="http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.2.xsd
 		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd
-		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
 
 	<import resource="classpath:/cmf-context.xml" />
-	<!-- <import resource="classpath:/accumulo-context.xml" /> -->
-	<import resource="classpath:/derby-context.xml" />
+    <import resource="classpath:/derby-context.xml" />
+	<import resource="classpath:/accumulo-context.xml" />
 
 	<bean
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
@@ -21,7 +21,7 @@
 		<property name="locations">
 			<array>
 				<value>file:/opt/amp/config/eventbus.properties</value>
-				<!-- <value>file:/opt/amp/config/accumulo.properties</value> -->
+				<value>file:/opt/amp/config/database.properties</value>
 			</array>
 		</property>
 	</bean>

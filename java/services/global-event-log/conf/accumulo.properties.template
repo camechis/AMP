@@ -1,5 +1,0 @@
-accumulo.instance=gel
-accumulo.zookeepers=10.1.30.133
-accumulo.user=root
-accumulo.password=root
-accumulo.tableName=envelope

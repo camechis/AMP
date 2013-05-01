@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
+<beans profile="default" xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:c="http://www.springframework.org/schema/c"
 	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
 	xmlns:p="http://www.springframework.org/schema/p" xmlns:security="http://www.springframework.org/schema/security"
@@ -14,7 +14,9 @@
 	</bean>
 
 	<bean id="derbyNetworkServer" class="amp.gel.dao.impl.derby.DerbyNetworkServer"
-		destroy-method="destroy" />
+		destroy-method="destroy">
+		<property name="port" value="${derby.port:1527}" />
+	</bean>
 
 	<context:component-scan base-package="amp.gel.dao.impl.derby" />
 
@@ -24,10 +26,10 @@
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
 		destroy-method="close">
 		<property name="driverClassName"
-			value="${db.driver:org.apache.derby.jdbc.EmbeddedDriver}" />
-		<property name="url" value="${db.url:jdbc:derby:gel;create=true}" />
-		<property name="username" value="${db.username:root}" />
-		<property name="password" value="${db.password:root}" />
+			value="${derby.driver:org.apache.derby.jdbc.EmbeddedDriver}" />
+		<property name="url" value="${derby.url:jdbc:derby:gel;create=true}" />
+		<property name="username" value="${derby.username:root}" />
+		<property name="password" value="${derby.password:root}" />
 	</bean>
 
 	<bean id="entityManagerFactory"
