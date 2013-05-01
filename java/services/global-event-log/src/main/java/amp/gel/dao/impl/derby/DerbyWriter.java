@@ -26,6 +26,6 @@ public class DerbyWriter implements DatastoreWriter {
 	}
 
 	public void close() {
-		// do nothing
+		entityManager.flush();
 	}
 }
