@@ -27,7 +27,7 @@
 	
 	<bean id="clusterRegistrationRepository" 
 	      class="amp.topology.core.repo.inmem.InMemoryClusterRegistrationRepository">
-		<property name="clusters">
+		<property name="modelInstances">
 			<list value-type="amp.topology.core.model.ClusterRegistration">
 				<bean class="amp.topology.core.model.ClusterRegistration" 
 					c:id="localhost" c:description="1 Node Localhost Cluster"

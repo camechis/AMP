@@ -16,7 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import amp.topology.core.model.ClusterRegistration;
-import amp.topology.core.repo.ClusterRegistrationRepository;
+import amp.topology.core.repo.TopologyModelRepository;
 
 import com.yammer.metrics.annotation.Timed;
 
@@ -26,9 +26,9 @@ public class ClusterRegistrationResource {
 
 	private static final Logger logger = LoggerFactory.getLogger(ClusterRegistrationResource.class);
 	
-	ClusterRegistrationRepository registrationRepository;
+	TopologyModelRepository<ClusterRegistration> registrationRepository;
 	
-	public ClusterRegistrationResource(ClusterRegistrationRepository registrationRepository){
+	public ClusterRegistrationResource(TopologyModelRepository<ClusterRegistration> registrationRepository){
 		
 		this.registrationRepository = registrationRepository;
 	}

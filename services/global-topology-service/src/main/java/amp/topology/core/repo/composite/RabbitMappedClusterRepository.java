@@ -10,8 +10,8 @@ import rabbitmq.mgmt.model.Overview;
 import amp.topology.core.model.Cluster;
 import amp.topology.core.model.ClusterDoesntExistException;
 import amp.topology.core.model.ClusterRegistration;
-import amp.topology.core.repo.ClusterRegistrationRepository;
 import amp.topology.core.repo.ClusterRepository;
+import amp.topology.core.repo.TopologyModelRepository;
 import amp.topology.core.repo.rmq.ModelUtils;
 import amp.topology.rmq.repo.ClusterInfoRepository;
 
@@ -20,11 +20,11 @@ public class RabbitMappedClusterRepository implements ClusterRepository {
 	private static final Logger logger = 
 		LoggerFactory.getLogger(RabbitMappedClusterRepository.class);
 	
-	ClusterRegistrationRepository registrationRepository;
+	TopologyModelRepository<ClusterRegistration> registrationRepository;
 	ClusterInfoRepository clusterInfoRepository;
 	
 	public RabbitMappedClusterRepository(
-		ClusterRegistrationRepository registrationRepository,
+		TopologyModelRepository<ClusterRegistration> registrationRepository,
 		ClusterInfoRepository clusterInfoRepository){
 		
 		this.registrationRepository = registrationRepository;

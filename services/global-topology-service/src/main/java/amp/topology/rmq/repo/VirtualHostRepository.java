@@ -10,8 +10,13 @@ import rabbitmq.mgmt.model.VirtualHost;
 
 public interface VirtualHostRepository {
 
+	VirtualHost get(String clusterId, String virtualHostName) throws ClusterDoesntExistException;
 	
 	Collection<VirtualHost> getVirtualHosts(String clusterId) throws ClusterDoesntExistException;
+	
+	void create(String clusterId, VirtualHost vhost) throws ClusterDoesntExistException;
+	
+	void delete(String clusterId, String vhost) throws ClusterDoesntExistException;
 	
 	Status getStatus(String clusterId, String vhost) throws ClusterDoesntExistException;
 	

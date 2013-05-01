@@ -9,7 +9,7 @@ import rabbitmq.httpclient.SslWithBasicAuthHttpClientProvider;
 import rabbitmq.mgmt.RabbitMgmtService;
 import amp.topology.core.model.ClusterRegistration;
 import amp.topology.core.model.ManagementEndpoint;
-import amp.topology.core.repo.ClusterRegistrationRepository;
+import amp.topology.core.repo.TopologyModelRepository;
 
 /**
  * Factory for retrieving the management interface to RabbitMQ.
@@ -18,9 +18,9 @@ import amp.topology.core.repo.ClusterRegistrationRepository;
  */
 public class RmqManagementFactory {
 
-	ClusterRegistrationRepository clusterRegistrationRepository;
+	TopologyModelRepository<ClusterRegistration> clusterRegistrationRepository;
 	
-	public RmqManagementFactory(ClusterRegistrationRepository clusterRegistrationRepository){
+	public RmqManagementFactory(TopologyModelRepository<ClusterRegistration> clusterRegistrationRepository){
 		
 		this.clusterRegistrationRepository = clusterRegistrationRepository;
 	}

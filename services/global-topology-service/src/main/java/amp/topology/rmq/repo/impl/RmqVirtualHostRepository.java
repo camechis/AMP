@@ -14,7 +14,34 @@ public class RmqVirtualHostRepository extends RmqBaseRepository implements Virtu
 	public RmqVirtualHostRepository(RmqManagementFactory managementFactory) {
 		super(managementFactory);
 	}
+	
+	@Override
+	public void create(String clusterId, final VirtualHost vhost)
+			throws ClusterDoesntExistException {
+		
+		this.execute(clusterId, new ManagementAction() {
+			@Override
+			public void perform(RabbitMgmtService mgmtService) throws Exception {
+				
+				mgmtService.vhosts().create(vhost);
+			}
+		});
+	}
 
+	@Override
+	public void delete(String clusterId, final String vhost)
+			throws ClusterDoesntExistException {
+		
+		this.execute(clusterId, new ManagementAction(){
+
+			@Override
+			public void perform(RabbitMgmtService mgmtService) throws Exception {
+				
+				mgmtService.vhosts().delete(vhost);
+			}
+		});
+	}
+	
 	@Override
 	public Collection<VirtualHost> getVirtualHosts(String clusterId)
 			throws ClusterDoesntExistException {
@@ -96,6 +123,20 @@ public class RmqVirtualHostRepository extends RmqBaseRepository implements Virtu
 			public void perform(RabbitMgmtService mgmtService) throws Exception {
 				
 				mgmtService.permissions().remove(vhost, username);
+			}
+		});
+	}
+
+	@Override
+	public VirtualHost get(String clusterId, final String virtualHostName)
+			throws ClusterDoesntExistException {
+		
+		return this.execute(clusterId, new ManagementFunction<VirtualHost>(){
+			@Override
+			public VirtualHost perform(RabbitMgmtService mgmtService)
+					throws Exception {
+				
+				return mgmtService.vhosts().get(virtualHostName);
 			}
 		});
 	}

@@ -1,6 +1,7 @@
 package amp.topology.core.model;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class Client extends TopologyModel {
 	
@@ -10,12 +11,12 @@ public class Client extends TopologyModel {
 	public Client(){}
 	
 	public Client(
-			String id, String description, String principalName, ArrayList<String> authorities) {
+			String id, String description, String principalName, Collection<String> authorities) {
 		
 		super(id, description);
 		
 		this.principalName = principalName;
-		this.authorities = authorities;
+		setAuthorities(authorities);
 	}
 	
 	public String getPrincipalName() {
@@ -30,8 +31,10 @@ public class Client extends TopologyModel {
 		return authorities;
 	}
 
-	public void setAuthorities(ArrayList<String> authorities) {
-		this.authorities = authorities;
+	public void setAuthorities(Collection<String> authorities) {
+		if (authorities != null){
+			this.authorities.addAll(authorities);
+		}
 	}
 
 	@Override

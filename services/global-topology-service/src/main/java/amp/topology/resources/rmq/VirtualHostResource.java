@@ -46,6 +46,48 @@ public class VirtualHostResource {
 		return this.virtualHostRepository.getVirtualHosts(cluster);
 	}
 	
+	@GET
+	@Path("/{vhost}")
+	@Timed
+	public VirtualHost getVhost(
+			@PathParam("cluster") String cluster, 
+			@PathParam("vhost") String vhostName) 
+			throws ClusterDoesntExistException{
+		
+		logger.info("Getting virtual host {} on cluster {}.", vhostName, cluster);
+		
+		return this.virtualHostRepository.get(cluster, vhostName);
+	}
+	
+	@PUT
+	@Path("/{vhost}")
+	@Timed
+	public Response createVhost(
+			@PathParam("cluster") String cluster, 
+			@PathParam("vhost") String vhostName, VirtualHost vhost) 
+			throws ClusterDoesntExistException{
+		
+		logger.info("Creating virtual host {} on cluster {}.", vhostName, cluster);
+		
+		this.virtualHostRepository.create(cluster, vhost);
+		
+		return Response.ok().build();
+	}
+	
+	@DELETE
+	@Path("/{vhost}")
+	@Timed
+	public Response deleteVhost(
+			@PathParam("cluster") String cluster, 
+			@PathParam("vhost") String vhostName) 
+			throws ClusterDoesntExistException{
+		
+		logger.info("Deleting virtual host {} on cluster {}.", vhostName, cluster);
+		
+		this.virtualHostRepository.delete(cluster, vhostName);
+		
+		return Response.ok().build();
+	}
 	
 	@GET
 	@Path("/{vhost}/permissions")
