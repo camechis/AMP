@@ -1,14 +1,14 @@
 
 package amp.esp.monitors;
 
-import java.util.Collection;
-import java.util.HashSet;
-
+import amp.esp.EventMatcher;
 import amp.esp.EventMonitor;
 import amp.esp.EventStreamProcessor;
 import amp.esp.InferredEvent;
 import amp.esp.publish.Publisher;
 
+import java.util.Collection;
+import java.util.HashSet;
 
 import com.espertech.esper.client.EventBean;
 
@@ -39,13 +39,19 @@ public class UnauthorizedAccessAttemptsDetector extends EventMonitor {
     @Override
     public Collection<Publisher> registerPatterns(EventStreamProcessor esp) {
 
-        String ipattern = "every request=Envelope(eventType='Request')" +
-                " -> response=Envelope(eventType='Response' and " +
-                "correlationId=request.id and topic='Unauthorized Access')";
+        String env1 = "request";
+        String env2 = "response";
+        String type1 = "Request";
+        String type2 = "Response";
+        String ipattern2 = EventMatcher.everyEnvelope(env1) .matching("EventType", type1 )
+                .followedBy(EventMatcher.everyEnvelope(env2).matching("EventType", type2)
+                        .matchingRef("CorrelationId", env1, "Id")
+                        .matching("Topic", "Unauthorized Access")
+                        ).getPattern();
 
         String createUA = "insert into UnauthorizedAccesses " +
                 "select request.replyTo as userid, request, response " +
-                "from pattern [ " + ipattern +  " ]";
+                "from pattern [ " + ipattern2 +  " ]";
 
         String createUAF = "insert into UnauthorizedAccessesFreq " +
                 "select userid, count(*) as freq from UnauthorizedAccesses.win:time(" +
@@ -53,9 +59,9 @@ public class UnauthorizedAccessAttemptsDetector extends EventMonitor {
         String getUAF = "select * from UnauthorizedAccessesFreq.win:time(" + timeLimit +
                 ") where freq >= " + minFreq;
 
-        esp.monitor(true, createUA, null);
-        esp.monitor(true, createUAF, null);
-        esp.monitor(true, getUAF, this);
+        esp.monitor(EventMatcher.matcher(true, createUA), null);
+        esp.monitor(EventMatcher.matcher(true, createUAF), null);
+        esp.monitor(EventMatcher.matcher(true, getUAF), this);
 
         // @todo = this needs to be integrated
         return new HashSet<Publisher>();

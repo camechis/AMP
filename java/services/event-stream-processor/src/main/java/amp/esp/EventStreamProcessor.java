@@ -42,8 +42,6 @@ public class EventStreamProcessor {
 
     private EPServiceProvider epService;
 
-    private EventMonitorRepository repository;
-
     private final String espKey = this.getClass().getCanonicalName();
     private Collection<Publisher> publishers = Lists.newArrayList();
     private IRegistration registration;
@@ -135,7 +133,6 @@ public class EventStreamProcessor {
     }
 
     public void setRepository(EventMonitorRepository repository) {
-        this.repository = repository;
         repository.registerWith(this);
     }
 
@@ -238,7 +235,7 @@ public class EventStreamProcessor {
         monitor(matcher.isEPL(), matcher.getPattern(), monitor);
     }
 
-    public
+    private
     void monitor(boolean isEPL, String pattern, EventMonitor monitor) {
         EPAdministrator administrator = epService.getEPAdministrator();
         EPStatement stmt;

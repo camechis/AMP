@@ -13,7 +13,6 @@ public class EventMatcher {
     private String inSep;
 
     private ArrayList<String> conds = Lists.newArrayList();
-    private String postSep;
     private EventMatcher followed;
 
     private EventMatcher(boolean epl, String env, String pattern) {
@@ -50,8 +49,16 @@ public class EventMatcher {
 
     // ******************************************************************
 
-    public static EventMatcher selectEnvelope(String envref) {
-        return new EventMatcher(true, envref, "select " + envref + " from Envelope as " + envref + "%s");
+    public static EventMatcher selectEnvelope(String ref) {
+        return new EventMatcher(true, ref, doSelect(ref, "Envelope") + "%s");
+    }
+
+    public static EventMatcher selectInferredEvent(String ref) {
+        return new EventMatcher(true, ref, doSelect(ref, "InferredEvent") + "%s");
+    }
+
+    public static String doSelect(String ref, String type) {
+        return "select " + ref + " from " + type + " as " + ref;
     }
 
     public static EventMatcher everyEnvelope(String envref) {

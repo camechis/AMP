@@ -1,19 +1,19 @@
 package amp.esp.monitors;
 
-import java.util.Collection;
-import java.util.HashSet;
-
+import amp.esp.EventMatcher;
 import amp.esp.EventMonitor;
 import amp.esp.EventStreamProcessor;
 import amp.esp.InferredEvent;
 import amp.esp.publish.Publisher;
 
+import java.util.Collection;
+import java.util.HashSet;
 
 import com.espertech.esper.client.EventBean;
 
 /**
  * Monitor for testing that catches all inferred events and logs them.
- * 
+ *
  * @author israel
  *
  */
@@ -28,7 +28,7 @@ public class InferredEventPrinter extends EventMonitor {
 
     @Override
     public Collection<Publisher> registerPatterns(EventStreamProcessor esp) {
-        esp.monitor(true, "select event from InferredEvent as event", this);
+        esp.monitor(EventMatcher.selectInferredEvent("event"), this);
 
         // @todo = this needs to be integrated
         return new HashSet<Publisher>();

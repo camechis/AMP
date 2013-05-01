@@ -1,5 +1,6 @@
 package amp.esp.monitors;
 
+import amp.esp.EventMatcher;
 import amp.esp.EventMonitor;
 import amp.esp.EventStreamProcessor;
 import amp.esp.InferredEvent;
@@ -27,7 +28,6 @@ public class JavascriptDetector extends EventMonitor {
 	private static final String language = "js";
 	private static final ScriptEngineManager scriptEngineFactory = new ScriptEngineManager();
 	private ScriptEngine engine;
-	private String monitorDef;
 	private Context cx;
 	private Scriptable scope;
 	private NativeObject eventMonitor = null;
@@ -35,7 +35,6 @@ public class JavascriptDetector extends EventMonitor {
 	public JavascriptDetector(String monitorDef) throws ScriptException {
 		super();
 		setupEngine();
-		this.monitorDef = monitorDef;
 		Object evalresult = cx.evaluateString(scope, monitorDef, "<cmd>", 1, null);
 		if (evalresult == null) {
 			throw new RuntimeException("No monitor created from: " + monitorDef);
@@ -70,7 +69,7 @@ public class JavascriptDetector extends EventMonitor {
 
 	@Override
     public Collection<Publisher> registerPatterns(EventStreamProcessor esp) {
-        esp.monitor(true, "select env from Envelope as env", this);
+        esp.monitor(EventMatcher.selectEnvelope("env"), this);
 
         // @todo = this needs to be integrated
         return new HashSet<Publisher>();
