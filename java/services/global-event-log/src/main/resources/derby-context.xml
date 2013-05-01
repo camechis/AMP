@@ -9,8 +9,9 @@
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
 
-	<!-- <bean id="derbyHealthCheck" class="amp.gel.health.DerbyHealthCheck" 
-		/> -->
+	<bean id="derbyHealthCheck" class="amp.gel.health.DerbyHealthCheck">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
 
 	<bean id="derbyNetworkServer" class="amp.gel.dao.impl.derby.DerbyNetworkServer"
 		destroy-method="destroy" />
