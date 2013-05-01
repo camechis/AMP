@@ -12,15 +12,21 @@ import org.slf4j.LoggerFactory;
 import com.yammer.metrics.core.HealthCheck;
 
 public class DerbyHealthCheck extends HealthCheck {
-	private static final String VALIDATION_QUERY = "SELECT 1 FROM SYSIBM.SYSDUMMY1";
+	private static final String DEFAULT_VALIDATION_QUERY = "SELECT 1 FROM SYSIBM.SYSDUMMY1";
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(DerbyHealthCheck.class);
 
 	private DataSource dataSource;
 
+	private String validationQuery = DEFAULT_VALIDATION_QUERY;
+
 	public void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;
+	}
+
+	public void setValidationQuery(String validationQuery) {
+		this.validationQuery = validationQuery;
 	}
 
 	public DerbyHealthCheck() {
@@ -38,11 +44,13 @@ public class DerbyHealthCheck extends HealthCheck {
 		try {
 			connection = dataSource.getConnection();
 			statement = connection.createStatement();
-			resultSet = statement.executeQuery(VALIDATION_QUERY);
+			resultSet = statement.executeQuery(validationQuery);
+
 			health = Result.healthy();
+			logger.info("Apache Derby is healthy.");
 		} catch (Exception e) {
-			logger.error("Unable to perform health check!", e);
 			health = Result.unhealthy(e);
+			logger.error("Unable to perform health check!", e);
 		} finally {
 			try {
 				resultSet.close();

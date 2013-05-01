@@ -14,7 +14,7 @@
 	</bean>
 
 	<bean id="derbyNetworkServer" class="amp.gel.dao.impl.derby.DerbyNetworkServer"
-		destroy-method="destroy">
+		init-method="start" destroy-method="stop">
 		<property name="port" value="${derby.port:1527}" />
 	</bean>
 

@@ -3,11 +3,15 @@ package amp.gel.dao.impl.derby;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import amp.gel.dao.DatastoreWriter;
 
 public class DerbyWriter implements DatastoreWriter {
+	private static final Logger logger = LoggerFactory
+			.getLogger(DerbyWriter.class);
 
 	private EntityManager entityManager;
 
@@ -18,6 +22,7 @@ public class DerbyWriter implements DatastoreWriter {
 
 	public void initialize() throws Exception {
 		// do nothing
+		logger.info("Initialized DerbyWriter.");
 	}
 
 	@Transactional(readOnly = false)
@@ -27,5 +32,7 @@ public class DerbyWriter implements DatastoreWriter {
 
 	public void close() {
 		entityManager.flush();
+
+		logger.info("Closed DerbyWriter.");
 	}
 }

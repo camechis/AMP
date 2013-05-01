@@ -15,6 +15,13 @@ import org.joda.time.DateTimeZone;
 
 import cmf.bus.EnvelopeHeaderConstants;
 
+/**
+ * This class adapts the cmf.bus.Envelope class as a POJO with JPA annotations.
+ * Instead of a map of headers, the individual fields are specifically
+ * identified. This means that if keys to the envelope headers were to change,
+ * then this class should be modified accordingly.
+ * 
+ */
 @Entity
 public class Envelope implements Serializable {
 
