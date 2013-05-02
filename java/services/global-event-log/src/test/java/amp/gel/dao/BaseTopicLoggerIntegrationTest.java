@@ -19,10 +19,7 @@ public class BaseTopicLoggerIntegrationTest {
 
 	protected static final int NUM_EVENTS = 100;
 
-	protected static final SimplePojo EVENT = new SimplePojo("Michael Jordan",
-			23);
-
-	protected static final String TOPIC = EVENT.getClass().getCanonicalName();
+	protected static final String TOPIC = SimplePojo.class.getCanonicalName();
 
 	protected static final String TABLE_NAME = "test_envelope";
 
@@ -62,9 +59,19 @@ public class BaseTopicLoggerIntegrationTest {
 			fail(message);
 		}
 
+		try {
+			/*
+			 * Sleep to give envelope bus time to register. This can be removed
+			 * after the AMP "bug" has been fixed.
+			 */
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// do nothing
+		}
+
 		for (int i = 0; i < NUM_EVENTS; i++) {
 			try {
-				eventBus.publish(EVENT);
+				eventBus.publish(new SimplePojo("Michael Jordan", i));
 			} catch (Exception e) {
 				String message = "Unable to publish messages";
 				logger.error(message, e);
@@ -74,6 +81,10 @@ public class BaseTopicLoggerIntegrationTest {
 
 		while (topicCounter.getCount() < NUM_EVENTS) {
 			try {
+				logger.info("# of events: " + topicCounter.getCount());
+				logger.info("Missing envelopes: "
+						+ topicCounter.getMissingIds());
+
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				// do nothing
@@ -93,36 +104,35 @@ public class BaseTopicLoggerIntegrationTest {
 	}
 
 	static public class SimplePojo {
-		private String attribute1;
+		private String text;
 
-		private int attribute2;
+		private int id;
 
-		public SimplePojo(String attribute1, int attribute2) {
+		public SimplePojo(String text, int id) {
 			super();
-			this.attribute1 = attribute1;
-			this.attribute2 = attribute2;
+			this.text = text;
+			this.id = id;
 		}
 
-		public String getAttribute1() {
-			return attribute1;
+		public String getText() {
+			return text;
 		}
 
-		public void setAttribute1(String attribute1) {
-			this.attribute1 = attribute1;
+		public void setText(String text) {
+			this.text = text;
 		}
 
-		public int getAttribute2() {
-			return attribute2;
+		public int getId() {
+			return id;
 		}
 
-		public void setAttribute2(int attribute2) {
-			this.attribute2 = attribute2;
+		public void setId(int id) {
+			this.id = id;
 		}
 
 		@Override
 		public String toString() {
-			return "SimplePojo [attribute1=" + attribute1 + ", attribute2="
-					+ attribute2 + "]";
+			return "SimplePojo [text=" + text + ", id=" + id + "]";
 		}
 	}
 }
