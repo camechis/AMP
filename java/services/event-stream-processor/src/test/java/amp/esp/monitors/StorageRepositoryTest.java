@@ -2,19 +2,11 @@ package amp.esp.monitors;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-
-import org.junit.Test;
-
-import amp.esp.EnvelopeUtils;
 import amp.esp.InferredEvent;
 import amp.esp.TestUtils;
-import amp.esp.monitors.ConsensusSearchDetector;
-import amp.esp.monitors.CorrelateRequestResponsesEventDetector;
-import amp.esp.monitors.DocumentCollectionWithHitFrequencySearchResultsDetector;
-import amp.esp.monitors.EventTypeDetector;
-import amp.esp.monitors.UnauthorizedAccessAttemptsDetector;
+import cmf.bus.Envelope;
 
-import pegasus.eventbus.client.Envelope;
+import org.junit.Test;
 
 public class StorageRepositoryTest extends AbstractDetectorTest {
 

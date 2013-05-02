@@ -1,11 +1,9 @@
 package amp.esp.monitors;
 
-import org.junit.Test;
-
 import amp.esp.TestUtils;
-import amp.esp.monitors.ConsensusSearchDetector;
+import cmf.bus.Envelope;
 
-import pegasus.eventbus.client.Envelope;
+import org.junit.Test;
 
 public class ConsensusSearchDectectorTest extends AbstractDetectorTest {
 

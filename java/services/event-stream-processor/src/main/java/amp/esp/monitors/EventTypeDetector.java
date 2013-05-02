@@ -1,14 +1,10 @@
 package amp.esp.monitors;
 
-import java.util.Collection;
-import java.util.HashSet;
-
+import amp.esp.EventMatcher;
 import amp.esp.EventMonitor;
 import amp.esp.EventStreamProcessor;
 import amp.esp.InferredEvent;
-import amp.esp.publish.Publisher;
-
-import pegasus.eventbus.client.Envelope;
+import cmf.bus.Envelope;
 
 import com.espertech.esper.client.EventBean;
 
@@ -22,16 +18,13 @@ public class EventTypeDetector extends EventMonitor {
 
     @Override
     public InferredEvent receive(EventBean eventBean) {
-        Envelope env = (Envelope) eventBean.get("resp");
+        Envelope env = getEnvelopeFromBean(eventBean, "resp");
         return makeInferredEvent().addEnvelope(env);
     }
 
     @Override
-    public Collection<Publisher> registerPatterns(EventStreamProcessor esp) {
-        esp.monitor(true, "select resp from Envelope as resp where eventType = '" + eventType + "'", this);
-
-        // @todo = this needs to be integrated
-        return new HashSet<Publisher>();
+    public void registerPatterns(EventStreamProcessor esp) {
+        esp.monitor(EventMatcher.everyEnvelope("resp").matching("EventType", eventType), this);
     }
 
     @Override

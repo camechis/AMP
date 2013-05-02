@@ -1,16 +1,13 @@
 package amp.esp.monitors;
 
+import amp.esp.InferredEvent;
+import amp.esp.TestUtils;
+import cmf.bus.Envelope;
+
 import javax.script.ScriptException;
 
 import org.junit.Assert;
 import org.junit.Test;
-
-import amp.esp.EnvelopeUtils;
-import amp.esp.InferredEvent;
-import amp.esp.TestUtils;
-import amp.esp.monitors.JsEnvelopeCounter;
-
-import pegasus.eventbus.client.Envelope;
 
 public class JsEnvelopeCounterTest extends AbstractDetectorTest {
 

@@ -1,26 +1,23 @@
 package amp.esp.monitors;
 
-import java.io.File;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-
-import org.joda.time.DateTime;
-
 import amp.esp.EnvelopeUtils;
+import amp.esp.EventMatcher;
 import amp.esp.EventMonitor;
 import amp.esp.EventStreamProcessor;
 import amp.esp.InferredEvent;
-import amp.esp.publish.Publisher;
+import amp.esp.WEUtils;
+import cmf.bus.Envelope;
 
-import pegasus.eventbus.client.Envelope;
+import java.io.File;
+import java.util.Date;
+
+import org.joda.time.DateTime;
 
 import com.espertech.esper.client.EventBean;
 
 public class EnvelopeLogger extends EventMonitor {
 
     private String logdir = null;
-    private String cond = null;
     private String logFile = null;
     private String jsonFile = null;
 
@@ -55,14 +52,6 @@ public class EnvelopeLogger extends EventMonitor {
         return file.mkdirs();
     }
 
-    public String getCond() {
-        return cond;
-    }
-
-    public void setCond(String cond) {
-        this.cond = cond;
-    }
-
     /**
      *  Write debugging output to a file
      *
@@ -84,8 +73,8 @@ public class EnvelopeLogger extends EventMonitor {
     @Override
     public InferredEvent receive(EventBean eventBean) {
         if (logdir != null) {
-            Envelope env = (Envelope) eventBean.get("resp");
-            if (env.getEventType().startsWith("dashboard.server.metric")) return null;
+            Envelope env = getEnvelopeFromBean(eventBean, "resp");
+            if (WEUtils.getEventType(env).startsWith("dashboard.server.metric")) return null;
             fprint(logFile, EnvelopeUtils.envelopeToReadableJson(env));
             fprint(jsonFile, EnvelopeUtils.toJson(env));
         }
@@ -93,18 +82,8 @@ public class EnvelopeLogger extends EventMonitor {
     }
 
     @Override
-    public Collection<Publisher> registerPatterns(EventStreamProcessor esp) {
-        esp.monitor(true, getPattern(), this);
-
-        return null;
-    }
-
-    private String getPattern() {
-        String where = "";
-        if (cond != null && cond.length() > 0) {
-            where = String.format(" where %s", cond);
-        }
-        return "select resp from Envelope as resp" + where;
+    public void registerPatterns(EventStreamProcessor esp) {
+        esp.monitor(EventMatcher.selectEnvelope("resp"), this);
     }
 
     @Override
