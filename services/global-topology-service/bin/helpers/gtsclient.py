@@ -69,21 +69,21 @@ class GTS:
     response = self.session.put(self.servicesUrl + partialUrl,
                                 data=json.dumps(data, default=objectToJson))
     
-    if response.status_code >= 200 and response.status_code < 300:
-      return True
-    
-    return False
+    return self.handleResponse(response)
   
-  def post(self, partialUrl, data):
+  def post(self, partialUrl, data, form=False):
 
-    response = self.session.post(self.servicesUrl + partialUrl,
-                                 data=json.dumps(data, default=objectToJson))
+    payload = data if form else json.dumps(data, default=objectToJson)
 
-    if response.status_code >= 200 and response.status_code < 300:
-      return True
+    if form:
+      headers = { "Content-Type": "application/x-www-form-urlencoded" }
+      response = self.session.post(self.servicesUrl + partialUrl, data=data, headers=headers )
+    else:
+      response = self.session.post(self.servicesUrl + partialUrl,
+                                  data=json.dumps(data, default=objectToJson))
 
-    return False
-  
+    return self.handleResponse(response)
+
   def delete(self, partialUrl, data=None):
 
     if data == None:
@@ -92,8 +92,15 @@ class GTS:
       response = self.session.delete(self.servicesUrl + partialUrl,
                                    data=json.dumps(data, default=objectToJson))
 
+    return self.handleResponse(response)
+
+  def handleResponse(self, response):
+
     if response.status_code >= 200 and response.status_code < 300:
-      return True
+      body = response.text
+      if not body:
+        return True
+      return body
 
     return False
 
@@ -343,3 +350,33 @@ class GTS:
   def deleteBinding(self, cluster, binding):
     return self.delete("/rmq/clusters/" + cluster + "/bindings", data=binding)
 
+  def getRoutingInfo(self, topic, pattern="pubsub"):
+    formParams = { "cmf.bus.message.topic": topic, "cmf.bus.message.pattern": pattern }
+    return self.post("/topology", formParams, form=True)
+
+  def indexEntries(self):
+    return self.get("/index/entries")
+
+  def indexEntry(self, id):
+    return self.get("/index/entries/" + id)
+
+  def addIndexEntry(self, entry):
+    return self.put("/index/entries/" + entry.id, entry)
+
+  def updateIndexEntry(self, entry):
+    return self.post("/index/entries/" + entry.id, entry)
+
+  def deleteIndexEntry(self, id):
+    return self.delete("/index/entries/" + id)
+
+  def indexedTopics(self, query="*"):
+    return self.get("/index/topics/" + query)
+
+  def indexedPatterns(self, query="*"):
+    return self.get("/index/patterns/" + query)
+
+  def indexedClients(self, query="*"):
+    return self.get("/index/clients/" + query)
+
+  def indexedGroups(self, query="*"):
+    return self.get("/index/groups/" + query)

@@ -2,36 +2,36 @@ package amp.topology.core.factory.index;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.UUID;
 
 import amp.bus.rabbit.topology.RoutingInfo;
 import amp.topology.core.factory.FactoryReference;
-import amp.topology.core.model.MessagingPattern;
-import amp.topology.core.model.Topic;
 
 public class RoutingInfoSelectionContext {
 	
-	ArrayList<Topic> includedTopics = new ArrayList<Topic>();
-	ArrayList<Topic> excludedTopics = new ArrayList<Topic>();
+	String id = UUID.randomUUID().toString();
+	ArrayList<String> includedTopics = new ArrayList<String>();
+	ArrayList<String> excludedTopics = new ArrayList<String>();
 	ArrayList<String> includedClients = new ArrayList<String>();
 	ArrayList<String> excludedClients = new ArrayList<String>();
 	ArrayList<String> includedGroups = new ArrayList<String>();
 	ArrayList<String> excludedGroups = new ArrayList<String>();
-	ArrayList<MessagingPattern> includedPatterns = new ArrayList<MessagingPattern>();
-	ArrayList<MessagingPattern> excludedPatterns = new ArrayList<MessagingPattern>();
+	ArrayList<String> includedPatterns = new ArrayList<String>();
+	ArrayList<String> excludedPatterns = new ArrayList<String>();
 	
 	FactoryReference<RoutingInfo> routingInfo;
 	
 	public RoutingInfoSelectionContext(){}
 	
 	public RoutingInfoSelectionContext(
-			Collection<Topic> includedTopics, 
-			Collection<Topic> excludedTopics, 
+			Collection<String> includedTopics, 
+			Collection<String> excludedTopics, 
 			Collection<String> includedClients,
 			Collection<String> excludedClients,
 			Collection<String> includedGroups,
 			Collection<String> excludedGroups,
-			Collection<MessagingPattern> includedPatterns,
-			Collection<MessagingPattern> excludedPatterns,
+			Collection<String> includedPatterns,
+			Collection<String> excludedPatterns,
 			FactoryReference<RoutingInfo> routingInfo) {
 		
 		setIncludedTopics(includedTopics);
@@ -46,19 +46,52 @@ public class RoutingInfoSelectionContext {
 		this.routingInfo = routingInfo;
 	}
 	
-	public Collection<Topic> getIncludedTopics() {
+	public RoutingInfoSelectionContext(
+			String id,
+			Collection<String> includedTopics, 
+			Collection<String> excludedTopics, 
+			Collection<String> includedClients,
+			Collection<String> excludedClients,
+			Collection<String> includedGroups,
+			Collection<String> excludedGroups,
+			Collection<String> includedPatterns,
+			Collection<String> excludedPatterns,
+			FactoryReference<RoutingInfo> routingInfo) {
+		
+		this.id = id;
+		setIncludedTopics(includedTopics);
+		setExcludedTopics(excludedTopics);
+		setIncludedClients(includedClients);
+		setExcludedClients(excludedClients);
+		setIncludedGroups(includedGroups);
+		setExcludedGroups(excludedGroups);
+		setIncludedPatterns(includedPatterns);
+		setExcludedPatterns(excludedPatterns);
+		
+		this.routingInfo = routingInfo;
+	}
+	
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public Collection<String> getIncludedTopics() {
 		return includedTopics;
 	}
 
-	public void setIncludedTopics(Collection<Topic> includedTopics) {
+	public void setIncludedTopics(Collection<String> includedTopics) {
 		addAllIfNotNull(this.includedTopics, includedTopics);
 	}
 
-	public Collection<Topic> getExcludedTopics() {
+	public Collection<String> getExcludedTopics() {
 		return excludedTopics;
 	}
 
-	public void setExcludedTopics(Collection<Topic> excludedTopics) {
+	public void setExcludedTopics(Collection<String> excludedTopics) {
 		addAllIfNotNull(this.excludedTopics, excludedTopics);
 	}
 
@@ -94,19 +127,19 @@ public class RoutingInfoSelectionContext {
 		addAllIfNotNull(this.excludedGroups, excludedGroups);
 	}
 
-	public Collection<MessagingPattern> getIncludedPatterns() {
+	public Collection<String> getIncludedPatterns() {
 		return includedPatterns;
 	}
 
-	public void setIncludedPatterns(Collection<MessagingPattern> includedPatterns) {
+	public void setIncludedPatterns(Collection<String> includedPatterns) {
 		addAllIfNotNull(this.includedPatterns, includedPatterns);
 	}
 
-	public Collection<MessagingPattern> getExcludedPatterns() {
+	public Collection<String> getExcludedPatterns() {
 		return excludedPatterns;
 	}
 
-	public void setExcludedPatterns(Collection<MessagingPattern> excludedPatterns) {
+	public void setExcludedPatterns(Collection<String> excludedPatterns) {
 		addAllIfNotNull(this.excludedPatterns, excludedPatterns);
 	}
 

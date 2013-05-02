@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:lang="http://www.springframework.org/schema/lang"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang-3.2.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd">
+
+    <!-- REST Endpoints -->
+    
+    <bean id="topologyServiceResource" class="amp.topology.resources.TopologyServiceResource"
+        c:routingInfoController-ref="routingInfoController" />
+    
+    <bean id="clusterRegistrationResource" class="amp.topology.resources.ClusterRegistrationResource" 
+        c:registrationRepository-ref="clusterRegistrationRepository" />
+    
+    <bean id="whoAmIResource" class="amp.topology.resources.WhoAmIResource" />
+    
+    <bean id="routingInfoIndexResource" class="amp.topology.resources.RoutingInfoIndexResource" 
+        c:routingInfoIndex-ref="routingInfoIndex" />
+    
+    <!-- Definition REST Endpoints -->
+    
+    <bean id="routingInfoDefinitionResource"
+          class="amp.topology.resources.definitions.RoutingInfoDefinitionResource"
+          c:repository-ref="routingInfoDefinitionRepository" />
+    
+    <bean id="producingRouteDefinitionResource"
+          class="amp.topology.resources.definitions.ProducingRouteDefinitionResource"
+          c:repository-ref="producingRouteDefinitionRepository" />
+          
+    <bean id="consumingRouteDefinitionResource"
+          class="amp.topology.resources.definitions.ConsumingRouteDefinitionResource"
+          c:repository-ref="consumingRouteDefinitionRepository" />     
+    
+    <bean id="exchangeDefinitionResource"
+          class="amp.topology.resources.definitions.ExchangeDefinitionResource"
+          c:repository-ref="exchangeDefinitionRepository" />
+    
+    <bean id="queueDefinitionResource"
+          class="amp.topology.resources.definitions.QueueDefinitionResource"
+          c:repository-ref="queueDefinitionRepository" />
+    
+    <bean id="clusterDefinitionResource"
+          class="amp.topology.resources.definitions.ClusterDefinitionResource"
+          c:repository-ref="clusterDefinitionRepository" />
+          
+    <bean id="routingContextDefinitionResource"
+          class="amp.topology.resources.definitions.RoutingContextDefinitionResource"
+          c:repository-ref="routingContextDefinitionRepository" />
+    
+    <!-- RMQ REST Endpoints -->
+    
+    <bean id="exchangeResource" class="amp.topology.resources.rmq.ExchangeResource" 
+        c:exchangeRepository-ref="rmqExchangeRepository" />
+        
+    <bean id="queueResource" class="amp.topology.resources.rmq.QueueResource"
+        c:queueRepository-ref="rmqQueueRepository" />
+    
+    <bean id="clusterInfoResource" class="amp.topology.resources.rmq.ClusterInfoResource"
+        c:clusterInfoRepository-ref="rmqClusterInfoRepository" />
+        
+    <bean id="permissionResource" class="amp.topology.resources.rmq.PermissionResource"
+        c:userRepository-ref="rmqUserRepository" />
+        
+    <bean id="userResource" class="amp.topology.resources.rmq.UserResource"
+        c:userRepository-ref="rmqUserRepository" />
+    
+    <bean id="virtualHostResource" class="amp.topology.resources.rmq.VirtualHostResource"
+        c:virtualHostRepository-ref="rmqVirtualHostRepository" />
+    
+    <bean id="bindingResource" class="amp.topology.resources.rmq.BindingResource"
+        c:bindingRepository-ref="rmqBindingRepository" />
+    
+
+</beans>

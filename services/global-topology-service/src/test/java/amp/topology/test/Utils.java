@@ -6,8 +6,6 @@ import java.util.UUID;
 
 import amp.bus.EnvelopeHelper;
 import amp.topology.core.model.Client;
-import amp.topology.core.model.MessagingPattern;
-import amp.topology.core.model.Topic;
 
 public class Utils {
 
@@ -24,15 +22,5 @@ public class Utils {
 		
 		return new Client(
 			UUID.randomUUID().toString(), "desc", name, Arrays.asList(groups));
-	}
-	
-	public static Topic topic(String topic){
-		
-		return new Topic(UUID.randomUUID().toString(), "desc", topic);
-	}
-	
-	public static MessagingPattern pattern(String pattern){
-		
-		return new MessagingPattern(UUID.randomUUID().toString(), "desc", pattern);
 	}
 }

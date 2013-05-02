@@ -184,6 +184,22 @@ class RoutingInfoDefinition(Referable):
   def addConsumingRouteReference(self, consumingRouteReference):
     self.consumingRouteReferences.append(consumingRouteReference)
 
+class RoutingInfoIndexEntry(Referable):
+
+  def __init__(self, factory, context, inTopics=[], exTopics=[], inPatterns=[], exPatterns=[],
+               inClients=[], exClients=[], inGroups=[], exGroups=[], id=None):
+
+    self.routingInfo = FR(factory, context)
+    self.id = ID() if id is None else id
+    self.includedTopics = inTopics
+    self.excludedTopics = exTopics
+    self.includedPatterns = inPatterns
+    self.excludedPatterns = exPatterns
+    self.includedClients = inClients
+    self.excludedClients = exClients
+    self.includedGroups = inGroups
+    self.excludedGroups = exGroups
+
 '''
   Helper methods for constructing generic references (Cluster Key or Factory References)
 '''

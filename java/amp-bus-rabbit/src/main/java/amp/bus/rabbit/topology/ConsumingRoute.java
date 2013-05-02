@@ -1,6 +1,5 @@
 package amp.bus.rabbit.topology;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 

@@ -11,138 +11,15 @@
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">    
 	
+	<import resource="repositoryContext.xml" />
+	<import resource="endpointContext.xml" />
+	<import resource="factoryContext.xml" />
 	
-	<bean id="managementFactory" class="amp.topology.rmq.repo.impl.RmqManagementFactory" 
-		c:clusterRegistrationRepository-ref="clusterRegistrationRepository" />
+	<bean id="routingInfoIndex" class="amp.topology.core.factory.index.InMemoryRoutingInfoIndex" />
+	<bean id="selectionStrategy" class="amp.topology.core.factory.index.selection.SelectFirstRoutingInfoStrategy" />
 	
-	<bean id="adminAtLocalhost" class="amp.topology.core.model.ManagementEndpoint"
-		c:id="localhost" c:description="Local Cluster" c:hostname="localhost"
-		c:port="15672" c:username="guest" c:password="guest" />
-	
-	<bean id="adminAtDevexample" class="amp.topology.core.model.ManagementEndpoint"
-		c:id="devexample" c:description="Devadmin Cluster" c:hostname="devexample.com"
-		c:port="15672" c:username="devexample" c:password="devexample" />
-	
-	<!-- Repositories -->
-	
-	<bean id="clusterRegistrationRepository" 
-	      class="amp.topology.core.repo.inmem.InMemoryClusterRegistrationRepository">
-		<property name="modelInstances">
-			<list value-type="amp.topology.core.model.ClusterRegistration">
-				<bean class="amp.topology.core.model.ClusterRegistration" 
-					c:id="localhost" c:description="1 Node Localhost Cluster"
-					c:managementEndpoints-ref="adminAtLocalhost" />
-				<bean class="amp.topology.core.model.ClusterRegistration" 
-					c:id="devexample" c:description="1 Node Devexample Cluster"
-					c:managementEndpoints-ref="adminAtDevexample" />
-			</list>
-		</property>
-	</bean>
-	
-	<!-- Definition Repositories -->
-	
-	<bean id="routingInfoDefinitionRepository" 
-          class="amp.topology.core.factory.dynamic.repo.inmem.InMemoryRoutingInfoDefinitionRepository" />
-	
-	<bean id="producingRouteDefinitionRepository" 
-          class="amp.topology.core.factory.dynamic.repo.inmem.InMemoryProducingRouteDefinitionRepository" />
-	
-	<bean id="consumingRouteDefinitionRepository" 
-          class="amp.topology.core.factory.dynamic.repo.inmem.InMemoryConsumingRouteDefinitionRepository" />
-	
-	<bean id="clusterDefinitionRepository" 
-          class="amp.topology.core.factory.dynamic.repo.inmem.InMemoryClusterDefinitionRepository" />
-	
-	<bean id="queueDefinitionRepository" 
-          class="amp.topology.core.factory.dynamic.repo.inmem.InMemoryQueueDefinitionRepository" />
-	
-	<bean id="exchangeDefinitionRepository" 
-	      class="amp.topology.core.factory.dynamic.repo.inmem.InMemoryExchangeDefinitionRepository" />
-	
-	<bean id="subtopologyDefinitionRepository" 
-          class="amp.topology.core.factory.dynamic.repo.inmem.InMemorySubtopologyDefinitionRepository" />
-	
-	<bean id="routingContextDefinitionRepository"
-	      class="amp.topology.core.factory.dynamic.repo.inmem.InMemoryRoutingContextDefinitionRepository" />
-	
-	<!-- RabbitMQ Repositories -->
-	
-	<bean id="rmqExchangeRepository" class="amp.topology.rmq.repo.impl.RmqExchangeRepository"
-		c:managementFactory-ref="managementFactory" />
-		
-	<bean id="rmqQueueRepository" class="amp.topology.rmq.repo.impl.RmqQueueRepository"
-		c:managementFactory-ref="managementFactory" />
-	
-	<bean id="rmqUserRepository" class="amp.topology.rmq.repo.impl.RmqUserRepository"
-		c:managementFactory-ref="managementFactory" />
-		
-	<bean id="rmqClusterInfoRepository" class="amp.topology.rmq.repo.impl.RmqClusterInfoRepository"
-		c:managementFactory-ref="managementFactory" />
-	
-	<bean id="rmqVirtualHostRepository" class="amp.topology.rmq.repo.impl.RmqVirtualHostRepository"
-		c:managementFactory-ref="managementFactory" />
-		
-	<bean id="rmqBindingRepository" class="amp.topology.rmq.repo.impl.RmqBindingRepository"
-		c:managementFactory-ref="managementFactory" />
-	
-	<!-- REST Endpoints -->
-	
-	<bean id="clusterRegistrationResource" class="amp.topology.resources.ClusterRegistrationResource" 
-		c:registrationRepository-ref="clusterRegistrationRepository" />
-	
-	<bean id="whoAmIResource" class="amp.topology.resources.WhoAmIResource" />
-	
-	<!-- Definition REST Endpoints -->
-	
-	<bean id="routingInfoDefinitionResource"
-	      class="amp.topology.resources.definitions.RoutingInfoDefinitionResource"
-	      c:repository-ref="routingInfoDefinitionRepository" />
-	
-	<bean id="producingRouteDefinitionResource"
-          class="amp.topology.resources.definitions.ProducingRouteDefinitionResource"
-          c:repository-ref="producingRouteDefinitionRepository" />
-          
-    <bean id="consumingRouteDefinitionResource"
-          class="amp.topology.resources.definitions.ConsumingRouteDefinitionResource"
-          c:repository-ref="consumingRouteDefinitionRepository" />     
-	
-	<bean id="exchangeDefinitionResource"
-          class="amp.topology.resources.definitions.ExchangeDefinitionResource"
-          c:repository-ref="exchangeDefinitionRepository" />
-	
-	<bean id="queueDefinitionResource"
-          class="amp.topology.resources.definitions.QueueDefinitionResource"
-          c:repository-ref="queueDefinitionRepository" />
-	
-	<bean id="clusterDefinitionResource"
-          class="amp.topology.resources.definitions.ClusterDefinitionResource"
-          c:repository-ref="clusterDefinitionRepository" />
-          
-    <bean id="routingContextDefinitionResource"
-          class="amp.topology.resources.definitions.RoutingContextDefinitionResource"
-          c:repository-ref="routingContextDefinitionRepository" />
-	
-	<!-- RMQ REST Endpoints -->
-	
-	<bean id="exchangeResource" class="amp.topology.resources.rmq.ExchangeResource" 
-		c:exchangeRepository-ref="rmqExchangeRepository" />
-		
-	<bean id="queueResource" class="amp.topology.resources.rmq.QueueResource"
-		c:queueRepository-ref="rmqQueueRepository" />
-	
-	<bean id="clusterInfoResource" class="amp.topology.resources.rmq.ClusterInfoResource"
-		c:clusterInfoRepository-ref="rmqClusterInfoRepository" />
-		
-	<bean id="permissionResource" class="amp.topology.resources.rmq.PermissionResource"
-		c:userRepository-ref="rmqUserRepository" />
-		
-	<bean id="userResource" class="amp.topology.resources.rmq.UserResource"
-		c:userRepository-ref="rmqUserRepository" />
-	
-	<bean id="virtualHostResource" class="amp.topology.resources.rmq.VirtualHostResource"
-		c:virtualHostRepository-ref="rmqVirtualHostRepository" />
-	
-	<bean id="bindingResource" class="amp.topology.resources.rmq.BindingResource"
-		c:bindingRepository-ref="rmqBindingRepository" />
+	<bean id="routingInfoController" class="amp.topology.core.factory.FactoryAssemblingRoutingInfoController"
+	   c:modelFactory-ref="modelFactory" c:routingInfoIndex-ref="routingInfoIndex" 
+	   c:selectionStrategy-ref="selectionStrategy" />
 	
 </beans>

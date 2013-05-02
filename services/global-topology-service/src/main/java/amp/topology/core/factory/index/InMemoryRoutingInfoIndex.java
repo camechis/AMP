@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeSet;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +42,8 @@ public class InMemoryRoutingInfoIndex implements RoutingInfoIndex {
 		
 		RoutingHints hints = getHints(routingContext);
 		
+		logger.debug("Routing Hints: {}", hints);
+		
 		ArrayList<RoutingInfoSelectionContext> selections = 
 				new ArrayList<RoutingInfoSelectionContext>();
 		
@@ -50,6 +53,12 @@ public class InMemoryRoutingInfoIndex implements RoutingInfoIndex {
 			boolean isPatternMatch = isPatternMatch(item, hints.getPattern());
 			boolean isClientMatch = isClientMatch(item, client.getPrincipalName());
 			boolean isGroupMatch = isGroupMatch(item, client.getAuthorities());
+			
+			logger.debug("{}=>{}: topic={}, pattern={}, client={}, group={}", 
+				new Object[]{
+					item.getRoutingInfo().getFactoryName(),
+					item.getRoutingInfo().getContext(),
+					isTopicMatch, isPatternMatch, isClientMatch, isGroupMatch });
 			
 			if (isTopicMatch && isPatternMatch && isClientMatch && isGroupMatch){
 				
@@ -62,12 +71,12 @@ public class InMemoryRoutingInfoIndex implements RoutingInfoIndex {
 	
 	static boolean isTopicMatch(RoutingInfoSelectionContext item, String topic){
 		
-		boolean isTopicMatch = containsTopic(item.getIncludedTopics(), topic);
+		boolean isTopicMatch = containsItem(item.getIncludedTopics(), topic);
 		
 		if (!isTopicMatch){
 			
-			isTopicMatch = containsTopic(item.getIncludedTopics(), ALL)
-					&& !containsTopic(item.getExcludedTopics(), topic);
+			isTopicMatch = containsItem(item.getIncludedTopics(), ALL)
+					&& !containsItem(item.getExcludedTopics(), topic);
 		}
 		
 		return isTopicMatch;
@@ -80,12 +89,12 @@ public class InMemoryRoutingInfoIndex implements RoutingInfoIndex {
 			return true;
 		}
 		
-		boolean isPatternMatch = containsPattern(item.getIncludedPatterns(), pattern);
+		boolean isPatternMatch = containsItem(item.getIncludedPatterns(), pattern);
 		
 		if (!isPatternMatch){
 			
-			isPatternMatch = containsPattern(item.getIncludedPatterns(), ALL)
-					&& !containsPattern(item.getExcludedPatterns(), pattern);
+			isPatternMatch = containsItem(item.getIncludedPatterns(), ALL)
+					&& !containsItem(item.getExcludedPatterns(), pattern);
 		}
 		
 		return isPatternMatch;
@@ -126,5 +135,138 @@ public class InMemoryRoutingInfoIndex implements RoutingInfoIndex {
 		}
 		
 		return isGroupMatch;
+	}
+
+	@Override
+	public boolean create(RoutingInfoSelectionContext context) {
+		
+		if (context != null){
+		
+			this.index.add(context);
+			
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public boolean update(RoutingInfoSelectionContext context) {
+		
+		boolean wasUpdated = false;
+		
+		RoutingInfoSelectionContext target = null;
+		
+		for (RoutingInfoSelectionContext i : index){
+			
+			if(i.getId().equals(context.getId())){
+				target = i;
+			}
+		}
+		
+		if (target != null){
+			
+			index.remove(target);
+			
+			wasUpdated = true;
+		}
+		
+		index.add(context);
+		
+		return wasUpdated;
+	}
+
+	@Override
+	public boolean delete(String id) {
+		
+		RoutingInfoSelectionContext target = null;
+		
+		for (RoutingInfoSelectionContext i : index){
+			
+			if(i.getId().equals(id)){
+				target = i;
+			}
+		}
+		
+		if (target != null){
+			
+			return index.remove(target);
+		}
+		
+		return false;
+	}
+
+	@Override
+	public RoutingInfoSelectionContext get(String id) {
+		
+		for (RoutingInfoSelectionContext i : index){
+			
+			if(i.getId().equals(id)){
+				
+				return i;
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public List<RoutingInfoSelectionContext> all() {
+		
+		return index;
+	}
+
+	@Override
+	public Collection<String> topics(String filter) {
+		
+		TreeSet<String> topics = new TreeSet<String>();
+		
+		for(RoutingInfoSelectionContext context : this.index){
+			
+			topics.addAll(context.getIncludedTopics());
+			topics.addAll(context.getExcludedTopics());
+		}
+		
+		return topics;
+	}
+
+	@Override
+	public Collection<String> messagePatterns(String filter) {
+		
+		TreeSet<String> patterns = new TreeSet<String>();
+		
+		for(RoutingInfoSelectionContext context : this.index){
+			
+			patterns.addAll(context.getIncludedPatterns());
+			patterns.addAll(context.getExcludedPatterns());
+		}
+		
+		return patterns;
+	}
+
+	@Override
+	public Collection<String> clients(String filter) {
+		
+		TreeSet<String> clients = new TreeSet<String>();
+		
+		for(RoutingInfoSelectionContext context : this.index){
+			
+			clients.addAll(context.getIncludedClients());
+			clients.addAll(context.getExcludedClients());
+		}
+		
+		return clients;
+	}
+
+	@Override
+	public Collection<String> groups(String filter) {
+		
+		TreeSet<String> groups = new TreeSet<String>();
+		
+		for(RoutingInfoSelectionContext context : this.index){
+			
+			groups.addAll(context.getIncludedGroups());
+			groups.addAll(context.getExcludedGroups());
+		}
+		
+		return groups;
 	}
 }

@@ -14,8 +14,6 @@ import org.junit.Test;
 import amp.bus.rabbit.topology.RoutingInfo;
 import amp.topology.core.factory.FactoryReference;
 import amp.topology.core.model.Client;
-import amp.topology.core.model.MessagingPattern;
-import amp.topology.core.model.Topic;
 
 public class InMemoryRoutingInfoIndexTest {
 	
@@ -27,8 +25,7 @@ public class InMemoryRoutingInfoIndexTest {
 		
 		context.setIncludedTopics(
 			Arrays.asList(
-				topic("test.Topic"),
-				topic("blah.test.Topic")));
+				"test.Topic", "blah.test.Topic"));
 		
 		assertTrue(InMemoryRoutingInfoIndex.isTopicMatch(context, "test.Topic"));
 		assertFalse(InMemoryRoutingInfoIndex.isTopicMatch(context, "no.a.match"));
@@ -40,8 +37,7 @@ public class InMemoryRoutingInfoIndexTest {
 		RoutingInfoSelectionContext context = new RoutingInfoSelectionContext();
 		
 		context.setIncludedTopics(
-			Arrays.asList(
-				topic("*")));
+			Arrays.asList("*"));
 		
 		assertTrue(InMemoryRoutingInfoIndex.isTopicMatch(context, "test.Topic"));
 	}
@@ -52,12 +48,10 @@ public class InMemoryRoutingInfoIndexTest {
 		RoutingInfoSelectionContext context = new RoutingInfoSelectionContext();
 		
 		context.setIncludedTopics(
-			Arrays.asList(
-				topic("*")));
+			Arrays.asList("*"));
 		
 		context.setExcludedTopics(
-			Arrays.asList(
-				topic("test.Topic")));
+			Arrays.asList("test.Topic"));
 		
 		assertFalse(InMemoryRoutingInfoIndex.isTopicMatch(context, "test.Topic"));
 		assertTrue(InMemoryRoutingInfoIndex.isTopicMatch(context, "test.other.Topic"));
@@ -69,9 +63,7 @@ public class InMemoryRoutingInfoIndexTest {
 		RoutingInfoSelectionContext context = new RoutingInfoSelectionContext();
 		
 		context.setIncludedPatterns(
-			Arrays.asList(
-				pattern("wiretap"),
-				pattern("rpc")));
+			Arrays.asList("wiretap", "rpc"));
 		
 		assertTrue(InMemoryRoutingInfoIndex.isPatternMatch(context, "rpc"));
 		assertFalse(InMemoryRoutingInfoIndex.isPatternMatch(context, "pubsub"));
@@ -83,8 +75,7 @@ public class InMemoryRoutingInfoIndexTest {
 		RoutingInfoSelectionContext context = new RoutingInfoSelectionContext();
 		
 		context.setIncludedPatterns(
-				Arrays.asList(
-					pattern("*")));
+				Arrays.asList("*"));
 			
 		assertTrue(InMemoryRoutingInfoIndex.isPatternMatch(context, "pubsub"));
 	}
@@ -95,12 +86,10 @@ public class InMemoryRoutingInfoIndexTest {
 		RoutingInfoSelectionContext context = new RoutingInfoSelectionContext();
 		
 		context.setIncludedPatterns(
-				Arrays.asList(
-					pattern("*")));
+				Arrays.asList("*"));
 		
 		context.setExcludedPatterns(
-				Arrays.asList(
-					pattern("wiretap")));
+				Arrays.asList("wiretap"));
 		
 		assertFalse(InMemoryRoutingInfoIndex.isPatternMatch(context, "wiretap"));
 		assertTrue(InMemoryRoutingInfoIndex.isPatternMatch(context, "pubsub"));
@@ -320,38 +309,10 @@ public class InMemoryRoutingInfoIndexTest {
 		RoutingInfoSelectionContext risc = 
 				new RoutingInfoSelectionContext();
 		
-		ArrayList<Topic> inTopics = new ArrayList<Topic>();
-		
-		for(String itopic : iTopics){
-			
-			inTopics.add(topic(itopic));
-		}
-		
-		ArrayList<Topic> exTopics = new ArrayList<Topic>();
-		
-		for(String xtopic : xTopics){
-			
-			exTopics.add(topic(xtopic));
-		}
-		
-		ArrayList<MessagingPattern> inPatterns = new ArrayList<MessagingPattern>();
-		
-		for(String ipattern : iPatterns){
-			
-			inPatterns.add(pattern(ipattern));
-		}
-		
-		ArrayList<MessagingPattern> exPatterns = new ArrayList<MessagingPattern>();
-		
-		for(String xpattern : xPatterns){
-			
-			exPatterns.add(pattern(xpattern));
-		}
-		
-		risc.setIncludedTopics(inTopics);
-		risc.setExcludedTopics(exTopics);
-		risc.setIncludedPatterns(inPatterns);
-		risc.setExcludedPatterns(exPatterns);
+		risc.setIncludedTopics(Arrays.asList(iTopics));
+		risc.setExcludedTopics(Arrays.asList(xTopics));
+		risc.setIncludedPatterns(Arrays.asList(iPatterns));
+		risc.setExcludedPatterns(Arrays.asList(xPatterns));
 		risc.setIncludedClients(Arrays.asList(iClients));
 		risc.setExcludedClients(Arrays.asList(xClients));
 		risc.setIncludedGroups(Arrays.asList(iGroups));

@@ -4,9 +4,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import amp.topology.core.model.MessagingPattern;
-import amp.topology.core.model.Topic;
-
 import cmf.bus.EnvelopeHeaderConstants;
 
 public class IndexUtils {
@@ -34,31 +31,6 @@ public class IndexUtils {
 			}
 		}
 		
-		return false;
-	}
-	
-	public static boolean containsTopic(Collection<Topic> topicCollection, String topicName){
-		
-		for (Topic topic : topicCollection){
-			
-			if (topic.getName().equals(topicName)){
-				
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	public static boolean containsPattern(
-			Collection<MessagingPattern> patternCollection, String patternName){
-		
-		for(MessagingPattern pattern : patternCollection){
-			
-			if (pattern.getPattern().equals(patternName)){
-				
-				return true;
-			}
-		}
 		return false;
 	}
 	

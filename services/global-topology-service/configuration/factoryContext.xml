@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:lang="http://www.springframework.org/schema/lang"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang-3.2.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd">
+
+    <import resource="repositoryContext.xml" />
+
+    <bean id="expressionEvaluator" class="amp.topology.core.factory.dynamic.expeval.MvelExpressionEvaluator" />
+
+    <bean id="serializer" class="amp.eventing.GsonSerializer" />
+    
+    <!-- Dynamic Factories (allowing expression-based configuration) -->
+
+    <bean id="dynamicClusterFactory" class="amp.topology.core.factory.dynamic.DynamicClusterFactory"
+           c:clusterRepository-ref="clusterRepository"
+           c:definitionRepository-ref="clusterDefinitionRepository"
+           c:evaluator-ref="expressionEvaluator"  />
+
+    <bean id="dynamicConsumingRouteFactory" class="amp.topology.core.factory.dynamic.DynamicConsumingRouteFactory"
+           c:repository-ref="consumingRouteDefinitionRepository" c:evaluator-ref="expressionEvaluator" />
+           
+    <bean id="dynamicProducingRouteFactory" class="amp.topology.core.factory.dynamic.DynamicProducingRouteFactory"
+           c:repository-ref="producingRouteDefinitionRepository" c:evaluator-ref="expressionEvaluator" />
+
+    <bean id="dynamicExchangeFactory" class="amp.topology.core.factory.dynamic.DynamicExchangeFactory"
+           c:repository-ref="exchangeDefinitionRepository" c:evaluator-ref="expressionEvaluator" />
+           
+    <bean id="dynamicQueueFactory" class="amp.topology.core.factory.dynamic.DynamicQueueFactory"
+           c:repository-ref="queueDefinitionRepository" c:evaluator-ref="expressionEvaluator" />
+           
+    <bean id="dynamicRoutingContextFactory" class="amp.topology.core.factory.dynamic.DynamicRoutingContextFactory"
+           c:repository-ref="routingContextDefinitionRepository" c:evaluator-ref="expressionEvaluator" />
+            
+    <bean id="dynamicRoutingInfoFactory" class="amp.topology.core.factory.dynamic.DynamicRoutingInfoFactory"
+           c:repository-ref="routingInfoDefinitionRepository" />
+
+    <!-- Static Factories (pulling config form RabbitMQ) -->
+
+    <bean id="rmqExchangeFactory" class="amp.topology.core.factory.rmq.RmqExchangeFactory"
+            c:exchangeRepository-ref="rmqExchangeRepository" c:serializer-ref="serializer" />
+    
+    <bean id="rmqQueueFactory" class="amp.topology.core.factory.rmq.RmqQueueFactory"
+            c:queueRepository-ref="rmqQueueRepository" c:serializer-ref="serializer" />
+    
+    <!-- Bridged Factory (RabbitMQ + Internal Repo) -->
+    
+    <bean id="defaultClusterFactory" class="amp.topology.core.factory.impl.DefaultClusterFactory"
+        c:clusterRepository-ref="clusterRepository" />
+    
+    <!-- Delegating Topology Factory (the factory of factories) -->
+    
+    <util:list id="topologyFactories" value-type="amp.topology.core.factory.TopologyFactory">
+        <ref local="dynamicClusterFactory" />
+        <ref local="dynamicConsumingRouteFactory" />
+        <ref local="dynamicProducingRouteFactory" />
+        <ref local="dynamicExchangeFactory" />
+        <ref local="dynamicQueueFactory" />
+        <ref local="dynamicRoutingContextFactory" />
+        <ref local="dynamicRoutingInfoFactory" />
+        <ref local="rmqExchangeFactory" />
+        <ref local="rmqQueueFactory" />
+        <ref local="defaultClusterFactory" />
+    </util:list>
+    
+    <bean id="modelFactory" class="amp.topology.core.factory.impl.DefaultDelegatingModelFactory"
+            c:factories-ref="topologyFactories" />
+</beans>
