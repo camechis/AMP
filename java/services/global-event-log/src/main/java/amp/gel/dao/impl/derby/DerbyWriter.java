@@ -30,6 +30,7 @@ public class DerbyWriter implements DatastoreWriter {
 		entityManager.persist(new Envelope(envelope));
 	}
 
+	@Transactional(readOnly = false)
 	public void close() {
 		entityManager.flush();
 
