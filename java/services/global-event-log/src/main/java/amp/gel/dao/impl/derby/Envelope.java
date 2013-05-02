@@ -65,13 +65,13 @@ public class Envelope implements Serializable {
 	@Column(unique = false, nullable = true)
 	private String senderSignature;
 
-	@Column(unique = false, nullable = true)
+	@Column(unique = false, nullable = true, columnDefinition = "LONG VARCHAR")
 	private String topic;
 
-	@Column(unique = false, nullable = true)
+	@Column(unique = false, nullable = true, columnDefinition = "LONG VARCHAR")
 	private String type;
 
-	@Column(unique = false, nullable = true)
+	@Column(unique = false, nullable = true, columnDefinition = "BLOB")
 	private byte[] payload;
 
 	public Envelope() {
