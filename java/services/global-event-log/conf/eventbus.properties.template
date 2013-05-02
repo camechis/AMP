@@ -1,0 +1,5 @@
+event.bus.username=devexample
+event.bus.password=devexample
+event.bus.host=devexample.com
+event.bus.virtualhost=/
+event.bus.port=5672

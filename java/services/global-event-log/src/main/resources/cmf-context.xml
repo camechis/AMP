@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:c="http://www.springframework.org/schema/c" xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+	<!-- The following components are for the Envelope Bus -->
+	<bean id="envelopeBus" class="amp.bus.DefaultEnvelopeBus"
+		destroy-method="dispose" c:transportProvider-ref="transportProvider" />
+
+	<bean id="transportProvider" class="amp.bus.rabbit.RabbitTransportProvider"
+		c:topologyService-ref="topologyService" c:channelFactory-ref="channelFactory" />
+
+	<bean id="channelFactory" class="amp.bus.rabbit.BasicChannelFactory"
+		c:username="${event.bus.username}" c:password="${event.bus.password}" />
+
+	<bean id="topologyService" class="amp.bus.rabbit.topology.SimpleTopologyService">
+		<constructor-arg name="clientProfile" value="" />
+		<constructor-arg name="name" value="gel" />
+		<constructor-arg name="hostname" value="${event.bus.host:rabbit}" />
+		<constructor-arg name="vhost" value="${event.bus.virtualhost:/}" />
+		<constructor-arg name="port" value="${event.bus.port:5671}" />
+	</bean>
+
+	<!-- The following components are for the Event Bus -->
+	<bean id="eventBus" class="amp.eventing.DefaultEventBus"
+		destroy-method="dispose">
+		<constructor-arg name="envelopeBus" ref="envelopeBus" />
+		<constructor-arg name="inboundProcessors" ref="inboundEventProcessors" />
+		<constructor-arg name="outboundProcessors" ref="outboundEventProcessors" />
+	</bean>
+
+	<util:list id="inboundEventProcessors" value-type="amp.eventing.IEventProcessor">
+		<ref bean="serializationProcessor" />
+	</util:list>
+
+	<util:list id="outboundEventProcessors" value-type="amp.eventing.IEventProcessor">
+		<ref bean="serializationProcessor" />
+		<ref bean="outboundHeadersProcessor" />
+	</util:list>
+
+	<bean id="serializationProcessor" class="amp.eventing.serializers.JsonEventSerializer">
+		<constructor-arg name="serializer" ref="serializer" />
+	</bean>
+
+	<bean id="serializer" class="amp.eventing.GsonSerializer" />
+
+	<bean id="outboundHeadersProcessor" class="amp.eventing.OutboundHeadersProcessor">
+		<constructor-arg name="userInfoRepository" ref="userInfoRepository" />
+	</bean>
+
+	<bean id="userInfoRepository" class="amp.bus.security.InMemoryUserInfoRepository">
+		<constructor-arg name="mapping">
+			<map>
+			</map>
+		</constructor-arg>
+	</bean>
+
+</beans>

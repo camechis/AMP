@@ -1,0 +1,6 @@
+connector.instance=gel
+connector.zookeepers=10.1.30.133
+connector.user=root
+connector.password=root
+
+tableName=events
