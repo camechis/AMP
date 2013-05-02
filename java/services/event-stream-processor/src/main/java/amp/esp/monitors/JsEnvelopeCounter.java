@@ -32,7 +32,6 @@ public class JsEnvelopeCounter extends JavascriptDetector {
                     "    ie.putData('Count', '' + this.count);" +
                     "    ie.putData('Elapsed', '' + elapsed);" +
                     "    ie.putData('Rate', '' + this.curRate);" +
-                    "    out.println('IE: ' + ie + ' for ' + env.getEventType());" +
                     "    return ie;" +
                     "  }" +
                     "};" +

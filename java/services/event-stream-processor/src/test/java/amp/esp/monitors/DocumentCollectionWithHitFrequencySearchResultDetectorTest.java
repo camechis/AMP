@@ -1,12 +1,10 @@
 package amp.esp.monitors;
 
-import org.junit.Test;
-
 import amp.esp.InferredEvent;
 import amp.esp.TestUtils;
-import amp.esp.monitors.DocumentCollectionWithHitFrequencySearchResultsDetector;
+import cmf.bus.Envelope;
 
-import pegasus.eventbus.client.Envelope;
+import org.junit.Test;
 
 public class DocumentCollectionWithHitFrequencySearchResultDetectorTest extends AbstractDetectorTest {
 
@@ -69,7 +67,7 @@ public class DocumentCollectionWithHitFrequencySearchResultDetectorTest extends 
     public void testNonAndMatchingDocCollAndHitFreq() {
         testRepository.addMonitor(new DocumentCollectionWithHitFrequencySearchResultsDetector());
 
-        Envelope dc1 = TestUtils.createDocumentCollection("red");
+        cmf.bus.Envelope dc1 = TestUtils.createDocumentCollection("red");
         sendAndExpectNo(dc1, DOCUMENT_COLLECTION_WITH_HIT_FREQUENCY_SEARCH_RESULT);
 
         Envelope hf1 = TestUtils.createHitFrequency("green");
@@ -86,7 +84,7 @@ public class DocumentCollectionWithHitFrequencySearchResultDetectorTest extends 
     public void testNonAndMatchingHitFreqAndDocColl() {
         testRepository.addMonitor(new DocumentCollectionWithHitFrequencySearchResultsDetector());
 
-        Envelope hf1 = TestUtils.createHitFrequency("red");
+        cmf.bus.Envelope hf1 = TestUtils.createHitFrequency("red");
         sendAndExpectNo(hf1, DOCUMENT_COLLECTION_WITH_HIT_FREQUENCY_SEARCH_RESULT);
 
         Envelope dc1 = TestUtils.createDocumentCollection("green");

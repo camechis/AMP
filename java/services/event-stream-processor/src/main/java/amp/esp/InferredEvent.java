@@ -1,9 +1,9 @@
 package amp.esp;
 
+import cmf.bus.Envelope;
+
 import java.util.ArrayList;
 import java.util.Map;
-
-import pegasus.eventbus.client.Envelope;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;

@@ -1,11 +1,11 @@
 package amp.esp;
 
 
+import cmf.bus.Envelope;
+
 import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
-
-import pegasus.eventbus.client.Envelope;
 
 import com.google.common.collect.Maps;
 
@@ -37,8 +37,6 @@ public class TestUtils {
     }
 
     public static Envelope makeSearchRequest(String user, String resource, String reqID) {
-        String typex = SEARCH_EVENT;
-        String old_search = "Search";
         Envelope env = TestUtils.makeEnvelope(SEARCH_EVENT, reqID, null, resource, user);
         return env;
     }
@@ -61,17 +59,17 @@ public class TestUtils {
     public static Envelope makeEnvelope(String type, String idsymbol, String correlationIdsymbol,
             String topic, String replyTo) {
         Envelope e = new Envelope();
-        e.setEventType(type);
-        e.setId(symIdToRealId(idsymbol));
+        WEUtils.setEventType(e, type);
+        WEUtils.setId(e, symIdToRealId(idsymbol));
         if (correlationIdsymbol != null) {
-            e.setCorrelationId(symIdToRealId(correlationIdsymbol));
+            WEUtils.setCorrelationId(e, symIdToRealId(correlationIdsymbol));
         }
-        e.setTopic(topic);
-        e.setReplyTo(replyTo);
+        WEUtils.setTopic(e, topic);
+        WEUtils.setReplyTo(e, replyTo);
         Date timestamp = new Date(testTime);
         testTime += timeIncr;
-        e.setTimestamp(timestamp);
-        e.setBody((type + topic).getBytes());
+        WEUtils.setTimestamp(e, timestamp);
+        WEUtils.setBody(e, (type + topic).getBytes());
         return e;
     }
 

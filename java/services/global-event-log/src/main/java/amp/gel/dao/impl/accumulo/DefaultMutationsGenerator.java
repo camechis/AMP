@@ -142,7 +142,7 @@ public class DefaultMutationsGenerator implements MutationsGenerator {
 		}
 	}
 
-	public static String generateUniqueId() {
+	private static String generateUniqueId() {
 		return UUID.randomUUID().toString();
 	}
 }

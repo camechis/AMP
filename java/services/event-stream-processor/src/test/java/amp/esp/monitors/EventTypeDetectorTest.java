@@ -1,18 +1,14 @@
 package amp.esp.monitors;
 
-import org.junit.Test;
-
 import amp.esp.InferredEvent;
 import amp.esp.TestUtils;
-import amp.esp.monitors.EventTypeDetector;
+import cmf.bus.Envelope;
 
-import pegasus.eventbus.client.Envelope;
+import org.junit.Test;
 
 public class EventTypeDetectorTest extends AbstractDetectorTest {
 
     private static final String RESPONSE = "Response";
-
-
 
     @Test
     public void testEvents() {
