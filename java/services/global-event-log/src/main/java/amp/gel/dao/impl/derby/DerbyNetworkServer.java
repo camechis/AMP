@@ -10,8 +10,8 @@ import org.slf4j.LoggerFactory;
  * Derby can be run in what is called the "embedded server" mode. This allows an
  * application to load the embedded JDBC driver for its own use and start the
  * Network Server to allow remote access by applications running in other JVMs.
- * Other applications, such as ij, can connect to the same database via a client
- * JDBC driver.
+ * Other applications, such as ij and SQuirreL SQL Client, can connect to the
+ * same database via a client JDBC driver.
  * 
  * Refer to the "Embedded Server" section of
  * http://db.apache.org/derby/papers/DerbyTut/ns_intro.html
