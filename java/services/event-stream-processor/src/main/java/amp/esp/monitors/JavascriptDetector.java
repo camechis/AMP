@@ -4,11 +4,7 @@ import amp.esp.EventMatcher;
 import amp.esp.EventMonitor;
 import amp.esp.EventStreamProcessor;
 import amp.esp.InferredEvent;
-import amp.esp.publish.Publisher;
 import cmf.bus.Envelope;
-
-import java.util.Collection;
-import java.util.HashSet;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -67,11 +63,8 @@ public class JavascriptDetector extends EventMonitor {
 
 
 	@Override
-    public Collection<Publisher> registerPatterns(EventStreamProcessor esp) {
+    public void registerPatterns(EventStreamProcessor esp) {
         esp.monitor(EventMatcher.selectEnvelope("env"), this);
-
-        // @todo = this needs to be integrated
-        return new HashSet<Publisher>();
     }
 
 	public void setupEngine() throws ScriptException {

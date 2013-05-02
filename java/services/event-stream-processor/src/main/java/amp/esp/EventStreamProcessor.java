@@ -2,13 +2,9 @@ package amp.esp;
 
 //import org.apache.commons.logging.Log;
 //import org.apache.commons.logging.LogFactory;
-import amp.esp.publish.Publisher;
-import amp.esp.publish.PublishingService;
 import cmf.bus.Envelope;
 import cmf.bus.IEnvelopeBus;
 import cmf.bus.IRegistration;
-
-import java.util.Collection;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +19,6 @@ import com.espertech.esper.client.EPStatement;
 import com.espertech.esper.client.EventBean;
 import com.espertech.esper.client.UpdateListener;
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.Lists;
 
 public class EventStreamProcessor {
 
@@ -31,12 +26,9 @@ public class EventStreamProcessor {
     public static final String engineURI = "EventStreamProcessor";
     private static final Logger LOG = LoggerFactory.getLogger(EventStreamProcessor.class);
 
-    private PublishingService publishingService;
-
     private EPServiceProvider epService;
 
     private final String espKey = this.getClass().getCanonicalName();
-    private Collection<Publisher> publishers = Lists.newArrayList();
     private IRegistration registration;
 
     IEnvelopeBus bus;
@@ -147,41 +139,8 @@ public class EventStreamProcessor {
         }
     }
 
-    public void setPublishingService(PublishingService publishingService) {
-        try {
-            attachToPublishingService(publishingService);
-        } catch (RuntimeException e) {
-            e.printStackTrace();
-            throw e;
-        }
-    }
-
-    public void attachToPublishingService(PublishingService publishingService) {
-        if (this.publishingService != null) {
-            detachFromPublishingService();
-        }
-        this.publishingService = publishingService;
-    }
-
-    public void detachFromPublishingService() {
-        if (publishingService != null) {
-            publishingService.removePublishers(publishers);
-            this.publishers.removeAll(publishers);
-        }
-    }
-
-    private void schedulePublishers(Collection<Publisher> publishers) {
-        if (publishingService != null) {
-            publishingService.addPublishers(publishers);
-            this.publishers.addAll(publishers);
-        } else {
-            LOG.error("Publishing Service is null. Not reporting results");
-        }
-    }
-
     public void watchFor(EventMonitor monitor) {
-        Collection<Publisher> publishers = monitor.registerPatterns(this);
-        if (publishers != null) schedulePublishers(publishers);
+        monitor.registerPatterns(this);
     }
 
     @VisibleForTesting

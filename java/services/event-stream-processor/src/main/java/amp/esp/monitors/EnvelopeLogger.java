@@ -6,11 +6,9 @@ import amp.esp.EventMonitor;
 import amp.esp.EventStreamProcessor;
 import amp.esp.InferredEvent;
 import amp.esp.WEUtils;
-import amp.esp.publish.Publisher;
 import cmf.bus.Envelope;
 
 import java.io.File;
-import java.util.Collection;
 import java.util.Date;
 
 import org.joda.time.DateTime;
@@ -84,9 +82,8 @@ public class EnvelopeLogger extends EventMonitor {
     }
 
     @Override
-    public Collection<Publisher> registerPatterns(EventStreamProcessor esp) {
+    public void registerPatterns(EventStreamProcessor esp) {
         esp.monitor(EventMatcher.selectEnvelope("resp"), this);
-        return null;
     }
 
     @Override

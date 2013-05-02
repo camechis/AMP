@@ -4,11 +4,7 @@ import amp.esp.EventMatcher;
 import amp.esp.EventMonitor;
 import amp.esp.EventStreamProcessor;
 import amp.esp.InferredEvent;
-import amp.esp.publish.Publisher;
 import cmf.bus.Envelope;
-
-import java.util.Collection;
-import java.util.HashSet;
 
 import com.espertech.esper.client.EventBean;
 
@@ -24,7 +20,7 @@ public class CorrelateRequestResponsesEventDetector extends EventMonitor {
     }
 
     @Override
-    public Collection<Publisher> registerPatterns(EventStreamProcessor esp) {
+    public void registerPatterns(EventStreamProcessor esp) {
 
 //        matching("EventType", eventType)
 
@@ -44,9 +40,6 @@ public class CorrelateRequestResponsesEventDetector extends EventMonitor {
                         .matching("EventType", "Response")
                         .matchingRef("CorrelationId", "request", "Id"));
         esp.monitor(em, this);
-
-        // @todo = this needs to be integrated
-        return new HashSet<Publisher>();
     }
 
     @Override

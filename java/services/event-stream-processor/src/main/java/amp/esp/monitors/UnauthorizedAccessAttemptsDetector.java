@@ -5,10 +5,6 @@ import amp.esp.EventMatcher;
 import amp.esp.EventMonitor;
 import amp.esp.EventStreamProcessor;
 import amp.esp.InferredEvent;
-import amp.esp.publish.Publisher;
-
-import java.util.Collection;
-import java.util.HashSet;
 
 import com.espertech.esper.client.EventBean;
 
@@ -37,7 +33,7 @@ public class UnauthorizedAccessAttemptsDetector extends EventMonitor {
     }
 
     @Override
-    public Collection<Publisher> registerPatterns(EventStreamProcessor esp) {
+    public void registerPatterns(EventStreamProcessor esp) {
 
         String env1 = "request";
         String env2 = "response";
@@ -62,9 +58,6 @@ public class UnauthorizedAccessAttemptsDetector extends EventMonitor {
         esp.monitor(EventMatcher.matcher(true, createUA), null);
         esp.monitor(EventMatcher.matcher(true, createUAF), null);
         esp.monitor(EventMatcher.matcher(true, getUAF), this);
-
-        // @todo = this needs to be integrated
-        return new HashSet<Publisher>();
     }
 
     private String quote(String str) {

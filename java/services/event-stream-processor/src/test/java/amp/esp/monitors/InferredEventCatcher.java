@@ -4,10 +4,7 @@ import amp.esp.EventMatcher;
 import amp.esp.EventMonitor;
 import amp.esp.EventStreamProcessor;
 import amp.esp.InferredEvent;
-import amp.esp.publish.Publisher;
 
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 
 import com.espertech.esper.client.EventBean;
@@ -36,11 +33,7 @@ public class InferredEventCatcher extends EventMonitor {
     }
 
     @Override
-    public Collection<Publisher> registerPatterns(EventStreamProcessor esp) {
-//        esp.monitor(true, "select res from InferredEvent as res", this);
+    public void registerPatterns(EventStreamProcessor esp) {
         esp.monitor(EventMatcher.selectInferredEvent("res"), this);
-
-        // @todo = this needs to be integrated
-        return new HashSet<Publisher>();
     }
 }

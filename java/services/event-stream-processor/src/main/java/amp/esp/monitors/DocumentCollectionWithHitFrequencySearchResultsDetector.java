@@ -4,11 +4,7 @@ import amp.esp.EventMatcher;
 import amp.esp.EventMonitor;
 import amp.esp.EventStreamProcessor;
 import amp.esp.InferredEvent;
-import amp.esp.publish.Publisher;
 import cmf.bus.Envelope;
-
-import java.util.Collection;
-import java.util.HashSet;
 
 import com.espertech.esper.client.EventBean;
 
@@ -26,7 +22,7 @@ public class DocumentCollectionWithHitFrequencySearchResultsDetector extends Eve
     }
 
     @Override
-    public Collection<Publisher> registerPatterns(EventStreamProcessor esp) {
+    public void registerPatterns(EventStreamProcessor esp) {
 
         String env1 = "docs";
         String env2 = "freq";
@@ -42,9 +38,6 @@ public class DocumentCollectionWithHitFrequencySearchResultsDetector extends Eve
                 .followedBy(EventMatcher.everyEnvelope(env1).matching("EventType", type1)
                         .matchingRef("CorrelationId", env2, "CorrelationId"));
         esp.monitor(em2, this);
-
-        // @todo = this needs to be integrated
-        return new HashSet<Publisher>();
     }
 
     @Override

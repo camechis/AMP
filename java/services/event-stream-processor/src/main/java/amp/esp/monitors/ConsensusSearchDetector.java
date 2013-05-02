@@ -7,11 +7,7 @@ import amp.esp.EventStreamProcessor;
 import amp.esp.InferredEvent;
 import amp.esp.InferredEventList;
 import amp.esp.WEUtils;
-import amp.esp.publish.Publisher;
 import cmf.bus.Envelope;
-
-import java.util.Collection;
-import java.util.HashSet;
 
 import com.espertech.esper.client.EventBean;
 
@@ -62,11 +58,8 @@ public class ConsensusSearchDetector extends EventMonitor {
 
 
         @Override
-        public Collection<Publisher> registerPatterns(EventStreamProcessor esp) {
+        public void registerPatterns(EventStreamProcessor esp) {
             esp.monitor(matcher, this);
-
-            // @todo = this needs to be integrated
-            return new HashSet<Publisher>();
         }
 
         @Override
@@ -94,7 +87,7 @@ public class ConsensusSearchDetector extends EventMonitor {
     }
 
     @Override
-    public Collection<Publisher> registerPatterns(EventStreamProcessor esp) {
+    public void registerPatterns(EventStreamProcessor esp) {
 
         // To calculate search term frequency, we need to do the following:
         //
@@ -134,9 +127,6 @@ public class ConsensusSearchDetector extends EventMonitor {
         // this will run into problems if multiple CSDs are created; e.g.
         // CSD(20, 30min), CSD(30, 60min) since there will be multiple intermediate
         // events created (Search Terms, UserTerms, SearchTermFreq)
-
-        // @todo = this needs to be integrated
-        return new HashSet<Publisher>();
     }
 
     @Override
