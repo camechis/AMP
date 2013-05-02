@@ -8,7 +8,10 @@
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
 
-	<bean id="accumuloHealthCheck" class="amp.gel.health.AccumuloHealthCheck" />
+	<bean id="accumuloHealthCheck" class="amp.gel.health.AccumuloHealthCheck">
+		<property name="connector" ref="connector" />
+		<property name="instanceName" value="${accumulo.instance:gel}" />
+	</bean>
 
 	<bean id="connectorFactory" class="amp.gel.dao.impl.accumulo.ConnectorFactoryImpl">
 		<property name="instanceName" value="${accumulo.instance:gel}" />
