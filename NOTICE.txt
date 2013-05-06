@@ -1,5 +1,8 @@
-This distribution includes the following third-party tools, which
-are separately licensed.
+This distribution makes use of the following third-party tools, 
+which may be separately licensed.  Not everything here is a
+runtime dependency: some of these tools are used for testing
+(JUnit, mockito, etc), and so are distributed with this code-
+base, but should not be considered "redistributed" components.
 
 
 [Third-Party Tools]
