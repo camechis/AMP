@@ -47,7 +47,7 @@ public class DefaultCommandReceiver implements ICommandReceiver {
                 try {
 
                     CommandContext ctx = new CommandContext(CommandContext.Directions.In, envelope);
-                    
+
                 }
                 catch (Exception ex) {
 
