@@ -1,27 +1,70 @@
-This distribution includes the following third-party tools, which
-are separately licensed.
+This distribution makes use of the following third-party tools, 
+which may be separately licensed.  Not everything here is a
+runtime dependency: some of these tools are used for testing
+(JUnit, mockito, etc), and so are distributed with this code-
+base, but should not be considered "redistributed" components.
+
 
 [Third-Party Tools]
+Apache Accumulo (Apache 2.0)
 Apache Commons (Apache 2.0)
+Apache Derby (Apache 2.0)
+Apache Hadoop (Apache 2.0)
+Apache HTTP Components (Apache 2.0)
+Apache Zookeeper (Apache 2.0)
+Berico Test Utilities (Apache 2.0)
+Berico Fallwizard (Apache 2.0)
+Common Logging (Apache 2.0)
 Common Messaging Framework (Apache 2.0)
+Configurable Assets Bundle for Dropwizard (Apache 2.0)
+Dropwizard (Apache 2.0)
+Esper (GPL v2)
+Hibernate (LGPL 2.1)
+JavaBeans Activation Framework (CDDL)
+JGoodies Form Layout (BSD)
 Joda Time (Apache 2.0)
 JUnit Testing Framework (Common Public License)
+Log4net (Apache 2.0)
+Logback (LGPL 2.1)
+MimosaJS (MIT)
+Mockito (MIT)
+Moq (BSD)
+Mozilla Rhino (Mozilla Public License)
+Newtonsoft Json (MIT)
+NUnit (NUnit License)
 Google Gson (Apache 2.0)
 Google Guava (Apache 2.0)
 RabbitMQ (Mozilla Public License)
 Simple Logging Facade for Java (MIT/X11)
 Spring Framework (Apache 2.0)
+Sun SAAJ Implementation (CDDL)
+
 
 [Licenses]
 Apache 2.0
 http://www.apache.org/licenses/LICENSE-2.0
 
+BSD
+http://opensource.org/licenses/bsd-license.html
+
+Common Development and Distribution License (CDDL)
+http://opensource.org/licenses/CDDL-1.0
+
 Common Public License
 http://opensource.org/licenses/cpl1.0.php
+
+GNU Public License (GPL) v2
+http://opensource.org/licenses/gpl-2.0.php
+
+Lesser GNU Public License (LGPL) 2.1
+http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
 
 MIT
 http://opensource.org/licenses/MIT
 
 Mozilla Public License
 http://www.mozilla.org/MPL/1.1/
+
+NUnit License
+http://nunit.org/index.php?p=license&r=2.6.2
 
