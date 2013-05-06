@@ -1,0 +1,27 @@
+This distribution includes the following third-party tools, which
+are separately licensed.
+
+[Third-Party Tools]
+Apache Commons (Apache 2.0)
+Common Messaging Framework (Apache 2.0)
+Joda Time (Apache 2.0)
+JUnit Testing Framework (Common Public License)
+Google Gson (Apache 2.0)
+Google Guava (Apache 2.0)
+RabbitMQ (Mozilla Public License)
+Simple Logging Facade for Java (MIT/X11)
+Spring Framework (Apache 2.0)
+
+[Licenses]
+Apache 2.0
+http://www.apache.org/licenses/LICENSE-2.0
+
+Common Public License
+http://opensource.org/licenses/cpl1.0.php
+
+MIT
+http://opensource.org/licenses/MIT
+
+Mozilla Public License
+http://www.mozilla.org/MPL/1.1/
+
