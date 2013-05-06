@@ -1,7 +1,10 @@
 package amp.esp.monitors;
 
-import java.util.Collection;
-import java.util.HashSet;
+import amp.esp.EventMatcher;
+import amp.esp.EventMonitor;
+import amp.esp.EventStreamProcessor;
+import amp.esp.InferredEvent;
+import cmf.bus.Envelope;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -12,14 +15,6 @@ import org.mozilla.javascript.NativeJavaObject;
 import org.mozilla.javascript.NativeObject;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
-import org.mozilla.javascript.Undefined;
-
-import amp.esp.EventMonitor;
-import amp.esp.EventStreamProcessor;
-import amp.esp.InferredEvent;
-import amp.esp.publish.Publisher;
-
-import pegasus.eventbus.client.Envelope;
 
 import com.espertech.esper.client.EventBean;
 
@@ -28,7 +23,6 @@ public class JavascriptDetector extends EventMonitor {
 	private static final String language = "js";
 	private static final ScriptEngineManager scriptEngineFactory = new ScriptEngineManager();
 	private ScriptEngine engine;
-	private String monitorDef;
 	private Context cx;
 	private Scriptable scope;
 	private NativeObject eventMonitor = null;
@@ -36,7 +30,6 @@ public class JavascriptDetector extends EventMonitor {
 	public JavascriptDetector(String monitorDef) throws ScriptException {
 		super();
 		setupEngine();
-		this.monitorDef = monitorDef;
 		Object evalresult = cx.evaluateString(scope, monitorDef, "<cmd>", 1, null);
 		if (evalresult == null) {
 			throw new RuntimeException("No monitor created from: " + monitorDef);
@@ -49,7 +42,7 @@ public class JavascriptDetector extends EventMonitor {
 
     @Override
     public InferredEvent receive(EventBean eventBean) {
-        Envelope env = (Envelope) eventBean.get("env");
+        Envelope env = getEnvelopeFromBean(eventBean, "env");
 		Object[] args = {env};
 		InferredEvent ie =
 				(InferredEvent) unwrap(ScriptableObject.callMethod(eventMonitor, "receive", args));
@@ -70,11 +63,8 @@ public class JavascriptDetector extends EventMonitor {
 
 
 	@Override
-    public Collection<Publisher> registerPatterns(EventStreamProcessor esp) {
-        esp.monitor(true, "select env from Envelope as env", this);
-
-        // @todo = this needs to be integrated
-        return new HashSet<Publisher>();
+    public void registerPatterns(EventStreamProcessor esp) {
+        esp.monitor(EventMatcher.selectEnvelope("env"), this);
     }
 
 	public void setupEngine() throws ScriptException {

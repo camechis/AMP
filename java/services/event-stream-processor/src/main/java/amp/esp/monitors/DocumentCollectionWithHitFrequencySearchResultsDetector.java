@@ -1,14 +1,10 @@
 package amp.esp.monitors;
 
-import java.util.Collection;
-import java.util.HashSet;
-
+import amp.esp.EventMatcher;
 import amp.esp.EventMonitor;
 import amp.esp.EventStreamProcessor;
 import amp.esp.InferredEvent;
-import amp.esp.publish.Publisher;
-
-import pegasus.eventbus.client.Envelope;
+import cmf.bus.Envelope;
 
 import com.espertech.esper.client.EventBean;
 
@@ -18,28 +14,30 @@ public class DocumentCollectionWithHitFrequencySearchResultsDetector extends Eve
 
     @Override
     public InferredEvent receive(EventBean eventBean) {
-        Envelope docs = (Envelope) eventBean.get("docs");
-        Envelope freq = (Envelope) eventBean.get("freq");
+        Envelope docs = getEnvelopeFromBean(eventBean, "docs");
+        Envelope freq = getEnvelopeFromBean(eventBean, "freq");
         InferredEvent resultingEvent = makeInferredEvent();
         resultingEvent.addEnvelope(docs).addEnvelope(freq);
         return resultingEvent;
     }
 
     @Override
-    public Collection<Publisher> registerPatterns(EventStreamProcessor esp) {
+    public void registerPatterns(EventStreamProcessor esp) {
 
-        String pattern = "every docs=Envelope(eventType='DocumentCollectionSearchResult')" +
-                " -> freq=Envelope(eventType='HitFrequencySearchResult' and " +
-                "correlationId=docs.correlationId)";
-        esp.monitor(false, pattern, this);
+        String env1 = "docs";
+        String env2 = "freq";
+        String type1 = "DocumentCollectionSearchResult";
+        String type2 = "HitFrequencySearchResult";
 
-        String pattern2 = "every freq=Envelope(eventType='HitFrequencySearchResult')" +
-                " -> docs=Envelope(eventType='DocumentCollectionSearchResult' and " +
-                "correlationId=freq.correlationId)";
-        esp.monitor(false, pattern2, this);
+        EventMatcher em = EventMatcher.everyEnvelope(env1) .matching("EventType", type1)
+                .followedBy(EventMatcher.everyEnvelope(env2).matching("EventType", type2)
+                        .matchingRef("CorrelationId", env1, "CorrelationId"));
+        esp.monitor(em, this);
 
-        // @todo = this needs to be integrated
-        return new HashSet<Publisher>();
+        EventMatcher em2 = EventMatcher.everyEnvelope(env2) .matching("EventType", type2)
+                .followedBy(EventMatcher.everyEnvelope(env1).matching("EventType", type1)
+                        .matchingRef("CorrelationId", env2, "CorrelationId"));
+        esp.monitor(em2, this);
     }
 
     @Override

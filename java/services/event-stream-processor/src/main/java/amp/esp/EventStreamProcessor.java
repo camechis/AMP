@@ -2,20 +2,12 @@ package amp.esp;
 
 //import org.apache.commons.logging.Log;
 //import org.apache.commons.logging.LogFactory;
-import java.util.Collection;
-import java.util.Date;
+import cmf.bus.Envelope;
+import cmf.bus.IEnvelopeBus;
+import cmf.bus.IRegistration;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import pegasus.eventbus.client.Envelope;
-import pegasus.eventbus.client.EnvelopeHandler;
-import pegasus.eventbus.client.EventManager;
-import pegasus.eventbus.client.EventResult;
-import pegasus.eventbus.client.Subscription;
-import pegasus.eventbus.client.SubscriptionToken;
-import amp.esp.publish.Publisher;
-import amp.esp.publish.PublishingService;
 
 import com.espertech.esper.client.Configuration;
 import com.espertech.esper.client.EPAdministrator;
@@ -27,7 +19,6 @@ import com.espertech.esper.client.EPStatement;
 import com.espertech.esper.client.EventBean;
 import com.espertech.esper.client.UpdateListener;
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.Lists;
 
 public class EventStreamProcessor {
 
@@ -35,18 +26,12 @@ public class EventStreamProcessor {
     public static final String engineURI = "EventStreamProcessor";
     private static final Logger LOG = LoggerFactory.getLogger(EventStreamProcessor.class);
 
-    private EventManager eventManager;
-
-    private PublishingService publishingService;
-
     private EPServiceProvider epService;
 
-    private SubscriptionToken token;
-
-    private EventMonitorRepository repository;
-
     private final String espKey = this.getClass().getCanonicalName();
-    private Collection<Publisher> publishers = Lists.newArrayList();
+    private IRegistration registration;
+
+    IEnvelopeBus bus;
 
     /**
      * This is a wrapper class around an EventMonitor to allow it to receive events
@@ -99,37 +84,6 @@ public class EventStreamProcessor {
         }
     }
 
-    class EventbusListener implements EnvelopeHandler {
-
-        private void addHeader(Envelope env, String label, String val) {
-            env.getHeaders().put(label, val);
-        }
-
-        private void addHeader(Envelope env, String label, Date now) {
-            addHeader(env, label, now.getTime() + "");
-        }
-
-        private EventStreamProcessor eventStreamProcessor;
-
-        public EventbusListener(EventStreamProcessor eventStreamProcessor) {
-            this.eventStreamProcessor = eventStreamProcessor;
-        }
-
-        @Override
-        public EventResult handleEnvelope(Envelope envelope) {
-            addHeader(envelope, espKey + ":" + "TimeReceived", new Date());
-            eventStreamProcessor.sendEvent(envelope);
-            return EventResult.Handled;
-        }
-
-        @Override
-        public String getEventSetName() {
-            return "All";
-        }
-    }
-
-
-
     public EventStreamProcessor() {
         epService = createEventProcessor();
     }
@@ -140,7 +94,6 @@ public class EventStreamProcessor {
     }
 
     public void setRepository(EventMonitorRepository repository) {
-        this.repository = repository;
         repository.registerWith(this);
     }
 
@@ -165,71 +118,29 @@ public class EventStreamProcessor {
         return epService;
     }
 
-    public void setEventManager(EventManager eventManager) {
-        try {
-            attachToEventBus(eventManager);
-        } catch (RuntimeException e) {
-            System.err.println("@@@@ Error attaching to EB:");
-            e.printStackTrace();
-            throw e;
+    public void attachToEventBus(IEnvelopeBus bus) throws Exception {
+        if (this.bus != null) {
+            try {
+                detachFromEventBus();
+            } catch (Exception e) {
+                // ignore
+            }
         }
+        this.bus = bus;
+        registration = new ESPRegistration(this);
+        bus.register(registration);
     }
 
-    public void attachToEventBus(EventManager eventManager) {
-        if (this.eventManager != null) {
-            detachFromEventBus();
-        }
-        this.eventManager = eventManager;
-        EnvelopeHandler envelopeHandler = new EventbusListener(this);
-        Subscription subscription = new Subscription(envelopeHandler);
-        // EventHandler<?> evtmp = null;
-        // Subscription subscription = new Subscription(evtmp );
-        token = eventManager.subscribe(subscription);
-    }
-
-    public void detachFromEventBus() {
-        if (eventManager != null) {
-            eventManager.unsubscribe(token);
-            token = null;
-            eventManager = null;
-        }
-    }
-
-    public void setPublishingService(PublishingService publishingService) {
-        try {
-            attachToPublishingService(publishingService);
-        } catch (RuntimeException e) {
-            e.printStackTrace();
-            throw e;
-        }
-    }
-
-    public void attachToPublishingService(PublishingService publishingService) {
-        if (this.publishingService != null) {
-            detachFromPublishingService();
-        }
-        this.publishingService = publishingService;
-    }
-
-    public void detachFromPublishingService() {
-        if (publishingService != null) {
-            publishingService.removePublishers(publishers);
-            this.publishers.removeAll(publishers);
-        }
-    }
-
-    private void schedulePublishers(Collection<Publisher> publishers) {
-        if (publishingService != null) {
-            publishingService.addPublishers(publishers);
-            this.publishers.addAll(publishers);
-        } else {
-            LOG.error("Publishing Service is null. Not reporting results");
+    public void detachFromEventBus() throws Exception {
+        if (bus != null) {
+            bus.unregister(registration);
+            this.bus = null;
+            this.registration = null;
         }
     }
 
     public void watchFor(EventMonitor monitor) {
-        Collection<Publisher> publishers = monitor.registerPatterns(this);
-        if (publishers != null) schedulePublishers(publishers);
+        monitor.registerPatterns(this);
     }
 
     @VisibleForTesting
@@ -239,10 +150,16 @@ public class EventStreamProcessor {
 
     }
 
-    public void monitor(boolean isEPL, String pattern, EventMonitor monitor) {
+    public void monitor(EventMatcher matcher, EventMonitor monitor) {
+        monitor(matcher.isEPL(), matcher.getPattern(), monitor);
+    }
+
+    private
+    void monitor(boolean isEPL, String pattern, EventMonitor monitor) {
         EPAdministrator administrator = epService.getEPAdministrator();
         EPStatement stmt;
         LOG.debug("Creating " + (isEPL ? "EPL" : "pattern") + ": " + pattern);
+        dbg("Creating " + (isEPL ? "EPL" : "pattern") + ": " + pattern);
         try {
             if (isEPL) {
                 stmt = administrator.createEPL(pattern);
@@ -251,6 +168,7 @@ public class EventStreamProcessor {
             }
         } catch (EPException e) {
             System.err.println("Error creating " + (isEPL ? "EPL" : "Pattern") + " statement: " + pattern);
+            dbg("\nError creating " + (isEPL ? "EPL" : "Pattern") + " statement: " + pattern + "\n" + e);
             e.printStackTrace();
             throw e;
         }
@@ -287,5 +205,26 @@ public class EventStreamProcessor {
         };
 
         return ip;
+    }
+
+    public static void dbg(String str) { fprint("/tmp/DEBUG", str); }
+
+    /**
+     *  Write debugging output to a file
+     *
+     * @param fname the file to be written to
+     * @param data The debug string to be written
+     **/
+
+    public static void fprint(String fname, String data) {
+      java.io.PrintWriter file;
+      boolean append = true;
+      try {
+        file = new java.io.PrintWriter(new java.io.FileOutputStream(fname, append));
+      } catch (Exception exc) {
+        return;
+      }
+      file.print(data + "\n");
+      file.close();
     }
 }

@@ -5,29 +5,41 @@ import org.apache.accumulo.core.client.Instance;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-
-import amp.gel.dao.impl.accumulo.ConnectorFactory;
-import amp.gel.dao.impl.accumulo.ConnectorFactoryImpl;
 
 import com.yammer.metrics.core.HealthCheck;
 
-public class AccumuloHealthCheck extends HealthCheck implements
-		ApplicationContextAware {
+public class AccumuloHealthCheck extends HealthCheck {
 	private static final Logger logger = LoggerFactory
 			.getLogger(AccumuloHealthCheck.class);
 
-	private ApplicationContext applicationContext;
+	/**
+	 * connects to an Accumulo instance
+	 */
+	private Connector connector;
+
+	/**
+	 * the name of specific accumulo instance
+	 */
+	protected String instanceName;
+
+	public AccumuloHealthCheck setConnector(Connector connector) {
+		if (connector == null)
+			throw new NullPointerException("connector is null!");
+
+		this.connector = connector;
+		return this;
+	}
+
+	public AccumuloHealthCheck setInstanceName(String instanceName) {
+		if (StringUtils.isBlank(instanceName))
+			throw new IllegalArgumentException("instanceName is blank!");
+
+		this.instanceName = instanceName;
+		return this;
+	}
 
 	public AccumuloHealthCheck() {
 		super("accumulo");
-	}
-
-	public void setApplicationContext(ApplicationContext applicationContext)
-			throws BeansException {
-		this.applicationContext = applicationContext;
 	}
 
 	@Override
@@ -35,16 +47,14 @@ public class AccumuloHealthCheck extends HealthCheck implements
 		Result health = null;
 
 		try {
-			ConnectorFactory connectorFactory = applicationContext.getBean(
-					"connectorFactory", ConnectorFactoryImpl.class);
-			Connector connector = connectorFactory.createConnector();
 			Instance instance = connector.getInstance();
-
 			String instanceName = instance.getInstanceName();
 			logger.info("instanceName: " + instanceName);
-			boolean healthy = StringUtils.isNotBlank(instanceName);
+
+			boolean healthy = StringUtils.isNotBlank(instanceName)
+					&& this.instanceName.equals(instanceName);
 			health = (healthy) ? Result.healthy() : Result
-					.unhealthy("instanceName is blank!");
+					.unhealthy("instanceName is NOT valid!");
 		} catch (Exception e) {
 			logger.error("Unable to perform health check!", e);
 			health = Result.unhealthy(e);

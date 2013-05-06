@@ -1,20 +1,16 @@
 package amp.esp;
 
+import cmf.bus.Envelope;
+
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
-
-import pegasus.eventbus.client.Envelope;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -25,19 +21,22 @@ public class EnvelopeUtils {
     private final static Gson gson_pp = new GsonBuilder().setPrettyPrinting().create();
     private final static Gson gson = new Gson();
 
+    @SuppressWarnings("rawtypes")
     public static String toFormattedJson(String line) {
         HashMap map = toMapJson(line);
         String mapstr = gson_pp.toJson(map);
         return mapstr;
     }
 
+    @SuppressWarnings("rawtypes")
     public static HashMap toMapJson(String line) {
         return gson.fromJson(line, HashMap.class);
     }
 
+    @SuppressWarnings("rawtypes")
     public static String getBodyValue(Envelope env, String key) {
         try {
-            String bodyJson = new String(env.getBody(), "UTF-8");
+            String bodyJson = new String(WEUtils.getBody(env), "UTF-8");
             HashMap map = EnvelopeUtils.toMapJson(bodyJson);
             Object queryText = map.get(key);
             return "" + queryText;
@@ -55,7 +54,7 @@ public class EnvelopeUtils {
     }
 
     public static String envelopeToReadableJson(Envelope env) {
-        byte[] body = env.getBody();
+        byte[] body = WEUtils.getBody(env);
         String bodyJson = "";
         try {
             bodyJson = new String(body, "UTF-8");
@@ -64,12 +63,12 @@ public class EnvelopeUtils {
         }
         String bodyformatted = toFormattedJson(bodyJson);
         JsonString json = new JsonString().start()
-                .add("EVENT_TYPE", env.getEventType())
-                .add("REPLYTO", env.getReplyTo())
-                .add("TOPIC", env.getTopic())
-                .add("ID", env.getId())
-                .add("CORRELATION_ID", env.getCorrelationId())
-                .add("TIMESTAMP", env.getTimestamp())
+                .add("EVENT_TYPE", WEUtils.getEventType(env))
+                .add("REPLYTO", WEUtils.getReplyTo(env))
+                .add("TOPIC", WEUtils.getTopic(env))
+                .add("ID", WEUtils.getId(env))
+                .add("CORRELATION_ID", WEUtils.getCorrelationId(env))
+                .add("TIMESTAMP", WEUtils.getTimestamp(env))
                 .add("HEADERS", env.getHeaders())
                 .add("BODY_SIZE", body.length)
                 .add("BODY_SRC", body)

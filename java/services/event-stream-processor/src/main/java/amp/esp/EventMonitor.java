@@ -1,11 +1,9 @@
 package amp.esp;
 
-import java.util.Collection;
+import cmf.bus.Envelope;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import amp.esp.publish.Publisher;
 
 import com.espertech.esper.client.EventBean;
 
@@ -21,7 +19,7 @@ public abstract class EventMonitor {
     protected final Log logger = LogFactory.getLog(this.getClass());
 
     /** register the patterns to be matched by this monitor with the event stream processor */
-    public abstract Collection<Publisher> registerPatterns(EventStreamProcessor esp);
+    public abstract void registerPatterns(EventStreamProcessor esp);
 
     /** Processes the matching event or events and return an inferred event, if any */
     public abstract InferredEvent receive(EventBean eventBean);
@@ -34,6 +32,10 @@ public abstract class EventMonitor {
         String inferredType = getInferredType();
         String label = getLabel();
         return new InferredEvent(inferredType, label);
+    }
+
+    public Envelope getEnvelopeFromBean(EventBean eventBean, String reference) {
+        return (Envelope) eventBean.get(reference);
     }
 
     public String getLabel() {

@@ -2,6 +2,9 @@ package amp.esp.monitors;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import amp.esp.EventStreamProcessor;
+import amp.esp.InferredEvent;
+import cmf.bus.Envelope;
 
 import java.util.ArrayList;
 
@@ -9,13 +12,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.After;
 import org.junit.Before;
-
-import amp.esp.EventStreamProcessor;
-import amp.esp.InferredEvent;
-import amp.esp.monitors.InferredEventCatcher;
-import amp.esp.monitors.StorageRepository;
-
-import pegasus.eventbus.client.Envelope;
 
 import com.google.common.collect.Lists;
 

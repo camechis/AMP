@@ -15,6 +15,10 @@
 		<level value="WARN" />
 	</logger>
 
+	<logger name="amp.bus.rabbit.RabbitConnectionShutdownListener">
+		<level value="ERROR" />
+	</logger>
+
 	<root>
 		<level value="INFO" />
 		<appender-ref ref="CONSOLE" />
