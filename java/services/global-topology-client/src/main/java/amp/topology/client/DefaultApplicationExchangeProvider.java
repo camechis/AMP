@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import amp.bus.rabbit.topology.Exchange;
-import amp.bus.rabbit.topology.RouteInfo;
-import amp.bus.rabbit.topology.RoutingInfo;
+import amp.rabbit.topology.Exchange;
+import amp.rabbit.topology.RouteInfo;
+import amp.rabbit.topology.RoutingInfo;
 
 /**
  * Provides a route on the "amq.direct" exchange (which may only be a RabbitMQ

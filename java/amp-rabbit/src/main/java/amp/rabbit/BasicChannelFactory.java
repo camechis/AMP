@@ -1,4 +1,4 @@
-package amp.bus.rabbit;
+package amp.rabbit;
 
 
 import java.io.IOException;
@@ -8,7 +8,7 @@ import com.rabbitmq.client.ConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import amp.bus.rabbit.topology.Exchange;
+import amp.rabbit.topology.Exchange;
 
 
 public class BasicChannelFactory extends BaseChannelFactory {

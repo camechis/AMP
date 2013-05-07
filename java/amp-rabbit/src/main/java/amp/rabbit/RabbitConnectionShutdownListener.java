@@ -1,4 +1,4 @@
-package amp.bus.rabbit;
+package amp.rabbit;
 
 
 import com.rabbitmq.client.ShutdownListener;
@@ -6,7 +6,7 @@ import com.rabbitmq.client.ShutdownSignalException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import amp.bus.rabbit.topology.Exchange;
+import amp.rabbit.topology.Exchange;
 
 
 public class RabbitConnectionShutdownListener implements ShutdownListener {

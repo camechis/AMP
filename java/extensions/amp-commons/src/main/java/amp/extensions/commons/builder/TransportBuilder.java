@@ -1,9 +1,9 @@
 package amp.extensions.commons.builder;
 
 import amp.bus.ITransportProvider;
-import amp.bus.rabbit.IRabbitChannelFactory;
+import amp.rabbit.IRabbitChannelFactory;
 import amp.bus.rabbit.RabbitTransportProvider;
-import amp.bus.rabbit.topology.ITopologyService;
+import amp.rabbit.topology.ITopologyService;
 
 /**
  * A little fluent interface for configuring the

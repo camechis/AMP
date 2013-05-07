@@ -1,4 +1,4 @@
-package amp.bus.rabbit;
+package amp.rabbit;
 
 
 import java.io.IOException;
@@ -22,13 +22,14 @@ import org.slf4j.LoggerFactory;
 
 import amp.bus.EnvelopeHelper;
 import amp.bus.IEnvelopeReceivedCallback;
-import amp.bus.rabbit.topology.Exchange;
+import amp.rabbit.topology.Exchange;
 
 
 public class RabbitListener implements IDisposable, Runnable {
     
 	public static int DELIVERY_INTERVAL = 100;
-	
+
+
     /**
      * (Intentional) Close Listeners
      */
@@ -53,6 +54,26 @@ public class RabbitListener implements IDisposable, Runnable {
     protected IRegistration registration;
     protected boolean shouldContinue;
     protected Thread threadImRunningOn = null;
+
+
+
+    /**
+     * Get the Exchange this listener is listening to.
+     * @return AMQP Exchange
+     */
+    public Exchange getExchange(){
+        return this.exchange;
+    }
+
+    /**
+     * Get the Registration this listener applies to.
+     * @return EnvelopeBus Registration
+     */
+    public IRegistration getRegistration(){
+        return this.registration;
+    }
+
+
 
     /**
      * Initialize the Listener with the Registration and Exchange
@@ -82,27 +103,13 @@ public class RabbitListener implements IDisposable, Runnable {
         log = LoggerFactory.getLogger(this.getClass());
     }
 
-    /**
-     * Get the Exchange this listener is listening to.
-     * @return AMQP Exchange
-     */
-    public Exchange getExchange(){
-    		return this.exchange;
-    }
-    
-    /**
-     * Get the Registration this listener applies to.
-     * @return EnvelopeBus Registration
-     */
-    public IRegistration getRegistration(){
-    		return this.registration;
-    }
-    
+
+
     /**
      * Start listening on the supplied channel for messages.
      * @param channel AMQP Channel
      */
-    public void start(Channel channel){
+    public void start(Channel channel) {
     	
 		if (shouldContinue) {
 			
@@ -127,7 +134,7 @@ public class RabbitListener implements IDisposable, Runnable {
      * Start listening on a new thread.  This won't work unless you
      * have set the Channel on the listener.
      */
-    public void start(){
+    public void start() {
     		
 		if (this.channel == null) {
 			

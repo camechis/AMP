@@ -2,7 +2,7 @@ package amp.extensions.commons.builder;
 
 import java.util.UUID;
 
-import amp.bus.rabbit.topology.SimpleTopologyService;
+import amp.rabbit.topology.SimpleTopologyService;
 
 /**
  * Build up a Simple Topology Service.

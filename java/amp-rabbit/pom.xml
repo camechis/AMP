@@ -1,5 +1,7 @@
 <?xml version="1.0"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
@@ -13,8 +15,8 @@
 	
 
     <groupId>amp</groupId>
-    <artifactId>amp.bus.rabbit</artifactId>
-    <name>AMP RabbitMQ Transport Provider</name>
+    <artifactId>amp.rabbit</artifactId>
+    <name>AMP RabbitMQ Shared Constructs</name>
     <packaging>jar</packaging>
 
 
@@ -26,20 +28,15 @@
             <artifactId>amp.bus</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
-        <dependency>
-            <groupId>amp</groupId>
-            <artifactId>amp.rabbit</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-
+        
         <!-- Shared dependencies -->
-        <dependency>
-            <groupId>com.rabbitmq</groupId>
-            <artifactId>amqp-client</artifactId>
-        </dependency>
         <dependency>
             <groupId>cmf</groupId>
             <artifactId>cmf.bus</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.rabbitmq</groupId>
+            <artifactId>amqp-client</artifactId>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>

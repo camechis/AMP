@@ -1,4 +1,4 @@
-package amp.bus.rabbit;
+package amp.rabbit;
 
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
@@ -9,7 +9,7 @@ import com.rabbitmq.client.Connection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import amp.bus.rabbit.topology.Exchange;
+import amp.rabbit.topology.Exchange;
 
 /**
  * Provides a lot of the boiler-plate functionality most Rabbit Connection Factories

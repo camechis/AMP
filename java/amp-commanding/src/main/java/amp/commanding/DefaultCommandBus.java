@@ -22,7 +22,7 @@ public class DefaultCommandBus implements ICommandSender, ICommandReceiver {
 
 
     @Override
-    public void onCommandReceived(ICommandHandler handler) throws CommandException {
+    public void onCommandReceived(ICommandHandler handler) throws CommandException, IllegalArgumentException {
         _receiver.onCommandReceived(handler);
     }
 

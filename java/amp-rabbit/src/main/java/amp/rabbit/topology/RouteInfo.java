@@ -1,4 +1,4 @@
-package amp.bus.rabbit.topology;
+package amp.rabbit.topology;
 
 
 public class RouteInfo {

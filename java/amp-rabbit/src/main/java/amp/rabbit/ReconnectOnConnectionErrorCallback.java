@@ -1,4 +1,4 @@
-package amp.bus.rabbit;
+package amp.rabbit;
 
 
 public class ReconnectOnConnectionErrorCallback implements IOnConnectionErrorCallback {

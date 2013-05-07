@@ -8,6 +8,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
+import amp.rabbit.IListenerCloseCallback;
+import amp.rabbit.RabbitListener;
+import amp.rabbit.ReconnectOnConnectionErrorCallback;
 import cmf.bus.Envelope;
 import cmf.bus.IRegistration;
 import com.rabbitmq.client.AMQP.BasicProperties;
@@ -18,10 +21,11 @@ import org.slf4j.LoggerFactory;
 import amp.bus.IEnvelopeDispatcher;
 import amp.bus.IEnvelopeReceivedCallback;
 import amp.bus.ITransportProvider;
-import amp.bus.rabbit.topology.Exchange;
-import amp.bus.rabbit.topology.ITopologyService;
-import amp.bus.rabbit.topology.RouteInfo;
-import amp.bus.rabbit.topology.RoutingInfo;
+import amp.rabbit.IRabbitChannelFactory;
+import amp.rabbit.topology.Exchange;
+import amp.rabbit.topology.ITopologyService;
+import amp.rabbit.topology.RouteInfo;
+import amp.rabbit.topology.RoutingInfo;
 
 
 /**
@@ -36,7 +40,8 @@ public class RabbitTransportProvider implements ITransportProvider {
     protected ConcurrentHashMap<IRegistration, RabbitListener> listeners = new ConcurrentHashMap<IRegistration, RabbitListener>();
     protected Logger log;
     protected ITopologyService topologyService;
-    
+
+
     /**
      * Initialize the Transport Provider with the Topology Service and the Channel Factory.
      * @param topologyService Service that determines the correct exchange and broker to send messages to.
@@ -49,6 +54,7 @@ public class RabbitTransportProvider implements ITransportProvider {
 		this.topologyService = topologyService;
 		this.channelFactory = channelFactory;
     }
+
 
     /**
      * Register a new Envelope handler for the specified routes.
@@ -67,7 +73,7 @@ public class RabbitTransportProvider implements ITransportProvider {
         
         for (RouteInfo route : routing.getRoutes()) {
         
-        		exchanges.add(route.getConsumerExchange());
+            exchanges.add(route.getConsumerExchange());
         }
 
         for (Exchange exchange : exchanges) {
@@ -81,10 +87,105 @@ public class RabbitTransportProvider implements ITransportProvider {
         log.debug("Leave Register");
     }
 
+    @Override
+    @SuppressWarnings({ "deprecation", "unchecked" })
+    public void send(Envelope env) throws Exception {
+
+        log.debug("Enter Send");
+
+        // first, get the topology based on the headers
+        RoutingInfo routing = topologyService.getRoutingInfo(env.getHeaders());
+
+        // next, pull out all the producer exchanges
+        List<Exchange> exchanges = new ArrayList<Exchange>();
+
+        for (RouteInfo route : routing.getRoutes()) {
+
+            exchanges.add(route.getProducerExchange());
+        }
+
+        // for each exchange, send the envelope
+        for (Exchange ex : exchanges) {
+            log.info("Sending to exchange: " + ex.toString());
+
+            Channel channel = null;
+
+            try {
+                channel = channelFactory.getChannelFor(ex);
+
+                BasicProperties props = new BasicProperties.Builder().build();
+
+                Map<String, Object> headers = new HashMap<String, Object>();
+
+                for (Entry<String, String> entry : env.getHeaders().entrySet()) {
+
+                    headers.put(entry.getKey(), entry.getValue());
+                }
+
+                props.setHeaders(headers);
+
+                channel.exchangeDeclare(
+                        ex.getName(), ex.getExchangeType(), ex.getIsDurable(),
+                        ex.getIsAutoDelete(), ex.getArguments());
+
+                channel.basicPublish(ex.getName(), ex.getRoutingKey(), props, env.getPayload());
+
+            } catch (Exception e) {
+                log.error("Failed to send an envelope", e);
+                throw e;
+            }
+        }
+
+        log.debug("Leave Send");
+    }
+
+    /**
+     * Unregister a registration with the bus (canceling the listener
+     * and stopping consumption from the broker).
+     * @param registration The original registration used to create
+     * the listener.
+     */
+    @Override
+    public void unregister(IRegistration registration) {
+
+        RabbitListener listener = listeners.remove(registration);
+
+        if (listener != null) {
+
+            listener.stopListening();
+        }
+    }
+
+    /**
+     * Register a callback for the EnvelopeReceived event.
+     * @param callback Called when an envelope is received.
+     */
+    @Override
+    public void onEnvelopeReceived(IEnvelopeReceivedCallback callback) {
+        envCallbacks.add(callback);
+    }
+
+    /**
+     * Gracefully shutdown all the services associated with the Transport Provider.
+     */
+    @Override
+    public void dispose() {
+
+        try {  channelFactory.dispose(); } catch (Exception ex) { }
+
+        try {  topologyService.dispose(); } catch (Exception ex) { }
+
+        for (RabbitListener l : listeners.values()) {
+
+            try { l.dispose(); } catch (Exception ex) { }
+        }
+    }
+
+
     protected RabbitListener createListener(
 			IRegistration registration, Exchange exchange) throws Exception {
     	
-    		// create a channel
+        // create a channel
         Channel channel = channelFactory.getChannelFor(exchange);
 
         // create a listener
@@ -126,87 +227,9 @@ public class RabbitTransportProvider implements ITransportProvider {
      * @return Listener that will pull messages from the broker and call the handlers
      * on the registration.
      */
-    protected RabbitListener getListener(IRegistration registration, Exchange exchange){
+    protected RabbitListener getListener(IRegistration registration, Exchange exchange) {
     		
-    		return new RabbitListener(registration, exchange);
-    }
-    
-    @Override
-    @SuppressWarnings({ "deprecation", "unchecked" })
-    public void send(Envelope env) throws Exception {
-    	
-        log.debug("Enter Send");
-
-        // first, get the topology based on the headers
-        RoutingInfo routing = topologyService.getRoutingInfo(env.getHeaders());
-
-        // next, pull out all the producer exchanges
-        List<Exchange> exchanges = new ArrayList<Exchange>();
-        
-        for (RouteInfo route : routing.getRoutes()) {
-        	
-            exchanges.add(route.getProducerExchange());
-        }
-
-        // for each exchange, send the envelope
-        for (Exchange ex : exchanges) {
-            log.info("Sending to exchange: " + ex.toString());
-
-            Channel channel = null;
-            
-            try {
-                channel = channelFactory.getChannelFor(ex);
-
-                BasicProperties props = new BasicProperties.Builder().build();
-                
-                Map<String, Object> headers = new HashMap<String, Object>();
-                
-                for (Entry<String, String> entry : env.getHeaders().entrySet()) {
-                
-                		headers.put(entry.getKey(), entry.getValue());
-                }
-                
-                props.setHeaders(headers);
-                
-                channel.exchangeDeclare(
-                		ex.getName(), ex.getExchangeType(), ex.getIsDurable(), 
-                		ex.getIsAutoDelete(), ex.getArguments());
-                
-                channel.basicPublish(ex.getName(), ex.getRoutingKey(), props, env.getPayload());
-                
-            } catch (Exception e) {
-                log.error("Failed to send an envelope", e);
-                throw e;
-            } 
-        }
-
-        log.debug("Leave Send");
-    }
-
-    /**
-     * Unregister a registration with the bus (canceling the listener
-     * and stopping consumption from the broker).
-     * @param registration The original registration used to create
-     * the listener.
-     */
-    @Override
-    public void unregister(IRegistration registration) {
-    	
-    		RabbitListener listener = listeners.remove(registration);
-    	
-        if (listener != null) {
-            
-        		listener.stopListening();
-        }
-    }
-    
-    /**
-     * Register a callback for the EnvelopeReceived event.
-     * @param callback Called when an envelope is received.
-     */
-    @Override
-    public void onEnvelopeReceived(IEnvelopeReceivedCallback callback) {
-        envCallbacks.add(callback);
+        return new RabbitListener(registration, exchange);
     }
 
     /**
@@ -222,22 +245,6 @@ public class RabbitTransportProvider implements ITransportProvider {
             } catch (Exception ex) {
                 log.error("Caught an unhandled exception raising the onEnvelopeReceived event", ex);
             }
-        }
-    }
-    
-    /**
-     * Gracefully shutdown all the services associated with the Transport Provider.
-     */
-    @Override
-    public void dispose() {
-    		
-        try {  channelFactory.dispose(); } catch (Exception ex) { }
-
-        try {  topologyService.dispose(); } catch (Exception ex) { }
-
-        for (RabbitListener l : listeners.values()) {
-            
-        		try { l.dispose(); } catch (Exception ex) { }
         }
     }
 

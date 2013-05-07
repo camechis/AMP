@@ -1,6 +1,6 @@
 package amp.extensions.commons.builder;
 
-import amp.bus.rabbit.topology.Exchange;
+import amp.rabbit.topology.Exchange;
 import amp.eventing.ISerializer;
 import amp.topology.client.BasicAuthHttpClientProvider;
 import amp.topology.client.DefaultApplicationExchangeProvider;

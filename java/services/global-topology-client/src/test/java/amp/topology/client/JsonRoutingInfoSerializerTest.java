@@ -6,9 +6,9 @@ import java.util.Iterator;
 
 import org.junit.Test;
 
-import amp.bus.rabbit.topology.Exchange;
-import amp.bus.rabbit.topology.RouteInfo;
-import amp.bus.rabbit.topology.RoutingInfo;
+import amp.rabbit.topology.Exchange;
+import amp.rabbit.topology.RouteInfo;
+import amp.rabbit.topology.RoutingInfo;
 
 public class JsonRoutingInfoSerializerTest {
 	

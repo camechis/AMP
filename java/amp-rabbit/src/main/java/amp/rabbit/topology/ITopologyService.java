@@ -1,4 +1,4 @@
-package amp.bus.rabbit.topology;
+package amp.rabbit.topology;
 
 
 import java.util.Map;

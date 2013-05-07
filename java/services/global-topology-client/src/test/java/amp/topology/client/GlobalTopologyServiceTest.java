@@ -9,7 +9,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import amp.bus.rabbit.topology.RoutingInfo;
+import amp.rabbit.topology.RoutingInfo;
 import amp.topology.client.integration.BasicAuthIntegrationTest;
 
 import com.berico.test.RequireProperties;

@@ -1,4 +1,4 @@
-package amp.bus.rabbit;
+package amp.rabbit;
 
 
 import java.io.FileInputStream;
@@ -13,7 +13,7 @@ import com.rabbitmq.client.DefaultSaslConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import amp.bus.rabbit.topology.Exchange;
+import amp.rabbit.topology.Exchange;
 
 
 public class CertificateChannelFactory extends BaseChannelFactory {

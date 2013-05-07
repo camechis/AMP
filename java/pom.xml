@@ -26,6 +26,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <slf4j.version>1.6.4</slf4j.version>
         <springframework.version>3.2.2.RELEASE</springframework.version>
+        <rabbitmq.version>3.0.2</rabbitmq.version>
     </properties>
 
 
@@ -35,6 +36,7 @@
         <module>amp-bus-rabbit</module>
         <module>amp-bus-security</module>
         <module>amp-eventing</module>
+        <module>amp-rabbit</module>
         <module>amp-commanding</module>
         <module>amp-commanding-rabbit</module>
         <module>amp-examples/bus-gui-tester</module>
@@ -109,6 +111,11 @@
                 <groupId>com.google.code.gson</groupId>
                 <artifactId>gson</artifactId>
                 <version>${gson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.rabbitmq</groupId>
+                <artifactId>amqp-client</artifactId>
+                <version>${rabbitmq.version}</version>
             </dependency>
             <dependency>
                 <groupId>junit</groupId>

@@ -1,6 +1,6 @@
 package amp.topology.client;
 
-import amp.bus.rabbit.topology.RoutingInfo;
+import amp.rabbit.topology.RoutingInfo;
 
 /**
  * Retrieve routing info for a topic.  We don't care how,

@@ -1,10 +1,10 @@
-package amp.bus.rabbit;
+package amp.rabbit;
 
 
 import cmf.bus.IDisposable;
 import com.rabbitmq.client.Channel;
 
-import amp.bus.rabbit.topology.Exchange;
+import amp.rabbit.topology.Exchange;
 
 
 public interface IRabbitChannelFactory extends IDisposable {

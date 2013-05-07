@@ -1,4 +1,4 @@
-package amp.bus.rabbit;
+package amp.rabbit;
 
 
 import com.rabbitmq.client.Channel;
@@ -8,15 +8,13 @@ import org.slf4j.LoggerFactory;
 
 public class ConnectionRemediator extends Thread {
 
+    public static long RETRY_INTERVAL = 30 * 1000;
 	private static final Logger logger = LoggerFactory.getLogger(ConnectionRemediator.class);
 	
 	private RabbitListener listener;
-	
 	private IRabbitChannelFactory channelFactory;
-	
-	public static long RETRY_INTERVAL = 30 * 1000;
+    private boolean keepTrying = true;
 
-	private boolean keepTrying = true;
 	
 	public ConnectionRemediator(
 			RabbitListener listener,
@@ -35,6 +33,7 @@ public class ConnectionRemediator extends Thread {
 		this.channelFactory = channelFactory;
 		RETRY_INTERVAL = retryInterval;
 	}
+
 
 	@Override
 	public void run() {
@@ -84,7 +83,8 @@ public class ConnectionRemediator extends Thread {
 		
 		this.keepTrying = false;
 	}
-	
+
+
 	/**
 	 * Take a break.  This is basically "Thread.sleep",
 	 * wrapped in a try-catch.

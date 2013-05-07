@@ -19,11 +19,20 @@
 
 
     <dependencies>
+
+        <!-- Dependencies specific to this project -->
         <dependency>
             <groupId>${project.parent.groupId}</groupId>
             <artifactId>amp.commanding</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
+        <dependency>
+            <groupId>${project.parent.groupId}</groupId>
+            <artifactId>amp.rabbit</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+        <!-- Shared dependencies -->
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
@@ -32,6 +41,8 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>
+
     </dependencies>
+
 
 </project>

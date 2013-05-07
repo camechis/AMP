@@ -9,8 +9,8 @@ import com.google.common.cache.CacheBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import amp.bus.rabbit.topology.ITopologyService;
-import amp.bus.rabbit.topology.RoutingInfo;
+import amp.rabbit.topology.ITopologyService;
+import amp.rabbit.topology.RoutingInfo;
 
 
 /**
