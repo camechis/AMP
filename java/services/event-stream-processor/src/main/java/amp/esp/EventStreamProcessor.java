@@ -32,6 +32,7 @@ public class EventStreamProcessor {
     private IRegistration registration;
 
     IEnvelopeBus bus;
+    private EventMonitorRepository repository;
 
     /**
      * This is a wrapper class around an EventMonitor to allow it to receive events
@@ -94,7 +95,12 @@ public class EventStreamProcessor {
     }
 
     public void setRepository(EventMonitorRepository repository) {
+        this.repository = repository;
         repository.registerWith(this);
+    }
+
+    public EventMonitorRepository getRepository() {
+        return repository;
     }
 
     private EPServiceProvider createEventProcessor() {
@@ -226,5 +232,10 @@ public class EventStreamProcessor {
       }
       file.print(data + "\n");
       file.close();
+    }
+
+    @Override
+    public String toString() {
+        return "EventStreamProcessor [bus=" + bus + ", repository=" + repository + "]";
     }
 }
