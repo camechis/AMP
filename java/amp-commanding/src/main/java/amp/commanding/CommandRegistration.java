@@ -2,6 +2,7 @@ package amp.commanding;
 
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import cmf.bus.Envelope;
@@ -9,6 +10,8 @@ import cmf.bus.EnvelopeHeaderConstants;
 import cmf.bus.IEnvelopeFilterPredicate;
 import cmf.bus.IRegistration;
 import com.google.common.base.Function;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -18,8 +21,11 @@ import com.google.common.base.Function;
  */
 public class CommandRegistration implements IRegistration {
 
-    private ICommandHandler<?> _handler;
-    private Function<Envelope, Object> _callback;
+    private static final Logger LOG = LoggerFactory.getLogger(CommandRegistration.class);
+
+    private ICommandChainProcessor _processor;
+    private List<ICommandProcessor> _processingChain;
+    private ICommandHandler _handler;
     private Map<String, String> _regInfo;
 
 
@@ -30,9 +36,14 @@ public class CommandRegistration implements IRegistration {
     public IEnvelopeFilterPredicate getFilterPredicate() { return null; }
 
 
-    public <TCOMMAND> CommandRegistration(ICommandHandler<TCOMMAND> handler, Function<Envelope, Object> callback) {
+    public CommandRegistration(
+            ICommandChainProcessor processor,
+            List<ICommandProcessor> processingChain,
+            ICommandHandler handler) {
+
+        _processor = processor;
+        _processingChain = processingChain;
         _handler = handler;
-        _callback = callback;
 
         _regInfo = new HashMap<String, String>();
         _regInfo.put(EnvelopeHeaderConstants.MESSAGE_TOPIC, _handler.getCommandType().getCanonicalName());
@@ -41,8 +52,27 @@ public class CommandRegistration implements IRegistration {
 
 
     @Override
-    public Object handle(Envelope env) throws Exception {
-        return _callback.apply(env);
+    public Object handle(final Envelope env) throws Exception {
+
+        try {
+            // create a context to send through the processors
+            final CommandContext ctx = new CommandContext(CommandContext.Directions.In, env);
+
+            _processor.processCommand(ctx, _processingChain, new IContinuationCallback() {
+
+                @Override
+                public void continueProcessing() throws Exception {
+                    _handler.handle(ctx.getCommand(), env.getHeaders());
+                }
+            });
+
+        }
+        catch (Exception ex) {
+            LOG.error("Failed to process incoming envelope", ex);
+            throw ex;
+        }
+
+        return null;
     }
 
     @Override

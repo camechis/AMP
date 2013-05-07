@@ -13,5 +13,5 @@ import java.util.Map;
  */
 public interface ICommandReceiver {
 
-    <TCOMMAND> void onCommandReceived(ICommandHandler<TCOMMAND> handler) throws CommandException;
+    <TCOMMAND> void onCommandReceived(ICommandHandler<TCOMMAND> handler) throws CommandException, IllegalArgumentException;
 }

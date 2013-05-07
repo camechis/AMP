@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
  * User: jar349
  * Date: 5/1/13
  */
-public class DefaultCommandSender implements ICommandSender {
+public class DefaultCommandSender implements ICommandSender, ICommandChainProcessor {
 
     static final Logger LOG = LoggerFactory.getLogger(DefaultCommandSender.class);
 
@@ -58,6 +58,7 @@ public class DefaultCommandSender implements ICommandSender {
         LOG.debug("Leave send");
     }
 
+    @Override
     public void processCommand(
             final CommandContext context,
             final List<ICommandProcessor> processingChain,

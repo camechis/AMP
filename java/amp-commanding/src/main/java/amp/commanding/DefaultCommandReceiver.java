@@ -9,6 +9,8 @@ import cmf.bus.IEnvelopeReceiver;
 import cmf.bus.IRegistration;
 import com.google.common.base.Function;
 import com.google.common.base.Functions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -16,7 +18,9 @@ import com.google.common.base.Functions;
  * User: jar349
  * Date: 5/1/13
  */
-public class DefaultCommandReceiver implements ICommandReceiver {
+public class DefaultCommandReceiver implements ICommandReceiver, ICommandChainProcessor {
+
+    private static final Logger LOG = LoggerFactory.getLogger(DefaultCommandReceiver.class);
 
     private IEnvelopeReceiver _envelopeReceiver;
     private List<ICommandProcessor> _processingChain;
@@ -37,24 +41,62 @@ public class DefaultCommandReceiver implements ICommandReceiver {
 
 
     @Override
-    public <TCOMMAND> void onCommandReceived(ICommandHandler<TCOMMAND> handler) throws CommandException {
+    public <TCOMMAND> void onCommandReceived(ICommandHandler<TCOMMAND> handler) throws CommandException, IllegalArgumentException {
 
-        CommandRegistration registration = new CommandRegistration(handler, new Function<Envelope, Object>() {
+        LOG.debug("Enter onCommandReceived");
+        if (null == handler) { throw new IllegalArgumentException("Cannot register a null handler"); }
+
+
+        // create a registration object
+        final CommandRegistration registration = new CommandRegistration(this, _processingChain, handler);
+
+        // and register it with the envelope receiver
+        try {
+            _envelopeReceiver.register(registration);
+        }
+        catch (Exception ex) {
+            String message = "Failed to register for a command";
+            LOG.error(message, ex);
+            throw new CommandException(message, ex);
+        }
+
+
+        LOG.debug("Leave onCommandReceived");
+    }
+
+
+    @Override
+    public void processCommand(
+            final CommandContext context,
+            final List<ICommandProcessor> processingChain,
+            final IContinuationCallback onComplete) throws Exception {
+
+        LOG.debug("Enter processCommand");
+
+        // if the chain is null or empty, complete processing
+        if ( (null == processingChain) || (0 == processingChain.size()) ) {
+            LOG.debug("command processing complete");
+            onComplete.continueProcessing();
+            return;
+        }
+
+        // get the first processor
+        ICommandProcessor processor = processingChain.get(0);
+
+        // create a processing chain that no longer contains this processor
+        final List<ICommandProcessor> newChain = processingChain.subList(1, processingChain.size());
+
+        // let it process the event and pass its "next" processor: a method that
+        // recursively calls this function with the current processor removed
+        processor.processCommand(context, new IContinuationCallback() {
 
             @Override
-            public Object apply(@Nullable Envelope envelope) {
-
-                try {
-
-                    CommandContext ctx = new CommandContext(CommandContext.Directions.In, envelope);
-
-                }
-                catch (Exception ex) {
-
-                }
-
-                return null;
+            public void continueProcessing() throws Exception {
+                processCommand(context, newChain, onComplete);
             }
+
         });
+
+        LOG.debug("Leave processCommand");
     }
 }
