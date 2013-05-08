@@ -26,9 +26,9 @@ public class DerbyEventDao {
 
 	private static final String EVENTS_BY_TIME_FOR_MONTH_QUERY = "SELECT "
 			+ "MIN(count), AVG(CAST(count AS DOUBLE PRECISION)), MAX(count), SUM(count), COUNT(count) "
-			+ "FROM ("
-			+ "SELECT "
-			+ "YEAR(creationtime), MONTH(creationtime), DAY(creationtime), COUNT(1) AS count "
+			+ "FROM "
+			+ "("
+			+ "SELECT COUNT(1) AS count "
 			+ "FROM envelope "
 			+ "WHERE YEAR(creationtime) = :year AND MONTH(creationtime) = :month "
 			+ "GROUP BY YEAR(creationtime), MONTH(creationtime), DAY(creationtime)"
