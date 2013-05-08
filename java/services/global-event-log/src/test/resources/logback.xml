@@ -19,6 +19,10 @@
 		<level value="ERROR" />
 	</logger>
 
+	<logger name="amp.gel">
+		<level value="DEBUG" />
+	</logger>
+
 	<root>
 		<level value="INFO" />
 		<appender-ref ref="CONSOLE" />
