@@ -13,13 +13,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
+import amp.gel.dao.EventDao;
 import amp.gel.domain.ColumnHeader;
 import amp.gel.domain.ColumnType;
 import amp.gel.domain.Row;
 import amp.gel.domain.Table;
 import amp.gel.domain.TimeScale;
 
-public class DerbyEventDao {
+public class DerbyEventDao implements EventDao {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(DerbyEventDao.class);
@@ -41,6 +42,13 @@ public class DerbyEventDao {
 		this.entityManager = entityManager;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * amp.gel.dao.impl.derby.EventDao#getEventsByTime(org.joda.time.DateTime,
+	 * org.joda.time.DateTime, amp.gel.domain.TimeScale)
+	 */
 	@Transactional(readOnly = true)
 	public Table getEventsByTime(DateTime start, DateTime stop,
 			TimeScale timeScale) throws Exception {
@@ -99,5 +107,17 @@ public class DerbyEventDao {
 			ColumnType columnType) {
 		return currentDateTime.toString(DateTimeFormat.forPattern(columnType
 				.getFormat()));
+	}
+
+	public Table getEventsByTimeForUser(DateTime start, DateTime stop,
+			TimeScale timeScale, String user) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Table getEventsByTimeForType(DateTime start, DateTime stop,
+			TimeScale timeScale, String type) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

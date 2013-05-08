@@ -12,12 +12,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
+import amp.gel.dao.TypeDao;
 import amp.gel.domain.ColumnHeader;
 import amp.gel.domain.ColumnType;
 import amp.gel.domain.Row;
 import amp.gel.domain.Table;
 
-public class DerbyTypeDao {
+public class DerbyTypeDao implements TypeDao {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(DerbyTypeDao.class);
@@ -35,6 +36,13 @@ public class DerbyTypeDao {
 		this.entityManager = entityManager;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * amp.gel.dao.impl.derby.TypeDao#getEventsByType(org.joda.time.DateTime,
+	 * org.joda.time.DateTime)
+	 */
 	@Transactional(readOnly = true)
 	public Table getEventsByType(DateTime start, DateTime stop)
 			throws Exception {
@@ -42,6 +50,13 @@ public class DerbyTypeDao {
 		return table;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * amp.gel.dao.impl.derby.TypeDao#getEventsByTypeForUser(org.joda.time.DateTime
+	 * , org.joda.time.DateTime, java.lang.String)
+	 */
 	@Transactional(readOnly = true)
 	public Table getEventsByTypeForUser(DateTime start, DateTime stop,
 			String user) throws Exception {
@@ -62,9 +77,20 @@ public class DerbyTypeDao {
 		return table;
 	}
 
-	@SuppressWarnings("unchecked")
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see amp.gel.dao.impl.derby.TypeDao#getTypes(org.joda.time.DateTime,
+	 * org.joda.time.DateTime)
+	 */
 	@Transactional(readOnly = true)
-	public List<String> getTypes(DateTime start, DateTime stop, String user) {
+	public List<String> getTypes(DateTime start, DateTime stop) {
+		List<String> types = getTypes(start, stop, null);
+		return types;
+	}
+
+	@SuppressWarnings("unchecked")
+	private List<String> getTypes(DateTime start, DateTime stop, String user) {
 		String sql = UNIQUE_TYPES_QUERY;
 		if (user != null) {
 			sql += USER_CONDITIONAL;
