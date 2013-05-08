@@ -26,6 +26,8 @@ public class DerbyUserDao {
 
 	private static final String COUNT_FOR_USER_QUERY = "SELECT COUNT(senderidentity) FROM envelope WHERE senderidentity = :user AND creationtime BETWEEN :start AND :stop";
 
+	private static final String TYPE_CONDITIONAL = " AND type = :type";
+
 	private EntityManager entityManager;
 
 	@PersistenceContext
@@ -36,13 +38,20 @@ public class DerbyUserDao {
 	@Transactional(readOnly = true)
 	public Table getEventsByUser(DateTime start, DateTime stop)
 			throws Exception {
+		Table table = getEventsByUserForType(start, stop, null);
+		return table;
+	}
+
+	@Transactional(readOnly = true)
+	public Table getEventsByUserForType(DateTime start, DateTime stop,
+			String type) throws Exception {
 		Table table = new Table();
 		table.setColumnHeaders(Arrays.asList(new ColumnHeader("User",
 				ColumnType.STRING), new ColumnHeader("Count", ColumnType.LONG)));
 
-		List<String> users = getUsers(start, stop);
+		List<String> users = getUsers(start, stop, type);
 		for (String user : users) {
-			Object result = getCountForUser(start, stop, user);
+			Object result = getCountForUser(start, stop, user, type);
 			Object[] objects = Arrays.asList(user, result).toArray();
 
 			Row row = new Row(objects);
@@ -54,20 +63,40 @@ public class DerbyUserDao {
 	}
 
 	@SuppressWarnings("unchecked")
-	private List<String> getUsers(DateTime start, DateTime stop) {
-		Query query = entityManager.createNativeQuery(UNIQUE_USERS_QUERY);
+	@Transactional(readOnly = true)
+	public List<String> getUsers(DateTime start, DateTime stop, String type) {
+		String sql = UNIQUE_USERS_QUERY;
+		if (type != null) {
+			sql += TYPE_CONDITIONAL;
+		}
+
+		Query query = entityManager.createNativeQuery(sql);
 		query.setParameter("start", start.toDate());
 		query.setParameter("stop", stop.toDate());
+
+		if (type != null) {
+			query.setParameter("type", type);
+		}
 
 		List<String> results = (List<String>) query.getResultList();
 		return results;
 	}
 
-	private Object getCountForUser(DateTime start, DateTime stop, String user) {
-		Query query = entityManager.createNativeQuery(COUNT_FOR_USER_QUERY);
+	private Object getCountForUser(DateTime start, DateTime stop, String user,
+			String type) {
+		String sql = COUNT_FOR_USER_QUERY;
+		if (type != null) {
+			sql += TYPE_CONDITIONAL;
+		}
+
+		Query query = entityManager.createNativeQuery(sql);
 		query.setParameter("user", user);
 		query.setParameter("start", start.toDate());
 		query.setParameter("stop", stop.toDate());
+
+		if (type != null) {
+			query.setParameter("type", type);
+		}
 
 		Object result = query.getSingleResult();
 		return result;

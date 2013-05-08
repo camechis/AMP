@@ -26,13 +26,19 @@ public class TestDerbyDataReader {
 		DerbyTypeDao typeDao = applicationContext.getBean("typeDao",
 				DerbyTypeDao.class);
 
-		typeDao.getEventsByType(new DateTime().withYear(2011)
-				.withMonthOfYear(1), new DateTime());
+		typeDao.getEventsByType(new DateTime().withMonthOfYear(1),
+				new DateTime());
+		typeDao.getEventsByTypeForUser(new DateTime().withMonthOfYear(1),
+				new DateTime(), "gwashington");
 
 		DerbyUserDao userDao = applicationContext.getBean("userDao",
 				DerbyUserDao.class);
 
-		userDao.getEventsByUser(new DateTime().withYear(2011)
-				.withMonthOfYear(1), new DateTime());
+		userDao.getEventsByUser(new DateTime().withMonthOfYear(1),
+				new DateTime());
+
+		userDao.getEventsByUserForType(new DateTime().withMonthOfYear(1),
+				new DateTime(),
+				"amp.gel.dao.impl.derby.data.events.core.ExportEvent");
 	}
 }
