@@ -31,8 +31,8 @@ public class TypeActivityService {
 
 	public Table getEventsByTime(DateTime start, DateTime stop,
 			TimeScale timeScale, String type) throws Exception {
-		Table table = this.eventDao.getEventsByTimeForType(start, stop,
-				timeScale, type);
+		Table table = eventDao.getEventsByTimeForType(start, stop, timeScale,
+				type);
 		return table;
 	}
 

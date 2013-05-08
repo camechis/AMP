@@ -9,7 +9,7 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
 
 	<import resource="classpath:/cmf-context.xml" />
-    <import resource="classpath:/derby-context.xml" />
+	<import resource="classpath:/derby-context.xml" />
 	<import resource="classpath:/accumulo-context.xml" />
 
 	<bean
@@ -39,6 +39,45 @@
 
 	<bean id="topicLoggerManager" class="amp.gel.managed.TopicLoggerManager">
 		<property name="topicLogger" ref="topicLogger" />
+	</bean>
+
+	<bean id="eventActivityService" class="amp.gel.service.EventActivityService">
+		<property name="eventDao" ref="eventDao" />
+		<property name="typeDao" ref="typeDao" />
+		<property name="userDao" ref="userDao" />
+	</bean>
+
+	<bean id="eventActivityService" class="amp.gel.service.EventActivityService">
+		<property name="eventDao" ref="eventDao" />
+		<property name="typeDao" ref="typeDao" />
+		<property name="userDao" ref="userDao" />
+	</bean>
+
+	<bean id="typeActivityService" class="amp.gel.service.TypeActivityService">
+		<property name="eventDao" ref="eventDao" />
+		<property name="typeDao" ref="typeDao" />
+		<property name="userDao" ref="userDao" />
+	</bean>
+
+	<bean id="userActivityService" class="amp.gel.service.UserActivityService">
+		<property name="eventDao" ref="eventDao" />
+		<property name="typeDao" ref="typeDao" />
+		<property name="userDao" ref="userDao" />
+	</bean>
+
+	<bean id="eventActivityEventHandler" class="amp.gel.service.event.EventActivityEventHandler">
+		<property name="eventBus" ref="eventBus" />
+		<property name="eventActivityService" ref="eventActivityService" />
+	</bean>
+
+	<bean id="typeActivityEventHandler" class="amp.gel.service.event.TypeActivityEventHandler">
+		<property name="eventBus" ref="eventBus" />
+		<property name="typeActivityService" ref="typeActivityService" />
+	</bean>
+
+	<bean id="userActivityEventHandler" class="amp.gel.service.event.UserActivityEventHandler">
+		<property name="eventBus" ref="eventBus" />
+		<property name="userActivityService" ref="userActivityService" />
 	</bean>
 
 </beans>
