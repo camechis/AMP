@@ -1,0 +1,17 @@
+applicationContext: ['conf/applicationContext.xml', 'conf/basicAuthSecurityContext.xml']
+
+useSpringSecurity: true
+
+espProperty: This was your esp property
+
+logging:
+    level: INFO
+    console:
+        enabled: true
+        threshold: DEBUG
+        
+http:
+    port: 8080
+    adminUsername: admin
+    adminPassword: admin
+    rootPath: /service/*
