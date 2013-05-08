@@ -51,6 +51,10 @@ public class EventHandlerDemo {
 		UserActivityRequestEvent userActivityRequestEvent = new UserActivityRequestEvent(
 				"tjefferson", start, stop, timeScale);
 		eventBus.publish(userActivityRequestEvent);
+
+		EventActivityRequestEvent eventActivityRequestEvent2 = new EventActivityRequestEvent(
+				new DateTime().withDayOfMonth(1).toDate(), stop, TimeScale.DAY);
+		eventBus.publish(eventActivityRequestEvent2);
 	}
 
 	static public class EventActivityResponseEventHandler implements
