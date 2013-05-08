@@ -1,4 +1,4 @@
-package amp.gel.dao.impl.derby.data;
+package amp.gel.dao.impl.derby;
 
 import java.util.Arrays;
 
