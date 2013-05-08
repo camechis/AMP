@@ -3,7 +3,7 @@ package amp.gel.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.FileSystemXmlApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import cmf.eventing.IEventBus;
 
@@ -13,8 +13,8 @@ public class TopicLoggerDemo {
 			.getLogger(TopicLoggerDemo.class);
 
 	public static void main(String[] args) {
-		ApplicationContext appContext = new FileSystemXmlApplicationContext(
-				"src/test/resources/test-cmf-context.xml");
+		ApplicationContext appContext = new ClassPathXmlApplicationContext(
+				"test-cmf-context.xml");
 		IEventBus eventBus = appContext.getBean("eventBus", IEventBus.class);
 
 		long counter = 0;

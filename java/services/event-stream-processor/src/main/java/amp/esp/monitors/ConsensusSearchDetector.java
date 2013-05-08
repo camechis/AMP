@@ -134,4 +134,15 @@ public class ConsensusSearchDetector extends EventMonitor {
         return INFERRED_TYPE;
     }
 
+    @Override
+    public String toString() {
+        StringBuffer sb = new StringBuffer();
+        sb.append(this.getClass().getSimpleName());
+        sb.append("(");
+        sb.append("minfreq=" + minFreq);
+        sb.append(",timelimit=" + timeLimit);
+        sb.append(")");
+        return sb.toString();
+    }
+
 }
