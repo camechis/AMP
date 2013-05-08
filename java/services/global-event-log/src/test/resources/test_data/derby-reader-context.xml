@@ -52,10 +52,10 @@
 
 	<tx:annotation-driven transaction-manager="transactionManager" />
 
-	<bean id="eventDao" class="amp.gel.dao.impl.derby.data.DerbyEventDao" />
+	<bean id="eventDao" class="amp.gel.dao.impl.derby.DerbyEventDao" />
 
-	<bean id="typeDao" class="amp.gel.dao.impl.derby.data.DerbyTypeDao" />
+	<bean id="typeDao" class="amp.gel.dao.impl.derby.DerbyTypeDao" />
 
-	<bean id="userDao" class="amp.gel.dao.impl.derby.data.DerbyUserDao" />
+	<bean id="userDao" class="amp.gel.dao.impl.derby.DerbyUserDao" />
 
 </beans>
