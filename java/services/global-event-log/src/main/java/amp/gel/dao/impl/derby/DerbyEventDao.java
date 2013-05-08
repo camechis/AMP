@@ -56,6 +56,7 @@ public class DerbyEventDao implements EventDao {
 		if (timeScale == TimeScale.MONTH) {
 			table = getEventsByTimeForMonthTimeScale(start, stop);
 		} else {
+			// TODO: handle other time scales
 			throw new UnsupportedOperationException(
 					"Only handling MONTH time scales!");
 		}
@@ -65,7 +66,9 @@ public class DerbyEventDao implements EventDao {
 	}
 
 	private Table getEventsByTimeForMonthTimeScale(DateTime start, DateTime stop) {
+		// start from first day of the month
 		start = start.withDayOfMonth(1);
+		// end with the last day of the month
 		stop = stop.withDayOfMonth(stop.dayOfMonth().getMaximumValue());
 		DateTime currentDateTime = new DateTime(start.getMillis());
 

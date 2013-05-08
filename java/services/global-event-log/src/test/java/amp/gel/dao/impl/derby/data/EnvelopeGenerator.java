@@ -19,6 +19,10 @@ import amp.gel.dao.impl.derby.data.generators.EventSequenceGenerator;
 import amp.gel.dao.impl.derby.data.processors.EventSequenceProcessor;
 import cmf.bus.Envelope;
 
+/**
+ * Generates envelopes by processing events.
+ * 
+ */
 public class EnvelopeGenerator implements Iterable<Envelope>,
 		Iterator<Envelope> {
 	private static final Logger logger = LoggerFactory

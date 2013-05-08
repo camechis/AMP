@@ -10,6 +10,13 @@ import amp.gel.dao.UserDao;
 import amp.gel.domain.Table;
 import amp.gel.domain.TimeScale;
 
+/**
+ * Service that provides the activity for a given event type. The method
+ * getTypes() should be used first to retrieve a list of valid event types for a
+ * given date range. From there, two different tables can be retrieved for event
+ * activity for a given event type: events by time and events by their user.
+ * 
+ */
 public class TypeActivityService {
 	private EventDao eventDao;
 

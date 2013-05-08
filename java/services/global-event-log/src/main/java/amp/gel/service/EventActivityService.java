@@ -8,6 +8,12 @@ import amp.gel.dao.UserDao;
 import amp.gel.domain.Table;
 import amp.gel.domain.TimeScale;
 
+/**
+ * Service that provides general event activity for a given date range. Event
+ * activity can be analyzed from three different perspectives: by time, by event
+ * type, and by user.
+ * 
+ */
 public class EventActivityService {
 
 	private EventDao eventDao;

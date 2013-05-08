@@ -7,6 +7,12 @@ import amp.eventing.EventContext;
 import amp.eventing.EventContext.Directions;
 import amp.eventing.IContinuationCallback;
 
+/**
+ * Processes event sequences and sets the sender identity in the envelope header
+ * to either "SYSTEM" for service responses or a person for user requests. The
+ * same person is set for all events within the event sequence.
+ * 
+ */
 public class SenderIdentityHeaderProcessor implements EventSequenceProcessor {
 
 	private static final String[] HUMAN_USERS = { "gwashington", "jadams",

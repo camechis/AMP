@@ -11,6 +11,14 @@ import amp.eventing.EventContext;
 import amp.eventing.EventContext.Directions;
 import amp.eventing.IContinuationCallback;
 
+/**
+ * Processes event sequences and sets creation and receipt times in the envelope
+ * headers. The processor starts at a given time, advances time, and continues
+ * until it reaches the given stop time. Once time has ended, then an Exception
+ * is thrown at the next event sequence. This signals the event generator to
+ * stop.
+ * 
+ */
 public class TimeHeadersProcessor implements EventSequenceProcessor {
 
 	private static final DateTimeFormatter DATE_FORMATTER = ISODateTimeFormat

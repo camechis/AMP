@@ -7,6 +7,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -86,13 +87,14 @@ public class DerbyUserDao implements UserDao {
 	@Transactional(readOnly = true)
 	public List<String> getUsers(DateTime start, DateTime stop) {
 		List<String> users = getUsers(start, stop, null);
+		logger.debug(users.toString());
 		return users;
 	}
 
 	@SuppressWarnings("unchecked")
 	private List<String> getUsers(DateTime start, DateTime stop, String type) {
 		String sql = UNIQUE_USERS_QUERY;
-		if (type != null) {
+		if (StringUtils.isNotBlank(type)) {
 			sql += TYPE_CONDITIONAL;
 		}
 
@@ -100,7 +102,7 @@ public class DerbyUserDao implements UserDao {
 		query.setParameter("start", start.toDate());
 		query.setParameter("stop", stop.toDate());
 
-		if (type != null) {
+		if (StringUtils.isNotBlank(type)) {
 			query.setParameter("type", type);
 		}
 
@@ -111,7 +113,7 @@ public class DerbyUserDao implements UserDao {
 	private Object getCountForUser(DateTime start, DateTime stop, String user,
 			String type) {
 		String sql = COUNT_FOR_USER_QUERY;
-		if (type != null) {
+		if (StringUtils.isNotBlank(type)) {
 			sql += TYPE_CONDITIONAL;
 		}
 
@@ -120,7 +122,7 @@ public class DerbyUserDao implements UserDao {
 		query.setParameter("start", start.toDate());
 		query.setParameter("stop", stop.toDate());
 
-		if (type != null) {
+		if (StringUtils.isNotBlank(type)) {
 			query.setParameter("type", type);
 		}
 
