@@ -1,5 +1,8 @@
 package amp.gel.dao.impl.derby;
 
+import static amp.gel.domain.ColumnHeader.COUNT;
+import static amp.gel.domain.ColumnHeader.USER;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -14,8 +17,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import amp.gel.dao.UserDao;
-import amp.gel.domain.ColumnHeader;
-import amp.gel.domain.ColumnType;
 import amp.gel.domain.Row;
 import amp.gel.domain.Table;
 
@@ -62,8 +63,7 @@ public class DerbyUserDao implements UserDao {
 	public Table getEventsByUserForType(DateTime start, DateTime stop,
 			String type) throws Exception {
 		Table table = new Table();
-		table.setColumnHeaders(Arrays.asList(new ColumnHeader("User",
-				ColumnType.STRING), new ColumnHeader("Count", ColumnType.LONG)));
+		table.setColumnHeaders(Arrays.asList(USER, COUNT));
 
 		List<String> users = getUsers(start, stop, type);
 		for (String user : users) {
