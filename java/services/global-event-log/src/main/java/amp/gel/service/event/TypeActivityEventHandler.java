@@ -43,8 +43,8 @@ public class TypeActivityEventHandler implements
 	public Object handle(TypeActivityRequestEvent requestEvent,
 			Map<String, String> headers) {
 		String type = requestEvent.getType();
-		DateTime start = requestEvent.getStart();
-		DateTime stop = requestEvent.getStop();
+		DateTime start = new DateTime(requestEvent.getStart().getTime());
+		DateTime stop = new DateTime(requestEvent.getStop().getTime());
 		TimeScale timeScale = requestEvent.getTimeScale();
 
 		try {

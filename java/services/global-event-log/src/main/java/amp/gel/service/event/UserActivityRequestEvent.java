@@ -1,6 +1,6 @@
 package amp.gel.service.event;
 
-import org.joda.time.DateTime;
+import java.util.Date;
 
 import amp.gel.domain.TimeScale;
 
@@ -8,13 +8,13 @@ public class UserActivityRequestEvent {
 
 	private String user;
 
-	private DateTime start;
+	private Date start;
 
-	private DateTime stop;
+	private Date stop;
 
 	private TimeScale timeScale;
 
-	public UserActivityRequestEvent(String user, DateTime start, DateTime stop,
+	public UserActivityRequestEvent(String user, Date start, Date stop,
 			TimeScale timeScale) {
 		super();
 
@@ -28,11 +28,11 @@ public class UserActivityRequestEvent {
 		return user;
 	}
 
-	public DateTime getStart() {
+	public Date getStart() {
 		return start;
 	}
 
-	public DateTime getStop() {
+	public Date getStop() {
 		return stop;
 	}
 

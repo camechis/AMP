@@ -43,8 +43,8 @@ public class UserActivityEventHandler implements
 	public Object handle(UserActivityRequestEvent requestEvent,
 			Map<String, String> headers) {
 		String user = requestEvent.getUser();
-		DateTime start = requestEvent.getStart();
-		DateTime stop = requestEvent.getStop();
+		DateTime start = new DateTime(requestEvent.getStart().getTime());
+		DateTime stop = new DateTime(requestEvent.getStop().getTime());
 		TimeScale timeScale = requestEvent.getTimeScale();
 
 		try {
