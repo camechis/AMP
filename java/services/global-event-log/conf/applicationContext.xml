@@ -47,12 +47,6 @@
 		<property name="userDao" ref="userDao" />
 	</bean>
 
-	<bean id="eventActivityService" class="amp.gel.service.EventActivityService">
-		<property name="eventDao" ref="eventDao" />
-		<property name="typeDao" ref="typeDao" />
-		<property name="userDao" ref="userDao" />
-	</bean>
-
 	<bean id="typeActivityService" class="amp.gel.service.TypeActivityService">
 		<property name="eventDao" ref="eventDao" />
 		<property name="typeDao" ref="typeDao" />
