@@ -14,7 +14,7 @@
 
     <groupId>amp</groupId>
     <artifactId>amp.commanding.rabbit</artifactId>
-    <name>AMP Command Channel Implementation via RabbitMQ</name>
+    <name>AMP Command Channel RabbitMQ Implementation</name>
     <packaging>jar</packaging>
 
 
