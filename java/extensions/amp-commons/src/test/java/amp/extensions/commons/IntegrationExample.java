@@ -22,7 +22,8 @@ public class IntegrationExample {
 						.globalTopology()
 							.usingHttp("localhost", 15677, "app01", "password")
 				.and().eventBus().getInstance();
-			
+			    .and().commandChannel().getInstance();
+
 		eventBus.publish(new String("Hello"));
 		
 		IEventBus eventBus2 = BusBuilder.localProfile().eventBus();

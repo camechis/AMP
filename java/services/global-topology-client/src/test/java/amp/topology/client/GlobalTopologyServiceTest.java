@@ -4,6 +4,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 //import static org.junit.Assert.*;
 
+import amp.commanding.ICommandReceiver;
 import org.junit.Rule;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -26,9 +27,9 @@ public class GlobalTopologyServiceTest {
 	public void gts_fails_when_it_cant_find_a_route_for_a_topic() {
 		
 		IRoutingInfoRetriever retriever = mock(IRoutingInfoRetriever.class);
-		
-		GlobalTopologyService gts = new GlobalTopologyService(retriever);
-		
+        ICommandReceiver commandReceiver = mock(ICommandReceiver.class);
+
+		GlobalTopologyService gts = new GlobalTopologyService(retriever, commandReceiver);
 		gts.getRoutingInfo(TestUtils.buildRoutingHints("A nonexistent topic!"));
 	}
 	
@@ -51,7 +52,7 @@ public class GlobalTopologyServiceTest {
 		String eventType = System.getProperty("amp.gtc.test.event");
 		
 		logger.debug("Calling GTS with Basic Auth.");
-		
+
 		HttpClientProvider provider = 
 				new BasicAuthHttpClientProvider(hostname, port, username, password);
 		
@@ -59,7 +60,8 @@ public class GlobalTopologyServiceTest {
 		
 		IRoutingInfoRetriever routingInfoRetriever = 
 			new HttpRoutingInfoRetriever(provider, serviceUrlExpression, serializer);
-		
+
+        ICommandReceiver commandReceiver = mock(ICommandReceiver.class);
 		DefaultApplicationExchangeProvider fallback = new DefaultApplicationExchangeProvider();
 		
 		fallback.setHostname(hostname);
@@ -69,7 +71,7 @@ public class GlobalTopologyServiceTest {
 		fallback.setExchangeName("amp.fallback");
 		
 		GlobalTopologyService gts = new GlobalTopologyService(
-			routingInfoRetriever, 10 * 60 * 1000, fallback);
+			routingInfoRetriever, commandReceiver, 10 * 60 * 1000, fallback);
 		
 		RoutingInfo routingInfo = gts.getRoutingInfo(TestUtils.buildRoutingHints(eventType));
 		
