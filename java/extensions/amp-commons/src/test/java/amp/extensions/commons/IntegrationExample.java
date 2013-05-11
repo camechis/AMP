@@ -21,8 +21,9 @@ public class IntegrationExample {
 					.routeWith()
 						.globalTopology()
 							.usingHttp("localhost", 15677, "app01", "password")
+                        .andThen()
+                            .useCommandableCache()
 				.and().eventBus().getInstance();
-			    .and().commandChannel().getInstance();
 
 		eventBus.publish(new String("Hello"));
 		

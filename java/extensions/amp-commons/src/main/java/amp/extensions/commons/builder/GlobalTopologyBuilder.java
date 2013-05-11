@@ -231,7 +231,7 @@ public class GlobalTopologyBuilder extends FluentExtension {
 	/**
 	 * Build the topology service and set it on the transport fluent.
 	 */
-	void buildTopologyService(){
+	void buildTopologyService() {
 		
 		// Fallback Provider.
 		FallbackRoutingInfoProvider fallback = 
@@ -265,7 +265,7 @@ public class GlobalTopologyBuilder extends FluentExtension {
 		
 		// Initialize GTS.
 		GlobalTopologyService gts = 
-			new GlobalTopologyService(riRetriever, this.cacheEntryExpiration, fallback);
+			new GlobalTopologyService(riRetriever, fallback);
 		
 		// Set it on the parent.
 		this.transportBuilder.setTopologyService(gts);

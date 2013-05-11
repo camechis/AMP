@@ -40,6 +40,7 @@ public class RabbitTransportProvider implements ITransportProvider {
     protected ConcurrentHashMap<IRegistration, RabbitListener> listeners = new ConcurrentHashMap<IRegistration, RabbitListener>();
     protected Logger log;
     protected ITopologyService topologyService;
+    protected IRoutingInfoCache routingInfoCache;
 
 
     /**

@@ -40,21 +40,6 @@
         </dependency>
         <dependency>
             <groupId>amp</groupId>
-            <artifactId>amp.commanding</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>amp</groupId>
-            <artifactId>amp.commanding.rabbit</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>amp</groupId>
-            <artifactId>amp.commands</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>amp</groupId>
             <artifactId>amp.eventing</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
