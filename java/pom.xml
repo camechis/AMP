@@ -252,6 +252,21 @@
     </build>
 
 
+    <!-- Plugins for reporting tools -->
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>com.googlecode.maven-overview-plugin</groupId>
+                <artifactId>maven-overview-plugin</artifactId>
+                <version>RELEASE</version>
+                <configuration>
+                    <includes>cmf, amp</includes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
+    
+
     <!-- Where we keep our source -->
     <scm>
         <connection>scm:git:git@github.com:Berico-Technologies/AMP.git</connection>

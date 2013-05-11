@@ -1,5 +1,6 @@
 package amp.extensions.commons.builder;
 
+import amp.commanding.ICommandReceiver;
 import amp.rabbit.topology.Exchange;
 import amp.eventing.ISerializer;
 import amp.topology.client.BasicAuthHttpClientProvider;
@@ -22,6 +23,7 @@ public class GlobalTopologyBuilder extends FluentExtension {
 	ISerializer serializer = new JsonRoutingInfoSerializer();
 	DefaultApplicationExchangeProvider primaryFallbackProvider;
 	FallbackRoutingInfoProvider fallbackProvider;
+    ICommandReceiver commandReceiver;
 	String host;
 	int port;
 	boolean useSSL = false;
@@ -203,6 +205,14 @@ public class GlobalTopologyBuilder extends FluentExtension {
 				prototype.getName(), 
 				prototype.getExchangeType());
 	}
+
+    public GlobalTopologyBuilder commandedBy(ICommandReceiver commandReceiver) {
+        this.commandReceiver = commandReceiver;
+    }
+
+    public GlobalTopologyBuilder notCommanded() {
+        this.commandReceiver = null;
+    }
 
 	/**
 	 * Build the Topology Service and return to the parent fluent.
