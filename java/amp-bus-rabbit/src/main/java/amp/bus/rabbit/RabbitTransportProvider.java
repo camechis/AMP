@@ -12,6 +12,7 @@ import amp.rabbit.IListenerCloseCallback;
 import amp.rabbit.RabbitListener;
 import amp.rabbit.ReconnectOnConnectionErrorCallback;
 import cmf.bus.Envelope;
+import cmf.bus.EnvelopeHeaderConstants;
 import cmf.bus.IRegistration;
 import com.rabbitmq.client.AMQP.BasicProperties;
 import com.rabbitmq.client.Channel;
@@ -35,12 +36,14 @@ import amp.rabbit.topology.RoutingInfo;
  */
 public class RabbitTransportProvider implements ITransportProvider {
 
+    private static final Logger LOG = LoggerFactory.getLogger(RabbitTransportProvider.class);
+
     protected IRabbitChannelFactory channelFactory;
     protected List<IEnvelopeReceivedCallback> envCallbacks = new ArrayList<IEnvelopeReceivedCallback>();
     protected ConcurrentHashMap<IRegistration, RabbitListener> listeners = new ConcurrentHashMap<IRegistration, RabbitListener>();
-    protected Logger log;
     protected ITopologyService topologyService;
     protected IRoutingInfoCache routingInfoCache;
+
 
 
     /**
@@ -48,13 +51,16 @@ public class RabbitTransportProvider implements ITransportProvider {
      * @param topologyService Service that determines the correct exchange and broker to send messages to.
      * @param channelFactory Service that uses topology information to establish connections to the broker.
      */
-    public RabbitTransportProvider(ITopologyService topologyService, IRabbitChannelFactory channelFactory) {
-
-		log = LoggerFactory.getLogger(this.getClass());
+    public RabbitTransportProvider(
+            ITopologyService topologyService,
+            IRabbitChannelFactory channelFactory,
+            IRoutingInfoCache routingInfoCache) {
 	
 		this.topologyService = topologyService;
 		this.channelFactory = channelFactory;
+        this.routingInfoCache = routingInfoCache;
     }
+
 
 
     /**
@@ -64,10 +70,13 @@ public class RabbitTransportProvider implements ITransportProvider {
     @Override
     public void register(IRegistration registration) throws Exception {
     		
-        log.debug("Enter Register");
+        LOG.debug("Enter Register");
 
         // first, get the topology based on the registration info
-        RoutingInfo routing = topologyService.getRoutingInfo(registration.getRegistrationInfo());
+        RoutingInfo routing = this.getRoutingFromCacheOrService(
+                routingInfoCache,
+                topologyService,
+                registration.getRegistrationInfo());
 
         // next, pull out all the producer exchanges
         List<Exchange> exchanges = new ArrayList<Exchange>();
@@ -85,17 +94,17 @@ public class RabbitTransportProvider implements ITransportProvider {
             listeners.put(registration, listener);
         }
 
-        log.debug("Leave Register");
+        LOG.debug("Leave Register");
     }
 
     @Override
     @SuppressWarnings({ "deprecation", "unchecked" })
     public void send(Envelope env) throws Exception {
 
-        log.debug("Enter Send");
+        LOG.debug("Enter Send");
 
         // first, get the topology based on the headers
-        RoutingInfo routing = topologyService.getRoutingInfo(env.getHeaders());
+        RoutingInfo routing = this.getRoutingFromCacheOrService(routingInfoCache, topologyService, env.getHeaders());
 
         // next, pull out all the producer exchanges
         List<Exchange> exchanges = new ArrayList<Exchange>();
@@ -107,7 +116,7 @@ public class RabbitTransportProvider implements ITransportProvider {
 
         // for each exchange, send the envelope
         for (Exchange ex : exchanges) {
-            log.info("Sending to exchange: " + ex.toString());
+            LOG.info("Sending to exchange: " + ex.toString());
 
             Channel channel = null;
 
@@ -132,12 +141,12 @@ public class RabbitTransportProvider implements ITransportProvider {
                 channel.basicPublish(ex.getName(), ex.getRoutingKey(), props, env.getPayload());
 
             } catch (Exception e) {
-                log.error("Failed to send an envelope", e);
+                LOG.error("Failed to send an envelope", e);
                 throw e;
             }
         }
 
-        log.debug("Leave Send");
+        LOG.debug("Leave Send");
     }
 
     /**
@@ -167,6 +176,38 @@ public class RabbitTransportProvider implements ITransportProvider {
     }
 
     /**
+     * Gets routing info - based on routing hints - from the cache if present, or the service if not.
+     * @param cache the cache to check for routing info
+     * @param service the service to use if routing isn't cached
+     * @param hints the routing hints that specify routing info
+     * @return RoutingInfo, or null
+     */
+    public RoutingInfo getRoutingFromCacheOrService(IRoutingInfoCache cache, ITopologyService service, Map<String, String> hints) {
+
+        // if there are no hints, we have no idea what to do
+        if ( (null == hints) || (hints.isEmpty())) { return null; }
+
+        // pull the topic from the hints
+        String topic = hints.get(EnvelopeHeaderConstants.MESSAGE_TOPIC);
+
+        // first, check the cache
+        RoutingInfo routing = cache.getIfPresent(topic);
+
+        // if nothing, use the service
+        if (null == routing) {
+            routing = service.getRoutingInfo(hints);
+
+            // if we got something from the service, cache it
+            if (null != routing) {
+                cache.put(topic, routing);
+            }
+        }
+
+        // whatever we end up with, return it
+        return routing;
+    }
+
+    /**
      * Gracefully shutdown all the services associated with the Transport Provider.
      */
     @Override
@@ -181,6 +222,7 @@ public class RabbitTransportProvider implements ITransportProvider {
             try { l.dispose(); } catch (Exception ex) { }
         }
     }
+
 
 
     protected RabbitListener createListener(
@@ -244,7 +286,7 @@ public class RabbitTransportProvider implements ITransportProvider {
             try {
                 callback.handleReceive(dispatcher);
             } catch (Exception ex) {
-                log.error("Caught an unhandled exception raising the onEnvelopeReceived event", ex);
+                LOG.error("Caught an unhandled exception raising the onEnvelopeReceived event", ex);
             }
         }
     }

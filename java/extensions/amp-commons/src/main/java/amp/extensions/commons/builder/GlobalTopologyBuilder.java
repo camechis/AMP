@@ -30,18 +30,20 @@ public class GlobalTopologyBuilder extends FluentExtension {
 	String urlExpression;
 	// Ten minute eviction policy.
 	long cacheEntryExpiration = 1000 * 60 * 10;
-	
+
+    BusBuilder busBuilder;
 	TransportBuilder transportBuilder;
 	
 	/**
 	 * Initialize the builder with a reference to the parent fluent interface.
-	 * @param parent Parent builder.
+	 * @param busBuilder Parent builder.
 	 * @param transportBuilder Builder in which we will set the topology service.
 	 */
-	public GlobalTopologyBuilder(BusBuilder parent, TransportBuilder transportBuilder) {
-		
-		super(parent);
-		
+	public GlobalTopologyBuilder(BusBuilder busBuilder, TransportBuilder transportBuilder) {
+
+        super(busBuilder);
+
+        this.busBuilder = busBuilder;
 		this.transportBuilder = transportBuilder;
 		this.primaryFallbackProvider = new DefaultApplicationExchangeProvider();
 		this.primaryFallbackProvider.setDurable(true);
@@ -206,14 +208,6 @@ public class GlobalTopologyBuilder extends FluentExtension {
 				prototype.getExchangeType());
 	}
 
-    public GlobalTopologyBuilder commandedBy(ICommandReceiver commandReceiver) {
-        this.commandReceiver = commandReceiver;
-    }
-
-    public GlobalTopologyBuilder notCommanded() {
-        this.commandReceiver = null;
-    }
-
 	/**
 	 * Build the Topology Service and return to the parent fluent.
 	 * @return Parent Fluent.
@@ -231,7 +225,7 @@ public class GlobalTopologyBuilder extends FluentExtension {
 	 */
 	@Override
 	public BusBuilder and() {
-		
+
 		buildTopologyService();
 		
 		// Super!

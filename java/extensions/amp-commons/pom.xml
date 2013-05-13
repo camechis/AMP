@@ -1,6 +1,9 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
 	<modelVersion>4.0.0</modelVersion>
+
 
 	<parent>
 		<groupId>amp</groupId>
@@ -9,89 +12,92 @@
 		<version>3.2.0-SNAPSHOT</version>
 	</parent>
 
+
 	<groupId>amp</groupId>
 	<artifactId>amp.commons</artifactId>
 	<packaging>jar</packaging>
-
 	<name>AMP Extensions - Commons</name>
-	<url>http://amp.bericotechnologies.com</url>
+	<url>http://ampere.berico.us/extensions</url>
+
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<logback.version>1.0.6</logback.version>
 	</properties>
 
-	<repositories>
-		<repository>
-			<id>nexus.bericotechnologies.com</id>
-			<name>Berico Technologies Nexus</name>
-			<url>http://nexus.bericotechnologies.com/content/groups/public</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
 
 	<dependencies>
+
+        <!-- Dependencies specific to this project -->
 		<dependency>
-			<groupId>cmf</groupId>
-			<artifactId>cmf.bus</artifactId>
-			<version>3.1.0</version>
-		</dependency>
-		<dependency>
-			<groupId>cmf</groupId>
-			<artifactId>cmf.eventing</artifactId>
-			<version>3.1.0</version>
-		</dependency>
-		<dependency>
-			<groupId>amp</groupId>
+			<groupId>${parent.groupId}</groupId>
 			<artifactId>amp.bus</artifactId>
 			<version>${parent.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>amp</groupId>
+			<groupId>${parent.groupId}</groupId>
 			<artifactId>amp.eventing</artifactId>
 			<version>${parent.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>amp</groupId>
-			<artifactId>amp.bus.rabbit</artifactId>
-			<version>${parent.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>amp</groupId>
+			<groupId>${parent.groupId}</groupId>
 			<artifactId>amp.bus.security</artifactId>
 			<version>${parent.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>amp</groupId>
+			<groupId>${parent.groupId}</groupId>
 			<artifactId>amp.topology.client</artifactId>
 			<version>${parent.version}</version>
 		</dependency>
+        <dependency>
+            <groupId>${parent.groupId}</groupId>
+            <artifactId>amp.rabbit</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${parent.groupId}</groupId>
+            <artifactId>amp.bus.rabbit</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${parent.groupId}</groupId>
+            <artifactId>amp.commanding</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${parent.groupId}</groupId>
+            <artifactId>amp.commanding.rabbit</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
+
+        <!-- Shared Dependencies -->
+        <dependency>
+            <groupId>cmf</groupId>
+            <artifactId>cmf.bus</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>cmf</groupId>
+            <artifactId>cmf.eventing</artifactId>
+        </dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.10</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-all</artifactId>
-			<version>1.9.5</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
-			<version>${logback.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-core</artifactId>
-			<version>${logback.version}</version>
 		</dependency>
+
 	</dependencies>
+
+
 </project>

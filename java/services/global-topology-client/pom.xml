@@ -17,7 +17,7 @@
     <artifactId>amp.topology.client</artifactId>
     <packaging>jar</packaging>
     <name>AMP Global Topology Client</name>
-    <url>http://ampere.berico.us/services/topology</url>
+    <url>http://ampere.berico.us/services/global-topology</url>
 
 
     <properties>
