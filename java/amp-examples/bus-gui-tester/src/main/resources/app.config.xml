@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:util="http://www.springframework.org/schema/util"
-	xmlns:c="http://www.springframework.org/schema/c"
-	xmlns:p="http://www.springframework.org/schema/p"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:c="http://www.springframework.org/schema/c"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
     <bean id="busTester" class="amp.examples.gui.BusTester"
-       c:eventBus-ref="eventBus" />
+          c:eventBus-ref="eventBus" />
 
-	<!-- The following components are for our Event Bus, which uses our Envelope Bus -->
-    <bean id="eventBus" class="amp.eventing.DefaultEventBus" 
-       destroy-method="dispose"
-       c:envelopeBus-ref="envelopeBus"
-       c:outboundProcessors-ref="outboundEventProcessors"
-       c:inboundProcessors-ref="inboundEventProcessors" />
+    <!-- The following components are for our Event Bus, which uses our Envelope Bus -->
+    <bean id="eventBus" class="amp.eventing.DefaultEventBus"
+          destroy-method="dispose"
+          c:envelopeBus-ref="envelopeBus"
+          c:outboundProcessors-ref="outboundEventProcessors"
+          c:inboundProcessors-ref="inboundEventProcessors" />
 
     <util:list id="inboundEventProcessors" value-type="amp.eventing.IEventProcessor">
         <ref bean="rpcFilter" />
@@ -29,31 +29,31 @@
     </util:list>
 
     <bean id="serializationProcessor" class="amp.eventing.serializers.JsonEventSerializer"
-    		c:serializer-ref="serializer" />
+          c:serializer-ref="serializer" />
 
     <bean id="serializer" class="amp.eventing.GsonSerializer" />
 
-    <bean id="outboundHeadersProcessor" class="amp.eventing.OutboundHeadersProcessor" 
-    		c:userInfoRepository-ref="userInfoRepository"  />
-	
-	<util:map id="userMapping" key-type="java.lang.String" value-type="java.lang.String">
-		<entry key="user" value="rclayton" />
-	</util:map>
-	
+    <bean id="outboundHeadersProcessor" class="amp.eventing.OutboundHeadersProcessor"
+          c:userInfoRepository-ref="userInfoRepository"  />
+
+    <util:map id="userMapping" key-type="java.lang.String" value-type="java.lang.String" />
+
     <bean id="userInfoRepository" class="amp.bus.security.InMemoryUserInfoRepository"
-    		c:mapping-ref="userMapping" />
+          c:mapping-ref="userMapping" />
 
     <bean id="rpcFilter" class="amp.eventing.RpcFilter" />
 
     <!-- The follow components are for our Envelope Bus -->
     <bean id="envelopeBus" class="amp.bus.DefaultEnvelopeBus" destroy-method="dispose"
-    		c:transportProvider-ref="transportProvider" />
+          c:transportProvider-ref="transportProvider" />
 
-    <bean id="transportProvider" class="amp.bus.rabbit.RabbitTransportProvider" 
-    		c:topologyService-ref="topologyService" c:channelFactory-ref="channelFactory" />
+    <bean id="transportProvider" class="amp.bus.rabbit.RabbitTransportProvider"
+          c:topologyService-ref="topologyService"
+          c:channelFactory-ref="channelFactory"
+          c:routingInfoCache-ref="routingInfoCache" />
 
-    <bean id="channelFactory" class="amp.bus.rabbit.BasicChannelFactory"
-           c:username="devexample" c:password="devexample" />
+    <bean id="channelFactory" class="amp.rabbit.BasicChannelFactory"
+          c:username="devexample" c:password="devexample" />
 
     <!-- Default Username and Password for RabbitMQ
 
@@ -79,18 +79,28 @@
           c:urlExpression="http://devexample.com:15677/service/topology/get-routing-info/%s" />
 
     <bean id="topologyService" class="amp.topology.client.GlobalTopologyService"
-          c:routingInfoRetriever-ref="routingInfoRetriever" c:cacheExpiryTime="10000"
+          c:routingInfoRetriever-ref="routingInfoRetriever"
           c:fallbackProvider-ref="fallbackProvider" />
 
     <bean id="routingSerializer" class="amp.topology.client.JsonRoutingInfoSerializer" />
 
-    <bean id="fallbackProvider" class="amp.topology.client.DefaultApplicationExchangeProvider"
-	      p:hostname="devexample.com" p:port="5672" p:durable="true" />
-	
     <!-- Configured to provide a route to the local Broker
-    
+
     <bean id="fallbackProvider" class="amp.topology.client.DefaultApplicationExchangeProvider"
 	      p:hostname="localhost" p:port="5672" />
     -->
-	
+    <bean id="fallbackProvider" class="amp.topology.client.DefaultApplicationExchangeProvider"
+          p:hostname="devexample.com" p:port="5672" p:durable="true" />
+
+    <bean id="routingInfoCache" class="amp.bus.rabbit.CommandableCache"
+          c:commandReceiver-ref="commandReceiver"
+          c:cacheExpiryInSeconds-value="600" />
+
+    <bean id="commandReceiver" class="amp.commanding.DefaultCommandReceiver" c:envelopeReceiver-ref="envelopeReceiver" />
+
+    <bean id="envelopeReceiver" class="amp.commanding.rabbit.RabbitEnvelopeReceiver"
+          c:topologyService-ref="topologyService"
+          c:channelFactory-ref="channelFactory" />
+
+
 </beans>

@@ -61,6 +61,8 @@ public class GlobalTopologyService implements ITopologyService {
                 && this.fallbackProvider != null) {
 
             routingInfo = this.fallbackProvider.getFallbackRoute(topic);
+
+            LOG.info("Falling back to routing info: {}", routingInfo.toString());
         }
 
         // If the RoutingInfo is still null, end this program's life!

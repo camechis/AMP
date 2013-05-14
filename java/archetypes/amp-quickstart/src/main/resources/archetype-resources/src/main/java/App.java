@@ -8,9 +8,9 @@ public class App {
 	
 	private static final Logger logger = LoggerFactory.getLogger(App.class);
 	
-    public static void main( String[] args ) {
+    public static void main(String args[]) {
 
-    		ClassPathXmlApplicationContext applicationContext = null;
+        ClassPathXmlApplicationContext applicationContext = null;
     	
         try {
         		
@@ -36,10 +36,10 @@ public class App {
         }
         finally {
         		
-        		if (applicationContext != null){
-        			
-        			applicationContext.close();
-        		}
+            if (applicationContext != null){
+
+                applicationContext.close();
+            }
         }
     }
 }

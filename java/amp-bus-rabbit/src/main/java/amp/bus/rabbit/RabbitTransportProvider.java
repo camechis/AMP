@@ -195,12 +195,16 @@ public class RabbitTransportProvider implements ITransportProvider {
 
         // if nothing, use the service
         if (null == routing) {
+            LOG.debug("No routing information cached for {}; using the topology service.", topic);
             routing = service.getRoutingInfo(hints);
 
             // if we got something from the service, cache it
             if (null != routing) {
                 cache.put(topic, routing);
             }
+        }
+        else {
+            LOG.debug("Routing information for {} was found in the cache.", topic);
         }
 
         // whatever we end up with, return it

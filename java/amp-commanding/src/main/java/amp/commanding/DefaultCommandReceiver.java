@@ -99,4 +99,9 @@ public class DefaultCommandReceiver implements ICommandReceiver, ICommandChainPr
 
         LOG.debug("Leave processCommand");
     }
+
+    @Override
+    public void dispose() {
+        _envelopeReceiver.dispose();
+    }
 }

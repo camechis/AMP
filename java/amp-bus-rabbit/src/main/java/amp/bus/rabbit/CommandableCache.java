@@ -31,7 +31,7 @@ public class CommandableCache implements IRoutingInfoCache {
 
     public CommandableCache(ICommandReceiver commandReceiver, long cacheExpiryInSeconds) {
 
-        commandReceiver = commandReceiver;
+        this.commandReceiver = commandReceiver;
 
         this.routingInfoCache = CacheBuilder
                 .newBuilder()
@@ -71,5 +71,10 @@ public class CommandableCache implements IRoutingInfoCache {
         finally {
             this.cacheLock.unlock();
         }
+    }
+
+    @Override
+    public void dispose() {
+        this.commandReceiver.dispose();
     }
 }

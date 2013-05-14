@@ -92,4 +92,8 @@ public class DefaultCommandSender implements ICommandSender, ICommandChainProces
 
         LOG.debug("Leave processCommand");
     }
+
+    @Override
+    public void dispose() {
+    }
 }

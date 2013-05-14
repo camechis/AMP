@@ -33,10 +33,8 @@
     <bean id="outboundHeadersProcessor" class="amp.eventing.OutboundHeadersProcessor" 
     		c:userInfoRepository-ref="userInfoRepository"  />
 	
-	<util:map id="userMapping" key-type="java.lang.String" value-type="java.lang.String">
-		<entry key="user" value="devexample" />
-	</util:map>
-	
+	<util:map id="userMapping" key-type="java.lang.String" value-type="java.lang.String" />
+
     <bean id="userInfoRepository" class="amp.bus.security.InMemoryUserInfoRepository"
     		c:mapping-ref="userMapping" />
 
@@ -49,11 +47,11 @@
     <bean id="transportProvider" class="amp.bus.rabbit.RabbitTransportProvider" 
     		c:topologyService-ref="topologyService" c:channelFactory-ref="channelFactory" />
 
-    <bean id="channelFactory" class="amp.bus.rabbit.BasicChannelFactory"
+    <bean id="channelFactory" class="amp.rabbit.BasicChannelFactory"
     		c:username="devexample" c:password="devexample" />
 
     <bean id="topologyService" class="amp.topology.client.GlobalTopologyService"
-          c:routingInfoRetriever-ref="routingInfoRetriever" c:cacheExpiryTime="10000"
+          c:routingInfoRetriever-ref="routingInfoRetriever"
           c:fallbackProvider-ref="fallbackProvider" />
 
     <bean id="httpClientProvider" class="amp.topology.client.BasicAuthHttpClientProvider"
@@ -66,6 +64,16 @@
           c:urlExpression="http://devexample.com:15677/service/topology/get-routing-info/%s" />
 
     <bean id="fallbackProvider" class="amp.topology.client.DefaultApplicationExchangeProvider"
-    		p:hostname="devexample.com" p:durable="true" />
+          p:hostname="devexample.com" p:port="5672" p:durable="true" />
+
+    <bean id="routingInfoCache" class="amp.bus.rabbit.CommandableCache"
+          c:commandReceiver-ref="commandReceiver"
+          c:cacheExpiryInSeconds-value="600" />
+
+    <bean id="commandReceiver" class="amp.commanding.DefaultCommandReceiver" c:envelopeReceiver-ref="envelopeReceiver" />
+
+    <bean id="envelopeReceiver" class="amp.commanding.rabbit.RabbitEnvelopeReceiver"
+          c:topologyService-ref="topologyService"
+          c:channelFactory-ref="channelFactory" />
 	
 </beans>
