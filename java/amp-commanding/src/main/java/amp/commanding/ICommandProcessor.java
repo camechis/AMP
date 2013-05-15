@@ -9,5 +9,5 @@ package amp.commanding;
  */
 public interface ICommandProcessor {
 
-    void processCommand(CommandContext context, IContinuationCallback next);
+    void processCommand(CommandContext context, IContinuationCallback next) throws CommandException;
 }

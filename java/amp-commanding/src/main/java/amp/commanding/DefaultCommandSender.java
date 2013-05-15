@@ -3,6 +3,7 @@ package amp.commanding;
 
 import java.util.List;
 
+import cmf.bus.Envelope;
 import cmf.bus.IEnvelopeSender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,15 +38,24 @@ public class DefaultCommandSender implements ICommandSender, ICommandChainProces
         if (null == command) { throw new IllegalArgumentException("Cannot send a null command."); }
         LOG.debug("Enter send");
 
-        final CommandContext context = new CommandContext(CommandContext.Directions.Out, command);
+        final Envelope envelope = new Envelope();
+        final CommandContext context = new CommandContext(CommandContext.Directions.Out, command, envelope);
 
         try {
 
             this.processCommand(context, _processorChain, new IContinuationCallback() {
 
                 @Override
-                public void continueProcessing() throws Exception {
-                    _envelopeSender.send(context.getEnvelope());
+                public void continueProcessing() throws CommandException {
+
+                    try {
+                        _envelopeSender.send(context.getEnvelope());
+                    }
+                    catch (Exception ex) {
+                        String message = "Failed to send envelope containing command.";
+                        LOG.error(message, ex);
+                        throw new CommandException(message, ex);
+                    }
                 }
             });
         }
@@ -62,7 +72,7 @@ public class DefaultCommandSender implements ICommandSender, ICommandChainProces
     public void processCommand(
             final CommandContext context,
             final List<ICommandProcessor> processingChain,
-            final IContinuationCallback onComplete) throws Exception {
+            final IContinuationCallback onComplete) throws CommandException {
 
         LOG.debug("Enter processCommand");
 
@@ -84,7 +94,7 @@ public class DefaultCommandSender implements ICommandSender, ICommandChainProces
         processor.processCommand(context, new IContinuationCallback() {
 
             @Override
-            public void continueProcessing() throws Exception {
+            public void continueProcessing() throws CommandException {
                 processCommand(context, newChain, onComplete);
             }
 

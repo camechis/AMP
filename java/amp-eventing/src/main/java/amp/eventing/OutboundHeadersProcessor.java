@@ -9,6 +9,7 @@ import org.apache.commons.lang.StringUtils;
 import amp.bus.security.IUserInfoRepository;
 import amp.eventing.EnvelopeHelper;
 import amp.eventing.EventContext.Directions;
+import org.joda.time.DateTime;
 
 
 public class OutboundHeadersProcessor implements IEventProcessor {
@@ -53,7 +54,9 @@ public class OutboundHeadersProcessor implements IEventProcessor {
         String senderIdentity = env.getSenderIdentity();
         senderIdentity = StringUtils.isBlank(senderIdentity) ? userInfoRepo.getDistinguishedName(System.getProperty("user.name")).replaceAll(",", ", ") : senderIdentity;
         env.setSenderIdentity(senderIdentity);
-        
+
+        env.setCreationTime(DateTime.now());
+
         continuation.continueProcessing();
 	}
 	

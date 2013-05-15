@@ -61,15 +61,16 @@ public class CommandRegistration implements IRegistration {
             _processor.processCommand(ctx, _processingChain, new IContinuationCallback() {
 
                 @Override
-                public void continueProcessing() throws Exception {
+                public void continueProcessing() throws CommandException {
                     _handler.handle(ctx.getCommand(), env.getHeaders());
                 }
             });
 
         }
-        catch (Exception ex) {
-            LOG.error("Failed to process incoming envelope", ex);
-            throw ex;
+        catch (CommandException ex) {
+            String message = "Failed to process an incoming command envelope.";
+            LOG.error(message, ex);
+            throw new Exception(message, ex);
         }
 
         return null;

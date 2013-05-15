@@ -9,8 +9,6 @@ import java.util.Map;
  * Created with IntelliJ IDEA.
  * User: jar349
  * Date: 5/1/13
- * Time: 2:11 PM
- * To change this template use File | Settings | File Templates.
  */
 public class CommandContext {
 
@@ -42,10 +40,18 @@ public class CommandContext {
         this.context = new HashMap<String, Object>();
     }
 
-    public CommandContext(Directions direction, Object command) {
+    public CommandContext(Directions direction, Object command, Envelope envelope) {
 
         this.direction = direction;
         this.command = command;
+        this.envelope = envelope;
+        this.context = new HashMap<String, Object>();
+    }
+
+    public CommandContext(Directions direction, Envelope envelope) {
+
+        this.direction = direction;
+        this.envelope = envelope;
         this.context = new HashMap<String, Object>();
     }
 }

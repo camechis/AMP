@@ -82,7 +82,7 @@
     <bean id="fallbackProvider" class="amp.topology.client.DefaultApplicationExchangeProvider">
         <property name="hostname" value="${event.bus.host}" />
         <property name="port" value="${event.bus.port}" />
-        <property name="durable" value="${event.bus.durable}" />
+        <property name="exchangeName" value="amp.fallback" />
     </bean>
 
     <bean id="routingInfoCache" class="amp.bus.rabbit.CommandableCache">

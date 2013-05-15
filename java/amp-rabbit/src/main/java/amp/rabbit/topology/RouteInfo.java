@@ -32,4 +32,19 @@ public class RouteInfo {
     public void setProducerExchange(Exchange exchange) {
         producerExchange = exchange;
     }
+
+
+    @Override
+    public String toString() {
+
+        StringBuilder sb = new StringBuilder("{");
+
+        sb.append(" \"producerExchange\" : ");
+        sb.append(producerExchange.toString());
+        sb.append(", \"consumerExchange\" : ");
+        sb.append(consumerExchange.toString());
+        sb.append("}");
+
+        return sb.toString();
+    }
 }

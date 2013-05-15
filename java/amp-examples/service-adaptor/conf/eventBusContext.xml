@@ -67,7 +67,7 @@
           c:urlExpression="http://devexample.com:15677/service/topology/get-routing-info/%s" />
 
     <bean id="fallbackProvider" class="amp.topology.client.DefaultApplicationExchangeProvider"
-    		p:hostname="devexample.com" p:port="5672" p:durable="true" p:exchangeName="amp.adaptation" />
+    		p:hostname="devexample.com" p:port="5672" p:exchangeName="amp.adaptation" />
 
     <bean id="routingInfoCache" class="amp.bus.rabbit.CommandableCache"
           c:commandReceiver-ref="commandReceiver"

@@ -15,5 +15,5 @@ public interface ICommandChainProcessor {
             final CommandContext context,
             final List<ICommandProcessor> processingChain,
             final IContinuationCallback onComplete)
-        throws Exception;
+        throws CommandException;
 }

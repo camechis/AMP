@@ -90,7 +90,7 @@
 	      p:hostname="localhost" p:port="5672" />
     -->
     <bean id="fallbackProvider" class="amp.topology.client.DefaultApplicationExchangeProvider"
-          p:hostname="devexample.com" p:port="5672" p:durable="true" />
+          p:hostname="devexample.com" p:port="5672" p:exchangeName="amp.fallback" />
 
     <bean id="routingInfoCache" class="amp.bus.rabbit.CommandableCache"
           c:commandReceiver-ref="commandReceiver"

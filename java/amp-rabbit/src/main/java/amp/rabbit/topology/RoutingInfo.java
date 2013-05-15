@@ -23,4 +23,15 @@ public class RoutingInfo {
     public void setRoutes(Iterable<RouteInfo> routes) {
         this.routes = routes;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("{ \"routes\" : [");
+        for (RouteInfo route : this.routes) {
+            sb.append(route.toString());
+        }
+        sb.append("]}");
+
+        return sb.toString();
+    }
 }

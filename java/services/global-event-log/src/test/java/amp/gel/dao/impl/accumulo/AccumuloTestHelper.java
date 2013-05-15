@@ -14,7 +14,7 @@ import org.apache.accumulo.core.security.Authorizations;
 import amp.gel.dao.DatastoreTestHelper;
 
 public class AccumuloTestHelper implements DatastoreTestHelper {
-	public static final int DEFAULT_BATCH_SIZE = 20;
+	public static final int DEFAULT_BATCH_SIZE = 30;
 
 	/**
 	 * connects to an Accumulo instance
@@ -34,7 +34,8 @@ public class AccumuloTestHelper implements DatastoreTestHelper {
 	 * testing.
 	 */
 	public long getRowCount(String tableName) throws TableNotFoundException {
-		long count = 0;
+
+		long count = 0; // since we are counting natual numbers, start with 1
 		Scanner scanner = connector.createScanner(tableName,
 				new Authorizations());
 		scanner.setBatchSize(DEFAULT_BATCH_SIZE);

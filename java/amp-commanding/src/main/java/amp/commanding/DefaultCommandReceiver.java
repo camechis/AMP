@@ -34,9 +34,9 @@ public class DefaultCommandReceiver implements ICommandReceiver, ICommandChainPr
         _envelopeReceiver = envelopeReceiver;
     }
 
-    public DefaultCommandReceiver(IEnvelopeReceiver envelopeReceiver, List<ICommandProcessor> processingChain) {
+    public DefaultCommandReceiver(IEnvelopeReceiver envelopeReceiver, List<ICommandProcessor> processorChain) {
         _envelopeReceiver = envelopeReceiver;
-        _processingChain = processingChain;
+        _processingChain = processorChain;
     }
 
 
@@ -69,7 +69,7 @@ public class DefaultCommandReceiver implements ICommandReceiver, ICommandChainPr
     public void processCommand(
             final CommandContext context,
             final List<ICommandProcessor> processingChain,
-            final IContinuationCallback onComplete) throws Exception {
+            final IContinuationCallback onComplete) throws CommandException {
 
         LOG.debug("Enter processCommand");
 
@@ -91,7 +91,7 @@ public class DefaultCommandReceiver implements ICommandReceiver, ICommandChainPr
         processor.processCommand(context, new IContinuationCallback() {
 
             @Override
-            public void continueProcessing() throws Exception {
+            public void continueProcessing() throws CommandException {
                 processCommand(context, newChain, onComplete);
             }
 

@@ -45,7 +45,9 @@
     		c:transportProvider-ref="transportProvider" />
 
     <bean id="transportProvider" class="amp.bus.rabbit.RabbitTransportProvider" 
-    		c:topologyService-ref="topologyService" c:channelFactory-ref="channelFactory" />
+    		c:topologyService-ref="topologyService"
+            c:channelFactory-ref="channelFactory"
+            c:routingInfoCache-ref="routingInfoCache"/>
 
     <bean id="channelFactory" class="amp.rabbit.BasicChannelFactory"
     		c:username="devexample" c:password="devexample" />
@@ -64,11 +66,11 @@
           c:urlExpression="http://devexample.com:15677/service/topology/get-routing-info/%s" />
 
     <bean id="fallbackProvider" class="amp.topology.client.DefaultApplicationExchangeProvider"
-          p:hostname="devexample.com" p:port="5672" p:durable="true" />
+          p:hostname="devexample.com" p:port="5672" p:exchangeName="amp.fallback" />
 
     <bean id="routingInfoCache" class="amp.bus.rabbit.CommandableCache"
           c:commandReceiver-ref="commandReceiver"
-          c:cacheExpiryInSeconds-value="600" />
+          c:cacheExpiryInSeconds="600" />
 
     <bean id="commandReceiver" class="amp.commanding.DefaultCommandReceiver" c:envelopeReceiver-ref="envelopeReceiver" />
 

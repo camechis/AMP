@@ -9,7 +9,7 @@ import cmf.bus.IRegistration;
  * Time: 4:22 PM
  * To change this template use File | Settings | File Templates.
  */
-public class DefaultCommandBus implements ICommandSender, ICommandReceiver {
+public class DefaultCommandBus implements ICommandBus {
 
     private ICommandSender _sender;
     private ICommandReceiver _receiver;
@@ -29,5 +29,10 @@ public class DefaultCommandBus implements ICommandSender, ICommandReceiver {
     @Override
     public void send(Object command) throws CommandException {
         _sender.send(command);
+    }
+
+    @Override
+    public void dispose() {
+        _receiver.dispose();
     }
 }
