@@ -84,16 +84,19 @@ public class JsonSerializationProcessor implements ICommandProcessor {
 
         try {
             Class<?> type = Class.forName(eventType);
+
             String jsonString = new String(env.getPayload(), ENCODING);
+            LOG.debug("Will deserialize into a command: " + jsonString);
+
             context.setCommand(this.gson.fromJson(jsonString, type));
+
+            next.continueProcessing();
         }
         catch (Exception ex) {
             String message = "Failed to deserialize an incoming command.";
             LOG.error(message, ex);
             throw new CommandException(message, ex);
         }
-
-        next.continueProcessing();
     }
 
     public void processOutbound(CommandContext context, IContinuationCallback next) throws CommandException {
@@ -102,7 +105,7 @@ public class JsonSerializationProcessor implements ICommandProcessor {
 
         try {
             String jsonString = gson.toJson(context.getCommand());
-            LOG.debug("Serialized event: " + jsonString);
+            LOG.debug("Serialized command: " + jsonString);
 
             env.setPayload(jsonString.getBytes(ENCODING));
 

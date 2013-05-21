@@ -54,6 +54,8 @@ public class CommandRegistration implements IRegistration {
     @Override
     public Object handle(final Envelope env) throws Exception {
 
+        LOG.debug("Enter CommandRegistration # handle( Envelope env )");
+
         try {
             // create a context to send through the processors
             final CommandContext ctx = new CommandContext(CommandContext.Directions.In, env);

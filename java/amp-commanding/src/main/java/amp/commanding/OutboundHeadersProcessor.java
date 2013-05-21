@@ -42,12 +42,9 @@ public class OutboundHeadersProcessor implements ICommandProcessor {
             String senderIdentity = env.getSenderIdentity();
             senderIdentity = StringUtils.isBlank(senderIdentity) ? System.getProperty("user.name") : senderIdentity;
             env.setSenderIdentity(senderIdentity);
+        }
 
-            next.continueProcessing();
-        }
-        else {
-            next.continueProcessing();
-        }
+        next.continueProcessing();
     }
 
 

@@ -35,7 +35,6 @@ public class RabbitEnvelopeReceiver implements IEnvelopeReceiver {
     private ITopologyService _topologyService;
     private IRabbitChannelFactory _channelFactory;
     private ConcurrentHashMap<IRegistration, RabbitListener> _listeners;
-    private List<IEnvelopeReceivedCallback> _envCallbacks;
 
 
 
@@ -45,7 +44,6 @@ public class RabbitEnvelopeReceiver implements IEnvelopeReceiver {
         _channelFactory = channelFactory;
 
         _listeners = new ConcurrentHashMap<IRegistration, RabbitListener>();
-        _envCallbacks = new ArrayList<IEnvelopeReceivedCallback>();
     }
 
 
@@ -102,8 +100,7 @@ public class RabbitEnvelopeReceiver implements IEnvelopeReceiver {
 
 
 
-    protected RabbitListener createListener(
-            IRegistration registration, Exchange exchange) throws Exception {
+    protected RabbitListener createListener(IRegistration registration, Exchange exchange) throws Exception {
 
         // create a channel
         Channel channel = _channelFactory.getChannelFor(exchange);
@@ -117,7 +114,9 @@ public class RabbitEnvelopeReceiver implements IEnvelopeReceiver {
             @Override
             public void handleReceive(IEnvelopeDispatcher dispatcher) {
 
-                raise_onEnvelopeReceivedEvent(dispatcher);
+                LOG.debug("Got an envelope from the RabbitListener: dispatching.");
+                // the dispatcher encapsulates the logic of giving the envelope to handlers
+                dispatcher.dispatch();
             }
         });
 
@@ -150,23 +149,6 @@ public class RabbitEnvelopeReceiver implements IEnvelopeReceiver {
     protected RabbitListener getListener(IRegistration registration, Exchange exchange) {
 
         return new RabbitListener(registration, exchange);
-    }
-
-
-    /**
-     * Used to signal EnvelopeReceived listeners that a new envelope has been
-     * received from a listener.
-     * @param dispatcher Object used to grab the envelope as well as to complete
-     * the process of receiving the message.
-     */
-    protected void raise_onEnvelopeReceivedEvent(IEnvelopeDispatcher dispatcher) {
-        for (IEnvelopeReceivedCallback callback : _envCallbacks) {
-            try {
-                callback.handleReceive(dispatcher);
-            } catch (Exception ex) {
-                LOG.error("Caught an unhandled exception raising the onEnvelopeReceived event", ex);
-            }
-        }
     }
 
     /**

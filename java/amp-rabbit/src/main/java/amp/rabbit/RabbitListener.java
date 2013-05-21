@@ -240,6 +240,9 @@ public class RabbitListener implements IDisposable, Runnable {
      * @param dispatcher Envelope Dispatcher that will allow listeners to dispatch the envelope.
      */
     protected void raise_onEnvelopeReceivedEvent(RabbitEnvelopeDispatcher dispatcher) {
+
+        log.debug("Now giving dispatcher to registered callbacks");
+
         for (IEnvelopeReceivedCallback callback : envCallbacks) {
             try {
                 callback.handleReceive(dispatcher);

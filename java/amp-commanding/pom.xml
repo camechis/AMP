@@ -26,6 +26,7 @@
         <dependency>
             <groupId>amp</groupId>
             <artifactId>amp.bus</artifactId>
+            <version>${parent.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
