@@ -65,10 +65,10 @@ public class Envelope implements Serializable {
 	@Column(unique = false, nullable = true)
 	private String senderSignature;
 
-	@Column(unique = false, nullable = true, columnDefinition = "LONG VARCHAR")
+	@Column(unique = false, nullable = true, columnDefinition = "VARCHAR(32672)")
 	private String topic;
 
-	@Column(unique = false, nullable = true, columnDefinition = "LONG VARCHAR")
+	@Column(unique = false, nullable = true, columnDefinition = "VARCHAR(32672)")
 	private String type;
 
 	@Column(unique = false, nullable = true, columnDefinition = "BLOB")

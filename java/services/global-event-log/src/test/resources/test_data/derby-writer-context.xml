@@ -54,8 +54,6 @@
 
 	<bean id="datastoreWriter" class="amp.gel.dao.impl.derby.DerbyWriter" />
 
-	<bean id="datastoreTestHelper" class="amp.gel.dao.impl.derby.DerbyTestHelper" />
-
 	<!-- Event Processors -->
 
 	<bean id="envelopeGenerator" class="amp.gel.dao.impl.derby.data.EnvelopeGenerator">
@@ -73,7 +71,7 @@
 			class="amp.gel.dao.impl.derby.data.processors.SenderIdentityHeaderProcessor" />
 		<bean id="timeHeadersProcessor"
 			class="amp.gel.dao.impl.derby.data.processors.TimeHeadersProcessor">
-			<property name="startDate" value="2013-01-01" />
+			<property name="startDate" value="2012-01-01" />
 			<property name="stopDate" value="2013-05-07" />
 		</bean>
 	</util:list>

@@ -17,7 +17,7 @@ public class TestDerbyDataWriter {
 	public static void main(String[] args) throws Exception {
 
 		ApplicationContext applicationContext = new ClassPathXmlApplicationContext(
-				"test_data/derby-context.xml");
+				"test_data/derby-writer-context.xml");
 		DatastoreWriter datastoreWriter = applicationContext.getBean(
 				"datastoreWriter", DatastoreWriter.class);
 		EnvelopeGenerator envelopeGenerator = applicationContext.getBean(
