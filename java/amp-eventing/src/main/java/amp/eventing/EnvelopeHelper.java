@@ -8,6 +8,7 @@ import cmf.bus.Envelope;
 import cmf.bus.EnvelopeHeaderConstants;
 import org.apache.commons.codec.binary.Base64;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.joda.time.Duration;
 
 
@@ -63,7 +64,7 @@ public class EnvelopeHelper {
             createTicks = env.getHeaders().get(EnvelopeHeaderConstants.ENVELOPE_CREATION_TIME);
         }
 
-        return new DateTime(Long.parseLong(createTicks));
+        return new DateTime(Long.parseLong(createTicks), DateTimeZone.UTC);
     }
 
     public byte[] getDigitalSignature() {

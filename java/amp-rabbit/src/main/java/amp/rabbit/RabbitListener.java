@@ -17,6 +17,7 @@ import com.rabbitmq.client.QueueingConsumer;
 import com.rabbitmq.client.QueueingConsumer.Delivery;
 import com.rabbitmq.client.ShutdownSignalException;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -422,7 +423,7 @@ public class RabbitListener implements IDisposable, Runnable {
     		
 		EnvelopeHelper env = new EnvelopeHelper(new Envelope());
     		
-        env.setReceiptTime(DateTime.now());
+        env.setReceiptTime(DateTime.now(DateTimeZone.UTC));
         env.setPayload(result.getBody());
 
         // Iterate through the AMQP headers and convert them into CMF headers

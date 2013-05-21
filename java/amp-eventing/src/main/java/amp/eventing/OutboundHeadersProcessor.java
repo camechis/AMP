@@ -10,6 +10,7 @@ import amp.bus.security.IUserInfoRepository;
 import amp.eventing.EnvelopeHelper;
 import amp.eventing.EventContext.Directions;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 
 
 public class OutboundHeadersProcessor implements IEventProcessor {
@@ -55,7 +56,7 @@ public class OutboundHeadersProcessor implements IEventProcessor {
         senderIdentity = StringUtils.isBlank(senderIdentity) ? userInfoRepo.getDistinguishedName(System.getProperty("user.name")).replaceAll(",", ", ") : senderIdentity;
         env.setSenderIdentity(senderIdentity);
 
-        env.setCreationTime(DateTime.now());
+        env.setCreationTime(DateTime.now(DateTimeZone.UTC));
 
         continuation.continueProcessing();
 	}
