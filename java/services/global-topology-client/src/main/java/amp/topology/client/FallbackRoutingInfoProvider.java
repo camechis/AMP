@@ -1,6 +1,6 @@
 package amp.topology.client;
 
-import amp.bus.rabbit.topology.RoutingInfo;
+import amp.rabbit.topology.RoutingInfo;
 
 public interface FallbackRoutingInfoProvider {
 

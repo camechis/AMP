@@ -13,7 +13,7 @@
 
 	<properties>
 		<cmf.version>3.1.0</cmf.version>
-		<amp.version>3.1.0</amp.version>
+		<amp.version>3.2.0-SNAPSHOT</amp.version>
 		<springframework.version>3.2.2.RELEASE</springframework.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>

@@ -4,6 +4,7 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
+
 	<parent>
 		<groupId>amp</groupId>
 		<artifactId>amp</artifactId>
@@ -11,15 +12,15 @@
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
+
 	<groupId>amp</groupId>
 	<artifactId>amp-gel</artifactId>
 	<packaging>jar</packaging>
-
 	<name>AMP Global Event Log</name>
+    <url>http://ampere.berico.us/services/global-event-log</url>
+
 
 	<properties>
-		<logback.version>1.0.7</logback.version>
-		<gson.version>2.2.2</gson.version>
 		<accumulo.version>1.4.3</accumulo.version>
 		<hadoop.version>0.20.203.0</hadoop.version>
 		<zookeeper.version>3.3.1</zookeeper.version>
@@ -32,24 +33,6 @@
 		<apache.derby.version>10.9.1.0</apache.derby.version>
 	</properties>
 
-	<repositories>
-		<repository>
-			<id>nexus.bericotechnologies.com</id>
-			<name>Berico Technologies Nexus</name>
-			<url>http://nexus.bericotechnologies.com/content/groups/public</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-		<repository>
-			<id>springsource-repo</id>
-			<name>SpringSource Repository</name>
-			<url>http://repo.springsource.org/release</url>
-		</repository>
-	</repositories>
 
 	<dependencies>
 		<!-- Fallwizard -->
@@ -84,20 +67,39 @@
 			<groupId>cmf</groupId>
 			<artifactId>cmf.eventing</artifactId>
 		</dependency>
+        <dependency>
+            <groupId>amp</groupId>
+            <artifactId>amp.bus</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>amp</groupId>
+            <artifactId>amp.rabbit</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>amp</groupId>
+            <artifactId>amp.bus.rabbit</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
 		<dependency>
 			<groupId>amp</groupId>
-			<artifactId>amp.bus.rabbit</artifactId>
-			<version>${project.version}</version>
+			<artifactId>amp.topology.client</artifactId>
+			<version>${parent.version}</version>
 		</dependency>
+        <dependency>
+            <groupId>amp</groupId>
+            <artifactId>amp.bus.security</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
 		<dependency>
 			<groupId>amp</groupId>
 			<artifactId>amp.eventing</artifactId>
-			<version>${project.version}</version>
+			<version>${parent.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
-			<version>${gson.version}</version>
 		</dependency>
 
 		<!-- Accumulo -->
@@ -133,12 +135,10 @@
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
-			<version>${logback.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-core</artifactId>
-			<version>${logback.version}</version>
 		</dependency>
 
 		<!-- Hibernate -->
@@ -208,8 +208,11 @@
 		</dependency>
 	</dependencies>
 
+
 	<build>
+
 		<plugins>
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
@@ -254,7 +257,10 @@
 					</execution>
 				</executions>
 			</plugin>
+
 		</plugins>
+
 	</build>
+
 
 </project>

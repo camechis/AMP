@@ -14,8 +14,9 @@ import cmf.bus.Envelope;
 import cmf.bus.EnvelopeHeaderConstants;
 import cmf.bus.IEnvelopeFilterPredicate;
 import cmf.bus.IRegistration;
-
 import com.google.gson.Gson;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Counts the # of envelopes that have been received with a specific topic.
@@ -23,14 +24,17 @@ import com.google.gson.Gson;
  */
 public class TopicCounter implements IRegistration {
 
+    private static final Logger LOG = LoggerFactory.getLogger(TopicCounter.class);
+
 	private String topic;
+
 
 	public TopicCounter(String topic) {
 		super();
 		this.topic = topic;
 	}
 
-	private AtomicLong count = new AtomicLong();
+	private volatile AtomicLong count = new AtomicLong();
 
 	private Set<Integer> ids = Collections
 			.synchronizedSet(new TreeSet<Integer>());
@@ -64,8 +68,11 @@ public class TopicCounter implements IRegistration {
 	}
 
 	public Object handle(Envelope envelope) throws Exception {
+
 		addId(envelope);
-		count.incrementAndGet();
+        long current = count.incrementAndGet();
+
+        LOG.debug("Received a SimplePojo, count currently at {}", current);
 		return true;
 	}
 

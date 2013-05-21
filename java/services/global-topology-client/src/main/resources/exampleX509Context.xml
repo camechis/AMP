@@ -20,10 +20,10 @@
 	     to make sure the settings of the exchange match the exchange specified in this
 	     fallback provider. -->
 	<bean id="fallbackProvider" class="amp.topology.client.DefaultApplicationExchangeProvider"
-		p:exchangeName="amp.apps" p:hostname="localhost" />
+		p:exchangeName="amp.fallback" p:hostname="devexample.com" />
 	
 	<bean id="topologyService" class="amp.topology.client.GlobalTopologyService" 
-		c:routingInfoRetriever-ref="routingInfoRetriever" c:cacheExpiryTime="10000"
+		c:routingInfoRetriever-ref="routingInfoRetriever"
 		c:fallbackProvider-ref="fallbackProvider" />
 		
 </beans>

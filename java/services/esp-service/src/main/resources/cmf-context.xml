@@ -5,56 +5,98 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
-	<!-- The following components are for the Envelope Bus -->
-	<bean id="envelopeBus" class="amp.bus.DefaultEnvelopeBus"
-		destroy-method="dispose" c:transportProvider-ref="transportProvider" />
+    <!-- The following components are for our Event Bus, which uses our Envelope Bus -->
+    <bean id="eventBus" class="amp.eventing.DefaultEventBus"
+          destroy-method="dispose">
+        <constructor-arg name="envelopeBus" ref="envelopeBus" />
+        <constructor-arg name="inboundProcessors" ref="inboundEventProcessors" />
+        <constructor-arg name="outboundProcessors" ref="outboundEventProcessors" />
+    </bean>
 
-	<bean id="transportProvider" class="amp.bus.rabbit.RabbitTransportProvider"
-		c:topologyService-ref="topologyService" c:channelFactory-ref="channelFactory" />
+    <util:list id="inboundEventProcessors" value-type="amp.eventing.IEventProcessor">
+        <ref bean="rpcFilter" />
+        <ref bean="serializationProcessor" />
+    </util:list>
 
-	<bean id="channelFactory" class="amp.bus.rabbit.BasicChannelFactory"
-		c:username="${event.bus.username}" c:password="${event.bus.password}" />
+    <util:list id="outboundEventProcessors" value-type="amp.eventing.IEventProcessor">
+        <ref bean="serializationProcessor" />
+        <ref bean="outboundHeadersProcessor" />
+        <ref bean="rpcFilter"/>
+    </util:list>
 
-	<bean id="topologyService" class="amp.bus.rabbit.topology.SimpleTopologyService">
-		<constructor-arg name="clientProfile" value="" />
-		<constructor-arg name="name" value="gel" />
-		<constructor-arg name="hostname" value="${event.bus.host:rabbit}" />
-		<constructor-arg name="vhost" value="${event.bus.virtualhost:/}" />
-		<constructor-arg name="port" value="${event.bus.port:5671}" />
-	</bean>
+    <bean id="serializationProcessor" class="amp.eventing.serializers.JsonEventSerializer">
+        <constructor-arg name="serializer" ref="serializer" />
+    </bean>
 
-	<!-- The following components are for the Event Bus -->
-	<bean id="eventBus" class="amp.eventing.DefaultEventBus"
-		destroy-method="dispose">
-		<constructor-arg name="envelopeBus" ref="envelopeBus" />
-		<constructor-arg name="inboundProcessors" ref="inboundEventProcessors" />
-		<constructor-arg name="outboundProcessors" ref="outboundEventProcessors" />
-	</bean>
+    <bean id="serializer" class="amp.eventing.GsonSerializer" />
 
-	<util:list id="inboundEventProcessors" value-type="amp.eventing.IEventProcessor">
-		<ref bean="serializationProcessor" />
-	</util:list>
+    <bean id="outboundHeadersProcessor" class="amp.eventing.OutboundHeadersProcessor">
+        <constructor-arg name="userInfoRepository" ref="userInfoRepository"  />
+    </bean>
 
-	<util:list id="outboundEventProcessors" value-type="amp.eventing.IEventProcessor">
-		<ref bean="serializationProcessor" />
-		<ref bean="outboundHeadersProcessor" />
-	</util:list>
+    <util:map id="userMapping" key-type="java.lang.String" value-type="java.lang.String" />
 
-	<bean id="serializationProcessor" class="amp.eventing.serializers.JsonEventSerializer">
-		<constructor-arg name="serializer" ref="serializer" />
-	</bean>
+    <bean id="userInfoRepository" class="amp.bus.security.InMemoryUserInfoRepository">
+        <constructor-arg name="mapping" ref="userMapping" />
+    </bean>
 
-	<bean id="serializer" class="amp.eventing.GsonSerializer" />
+    <bean id="rpcFilter" class="amp.eventing.RpcFilter" />
 
-	<bean id="outboundHeadersProcessor" class="amp.eventing.OutboundHeadersProcessor">
-		<constructor-arg name="userInfoRepository" ref="userInfoRepository" />
-	</bean>
 
-	<bean id="userInfoRepository" class="amp.bus.security.InMemoryUserInfoRepository">
-		<constructor-arg name="mapping">
-			<map>
-			</map>
-		</constructor-arg>
-	</bean>
+    <!-- The following components are for our Envelope Bus -->
+    <bean id="envelopeBus" class="amp.bus.DefaultEnvelopeBus" destroy-method="dispose">
+        <constructor-arg name="transportProvider" ref="transportProvider" />
+    </bean>
+
+    <bean id="transportProvider" class="amp.bus.rabbit.RabbitTransportProvider">
+        <constructor-arg name="topologyService" ref="topologyService" />
+        <constructor-arg name="channelFactory" ref="channelFactory" />
+        <constructor-arg name="routingInfoCache" ref="routingInfoCache" />
+    </bean>
+
+    <bean id="channelFactory" class="amp.rabbit.BasicChannelFactory">
+        <constructor-arg name="username" value="devexample" />
+        <constructor-arg name="password" value="devexample" />
+    </bean>
+
+    <bean id="httpClientProvider" class="amp.topology.client.BasicAuthHttpClientProvider">
+        <constructor-arg name="hostname" value="devexample.com" />
+        <constructor-arg name="port" value="15677" />
+        <constructor-arg name="username" value="devexample" />
+        <constructor-arg name="password" value="devexample" />
+    </bean>
+
+    <bean id="routingInfoRetriever" class="amp.topology.client.HttpRoutingInfoRetriever">
+        <constructor-arg name="httpClientProvider" ref="httpClientProvider" />
+        <constructor-arg name="serializer" ref="routingSerializer" />
+        <constructor-arg name="urlExpression" value="http://devexample.com:15677/service/topology/get-routing-info/%s" />
+    </bean>
+
+    <bean id="topologyService" class="amp.topology.client.GlobalTopologyService">
+        <constructor-arg name="routingInfoRetriever" ref="routingInfoRetriever" />
+        <constructor-arg name="fallbackProvider" ref="fallbackProvider" />
+    </bean>
+
+    <bean id="routingSerializer" class="amp.topology.client.JsonRoutingInfoSerializer" />
+
+    <bean id="fallbackProvider" class="amp.topology.client.DefaultApplicationExchangeProvider">
+        <property name="hostname" value="devexample.com" />
+        <property name="port" value="5672" />
+        <property name="exchangeName" value="amp.fallback" />
+    </bean>
+
+    <bean id="routingInfoCache" class="amp.bus.rabbit.CommandableCache">
+        <constructor-arg name="commandReceiver" ref="commandReceiver" />
+        <constructor-arg name="cacheExpiryInSeconds" value="600" />
+    </bean>
+
+    <bean id="commandReceiver" class="amp.commanding.DefaultCommandReceiver">
+        <constructor-arg name="envelopeReceiver" ref="envelopeReceiver" />
+    </bean>
+
+    <bean id="envelopeReceiver" class="amp.commanding.rabbit.RabbitEnvelopeReceiver">
+        <constructor-arg name="topologyService" ref="topologyService" />
+        <constructor-arg name="channelFactory" ref="channelFactory" />
+    </bean>
 
 </beans>

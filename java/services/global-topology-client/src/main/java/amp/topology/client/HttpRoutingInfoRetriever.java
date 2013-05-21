@@ -8,7 +8,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import amp.bus.rabbit.topology.RoutingInfo;
+import amp.rabbit.topology.RoutingInfo;
 import amp.eventing.ISerializer;
 
 /**

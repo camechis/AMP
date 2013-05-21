@@ -9,13 +9,19 @@
 		</encoder>
 	</appender>
 
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>target/test-log.txt</file>
+        <append>false</append>
+        <encoder><pattern>%d %5p | %t | %-55logger{55} | %m | %n</pattern></encoder>
+    </appender>
+
 	<timestamp key="byHour" datePattern="yyyyMMdd'T'HH" />
 
 	<logger name="amp.bus.rabbit">
-		<level value="WARN" />
+		<level value="DEBUG" />
 	</logger>
 
-	<logger name="amp.bus.rabbit.RabbitConnectionShutdownListener">
+	<logger name="amp.rabbit.RabbitConnectionShutdownListener">
 		<level value="ERROR" />
 	</logger>
 
@@ -24,8 +30,9 @@
 	</logger>
 
 	<root>
-		<level value="INFO" />
+		<level value="DEBUG" />
 		<appender-ref ref="CONSOLE" />
+        <appender-ref ref="FILE" />
 	</root>
 
 </configuration>
