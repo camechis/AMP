@@ -7,8 +7,6 @@ define [
     'services/services'
     ], (angular) ->
     'use strict'
-
-
     angular.module 'app', [
         'controllers'
         'directives'
