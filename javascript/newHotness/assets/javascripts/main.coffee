@@ -12,11 +12,11 @@ requirejs.config
   paths:
     c:"controllers",
     d:"directives"
-    jquery: 'vendor/jquery/jquery'
-    angular: 'vendor/angular/angular'
-    i18n: 'vendor/requirejs-i18n/i18n'
-    domReady: 'vendor/requirejs-domready/domReady'
-    modernizr: 'vendor/modernizr/modernizr'
+    jquery: 'vendor/managed/jquery/jquery'
+    angular: 'vendor/managed/angular/angular'
+    i18n: 'vendor/managed/requirejs-i18n/i18n'
+    domReady: 'vendor/managed/requirejs-domready/domReady'
+    modernizr: 'vendor/managed/modernizr/modernizr'
 
   #Non-compliant AMD modules are explicitly defined here along with their dependencies
   shim:
