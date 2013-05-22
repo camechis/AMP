@@ -10,7 +10,8 @@ using RabbitMQ.Client;
 
 using cmf.bus;
 using amp.bus;
-using amp.bus.rabbit.topology;
+using amp.rabbit;
+using amp.rabbit.topology;
 
 namespace amp.bus.rabbit
 {

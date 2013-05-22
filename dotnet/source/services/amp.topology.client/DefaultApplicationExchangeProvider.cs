@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using amp.bus.rabbit.topology;
+using amp.rabbit.topology;
 
 namespace amp.topology.client
 {

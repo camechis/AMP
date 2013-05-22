@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 using cmf.bus;
 
-namespace amp.bus.rabbit.topology
+namespace amp.rabbit.topology
 {
     public class SimpleTopologyService : ITopologyService
     {

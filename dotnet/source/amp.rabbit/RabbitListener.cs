@@ -16,9 +16,9 @@ using RabbitMQ.Util;
 
 using cmf.bus;
 using amp.bus;
-using amp.bus.rabbit.topology;
+using amp.rabbit.topology;
 
-namespace amp.bus.rabbit
+namespace amp.rabbit
 {
     public class RabbitListener
     {

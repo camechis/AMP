@@ -58,11 +58,10 @@
     <Compile Include="Utf8JsonRoutingDeserializer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <ItemGroup />
   <ItemGroup>
-    <ProjectReference Include="..\..\amp.bus.rabbit\amp.bus.rabbit.csproj">
-      <Project>{8CB67E8B-14B4-4C67-A23E-5C61EE17C8C2}</Project>
-      <Name>amp.bus.rabbit</Name>
+    <ProjectReference Include="..\..\amp.rabbit\amp.rabbit.csproj">
+      <Project>{1d9a3ed8-779b-4f1b-93f5-837320af4656}</Project>
+      <Name>amp.rabbit</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

@@ -9,7 +9,7 @@ using RabbitMQ.Client;
 using cmf.bus;
 using amp.bus;
 
-namespace amp.bus.rabbit
+namespace amp.rabbit
 {
     public class RabbitEnvelopeDispatcher : IEnvelopeDispatcher
     {

@@ -4,7 +4,7 @@ using System.Runtime.Caching;
 
 using cmf.bus;
 
-using amp.bus.rabbit.topology;
+using amp.rabbit.topology;
 
 
 namespace amp.topology.client

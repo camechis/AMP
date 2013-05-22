@@ -1,21 +1,22 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{8CB67E8B-14B4-4C67-A23E-5C61EE17C8C2}</ProjectGuid>
+    <ProjectGuid>{1D9A3ED8-779B-4F1B-93F5-837320AF4656}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>amp.bus.rabbit</RootNamespace>
-    <AssemblyName>amp.bus.rabbit</AssemblyName>
+    <RootNamespace>amp.rabbit</RootNamespace>
+    <AssemblyName>amp.rabbit</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>True</DebugSymbols>
+    <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>False</Optimize>
+    <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -23,19 +24,22 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
-    <Optimize>True</Optimize>
+    <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>True</SignAssembly>
+    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>amp.bus.rabbit.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>amp.rabbit.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="cmf.bus">
+      <HintPath>..\..\binaries\libraries\cmf.bus.dll</HintPath>
+    </Reference>
     <Reference Include="Common.Logging">
       <HintPath>..\..\binaries\libraries\Common.Logging.dll</HintPath>
     </Reference>
@@ -49,37 +53,41 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="cmf.bus">
-      <HintPath>..\..\binaries\libraries\cmf.bus.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\GlobalAssemblyInfo.cs">
-      <Link>Properties\GlobalAssemblyInfo.cs</Link>
-    </Compile>
-    <Compile Include="CommandableCache.cs" />
-    <Compile Include="IRoutingInfoCache.cs" />
-    <Compile Include="RabbitTransportProvider.cs" />
+    <Compile Include="BasicConnectionFactory.cs" />
+    <Compile Include="CertificateConnectionFactory.cs" />
+    <Compile Include="DeliveryOutcomes.cs" />
+    <Compile Include="IRabbitConnectionFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RoutingCacheBuster.cs" />
+    <Compile Include="Properties\GlobalAssemblyInfo.cs" />
+    <Compile Include="RabbitEnvelopeDispatcher.cs" />
+    <Compile Include="RabbitException.cs" />
+    <Compile Include="RabbitListener.cs" />
+    <Compile Include="topology\Exchange.cs" />
+    <Compile Include="topology\ITopologyService.cs" />
+    <Compile Include="topology\RouteInfo.cs" />
+    <Compile Include="topology\RoutingInfo.cs" />
+    <Compile Include="topology\SimpleTopologyService.cs" />
+    <Compile Include="topology\TopologyExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\amp.bus.security\amp.bus.security.csproj">
+      <Project>{55e3c8ab-52aa-4170-8326-b09f795c9449}</Project>
+      <Name>amp.bus.security</Name>
+    </ProjectReference>
     <ProjectReference Include="..\amp.bus\amp.bus.csproj">
-      <Project>{D96A6D2B-E427-406A-BD73-9961447B3557}</Project>
+      <Project>{d96a6d2b-e427-406a-bd73-9961447b3557}</Project>
       <Name>amp.bus</Name>
     </ProjectReference>
-    <ProjectReference Include="..\amp.rabbit\amp.rabbit.csproj">
-      <Project>{1d9a3ed8-779b-4f1b-93f5-837320af4656}</Project>
-      <Name>amp.rabbit</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="amp.bus.rabbit.snk" />
+    <None Include="amp.rabbit.snk" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>IF NOT EXIST "$(SolutionDir)binaries" MKDIR "$(SolutionDir)binaries"
-copy "$(TargetDir)$(TargetName)*" "$(SolutionDir)binaries"</PostBuildEvent>
+    <PostBuildEvent>IF NOT EXIST $(SolutionDir)binaries MKDIR $(SolutionDir)binaries
+copy $(TargetDir)$(TargetName)* $(SolutionDir)binaries</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
