@@ -1,9 +1,9 @@
-define ['jquery', 'templates'], ($, templates) ->
+define ['jquery', 'templates', 'angular'], ($, templates, angular) ->
 
   class ExampleView
 
     render: (element) ->
-      $(element).append templates.example({name:'Handlebars', css:'stylus'})
-      $(element).append templates['another-example']({name:'Handlebars'})
+      $(element).append templates.example
+      $(element).append templates['another-example']
 
   ExampleView

@@ -144,9 +144,9 @@ exports.config = {
     # port: 3000                 # port to start server on
     # base: ''                   # base of url for the app, if altered should start with a slash
     views:                     # configuration for the view layer of your application
-      compileWith: 'handlebars'      # Valid options: "jade", "hogan", "html", "ejs", "handlebars".
+      compileWith: 'html'      # Valid options: "jade", "hogan", "html", "ejs", "handlebars".
                                  # The compiler for your views.
-      extension: 'hbs'        # extension of your server views
+      extension: 'html'        # extension of your server views
       # path: 'views'            # This is the path to project views, it can be absolute or
                                  # relative. If defaultServer.enabled is true, it is relative to the
                                  # root of the project. If defaultServer.enabled is false it is
