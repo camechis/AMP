@@ -1,0 +1,27 @@
+{
+  "name": "ampjs",
+  "version": "0.0.2",
+  "ignore": [
+    "assets/",
+    "test/",
+    "views/",
+    "karma.conf.js",
+    "mimosa-config.coffee",
+    ".bowerrc",
+    "public/javascripts/vendor"
+  ],
+  "main": "public/javascripts/src/app.js",
+  "dependencies": {
+    "modernizr": "2.6.2",
+    "underscore-amd": "1.4.4"
+  },
+  "gitHead": "20552bb205309e78e18497cd2d031498ef964ed0",
+  "readme": "AMPJS\n=====\n\nAMPJS\n",
+  "readmeFilename": "README.md",
+  "_id": "ampjs@0.0.2",
+  "description": "AMPJS =====",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Berico-Technologies/ampjs.git"
+  }
+}
