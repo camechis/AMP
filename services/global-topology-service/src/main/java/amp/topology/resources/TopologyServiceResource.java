@@ -14,8 +14,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 
 
-import amp.bus.rabbit.topology.ITopologyService;
-import amp.bus.rabbit.topology.RoutingInfo;
+import amp.rabbit.topology.ITopologyService;
+import amp.rabbit.topology.RoutingInfo;
 
 import cmf.bus.EnvelopeHeaderConstants;
 

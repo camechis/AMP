@@ -1,235 +1,241 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-  <groupId>amp</groupId>
-  <artifactId>amp.topology.service</artifactId>
-  <version>3.2.0-SNAPSHOT</version>
-  <packaging>jar</packaging>
+    <groupId>amp</groupId>
+    <artifactId>amp.topology.service</artifactId>
+    <version>3.2.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
 
-  <name>Global Topology Service</name>
-  <url>http://labs.beri.co/cmf/topology</url>
+    <name>Global Topology Service</name>
+    <url>http://ampere.berico.us/services/global-topology</url>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <dropwizard.version>0.6.1</dropwizard.version>
-    <spring.version>3.2.1.RELEASE</spring.version>
-    <spring.security.version>3.1.3.RELEASE</spring.security.version>
-    <cmf.version>3.1.0</cmf.version>
-    <amp.version>${project.version}</amp.version>
-  </properties>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <dropwizard.version>0.6.1</dropwizard.version>
+        <spring.version>3.2.1.RELEASE</spring.version>
+        <spring.security.version>3.1.3.RELEASE</spring.security.version>
+        <cmf.version>3.1.0</cmf.version>
+        <amp.version>${project.version}</amp.version>
+    </properties>
 
-  <repositories>
-  	
-  	  <repository>
-		  <id>nexus.bericotechnologies.com</id>
-		  <name>Berico Technologies Nexus</name>
-		  <url>http://nexus.bericotechnologies.com/content/groups/public</url>
-		  <releases><enabled>true</enabled></releases>
-		  <snapshots><enabled>true</enabled></snapshots>
-	 </repository>
-  
-	  <repository>
-	    <id>springsource-repo</id>
-	    <name>SpringSource Repository</name>
-	    <url>http://repo.springsource.org/release</url>
-	  </repository>
-	  <repository>
-	    <id>spring-snapshot</id>
-    		<name>Spring Maven SNAPSHOT Repository</name>
-    		<url>http://repo.springsource.org/libs-snapshot</url>
-	</repository>
+    <repositories>
 
-  </repositories>
+        <repository>
+            <id>nexus.bericotechnologies.com</id>
+            <name>Berico Technologies Nexus</name>
+            <url>http://nexus.bericotechnologies.com/content/groups/public</url>
+            <releases><enabled>true</enabled></releases>
+            <snapshots><enabled>true</enabled></snapshots>
+        </repository>
 
-  <dependencies>
-  	
-    <dependency>
-    		<groupId>cmf</groupId>
-    		<artifactId>cmf.bus</artifactId>
-    		<version>${cmf.version}</version>
-    </dependency>
-    
-    <dependency>
-    		<groupId>amp</groupId>
-    		<artifactId>amp.bus</artifactId>
-    		<version>${amp.version}</version>
-    </dependency>
-    
-    <dependency>
-    		<groupId>amp</groupId>
-    		<artifactId>amp.bus.rabbit</artifactId>
-    		<version>${amp.version}</version>
-    </dependency>
-    
-    <dependency>
-	 <groupId>org.springframework</groupId>
-	 <artifactId>spring-context</artifactId>
-	 <version>${spring.version}</version>
-	 <exclusions>
-	 	<exclusion>
-	 		<groupId>commons-logging</groupId>
-	 		<artifactId>commons-logging</artifactId>
-	 	</exclusion>
-	 </exclusions>
-	</dependency> 
-	
-	<dependency>
-	    <groupId>org.springframework.security</groupId>
-	    <artifactId>spring-security-core</artifactId>
-	    <version>${spring.security.version}</version>
-	 </dependency> 
-	 <dependency>
-	    <groupId>org.springframework.security</groupId>
-	    <artifactId>spring-security-web</artifactId>
-	    <version>${spring.security.version}</version>
-	  </dependency> 
-	  <dependency>
-	    <groupId>org.springframework.security</groupId>
-	    <artifactId>spring-security-config</artifactId>
-	    <version>${spring.security.version}</version>
-	  </dependency>
-	
-	<dependency>
-	 <groupId>org.springframework.data</groupId>
-	 <artifactId>spring-data-mongodb</artifactId>
-	 <version>1.2.0.BUILD-SNAPSHOT</version>
-	</dependency>  
-	
-	<dependency>
-		<groupId>commons-io</groupId>
-		<artifactId>commons-io</artifactId>
-		<version>2.4</version>
-	</dependency>
-                
-    <dependency>
-		<groupId>joda-time</groupId>
-		<artifactId>joda-time</artifactId>
-		<version>2.1</version>
-	</dependency>
-    
-	<dependency>
-		<groupId>com.google.code.gson</groupId>
-		<artifactId>gson</artifactId>
-		<version>2.2.2</version>
-	</dependency>
-	
-    <dependency>
-		<groupId>com.thoughtworks.xstream</groupId>
-		<artifactId>xstream</artifactId>
-		<version>1.2.2</version>
-	</dependency>    
-            
-	<dependency>
-        <groupId>com.yammer.dropwizard</groupId>
-        <artifactId>dropwizard-core</artifactId>
-        <version>${dropwizard.version}</version>
-    </dependency>
-    
-    <dependency>
-        <groupId>com.yammer.dropwizard</groupId>
-        <artifactId>dropwizard-auth</artifactId>
-        <version>${dropwizard.version}</version>
-    </dependency>
-    
-    <dependency>
-    		<groupId>com.berico.dropwizard</groupId>
-  		<artifactId>utils</artifactId>
-  		<version>1.0.0</version>
-    </dependency>
-    
-    <dependency>
-	  <groupId>com.bazaarvoice.dropwizard</groupId>
-	  <artifactId>dropwizard-configurable-assets-bundle</artifactId>
-	  <version>0.1.9</version>
-	</dependency>
+        <repository>
+            <id>springsource-repo</id>
+            <name>SpringSource Repository</name>
+            <url>http://repo.springsource.org/release</url>
+        </repository>
+        <repository>
+            <id>spring-snapshot</id>
+            <name>Spring Maven SNAPSHOT Repository</name>
+            <url>http://repo.springsource.org/libs-snapshot</url>
+        </repository>
 
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.10</version>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
-  
-  <build>
-  	<plugins>
-  		<plugin>
-		    <groupId>org.apache.maven.plugins</groupId>
-		    <artifactId>maven-shade-plugin</artifactId>
-		    <version>1.6</version>
-		    <configuration>
-		        <createDependencyReducedPom>true</createDependencyReducedPom>
-		        <filters>
-		            <filter>
-		                <artifact>*:*</artifact>
-		                <excludes>
-		                    <exclude>META-INF/*.SF</exclude>
-		                    <exclude>META-INF/*.DSA</exclude>
-		                    <exclude>META-INF/*.RSA</exclude>
-		                </excludes>
-		            </filter>
-		        </filters>
-		    </configuration>
-		    <executions>
-		        <execution>
-		            <phase>package</phase>
-		            <goals>
-		                <goal>shade</goal>
-		            </goals>
-		            <configuration>
-		                <transformers>
-		                		<transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-			                  <resource>META-INF/spring.handlers</resource>
-			                </transformer>
-			                <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-			                  <resource>META-INF/spring.schemas</resource>
-			                </transformer>
-		                    <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
-		                    <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-		                        <mainClass>amp.topology.TopologyService</mainClass>
-		                    </transformer>
-		                </transformers>
-		            </configuration>
-		        </execution>
-		    </executions>
-		</plugin>
-		<plugin>
-	     <groupId>org.codehaus.mojo</groupId>
-	     <artifactId>exec-maven-plugin</artifactId>
-	     <version>1.2.1</version>
-	     <executions>
-	       <execution>
-	      <id>mimosa-compile</id>
-	      <phase>compile</phase>
-	      <goals>
-	        <goal>exec</goal>
-	      </goals>
-	      <configuration>
-	        <executable>mimosa</executable>
-	        <workingDirectory>${basedir}/mimosa</workingDirectory>
-	        <arguments>
-	       <argument>build</argument>
-	        </arguments>
-	      </configuration>
-	       </execution>
-	     </executions>
-	    </plugin>
-  	</plugins>
-  </build>
-  
-  <distributionManagement>
-	<repository>
-		<id>nexus.bericotechnologies.com</id>
-		<name>Berico Technologies Nexus</name>
-		<url>http://nexus.bericotechnologies.com/content/repositories/releases/</url>
-	</repository>
-	
-	<snapshotRepository>
-	  <id>nexus.bericotechnologies.com</id>
-	  <name>Berico Technologies Nexus</name>
-	  <url>http://nexus.bericotechnologies.com/content/repositories/snapshots/</url>
-	</snapshotRepository>
-  </distributionManagement>
-	
+    </repositories>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>cmf</groupId>
+            <artifactId>cmf.bus</artifactId>
+            <version>${cmf.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>amp</groupId>
+            <artifactId>amp.bus</artifactId>
+            <version>${amp.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>amp</groupId>
+            <artifactId>amp.rabbit</artifactId>
+            <version>${amp.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>amp</groupId>
+            <artifactId>amp.bus.rabbit</artifactId>
+            <version>${amp.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+            <version>${spring.security.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-web</artifactId>
+            <version>${spring.security.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+            <version>${spring.security.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-mongodb</artifactId>
+            <version>1.2.0.BUILD-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.4</version>
+        </dependency>
+
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>2.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.2.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.thoughtworks.xstream</groupId>
+            <artifactId>xstream</artifactId>
+            <version>1.2.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.yammer.dropwizard</groupId>
+            <artifactId>dropwizard-core</artifactId>
+            <version>${dropwizard.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.yammer.dropwizard</groupId>
+            <artifactId>dropwizard-auth</artifactId>
+            <version>${dropwizard.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.berico.dropwizard</groupId>
+            <artifactId>utils</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.bazaarvoice.dropwizard</groupId>
+            <artifactId>dropwizard-configurable-assets-bundle</artifactId>
+            <version>0.1.9</version>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.10</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>1.6</version>
+                <configuration>
+                    <createDependencyReducedPom>true</createDependencyReducedPom>
+                    <filters>
+                        <filter>
+                            <artifact>*:*</artifact>
+                            <excludes>
+                                <exclude>META-INF/*.SF</exclude>
+                                <exclude>META-INF/*.DSA</exclude>
+                                <exclude>META-INF/*.RSA</exclude>
+                            </excludes>
+                        </filter>
+                    </filters>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                    <resource>META-INF/spring.handlers</resource>
+                                </transformer>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                    <resource>META-INF/spring.schemas</resource>
+                                </transformer>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>amp.topology.TopologyService</mainClass>
+                                </transformer>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.2.1</version>
+                <executions>
+                    <execution>
+                        <id>mimosa-compile</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>mimosa</executable>
+                            <workingDirectory>${basedir}/mimosa</workingDirectory>
+                            <arguments>
+                                <argument>build</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <distributionManagement>
+        <repository>
+            <id>nexus.bericotechnologies.com</id>
+            <name>Berico Technologies Nexus</name>
+            <url>http://nexus.bericotechnologies.com/content/repositories/releases/</url>
+        </repository>
+
+        <snapshotRepository>
+            <id>nexus.bericotechnologies.com</id>
+            <name>Berico Technologies Nexus</name>
+            <url>http://nexus.bericotechnologies.com/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
 </project>
