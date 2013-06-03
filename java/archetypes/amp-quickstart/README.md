@@ -12,6 +12,12 @@ From the shell, execute the following command:
 # the nexus repository that contains the archetype (it's not in maven central)
 mvn archetype:generate  \
   -DarchetypeCatalog=http://nexus.bericotechnologies.com/content/repositories/releases/archetype-catalog.xml
+
+# Alternatively, you may want to use the latest snapshot of the archetype
+# instead of the "Release" version.  In that case, point to the snapshots
+# repository instead of release:
+mvn archetype:generate  \
+  -DarchetypeCatalog=http://nexus.bericotechnologies.com/content/repositories/snapshots/archetype-catalog.xml
 ```
 
 Follow the instructions displayed in the prompt.  Once complete, you can cd into your project's directory and run the start script:
