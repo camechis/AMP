@@ -1,19 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<archetype xmlns="http://maven.apache.org/plugins/maven-archetype-plugin/archetype/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/plugins/maven-archetype-plugin/archetype/1.0.0 http://maven.apache.org/xsd/archetype-1.0.0.xsd">
-  <id>quickstart</id>
-  <sources>
-    <source>src/main/java/AmpService.java</source>
-    <source>src/main/java/AmpStartupEvent.java</source>
-    <source>src/main/java/AmpStartupEventHandler.java</source>
-    <source>src/main/java/App.java</source>
-  </sources>
-  <resources>
-  	<resource>src/main/resources/logback.xml</resource>
-  	<resource>config/ampContext.xml</resource>
-    <!-- <resource>bin/amp-start</resource> -->
-  </resources>
-  <testSources>
-    <source>src/test/java/AmpStartupEventHandlerTest.java</source>
-  </testSources>
+<archetype 
+    xmlns="http://maven.apache.org/plugins/maven-archetype-plugin/archetype/1.0.0" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/plugins/maven-archetype-plugin/archetype/1.0.0
+                        http://maven.apache.org/xsd/archetype-1.0.0.xsd">
+
+    <id>quickstart</id>
+    
+    
+    <sources>
+        <source>src/main/java/AmpService.java</source>
+        <source>src/main/java/AmpStartupEvent.java</source>
+        <source>src/main/java/AmpStartupEventHandler.java</source>
+        <source>src/main/java/App.java</source>
+    </sources>
+    
+    
+    <resources>
+        <resource>src/main/resources/logback.xml</resource>
+        <resource>config/ampContext.xml</resource>
+        <resource>bin/amp-start</resource>        
+    </resources>
+    
+    
+    <testSources>
+        <source>src/test/java/AmpStartupEventHandlerTest.java</source>
+    </testSources>
+
+
 </archetype>

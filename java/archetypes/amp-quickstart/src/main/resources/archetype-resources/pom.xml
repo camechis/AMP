@@ -9,7 +9,7 @@
 	<packaging>jar</packaging>
 
 	<name>AMP Quick Start</name>
-	<url>http://amp.bericotechnologies.com</url>
+	<url>http://ampere.berico.us</url>
 
 	<properties>
 		<cmf.version>3.1.0</cmf.version>

@@ -7,7 +7,7 @@
 
 
     <!-- This is "your" service.  Pretend it's the one you're writing that uses the event bus -->
-    <bean id="ampService" class="amp.AmpService">
+    <bean id="ampService" class="${package}.AmpService">
         <constructor-arg index="0" ref="eventBus" />
     </bean>
 
