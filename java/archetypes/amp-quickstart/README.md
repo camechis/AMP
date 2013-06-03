@@ -4,7 +4,7 @@ Generates an AMP Quick Start project with a properly wired Spring Application Co
 
 ## Usage
 
-From the shell, execute the following command:
+From the shell, execute *ONE OF* the following commands:
 
 ```bash
  
