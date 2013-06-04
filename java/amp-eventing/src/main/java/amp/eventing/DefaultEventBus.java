@@ -138,6 +138,7 @@ public class DefaultEventBus implements IEventBus, IStreamingEventBus, IInboundP
                 EventContext context = new EventContext(Directions.Out, envelope, eventItem);
                 streamQueue.add(new EventStreamQueueItem(context));
                 limitCounter++;
+                log.debug("Buffering event to be streamed with sequenceId: " + sequenceId + ", position: " + position + ", isLast: " + isLast);
             } else {
                 while (streamQueue.size() > 0) {
                     final EventStreamQueueItem queueItem = streamQueue.remove();
@@ -149,7 +150,11 @@ public class DefaultEventBus implements IEventBus, IStreamingEventBus, IInboundP
                                     envelopeBus.send(queueItem.getEnvelope());
                                 }
                             });
-                    log.debug("Sending streamed event with sequenceId: " + sequenceId + ", position: " + position + ", isLast: " + isLast);
+                    log.debug("Sending streamed event with sequenceId: " +
+                            queueItem.getEnvelope().getHeader(SEQUENCE_ID) +
+                            ", position: " + queueItem.getEnvelope().getHeader(POSITION) +
+                            ", isLast: " + queueItem.getEnvelope().getHeader(IS_LAST));
+
                 }
                 limitCounter = 0;
                 streamQueue.clear();
