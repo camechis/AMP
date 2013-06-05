@@ -58,6 +58,8 @@
     <Compile Include="CommandException.cs" />
     <Compile Include="CommandRegistration.cs" />
     <Compile Include="DefaultCommandBus.cs" />
+    <Compile Include="DefaultCommandReceiver.cs" />
+    <Compile Include="DefaultCommandSender.cs" />
     <Compile Include="ICommandBus.cs" />
     <Compile Include="ICommandHandler.cs" />
     <Compile Include="ICommandProcessor.cs" />
@@ -66,6 +68,7 @@
     <Compile Include="JsonSerializationProcessor.cs" />
     <Compile Include="OutboundHeadersProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TypedCommandHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="amp.commanding.snk" />

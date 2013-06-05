@@ -3,14 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using Common.Logging;
+
 namespace amp.bus.rabbit
 {
     public class CommandableCache : IRoutingInfoCache
     {
-        private static final Logger LOG = LoggerFactory.getLogger(CommandableCache.class);
+        private static readonly ILog Log = LogManager.GetLogger(typeof(CommandableCache));
 
-        private volatile Cache<String, RoutingInfo> routingInfoCache;
-        private Lock cacheLock;
+        private Cache<String, RoutingInfo> routingInfoCache;
+        private object cacheLock = new object();
         private ICommandReceiver commandReceiver;
 
 
@@ -31,7 +33,7 @@ namespace amp.bus.rabbit
                 this.commandReceiver.onCommandReceived(new RoutingCacheBuster(this.routingInfoCache, cacheLock));
             }
             catch (CommandException cex) {
-                LOG.warn("Failed to subscribe for Routing Cache Bust commands - the cache cannot be remotely commanded.", cex);
+                Log.warn("Failed to subscribe for Routing Cache Bust commands - the cache cannot be remotely commanded.", cex);
             }
         }
 

@@ -30,7 +30,19 @@ namespace amp.commanding
                 // use the provided envelope opener to get a context
                 CommandContext context = _envelopeOpener(env);
 
-                _handler.Handle(context.Command, context.Envelope.Headers);
+                if (null != context)
+                {
+                    _handler.Handle(context.Command, context.Envelope.Headers);
+                }
+                else
+                {
+                    // if our opener returned null, that signifies that it declined
+                    // to open it, and that we should quietly drop this envelope
+                    // So, I'll return null here to make this explicit, even though
+                    // just doing nothing here would lead to the 'return null' that
+                    // is just a few lines below this.
+                    return null;
+                }
             }
             catch (CommandException ex) {
                 String message = "Failed to process an incoming command envelope.";
