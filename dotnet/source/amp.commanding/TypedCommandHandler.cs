@@ -11,12 +11,18 @@ namespace amp.commanding
     {
         private static readonly ILog Log = LogManager.GetLogger("TypedCommandHandler");
 
-        protected Action<TCommand, IDictionary<string, string>> _handler;
+        private Action<TCommand, IDictionary<string, string>> _handler;
 
 
         public Type CommandType
         {
             get { return typeof(TCommand); }
+        }
+
+        protected Action<TCommand, IDictionary<string, string>> Handler
+        {
+            get { return _handler; }
+            set { _handler = value; }
         }
 
 
@@ -25,9 +31,16 @@ namespace amp.commanding
             _handler = handler;
         }
 
+        protected TypedCommandHandler()
+        {
+            
+        }
+
 
         public object Handle(object command, IDictionary<string, string> headers)
         {
+            if (null == _handler) { throw new ArgumentNullException("Typed Command Handler was asked to handle a command, but was given no handler."); }
+
             try
             {
                 _handler((TCommand)command, headers);

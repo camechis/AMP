@@ -44,6 +44,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -67,6 +68,14 @@
     <ProjectReference Include="..\amp.bus\amp.bus.csproj">
       <Project>{D96A6D2B-E427-406A-BD73-9961447B3557}</Project>
       <Name>amp.bus</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\amp.commanding\amp.commanding.csproj">
+      <Project>{93150a91-3d0a-4753-94a4-b6280994a18a}</Project>
+      <Name>amp.commanding</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\amp.commands\amp.commands.csproj">
+      <Project>{61b5d5a6-4b11-4433-ba42-0f96c92c3380}</Project>
+      <Name>amp.commands</Name>
     </ProjectReference>
     <ProjectReference Include="..\amp.rabbit\amp.rabbit.csproj">
       <Project>{1d9a3ed8-779b-4f1b-93f5-837320af4656}</Project>

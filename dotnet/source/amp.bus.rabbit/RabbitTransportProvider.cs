@@ -19,32 +19,33 @@ namespace amp.bus.rabbit
     {
         public event Action<IEnvelopeDispatcher> OnEnvelopeReceived;
 
+        private static readonly ILog Log = LogManager.GetLogger(typeof(RabbitTransportProvider));
 
         protected IDictionary<IRegistration, RabbitListener> _listeners;
         protected ITopologyService _topoSvc;
         protected IRabbitConnectionFactory _connFactory;
-        protected ILog _log;
+        protected IRoutingInfoCache _routingInfoCache;
 
 
         public RabbitTransportProvider(
             ITopologyService topologyService, 
-            IRabbitConnectionFactory connFactory)
+            IRabbitConnectionFactory connFactory,
+            IRoutingInfoCache routingInfoCache)
         {
             _topoSvc = topologyService;
             _connFactory = connFactory;
+            _routingInfoCache = routingInfoCache;
 
             _listeners = new Dictionary<IRegistration, RabbitListener>();
-
-            _log = LogManager.GetLogger(this.GetType());
         }
 
 
         public void Send(Envelope env)
         {
-            _log.Debug("Enter Send");
+            Log.Debug("Enter Send");
 
             // first, get the topology based on the headers
-            RoutingInfo routing = _topoSvc.GetRoutingInfo(env.Headers);
+            RoutingInfo routing = this.GetRoutingFromCacheOrService(_routingInfoCache, _topoSvc, env.Headers);
 
             // next, pull out all the producer exchanges
             IEnumerable<Exchange> exchanges =
@@ -54,7 +55,7 @@ namespace amp.bus.rabbit
             // for each exchange, send the envelope
             foreach (Exchange ex in exchanges)
             {
-                _log.Debug("Sending to exchange: " + ex.ToString());
+                Log.Debug("Sending to exchange: " + ex.ToString());
                 IConnection conn = _connFactory.ConnectTo(ex);
                 
                 using (IModel channel = conn.CreateModel())
@@ -70,15 +71,54 @@ namespace amp.bus.rabbit
                 }
             }
 
-            _log.Debug("Leave Send");
+            Log.Debug("Leave Send");
+        }
+
+        public RoutingInfo GetRoutingFromCacheOrService(
+            IRoutingInfoCache cache, 
+            ITopologyService service, 
+            IDictionary<string, string> hints)
+        {
+            // if there are no hints, we have no idea what to do
+            if ((null == hints) || (!hints.Any()))
+            {
+                return null;
+            }
+
+            // pull the topic from the hints
+            string topic = hints.GetMessageTopic();
+
+            // first, check the cache
+            RoutingInfo routing = cache.GetIfPresent(topic);
+
+            // if nothing, use the service
+            if (null == routing)
+            {
+                Log.Debug(string.Format("No routing information cache for {0}; using the topology service.", topic));
+
+                routing = service.GetRoutingInfo(hints);
+
+                // if we get something from the service, cache it
+                if (null != routing)
+                {
+                    cache.Put(topic, routing);
+                }
+            }
+            else
+            {
+                Log.Debug(string.Format("Routing information for {0} was found in the cache.", topic));
+            }
+
+            // whatever we end up with, return it
+            return routing;
         }
 
         public void Register(IRegistration registration)
         {
-            _log.Debug("Enter Register");
+            Log.Debug("Enter Register");
 
             // first, get the topology based on the registration info
-            RoutingInfo routing = _topoSvc.GetRoutingInfo(registration.Info);
+            RoutingInfo routing = this.GetRoutingFromCacheOrService(_routingInfoCache, _topoSvc, registration.Info);
 
             // next, pull out all the consumer exchanges
             IEnumerable<Exchange> exchanges =
@@ -103,7 +143,7 @@ namespace amp.bus.rabbit
                 _listeners.Add(registration, listener);
             }
 
-            _log.Debug("Leave Register");
+            Log.Debug("Leave Register");
         }
 
         public virtual void Unregister(IRegistration registration)
@@ -138,7 +178,7 @@ namespace amp.bus.rabbit
 
         protected virtual void Dispose(bool disposing)
         {
-            _log.Debug("Enter Dispose");
+            Log.Debug("Enter Dispose");
 
             if (disposing)
             {
@@ -148,10 +188,13 @@ namespace amp.bus.rabbit
 
                 try { _connFactory.Dispose(); }
                 catch { }
+
+                try { _routingInfoCache.Dispose(); }
+                catch { }
             }
             // get rid of unmanaged resources
 
-            _log.Debug("Leave Dispose");
+            Log.Debug("Leave Dispose");
         }
     }
 }
