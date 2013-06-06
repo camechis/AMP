@@ -6,6 +6,8 @@ import cmf.bus.IEnvelopeFilterPredicate;
 import cmf.bus.IRegistration;
 import cmf.eventing.patterns.streaming.IStreamingCollectionHandler;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,11 +17,13 @@ import java.util.Map;
  * User: jholmberg
  * Date: 6/5/13
  */
-public class StreamingCollectionRegistration implements IRegistration {
-    protected IStreamingCollectionHandler eventHandler;
+public class StreamingCollectionRegistration<TEVENT> implements IRegistration {
+    protected IStreamingCollectionHandler<TEVENT> eventHandler;
     protected IEnvelopeFilterPredicate filterPredicate;
     protected IInboundProcessorCallback processorCallback;
     protected Map<String, String> registrationInfo;
+    protected Collection<TEVENT> collectedEvents;
+
 
     @Override
     public IEnvelopeFilterPredicate getFilterPredicate() {
@@ -31,22 +35,24 @@ public class StreamingCollectionRegistration implements IRegistration {
         return registrationInfo;
     }
 
-    public StreamingCollectionRegistration(IStreamingCollectionHandler handler, IInboundProcessorCallback processorCallback) {
+    public StreamingCollectionRegistration(IStreamingCollectionHandler<TEVENT> handler, IInboundProcessorCallback processorCallback) {
         this.eventHandler = eventHandler;
         this.processorCallback = processorCallback;
 
         registrationInfo = new HashMap<String, String>();
         registrationInfo.put(EnvelopeHeaderConstants.MESSAGE_TOPIC, eventHandler.getEventType().getCanonicalName());
+        this.collectedEvents = new ArrayList<TEVENT>();
     }
 
     @Override
     public Object handle(Envelope env) throws Exception {
-        Object event = this.processorCallback.ProcessInbound(env);
+        TEVENT event = (TEVENT) this.processorCallback.ProcessInbound(env);
         Object result = null;
 
         if (null != event) {
             try {
-
+                collectedEvents.add(event);
+                //TODO: Determine how to collect the rest of the events
                 result = eventHandler.handle(event, env.getHeaders());
             } catch (Exception ex) {
                 result = handleFailed(env, ex);
