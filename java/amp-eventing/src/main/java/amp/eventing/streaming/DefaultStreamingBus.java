@@ -8,7 +8,7 @@ import cmf.eventing.IEventFilterPredicate;
 import cmf.eventing.IEventHandler;
 import cmf.eventing.patterns.streaming.IStreamingCollectionHandler;
 import cmf.eventing.patterns.streaming.IStreamingEventBus;
-import cmf.eventing.patterns.streaming.IStreamingIteratorHandler;
+import cmf.eventing.patterns.streaming.IStreamingNotifierHandler;
 import cmf.eventing.patterns.streaming.IStreamingMapperCallback;
 
 import java.util.*;
@@ -170,7 +170,7 @@ public class DefaultStreamingBus extends DefaultEventBus implements IStreamingEv
      * @throws Exception
      */
     @Override
-    public <TEVENT> void subscribeToIterator(IStreamingIteratorHandler<TEVENT> handler) throws Exception {
+    public <TEVENT> void subscribeToNotifier(IStreamingNotifierHandler<TEVENT> handler) throws Exception {
         Class<TEVENT> type = handler.getEventType();
         IEventFilterPredicate filterPredicate = new TypeEventFilterPredicate(type);
         subscribe(handler, filterPredicate);
@@ -185,9 +185,9 @@ public class DefaultStreamingBus extends DefaultEventBus implements IStreamingEv
                     (IStreamingCollectionHandler)eventHandler, this);
             envelopeBus.register(registration);
 
-        } else if (eventHandler instanceof IStreamingIteratorHandler) {
+        } else if (eventHandler instanceof IStreamingNotifierHandler) {
             StreamingIteratorRegistration registration = new StreamingIteratorRegistration(
-                    (IStreamingIteratorHandler)eventHandler, this);
+                    (IStreamingNotifierHandler)eventHandler, this);
             envelopeBus.register(registration);
         }
     }
