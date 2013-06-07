@@ -1,5 +1,6 @@
-package amp.eventing;
+package amp.eventing.streaming;
 
+import amp.eventing.EventContext;
 import cmf.bus.Envelope;
 
 /**

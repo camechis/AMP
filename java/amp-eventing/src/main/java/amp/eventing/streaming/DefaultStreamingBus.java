@@ -1,13 +1,14 @@
-package amp.eventing;
+package amp.eventing.streaming;
 
 
+import amp.eventing.*;
 import cmf.bus.Envelope;
 import cmf.bus.IEnvelopeBus;
 import cmf.eventing.IEventFilterPredicate;
 import cmf.eventing.IEventHandler;
 import cmf.eventing.patterns.streaming.IStreamingCollectionHandler;
 import cmf.eventing.patterns.streaming.IStreamingEventBus;
-import cmf.eventing.patterns.streaming.IStreamingIterableHandler;
+import cmf.eventing.patterns.streaming.IStreamingIteratorHandler;
 import cmf.eventing.patterns.streaming.IStreamingMapperCallback;
 
 import java.util.*;
@@ -139,7 +140,7 @@ public class DefaultStreamingBus extends DefaultEventBus implements IStreamingEv
 
     /**
      * Subscribe to a stream of events that will get handled to a {@link java.util.Collection}.
-     * <p>See {@link cmf.eventing.patterns.streaming.IStreamingCollectionHandler#numEventsHandled()}</p> as a way to
+     * <p>See {@link cmf.eventing.patterns.streaming.IStreamingCollectionHandler#getProgressNotifier()}</p> as a way to
      * get a progress check on how many events have been processed.
      * <p>
      * This offers the subscriber a simpler API allowing them to get the entire collection
@@ -169,7 +170,7 @@ public class DefaultStreamingBus extends DefaultEventBus implements IStreamingEv
      * @throws Exception
      */
     @Override
-    public <TEVENT> void subscribeToIterator(IStreamingIterableHandler<TEVENT> handler) throws Exception {
+    public <TEVENT> void subscribeToIterator(IStreamingIteratorHandler<TEVENT> handler) throws Exception {
         Class<TEVENT> type = handler.getEventType();
         IEventFilterPredicate filterPredicate = new TypeEventFilterPredicate(type);
         subscribe(handler, filterPredicate);
@@ -184,9 +185,9 @@ public class DefaultStreamingBus extends DefaultEventBus implements IStreamingEv
                     (IStreamingCollectionHandler)eventHandler, this);
             envelopeBus.register(registration);
 
-        } else if (eventHandler instanceof IStreamingIterableHandler) {
-            StreamingIterableRegistration registration = new StreamingIterableRegistration(
-                    (IStreamingIterableHandler)eventHandler, this);
+        } else if (eventHandler instanceof IStreamingIteratorHandler) {
+            StreamingIteratorRegistration registration = new StreamingIteratorRegistration(
+                    (IStreamingIteratorHandler)eventHandler, this);
             envelopeBus.register(registration);
         }
     }
