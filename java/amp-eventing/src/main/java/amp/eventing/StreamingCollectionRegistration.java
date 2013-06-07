@@ -71,7 +71,8 @@ public class StreamingCollectionRegistration<TEVENT> implements IRegistration {
                 }
 
                 if (isLast) {
-                    result = this.eventHandler.handle(collectedEvents.get(sequenceId), env.getHeaders());
+                    result = this.eventHandler.handle(new ArrayList<TEVENT>(collectedEvents.get(sequenceId)), env.getHeaders());
+                    collectedEvents.remove(sequenceId);
                 }
             } catch (Exception ex) {
                 result = handleFailed(env, ex);
