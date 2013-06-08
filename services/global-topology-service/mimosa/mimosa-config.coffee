@@ -9,10 +9,6 @@ exports.config = {
     outputFileName: "templates"
     handlebars:
       helperFiles:["app/template/handlebars-helpers"]
-      ###  -> Need RequireJs compat Ember
-      ember:
-        enabled: true
-      ###
   copy:
     extensions: ["js","css","png","jpg",
       "jpeg","gif","html","eot",
