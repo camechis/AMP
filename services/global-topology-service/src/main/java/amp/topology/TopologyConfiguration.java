@@ -7,7 +7,7 @@ import javax.validation.constraints.NotNull;
 
 import com.bazaarvoice.dropwizard.assets.AssetsBundleConfiguration;
 import com.bazaarvoice.dropwizard.assets.AssetsConfiguration;
-import com.berico.dropwizard.SpringConfiguration;
+import com.berico.fallwizard.SpringConfiguration;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class TopologyConfiguration extends SpringConfiguration implements AssetsBundleConfiguration {
