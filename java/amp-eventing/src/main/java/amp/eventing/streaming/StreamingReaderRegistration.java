@@ -6,12 +6,11 @@ import cmf.bus.EnvelopeHeaderConstants;
 import cmf.bus.IEnvelopeFilterPredicate;
 import cmf.bus.IRegistration;
 import cmf.eventing.patterns.streaming.IStreamingEventItem;
-import cmf.eventing.patterns.streaming.IStreamingNotifierHandler;
+import cmf.eventing.patterns.streaming.IStreamingReaderHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 import static amp.eventing.streaming.StreamingEnvelopeConstants.*;
 /**
@@ -20,10 +19,10 @@ import static amp.eventing.streaming.StreamingEnvelopeConstants.*;
  * User: jholmberg
  * Date: 6/5/13
  */
-public class StreamingIteratorRegistration<TEVENT> implements IRegistration {
-    protected static final Logger log = LoggerFactory.getLogger(StreamingIteratorRegistration.class);
+public class StreamingReaderRegistration<TEVENT> implements IRegistration {
+    protected static final Logger log = LoggerFactory.getLogger(StreamingReaderRegistration.class);
 
-    protected IStreamingNotifierHandler<TEVENT> eventHandler;
+    protected IStreamingReaderHandler<TEVENT> eventHandler;
     protected IEnvelopeFilterPredicate filterPredicate;
     protected IInboundProcessorCallback processorCallback;
     protected  Map<String, String> registrationInfo;
@@ -38,7 +37,7 @@ public class StreamingIteratorRegistration<TEVENT> implements IRegistration {
         return registrationInfo;
     }
 
-    public StreamingIteratorRegistration(IStreamingNotifierHandler<TEVENT> handler, IInboundProcessorCallback processorCallback) {
+    public StreamingReaderRegistration(IStreamingReaderHandler<TEVENT> handler, IInboundProcessorCallback processorCallback) {
         this.eventHandler = handler;
         this.processorCallback = processorCallback;
 
