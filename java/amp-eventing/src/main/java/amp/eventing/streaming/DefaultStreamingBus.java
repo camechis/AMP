@@ -139,7 +139,7 @@ public class DefaultStreamingBus extends DefaultEventBus implements IStreamingEv
 
     /**
      * Subscribe to a stream of events that will get handled to a {@link java.util.Collection}.
-     * <p>See {@link cmf.eventing.patterns.streaming.IStreamingCollectionHandler#getProgressNotifier()}</p> as a way to
+     * <p>See {@link cmf.eventing.patterns.streaming.IStreamingCollectionHandler#getProgress()}</p> as a way to
      * get a progress check on how many events have been processed.
      * <p>
      * This offers the subscriber a simpler API allowing them to get the entire collection

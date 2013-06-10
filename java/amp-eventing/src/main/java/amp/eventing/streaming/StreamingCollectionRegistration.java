@@ -7,7 +7,7 @@ import cmf.bus.IEnvelopeFilterPredicate;
 import cmf.bus.IRegistration;
 import cmf.eventing.patterns.streaming.IStreamingCollectionHandler;
 import cmf.eventing.patterns.streaming.IStreamingEventItem;
-import cmf.eventing.patterns.streaming.IStreamingProgressNotifier;
+import cmf.eventing.patterns.streaming.IStreamingProgressUpdater;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -65,7 +65,7 @@ public class StreamingCollectionRegistration<TEVENT> implements IRegistration {
                 }
                 IStreamingEventItem<TEVENT> eventItem = new StreamingEventItem<TEVENT>(event, env.getHeaders());
                 collectedEvents.get(sequenceId).add(eventItem);
-                IStreamingProgressNotifier notifier = eventHandler.getProgressNotifier();
+                IStreamingProgressUpdater notifier = eventHandler.getProgress();
                 if (null != notifier) {
                     notifier.updateProgress(sequenceId,
                             collectedEvents.get(sequenceId).size());

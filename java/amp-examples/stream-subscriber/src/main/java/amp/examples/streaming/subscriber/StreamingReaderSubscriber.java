@@ -9,14 +9,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.util.Map;
 
-/**
- * Created with IntelliJ IDEA.
- * User: jholmberg
- * Date: 6/7/13
- * Time: 10:00 PM
- * To change this template use File | Settings | File Templates.
- */
-public class StreamingSubscriber {
+public class StreamingReaderSubscriber {
     public static void main(String[] args) throws Exception {
         ClassPathXmlApplicationContext injector = new ClassPathXmlApplicationContext("classpath:META-INF/spring/eventBusContext.xml");
 
@@ -39,7 +32,7 @@ public class StreamingSubscriber {
                 System.out.println("Last Message In Sequence received: (sequenceId: " + eventItem.getSequenceId().toString() +
                         "), (position: " + eventItem.getPosition() +
                         "), (isLast: " + Boolean.toString(eventItem.isLast()) + "), \nEvent Value: " + eventItem.getEvent() );
-                StreamingSubscriber.isDone = true;
+                StreamingReaderSubscriber.isDone = true;
                 return null;  //To change body of implemented methods use File | Settings | File Templates.
             }
 
@@ -68,10 +61,17 @@ public class StreamingSubscriber {
 
         while (allEventsReceived == false) {
 
-            allEventsReceived = isDone;
+            allEventsReceived = StreamingReaderSubscriber.isDone;
+
+            if (allEventsReceived) {
+                System.out.println("All events have been received. Processing is complete.");
+            } else {
+                System.out.println("Still waiting for more events to be processed.");
+            }
 
             Thread.sleep(200);
         }
+        System.exit(0);
     }
 
 

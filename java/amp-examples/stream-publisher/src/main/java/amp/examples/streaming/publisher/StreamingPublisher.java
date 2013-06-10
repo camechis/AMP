@@ -24,7 +24,7 @@ public class StreamingPublisher {
         streamMessages.add("vegetable, animal, ");
         streamMessages.add("and mineral, ");
         streamMessages.add("I know the kings of England, ");
-        streamMessages.add("and I quote teh fights historical, ");
+        streamMessages.add("and I quote the fights historical, ");
         streamMessages.add("From Marathon to Waterloo, ");
         streamMessages.add("in order categorical; ");
 
@@ -37,5 +37,6 @@ public class StreamingPublisher {
 
         streamingEventBus.setBatchLimit(2);
         streamingEventBus.publishStream(streamMessages.iterator(), mapper);
+        System.exit(0);
     }
 }

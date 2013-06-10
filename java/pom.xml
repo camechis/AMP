@@ -35,8 +35,9 @@
         <module>amp-examples/bus-gui-tester</module>
         <module>amp-examples/user-notifications</module>
         <module>amp-examples/service-adaptor</module>
+        <module>amp-examples/stream-publisher</module>
+        <module>amp-examples/stream-subscriber</module>
         <module>services/global-topology-client</module>
-        <module>amp-examples</module>
     </modules>
 
 
