@@ -73,6 +73,10 @@
     <Compile Include="RpcFilter.cs" />
     <Compile Include="RpcRegistration.cs" />
     <Compile Include="serializers\JsonEventSerializer.cs" />
+    <Compile Include="streaming\EventStreamQueueItem.cs" />
+    <Compile Include="streaming\StreamingCollectionRegistration.cs" />
+    <Compile Include="streaming\StreamingEnvelopeConstants.cs" />
+    <Compile Include="streaming\StreamingEventItem.cs" />
     <Compile Include="TypedEventHandler.cs" />
   </ItemGroup>
   <ItemGroup>
