@@ -45,6 +45,7 @@
 		class="amp.topology.tasks.ShowTopicMissesTask"
 		c:noRouteForTopicListener-ref="noRouteInfoForTopicListener" />
 	
+	
 	<bean id="topologyService"
         class="amp.topology.core.GlobalTopologyService"
         c:topologyRepository-ref="topologyRepository"
@@ -62,5 +63,10 @@
 	   
 	<bean id="routeCreator" class="amp.topology.core.RmqRouteCreator" 
 	   c:mgmtService-ref="rmqManagementService" />
+	
+	<bean id="cleanupRabbitmqTask"
+       class="amp.topology.tasks.CleanupRabbitmqTask"
+       c:mgmtService-ref="rmqManagementService"
+       p:maxIdleTimeInMinutes="1" />
 	
 </beans>
