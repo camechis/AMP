@@ -114,7 +114,8 @@ public abstract class BaseTopologyRepository implements ITopologyRepository {
 	
 	protected void fireRoutingInfoRetrieved(String topic, String client, Collection<ExtendedRouteInfo> routingInfo){
 		
-		logger.debug("fireRoutingInfoRetrieved({}, {}, has routes: {})", new Object[]{ topic, client, routingInfo.size() > 0 });
+		logger.debug("fireRoutingInfoRetrieved({}, {}, has routes: {})", 
+				new Object[]{ topic, client, routingInfo.size() > 0 });
 		
 		for (ITopologyRepositoryEventListener listener : listeners){
 			

@@ -1,7 +1,7 @@
 package amp.topology;
 
 import com.bazaarvoice.dropwizard.assets.ConfiguredAssetsBundle;
-import com.berico.dropwizard.SpringService;
+import com.berico.fallwizard.SpringService;
 import com.yammer.dropwizard.config.Bootstrap;
 
 public class TopologyService extends SpringService<TopologyConfiguration>

@@ -11,10 +11,6 @@
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">    
 	
-	<bean id="topologyService"
-		class="amp.topology.core.GlobalTopologyService"
-		c:topologyRepository-ref="topologyRepository" />
-	
 	<bean id="exchangeResource" 
 		class="amp.topology.resources.ExchangeResource" 
 		c:topologyRepository-ref="topologyRepository" />
@@ -48,5 +44,23 @@
 	<bean id="showTopicMissesTask"
 		class="amp.topology.tasks.ShowTopicMissesTask"
 		c:noRouteForTopicListener-ref="noRouteInfoForTopicListener" />
+	
+	<bean id="topologyService"
+        class="amp.topology.core.GlobalTopologyService"
+        c:topologyRepository-ref="topologyRepository"
+        c:routeCreator-ref="routeCreator" />
+	
+	<!-- Enter the authentication parameters for the RabbitMQ Management Console.
+	     There is an equivalent provider for SSL.
+	 -->
+	<bean id="authProvider" class="rabbitmq.httpclient.BasicAuthHttpClientProvider"
+	    c:username="guest" c:password="guest" />
+	
+	<bean id="rmqManagementService" class="rabbitmq.mgmt.RabbitMgmtService" 
+	   init-method="initialize" 
+	   c:hostname="localhost" c:port="15672" c:httpClientProvider-ref="authProvider" />
+	   
+	<bean id="routeCreator" class="amp.topology.core.RmqRouteCreator" 
+	   c:mgmtService-ref="rmqManagementService" />
 	
 </beans>

@@ -133,9 +133,9 @@
     </dependency>
     
     <dependency>
-    		<groupId>com.berico.dropwizard</groupId>
-  		<artifactId>utils</artifactId>
-  		<version>1.0.0</version>
+    		<groupId>com.berico</groupId>
+  		<artifactId>fallwizard</artifactId>
+  		<version>1.1.0</version>
     </dependency>
     
     <dependency>
@@ -145,10 +145,23 @@
 	</dependency>
 
     <dependency>
+      <groupId>rabbitmq</groupId>
+      <artifactId>mgmt</artifactId>
+      <version>3.2.0</version>
+    </dependency>
+    
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.10</version>
       <scope>test</scope>
+    </dependency>
+    
+    <dependency>
+	    <groupId>org.mockito</groupId>
+	    <artifactId>mockito-all</artifactId>
+	    <version>1.9.5</version>
+	    <scope>test</scope>
     </dependency>
   </dependencies>
   
