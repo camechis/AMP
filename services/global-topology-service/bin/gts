@@ -15,11 +15,11 @@
 . /etc/rc.d/init.d/functions
 
 prog="gts"
-config="<WHERE YOU WANT YOUR YAML/Context files>"
-JAR="<JAR_LOCATION>"
+config="/etc/$prog/gts-basicAuth.yaml"
+JAR="/opt/gts/amp.topology.service-3.2.0-SNAPSHOT.jar"
 ARGS="server $config"
-serviceUser="<USER_ACCOUNT>"
-serviceGroup="<USER_GROUP>"
+serviceUser="gts"
+serviceGroup="gts"
 maxShutdownTime=15
 
 [ -e /etc/default/$prog ] && . /etc/default/$prog
