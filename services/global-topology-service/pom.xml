@@ -221,6 +221,65 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>rpm-maven-plugin</artifactId>
+                <version>2.1-alpha-2</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>rpm</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <copyright>2013, Berico Technologies</copyright>
+                    <group>gts</group>
+                    <description>global topology service</description>
+                    <targetVendor>redhat</targetVendor>
+                    <mappings>
+                        <mapping>
+                            <directory>/opt/gts/</directory>
+                            <artifact/>
+                        </mapping>
+                        <mapping>
+                            <directory>/etc/rc.d/init.d</directory>
+                            <filemode>755</filemode>
+                            <sources>
+                                <source>
+                                    <location>${basedir}/bin/gts</location>
+                                </source>
+                            </sources>
+                        </mapping>
+                        <mapping>
+                            <directory>/etc/default</directory>
+                            <configuration>true</configuration>
+                            <sources>
+                                <source>
+                                    <location>${basedir}/bin/etc/default/gts</location>
+                                </source>
+                            </sources>
+                        </mapping>
+                        <mapping>
+                            <directory>/etc/gts</directory>
+                            <configuration>true</configuration>
+                            <sources>
+                                <source>
+                                    <location>${basedir}/configuration</location>
+                                </source>
+                            </sources>
+                        </mapping>
+                    </mappings>
+                    <postinstallScriptlet>
+                        <scriptFile>/bin/rpm/postInstall.sh</scriptFile>
+                        <fileEncoding>utf-8</fileEncoding>
+                    </postinstallScriptlet>
+                    <preremoveScriptlet>
+                        <scriptFile>/bin/rpm/preUninstall.sh</scriptFile>
+                        <fileEncoding>utf-8</fileEncoding>
+                    </preremoveScriptlet>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
