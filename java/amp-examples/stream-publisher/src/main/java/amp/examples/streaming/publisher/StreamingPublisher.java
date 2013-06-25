@@ -36,7 +36,7 @@ public class StreamingPublisher {
         };
 
         streamingEventBus.setBatchLimit(2);
-        streamingEventBus.publishStream(streamMessages.iterator(), mapper);
+        streamingEventBus.publishChunkedSequence(streamMessages.iterator(), mapper);
         System.exit(0);
     }
 }

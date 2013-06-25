@@ -20,7 +20,7 @@ public class StreamingReaderSubscriber {
 
         IStreamingReaderHandler<String> handler = new IStreamingReaderHandler<String>() {
             @Override
-            public Object onSequenceEventRead(IStreamingEventItem<String> eventItem) {
+            public Object onEventRead(IStreamingEventItem<String> eventItem) {
                 System.out.println("Message received: (sequenceId: " + eventItem.getSequenceId().toString() +
                         "), (position: " + eventItem.getPosition() +
                         "), (isLast: " + Boolean.toString(eventItem.isLast()) + "), \nEvent Value: " + eventItem.getEvent() );

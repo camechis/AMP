@@ -24,9 +24,7 @@ public class DefaultEventBus implements IEventBus, IInboundProcessorCallback {
      */
     protected int batchLimit = 10;
 
-    protected static final String SEQUENCE_ID = "sequenceId";
-    protected static final String POSITION = "position";
-    protected static final String IS_LAST = "isLast";
+
 
     public DefaultEventBus(IEnvelopeBus envelopeBus) {
         this.envelopeBus = envelopeBus;
@@ -135,7 +133,6 @@ public class DefaultEventBus implements IEventBus, IInboundProcessorCallback {
 
         return context.getEvent();
     }
-
 
     @Override
     protected void finalize() {
