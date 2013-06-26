@@ -37,28 +37,27 @@ public class DefaultEventStream implements IEventStream {
     @Override
     public void publish(Object event) throws Exception {
         log.debug("enter publish to stream");
+        boolean isLast = false;
+        String sequence = sequenceId.toString();
+        String isLastFlag = Boolean.toString(isLast);
+
+        Envelope env = StreamingEnvelopeHelper.buildStreamingEnvelope(sequence, position, isLastFlag);
+        EnvelopeHelper envelopHelper = new EnvelopeHelper(env);
+        envelopHelper.setMessageTopic(getTopic());
+
+        EventContext context = new EventContext(EventContext.Directions.Out, env, event);
+        EventStreamQueueItem eventItem = new EventStreamQueueItem(context);
+
+        log.debug("buffering event with sequenceId: " + sequence + ", position: " + position + ", isLast: " + isLastFlag);
+        this.queuedEvents.add(eventItem);
 
         if (this.queuedEvents.size() == (this.batchLimit + 1)) {
             log.debug("flushing " + batchLimit + " event(s) to stream.");
             boolean isComplete = false;
             flushStreamBuffer(isComplete);
-        } else {
-            boolean isLast = false;
-            String sequence = sequenceId.toString();
-            String isLastFlag = Boolean.toString(isLast);
-
-            Envelope env = StreamingEnvelopeHelper.buildStreamingEnvelope(sequence, position, isLastFlag);
-            EnvelopeHelper envelopHelper = new EnvelopeHelper(env);
-            envelopHelper.setMessageTopic(getTopic());
-
-            EventContext context = new EventContext(EventContext.Directions.Out, env, event);
-            EventStreamQueueItem eventItem = new EventStreamQueueItem(context);
-
-            log.debug("buffering event with sequenceId: " + sequence + ", position: " + position + ", isLast: " + isLastFlag);
-            this.queuedEvents.add(eventItem);
-            position++;
         }
 
+        position++;
     }
 
     @Override
