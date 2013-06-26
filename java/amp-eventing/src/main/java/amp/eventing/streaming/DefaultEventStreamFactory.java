@@ -6,6 +6,7 @@ import cmf.eventing.patterns.streaming.IEventStream;
 public class DefaultEventStreamFactory implements IEventStreamFactory {
 
     private DefaultStreamingBus eventBus;
+    private String topic;
 
     @Override
     public void setEventBus(DefaultStreamingBus bus) {
@@ -13,7 +14,12 @@ public class DefaultEventStreamFactory implements IEventStreamFactory {
     }
 
     @Override
+    public void setTopic(String topic) {
+        this.topic = topic;
+    }
+
+    @Override
     public IEventStream generateEventStream() {
-        return new DefaultEventStream(eventBus);
+        return new DefaultEventStream(eventBus, topic);
     }
 }

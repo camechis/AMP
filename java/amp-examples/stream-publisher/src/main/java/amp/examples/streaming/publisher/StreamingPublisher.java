@@ -1,6 +1,7 @@
 package amp.examples.streaming.publisher;
 
 import amp.eventing.streaming.DefaultStreamingBus;
+import cmf.eventing.patterns.streaming.IEventStream;
 import cmf.eventing.patterns.streaming.IStreamingEventBus;
 import cmf.eventing.patterns.streaming.IStreamingMapperCallback;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -9,6 +10,11 @@ import java.util.ArrayList;
 
 public class StreamingPublisher {
 
+    /**
+     * Demonstrates how to publish a chunked sequence of messages or using the eventStream to publish for you.
+     * @param args
+     * @throws Exception
+     */
     public static void main(String[] args) throws Exception {
         ClassPathXmlApplicationContext injector = new ClassPathXmlApplicationContext("classpath:META-INF/spring/eventBusContext.xml");
 
@@ -37,6 +43,11 @@ public class StreamingPublisher {
 
         streamingEventBus.setBatchLimit(2);
         streamingEventBus.publishChunkedSequence(streamMessages.iterator(), mapper);
+
+        IEventStream stream = streamingEventBus.createStream(String.class.getCanonicalName());
+        for (Object message : streamMessages) {
+            stream.publish(message);
+        }
         System.exit(0);
     }
 }

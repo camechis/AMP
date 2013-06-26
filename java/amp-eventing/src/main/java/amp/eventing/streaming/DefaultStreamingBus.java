@@ -41,6 +41,7 @@ public class DefaultStreamingBus extends DefaultEventBus implements IStreamingEv
 
     @Override
     public IEventStream createStream(String topic) {
+        eventStreamFactory.setTopic(topic);
         IEventStream eventStream = eventStreamFactory.generateEventStream();
         this.eventStreams.put(topic, eventStream);
         return eventStream;
@@ -62,15 +63,9 @@ public class DefaultStreamingBus extends DefaultEventBus implements IStreamingEv
         validateEventIterator(dataSet);
         boolean doMap = isValidMapper(objectMapper);
 
-        String sequenceId = UUID.randomUUID().toString();
-        int position = 0;
-        boolean isLast;
-        Queue<EventStreamQueueItem> streamBuffer = new LinkedList<EventStreamQueueItem>();
-
         try {
             while (dataSet.hasNext()) {
                 Object eventItem = dataSet.next();
-                isLast = (!dataSet.hasNext()) ? true : false;
                 if (doMap) {
                     //This may look a little strange, but just reusing eventItem again for efficiency.
                     //The eventItem is now of type TEVENT which was converted to conform to the sender's desired format
@@ -80,9 +75,11 @@ public class DefaultStreamingBus extends DefaultEventBus implements IStreamingEv
 
                 if (null == eventStream) {
                     topic = eventItem.getClass().getCanonicalName();
-                    eventStream = new DefaultEventStream(this); //Skipping use of the factory so that we
+                    eventStream = new DefaultEventStream(this, topic); //Skipping use of the factory so that we ensure sequencing based event stream is used
+                    eventStream.setBatchLimit(this.batchLimit);
+                    eventStreams.put(topic, eventStream);
                 }
-                eventStream.setBatchLimit(this.batchLimit);
+
                 eventStream.publish(eventItem);
             }
         } finally {

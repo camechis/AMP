@@ -7,5 +7,7 @@ public interface IEventStreamFactory {
 
     void setEventBus(DefaultStreamingBus bus);
 
+    void setTopic(String topic);
+
     IEventStream generateEventStream();
 }

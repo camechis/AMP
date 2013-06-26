@@ -2,6 +2,7 @@ package amp.eventing.streaming;
 
 import amp.eventing.EventContext;
 import amp.eventing.IContinuationCallback;
+import amp.eventing.EnvelopeHelper;
 import cmf.bus.Envelope;
 import cmf.eventing.IEventBus;
 import cmf.eventing.patterns.streaming.IEventStream;
@@ -18,9 +19,11 @@ public class DefaultEventStream implements IEventStream {
     private Queue<EventStreamQueueItem> queuedEvents;
     private final UUID sequenceId;
     private int position;
+    private String topic;
 
-    public DefaultEventStream(DefaultStreamingBus eventBus) {
+    public DefaultEventStream(DefaultStreamingBus eventBus, String topic) {
         this.eventBus = eventBus;
+        this.topic = topic;
         this.queuedEvents = new LinkedList<EventStreamQueueItem>();
         this.sequenceId = UUID.randomUUID();
         this.position = 0;
@@ -45,6 +48,9 @@ public class DefaultEventStream implements IEventStream {
             String isLastFlag = Boolean.toString(isLast);
 
             Envelope env = StreamingEnvelopeHelper.buildStreamingEnvelope(sequence, position, isLastFlag);
+            EnvelopeHelper envelopHelper = new EnvelopeHelper(env);
+            envelopHelper.setMessageTopic(getTopic());
+
             EventContext context = new EventContext(EventContext.Directions.Out, env, event);
             EventStreamQueueItem eventItem = new EventStreamQueueItem(context);
 
@@ -53,6 +59,11 @@ public class DefaultEventStream implements IEventStream {
             position++;
         }
 
+    }
+
+    @Override
+    public String getTopic() {
+        return this.topic;
     }
 
     /**
@@ -101,7 +112,7 @@ public class DefaultEventStream implements IEventStream {
         int counter = 0;
         for (EventStreamQueueItem item : queuedEvents) {
             if (counter == (queuedEvents.size() - 1)) {
-                queuedEvents.peek().getEnvelope().setHeader(StreamingEnvelopeConstants.IS_LAST, Boolean.toString(true));
+                item.getEnvelope().setHeader(StreamingEnvelopeConstants.IS_LAST, Boolean.toString(true));
             }
             counter++;
         }
