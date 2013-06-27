@@ -5,8 +5,10 @@ import java.util.Collection;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import com.fasterxml.jackson.databind.util.JSONPObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,13 +33,16 @@ public class MissedTopicsResource {
 	
 	@GET
 	@Timed
-	public Collection<TopicMiss> getMissedTopics(){
+	public Object getMissedTopics(@QueryParam("callback") String callback){
 		
 		logger.info("Getting missed topics.");
 		
 		Collection<TopicMiss> topicMisses = this.noRouteForTopicListener.getTopicMisses();
-		
-		return topicMisses;
+
+        if(callback != null && callback.length()>0){
+            return new JSONPObject(callback, topicMisses);
+        }
+        return topicMisses;
 	}
 	
 }
