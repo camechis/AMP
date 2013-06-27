@@ -1,0 +1,16 @@
+applicationContext: ['config/applicationContext.xml', 'config/basicAuthSecurityContext.xml']
+
+useSpringSecurity: true
+
+logging:
+    level: DEBUG
+    console:
+        enabled: true
+        threshold: DEBUG
+
+http:
+    port: 15678
+    adminPort: 8082
+    adminUsername: admin
+    adminPassword: admin
+    rootPath: /anubis/*
