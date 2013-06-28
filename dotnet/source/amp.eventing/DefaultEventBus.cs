@@ -62,7 +62,7 @@ namespace amp.eventing
             _log.Debug("Leave Publish");
         }
 
-        public virtual void Subscribe(IEventHandler handler)
+        public virtual void Subscribe<TEvent>(IEventHandler<TEvent> handler) where TEvent : class
         {
             _log.Debug("Enter Subscribe");
 

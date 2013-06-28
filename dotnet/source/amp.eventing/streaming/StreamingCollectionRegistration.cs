@@ -66,7 +66,7 @@ namespace amp.eventing.streaming
                     if (isLast)
                     { 
                         result = _eventHandler.HandleCollection(
-                            new List<IStreamingEventItem<TEvent>(_collectedEvents[sequenceId]), 
+                            new List<IStreamingEventItem<TEvent>>(_collectedEvents[sequenceId]), 
                             env.Headers);
                     }
 
