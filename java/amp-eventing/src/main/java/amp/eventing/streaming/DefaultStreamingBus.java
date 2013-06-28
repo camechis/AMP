@@ -13,6 +13,11 @@ import java.util.*;
 public class DefaultStreamingBus extends DefaultEventBus implements IStreamingEventBus, IInboundProcessorCallback {
     private IEventStreamFactory eventStreamFactory;
     private Map<String, IEventStream> eventStreams;
+    /**
+     * Default setting for {@link cmf.eventing.patterns.streaming.IStreamingEventBus} to stream events in batches.
+     * Allows for tuning by setting this to a different value based on size of events.
+     */
+    protected int batchLimit = 10;
 
     public DefaultStreamingBus(IEnvelopeBus envelopeBus) {
         super(envelopeBus);
@@ -31,6 +36,7 @@ public class DefaultStreamingBus extends DefaultEventBus implements IStreamingEv
                                IEventStreamFactory eventStreamFactory) {
         super(envelopeBus, inboundProcessors, outboundProcessors);
         this.eventStreamFactory = eventStreamFactory;
+        this.eventStreams = new HashMap<String, IEventStream>();
     }
 
     private void initializeDefaults() {
@@ -41,10 +47,15 @@ public class DefaultStreamingBus extends DefaultEventBus implements IStreamingEv
 
     @Override
     public IEventStream createStream(String topic) {
-        eventStreamFactory.setTopic(topic);
-        IEventStream eventStream = eventStreamFactory.generateEventStream();
-        this.eventStreams.put(topic, eventStream);
-        return eventStream;
+        if (false == this.eventStreams.containsKey(topic)) {
+            eventStreamFactory.setTopic(topic);
+            IEventStream eventStream = eventStreamFactory.generateEventStream();
+            this.eventStreams.put(topic, eventStream);
+            return eventStream;
+        } else {
+            return this.eventStreams.get(topic);
+        }
+
     }
 
     public void removeStream(String topic) {

@@ -42,8 +42,8 @@ public class DefaultEventStream implements IEventStream {
         String isLastFlag = Boolean.toString(isLast);
 
         Envelope env = StreamingEnvelopeHelper.buildStreamingEnvelope(sequence, position, isLastFlag);
-        EnvelopeHelper envelopHelper = new EnvelopeHelper(env);
-        envelopHelper.setMessageTopic(getTopic());
+        EnvelopeHelper envHelper = new EnvelopeHelper(env);
+        envHelper.setMessageTopic(getTopic());
 
         EventContext context = new EventContext(EventContext.Directions.Out, env, event);
         EventStreamQueueItem eventItem = new EventStreamQueueItem(context);

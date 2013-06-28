@@ -18,11 +18,7 @@ public class DefaultEventBus implements IEventBus, IInboundProcessorCallback {
     protected IEnvelopeBus envelopeBus;
     protected List<IEventProcessor> inboundProcessors = new LinkedList<IEventProcessor>();
     protected List<IEventProcessor> outboundProcessors = new LinkedList<IEventProcessor>();
-    /**
-     * Default setting for {@link cmf.eventing.patterns.streaming.IStreamingEventBus} to stream events in batches.
-     * Allows for tuning by setting this to a different value based on size of events.
-     */
-    protected int batchLimit = 10;
+
 
 
 
