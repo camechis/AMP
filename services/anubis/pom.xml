@@ -183,22 +183,6 @@
 	
 	<build>
 		<plugins>
-			<!-- this plugin transforms the manifest to put the config folder on the 
-				class path. It does this during 'mvn package' -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.4</version>
-				<configuration>
-					<archive>
-						<manifestEntries>
-							<!-- we specify ../config/ instead of config/ because the start script 
-								is in bin/ and runs the jar in target/ -->
-							<Class-Path>../config/</Class-Path>
-						</manifestEntries>
-					</archive>
-				</configuration>
-			</plugin>
 			<!-- this plugin takes my code, and all dependencies in this pom, and 
 				rolls them into one big executable fat jar. It does this during 'mvn package' -->
 			<plugin>
@@ -212,7 +196,7 @@
 							<goal>shade</goal>
 						</goals>
 						<configuration>
-							<createDependencyReducedPom>true</createDependencyReducedPom>
+							<createDependencyReducedPom>false</createDependencyReducedPom>
                             <filters>
                                 <filter>
                                     <artifact>*:*</artifact>
@@ -227,6 +211,11 @@
 								<transformer
 									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
 									<mainClass>amp.anubis.AnubisService</mainClass>
+                                    <!-- Sets the classpath in the manifest
+                                    <manifestEntries>
+                                        <Class-Path>../lib/spring-security-kerberos-core-1.0.1.BERICO.jar</Class-Path>
+                                    </manifestEntries>
+                                    -->
 								</transformer>
 								<transformer
 									implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">

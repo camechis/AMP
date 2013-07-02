@@ -27,7 +27,7 @@
         <property name="ticketValidator">
             <bean class="org.springframework.security.extensions.kerberos.SunJaasKerberosTicketValidator">
                 <property name="servicePrincipal" value="HTTP/anubis.johnruiz.com" />
-                <property name="keyTabLocation" value="file:/opt/anubis/keys/<your keytab file>" />
+                <property name="keyTabLocation" value="file:/opt/anubis/keys/anubis.johnruiz.com.keytab" />
                 <property name="debug" value="true" />
             </bean>
         </property>
@@ -37,7 +37,7 @@
     <sec:ldap-server id="johnruizLdapServer"
                      url="ldap://dc01.johnruiz.com:389/DC=johnruiz,DC=com"
                      manager-dn="CN=LDAP Bind Account,CN=Users,DC=johnruiz,DC=com"
-                     manager-password="<password>" />
+                     manager-password="1qaz@WSX3edc$RFV" />
 
     <bean id="filterBasedLdapUserSearch" class="org.springframework.security.ldap.search.FilterBasedLdapUserSearch">
         <constructor-arg value="cn=Users" />
