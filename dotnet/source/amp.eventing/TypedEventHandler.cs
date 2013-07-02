@@ -11,7 +11,7 @@ using amp.bus;
 
 namespace amp.eventing
 {
-    public class TypedEventHandler<TEvent> : IEventHandler<TEvent> where TEvent : class
+    public class TypedEventHandler<TEvent> : IEventHandler where TEvent : class
     {
         protected Func<TEvent, IDictionary<string, string>, object> _handler;
         protected Func<Envelope, Exception, object> _failHandler;

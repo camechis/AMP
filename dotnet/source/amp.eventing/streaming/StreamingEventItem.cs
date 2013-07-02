@@ -39,7 +39,7 @@ namespace amp.eventing.streaming
         {
             get
             { 
-                return Guid.Parse(_eventHeaders[SEC.SequenceId]);
+                return Guid.Parse(_eventHeaders[SEC.SEQUENCE_ID]);
             }
         }
 
@@ -47,7 +47,7 @@ namespace amp.eventing.streaming
         {
             get 
             {
-                return int.Parse(_eventHeaders[SEC.Position]);
+                return int.Parse(_eventHeaders[SEC.POSITION]);
             }
         }
 
@@ -55,7 +55,7 @@ namespace amp.eventing.streaming
         {
             get 
             {
-                return bool.Parse(_eventHeaders[SEC.IsLast]); 
+                return bool.Parse(_eventHeaders[SEC.IS_LAST]); 
             }
         }
 

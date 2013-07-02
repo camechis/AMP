@@ -8,6 +8,7 @@ using cmf.eventing.patterns.streaming;
 using Common.Logging;
 
 using SEC = amp.eventing.streaming.StreamingEnvelopeConstants;
+using cmf.eventing;
 
 namespace amp.eventing.streaming
 {
@@ -15,12 +16,12 @@ namespace amp.eventing.streaming
     {
         protected IStreamingCollectionHandler<TEvent> _eventHandler;
         protected Predicate<Envelope> _filterPredicate;
-        protected Func<Envelope, TEvent> _processInbound;
+        protected Func<IEventHandler, Envelope, object> _processInbound;
         protected IDictionary<string, string> _registrationInfo;
         protected ILog _log;
         protected IDictionary<string, IList<IStreamingEventItem<TEvent>>> _collectedEvents;
 
-        public StreamingCollectionRegistration(IStreamingCollectionHandler<TEvent> handler, Func<Envelope, TEvent> processorCallback) 
+        public StreamingCollectionRegistration(IStreamingCollectionHandler<TEvent> handler, Func<IEventHandler, Envelope, object> processorCallback) 
         {
             _eventHandler = handler;
             _processInbound = processorCallback;
@@ -38,15 +39,15 @@ namespace amp.eventing.streaming
 
         public object Handle(Envelope env)
         {
-            TEvent streamEvent = _processInbound(env);
+            TEvent streamEvent = (TEvent)_processInbound(_eventHandler, env);
             object result = null;
 
             if (null != streamEvent)
             {
                 try
                 {
-                    string sequenceId = env.Headers[SEC.SequenceId];
-                    bool isLast = bool.Parse(env.Headers[SEC.IsLast]);
+                    string sequenceId = env.Headers[SEC.SEQUENCE_ID];
+                    bool isLast = bool.Parse(env.Headers[SEC.IS_LAST]);
 
                     if (!_collectedEvents.ContainsKey(sequenceId))
                     { 

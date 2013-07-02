@@ -14,7 +14,7 @@ namespace amp.eventing
 {
     public class EventRegistration : IRegistration
     {
-        protected Func<IEventHandler<object>, Envelope, object> _interceptor;
+        protected Func<IEventHandler, Envelope, object> _interceptor;
         protected IDictionary<string, string> _registrationInfo;
         protected ILog _log;
 
@@ -29,14 +29,14 @@ namespace amp.eventing
             get { return _registrationInfo; }
         }
 
-        public virtual IEventHandler<object> Handler { get; protected set; }
+        public virtual IEventHandler Handler { get; protected set; }
         
         public virtual Envelope Envelope { get; protected set; }
 
 
         public EventRegistration(
-            IEventHandler<object> handler, 
-            Func<IEventHandler<object>, Envelope, object> interceptor)
+            IEventHandler handler, 
+            Func<IEventHandler, Envelope, object> interceptor)
         {
             this.Handler = handler;
             _interceptor = interceptor;

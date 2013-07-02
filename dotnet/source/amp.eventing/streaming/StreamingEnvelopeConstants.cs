@@ -7,8 +7,8 @@ namespace amp.eventing.streaming
 {
     public class StreamingEnvelopeConstants
     {
-        public const string SequenceId = "sequenceId";
-        public const string Position = "position";
-        public const string IsLast = "isLast";
+        public const string SEQUENCE_ID = "sequenceId";
+        public const string POSITION = "position";
+        public const string IS_LAST = "isLast";
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using cmf.eventing.patterns.streaming;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,7 +8,7 @@ namespace amp.eventing.streaming
 {
     public class DefaultEventStreamFactory : IEventStreamFactory 
     {
-        private DefaultStreamingBus _eventBus;
+        private IStandardStreamingEventBus _eventBus;
         private string _topic;
 
         public DefaultStreamingBus DefaultStreamingBus { set { _eventBus = value; } }
@@ -16,6 +17,11 @@ namespace amp.eventing.streaming
         public IEventStream GenerateEventStream()
         {
             return new DefaultEventStream(_eventBus, _topic);
+        }
+
+        public IStandardStreamingEventBus EventBus
+        {
+            set { _eventBus = value; }
         }
     }
 }

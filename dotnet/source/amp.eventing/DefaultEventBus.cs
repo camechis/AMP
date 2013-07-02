@@ -62,7 +62,7 @@ namespace amp.eventing
             _log.Debug("Leave Publish");
         }
 
-        public virtual void Subscribe<TEvent>(IEventHandler<TEvent> handler) where TEvent : class
+        public virtual void Subscribe(IEventHandler handler)
         {
             _log.Debug("Enter Subscribe");
 
@@ -112,7 +112,7 @@ namespace amp.eventing
 
 
         // recursive function that processes envelopes
-        protected virtual void ProcessEvent(
+        public virtual void ProcessEvent(
             EventContext context,
             IEnumerable<IEventProcessor> processorChain,
             Action processingComplete)

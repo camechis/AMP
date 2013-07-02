@@ -13,15 +13,15 @@ namespace amp.eventing.streaming
     public class DefaultEventStream : IEventStream 
     {
         protected ILog _log;
-        private readonly DefaultStreamingBus _eventBus;
+        private readonly IStandardStreamingEventBus _eventBus;
         private int _batchLimit = 2;
         private Queue<EventStreamQueueItem> _queuedEvents;
         
         private readonly Guid _sequenceId;
         private int _position;
-        private string _topic;       
+        private string _topic;
 
-        public DefaultEventStream(DefaultStreamingBus eventBus, string topic)
+        public DefaultEventStream(IStandardStreamingEventBus eventBus, string topic)
         {
             _log = LogManager.GetLogger(this.GetType());
             _eventBus = eventBus;
@@ -105,7 +105,7 @@ namespace amp.eventing.streaming
             { 
                 if (counter == (_queuedEvents.Count - 1))
                 {
-                    item.Envelope.Headers[StreamingEnvelopeConstants.IsLast] = bool.TrueString;
+                    item.Envelope.Headers[StreamingEnvelopeConstants.IS_LAST] = bool.TrueString;
                 }
                 counter++;
             }
