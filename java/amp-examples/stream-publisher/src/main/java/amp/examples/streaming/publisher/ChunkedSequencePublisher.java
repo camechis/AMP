@@ -8,7 +8,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.util.ArrayList;
 
-public class StreamingPublisher {
+public class ChunkedSequencePublisher {
 
     /**
      * Demonstrates how to publish a chunked sequence of messages or using the eventStream to publish for you.
@@ -34,15 +34,15 @@ public class StreamingPublisher {
         streamMessages.add("From Marathon to Waterloo, ");
         streamMessages.add("in order categorical; ");
 
+        IStreamingMapperCallback<String> mapper = new IStreamingMapperCallback<String>() {
+            @Override
+            public String map(Object element) {
+                return (String) element;
+            }
+        };
 
-        IEventStream stream = streamingEventBus.createStream(String.class.getCanonicalName());
-        stream.setBatchLimit(2);
-
-        for (Object message : streamMessages) {
-            stream.publish(message);
-        }
-        stream.dispose();
-
+        streamingEventBus.setBatchLimit(2);
+        streamingEventBus.publishChunkedSequence(streamMessages.iterator(), mapper);
         System.exit(0);
     }
 }

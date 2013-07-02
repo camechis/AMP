@@ -15,12 +15,9 @@ public class StreamingReaderSubscriber {
 
         IStreamingEventBus streamingEventBus = injector.getBean("eventBus", DefaultStreamingBus.class);
 
-        final Boolean isDone = new Boolean(false);
-
-
         IStreamingReaderHandler<String> handler = new IStreamingReaderHandler<String>() {
             @Override
-            public Object onSequenceEventRead(IStreamingEventItem<String> eventItem) {
+            public Object onEventRead(IStreamingEventItem<String> eventItem) {
                 System.out.println("Message received: (sequenceId: " + eventItem.getSequenceId().toString() +
                         "), (position: " + eventItem.getPosition() +
                         "), (isLast: " + Boolean.toString(eventItem.isLast()) + "), \nEvent Value: " + eventItem.getEvent() );
@@ -28,12 +25,9 @@ public class StreamingReaderSubscriber {
             }
 
             @Override
-            public Object onSequenceFinished(IStreamingEventItem<String> eventItem) {
-                System.out.println("Last Message In Sequence received: (sequenceId: " + eventItem.getSequenceId().toString() +
-                        "), (position: " + eventItem.getPosition() +
-                        "), (isLast: " + Boolean.toString(eventItem.isLast()) + "), \nEvent Value: " + eventItem.getEvent() );
-                StreamingReaderSubscriber.isDone = true;
-                return null;  //To change body of implemented methods use File | Settings | File Templates.
+            public void dispose() {
+                System.out.println("Last event was received from publisher. Event Stream has been closed.");
+                isDone = true;
             }
 
             @Override
@@ -43,8 +37,8 @@ public class StreamingReaderSubscriber {
 
             @Override
             public Object handle(String event, Map<String, String> headers) {
-                System.out.println("Handle called.");
-                return null;  //To change body of implemented methods use File | Settings | File Templates.
+                System.out.println("Handle called");
+                return null;
             }
 
             @Override
@@ -56,7 +50,7 @@ public class StreamingReaderSubscriber {
 
         boolean allEventsReceived = false;
 
-        streamingEventBus.subscribeToNotifier(handler);
+        streamingEventBus.subscribeToReader(handler);
 
 
         while (allEventsReceived == false) {

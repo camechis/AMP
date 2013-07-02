@@ -55,11 +55,9 @@ public class StreamingReaderRegistration<TEVENT> implements IRegistration {
                 boolean isLast = Boolean.parseBoolean(env.getHeader(IS_LAST));
 
                 IStreamingEventItem<TEVENT> eventItem = new StreamingEventItem<TEVENT>(event, env.getHeaders());
-
-                if (false == isLast) {
-                    result = this.eventHandler.onSequenceEventRead(eventItem);
-                } else {
-                    result = this.eventHandler.onSequenceFinished(eventItem);
+                result = this.eventHandler.onEventRead(eventItem);
+                if (isLast) {
+                    this.eventHandler.dispose();
                 }
             } catch (Exception ex) {
                 result = handleFailed(env, ex);

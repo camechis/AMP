@@ -18,15 +18,9 @@ public class DefaultEventBus implements IEventBus, IInboundProcessorCallback {
     protected IEnvelopeBus envelopeBus;
     protected List<IEventProcessor> inboundProcessors = new LinkedList<IEventProcessor>();
     protected List<IEventProcessor> outboundProcessors = new LinkedList<IEventProcessor>();
-    /**
-     * Default setting for {@link cmf.eventing.patterns.streaming.IStreamingEventBus} to stream events in batches.
-     * Allows for tuning by setting this to a different value based on size of events.
-     */
-    protected int batchLimit = 10;
 
-    protected static final String SEQUENCE_ID = "sequenceId";
-    protected static final String POSITION = "position";
-    protected static final String IS_LAST = "isLast";
+
+
 
     public DefaultEventBus(IEnvelopeBus envelopeBus) {
         this.envelopeBus = envelopeBus;
@@ -135,7 +129,6 @@ public class DefaultEventBus implements IEventBus, IInboundProcessorCallback {
 
         return context.getEvent();
     }
-
 
     @Override
     protected void finalize() {
