@@ -12,37 +12,20 @@ namespace amp.eventing.streaming
     {
         private IEventStreamFactory _eventStreamFactory;
         private Dictionary<string, IEventStream> _eventStreams;
-        private IList<IEventProcessor> _inboundProcessors;
-        private IList<IEventProcessor> _outboundProcessors;
-
+        
         protected int _batchLimit = 10;
 
         public DefaultStreamingBus(IEnvelopeBus envelopeBus) : base(envelopeBus)
         {
-            _inboundProcessors = new List<IEventProcessor>();
-            _outboundProcessors = new List<IEventProcessor>();
+            InboundChain = new Dictionary<int, IEventProcessor>();
+            OutboundChain = new Dictionary<int, IEventProcessor>();
 
             InitializeDefaults();
         }
 
         public DefaultStreamingBus(IEnvelopeBus envelopeBus, 
-                                    IList<IEventProcessor> inboundProcessors,
-                                    IList<IEventProcessor> outboundProcessors) : base(envelopeBus)
-        {
-             _inboundProcessors = inboundProcessors;
-            _outboundProcessors = outboundProcessors;
-            
-            InitializeDefaults();
-        }
-
-        public DefaultStreamingBus(IEnvelopeBus envelopeBus, 
-                                    IList<IEventProcessor> inboundProcessors,
-                                    IList<IEventProcessor> outboundProcessors, 
                                     IEventStreamFactory eventStreamFactory) : base(envelopeBus)
         {
-            _inboundProcessors = inboundProcessors;
-            _outboundProcessors = outboundProcessors;
-            SetBaseProcessingChains();
             _eventStreamFactory = eventStreamFactory;
             _eventStreams = new Dictionary<string, IEventStream>();
            
@@ -50,28 +33,9 @@ namespace amp.eventing.streaming
 
         private void InitializeDefaults()
         {
-
-            SetBaseProcessingChains();
             _eventStreamFactory = new DefaultEventStreamFactory();
             _eventStreamFactory.EventBus = this;
             _eventStreams = new Dictionary<string,IEventStream>();
-        }
-
-        private void SetBaseProcessingChains()
-        {
-            IDictionary<int, IEventProcessor> inChain = new Dictionary<int, IEventProcessor>();
-            for (int i = 0; i < _inboundProcessors.Count; i++)
-            {
-                inChain.Add(i, _inboundProcessors[i]);
-            }
-            base.InboundChain = inChain;
-
-            IDictionary<int, IEventProcessor> outChain = new Dictionary<int, IEventProcessor>();
-            for (int i = 0; i < _outboundProcessors.Count; i++)
-            {
-                outChain.Add(i, _outboundProcessors[i]);
-            }
-            base.OutboundChain = outChain;
         }
 
         public IEventStream CreateStream(string topic)
@@ -127,6 +91,8 @@ namespace amp.eventing.streaming
                         eventStream.BatchLimit = _batchLimit;
                         _eventStreams.Add(topic, eventStream);
                     }
+
+                    eventStream.Publish(item);
                 }
             }
             finally
@@ -192,15 +158,7 @@ namespace amp.eventing.streaming
         {
             get
             {
-                if (null == _inboundProcessors)
-                {
-                    IEnumerable<int> sortedKeys = this.OutboundChain.Keys.OrderBy(k => k);
-                    foreach (int key in this.InboundChain.Keys)
-                    {
-                        _inboundProcessors.Add(InboundChain[key]);
-                    }
-                }
-                return _inboundProcessors;
+                return new List<IEventProcessor>(InboundChain.Sort());
             }
         }
 
@@ -208,15 +166,7 @@ namespace amp.eventing.streaming
         {
             get
             {
-                if (null == _outboundProcessors)
-                {
-                    IEnumerable<int> sortedKeys = this.OutboundChain.Keys.OrderBy(k => k);
-                    foreach (int key in sortedKeys)
-                    {
-                        _outboundProcessors.Add(OutboundChain[key]);
-                    }
-                }
-                return _outboundProcessors;
+                return new List<IEventProcessor>(OutboundChain.Sort());
             }
         }
 

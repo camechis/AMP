@@ -11,7 +11,6 @@ namespace amp.eventing.streaming
         private IStandardStreamingEventBus _eventBus;
         private string _topic;
 
-        public DefaultStreamingBus DefaultStreamingBus { set { _eventBus = value; } }
         public string Topic { set { _topic = value; } }
 
         public IEventStream GenerateEventStream()

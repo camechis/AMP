@@ -52,7 +52,7 @@ namespace amp.eventing.streaming
             _queuedEvents.Enqueue(eventItem);
 
             if (_queuedEvents.Count == (_batchLimit + 1)) {
-                _log.Debug("flusshing " + _batchLimit + " event(s) to stream.");
+                _log.Debug("flushing " + _batchLimit + " event(s) to stream.");
                 bool isComplete = false;
                 FlushStreamBuffer(isComplete);
             }
