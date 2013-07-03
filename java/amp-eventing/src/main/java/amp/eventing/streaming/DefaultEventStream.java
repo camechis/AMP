@@ -4,9 +4,7 @@ import amp.eventing.EventContext;
 import amp.eventing.IContinuationCallback;
 import amp.eventing.EnvelopeHelper;
 import cmf.bus.Envelope;
-import cmf.eventing.IEventBus;
 import cmf.eventing.patterns.streaming.IEventStream;
-import cmf.eventing.patterns.streaming.IStreamingEventItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,14 +12,14 @@ import java.util.*;
 
 public class DefaultEventStream implements IEventStream {
     protected static final Logger log = LoggerFactory.getLogger(DefaultEventStream.class);
-    private final DefaultStreamingBus eventBus;
+    private final IStandardStreamingEventBus eventBus;
     private int batchLimit = 2;
     private Queue<EventStreamQueueItem> queuedEvents;
     private final UUID sequenceId;
     private int position;
     private String topic;
 
-    public DefaultEventStream(DefaultStreamingBus eventBus, String topic) {
+    public DefaultEventStream(IStandardStreamingEventBus eventBus, String topic) {
         this.eventBus = eventBus;
         this.topic = topic;
         this.queuedEvents = new LinkedList<EventStreamQueueItem>();

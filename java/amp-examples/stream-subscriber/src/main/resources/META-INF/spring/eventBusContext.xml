@@ -18,14 +18,14 @@
     		c:inboundProcessors-ref="inboundEventProcessors" />
 
     <util:list id="inboundEventProcessors" value-type="amp.eventing.IEventProcessor">
-        <ref bean="rpcFilter" />
+        <!--<ref bean="rpcFilter" />-->
         <ref bean="serializationProcessor" />
     </util:list>
 
     <util:list id="outboundEventProcessors" value-type="amp.eventing.IEventProcessor">
         <ref bean="serializationProcessor" />
         <ref bean="outboundHeadersProcessor" />
-        <ref bean="rpcFilter"/>
+        <!--<ref bean="rpcFilter"/>-->
     </util:list>
 
     <bean id="serializationProcessor" class="amp.eventing.serializers.JsonEventSerializer"

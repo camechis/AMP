@@ -1,6 +1,7 @@
 package amp.examples.streaming.publisher;
 
 import amp.eventing.streaming.DefaultStreamingBus;
+import amp.eventing.streaming.IStandardStreamingEventBus;
 import cmf.eventing.patterns.streaming.IEventStream;
 import cmf.eventing.patterns.streaming.IStreamingEventBus;
 import cmf.eventing.patterns.streaming.IStreamingMapperCallback;
@@ -18,7 +19,7 @@ public class ChunkedSequencePublisher {
     public static void main(String[] args) throws Exception {
         ClassPathXmlApplicationContext injector = new ClassPathXmlApplicationContext("classpath:META-INF/spring/eventBusContext.xml");
 
-        IStreamingEventBus streamingEventBus = injector.getBean("eventBus", DefaultStreamingBus.class);
+        IStandardStreamingEventBus streamingEventBus = injector.getBean("eventBus", DefaultStreamingBus.class);
 
         ArrayList<Object> streamMessages = new ArrayList<Object>();
         streamMessages.add("I am ");
