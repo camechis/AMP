@@ -12,11 +12,11 @@
     </parent>
 
 
-    <name>AMP Example - Streaming Message Subscriber</name>
+    <name>AMP Example - Common Streaming Messages</name>
     <url>http://amp.bericotechnologies.com</url>
 
     <groupId>amp</groupId>
-    <artifactId>amp.examples.streaming.subscriber</artifactId>
+    <artifactId>amp.examples.streaming.common</artifactId>
     <version>3.1.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
@@ -78,11 +78,6 @@
         <dependency>
             <groupId>amp</groupId>
             <artifactId>amp.topology.client</artifactId>
-            <version>${cmf.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>amp</groupId>
-            <artifactId>amp.examples.streaming.common</artifactId>
             <version>${cmf.version}</version>
         </dependency>
 

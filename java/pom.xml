@@ -37,6 +37,7 @@
         <module>amp-examples/service-adaptor</module>
         <module>amp-examples/stream-publisher</module>
         <module>amp-examples/stream-subscriber</module>
+        <module>amp-examples/stream-common</module>
         <module>services/global-topology-client</module>
     </modules>
 

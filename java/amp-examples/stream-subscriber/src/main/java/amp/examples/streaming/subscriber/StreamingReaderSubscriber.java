@@ -1,6 +1,8 @@
 package amp.examples.streaming.subscriber;
 
 import amp.eventing.streaming.DefaultStreamingBus;
+import amp.eventing.streaming.IStandardStreamingEventBus;
+import amp.examples.streaming.common.ModernMajorGeneralMessage;
 import cmf.bus.Envelope;
 import cmf.eventing.patterns.streaming.IStreamingEventBus;
 import cmf.eventing.patterns.streaming.IStreamingEventItem;
@@ -13,14 +15,13 @@ public class StreamingReaderSubscriber {
     public static void main(String[] args) throws Exception {
         ClassPathXmlApplicationContext injector = new ClassPathXmlApplicationContext("classpath:META-INF/spring/eventBusContext.xml");
 
-        IStreamingEventBus streamingEventBus = injector.getBean("eventBus", DefaultStreamingBus.class);
-
-        IStreamingReaderHandler<String> handler = new IStreamingReaderHandler<String>() {
+        IStandardStreamingEventBus streamingEventBus = injector.getBean("eventBus", DefaultStreamingBus.class);
+        IStreamingReaderHandler<ModernMajorGeneralMessage> handler = new IStreamingReaderHandler<ModernMajorGeneralMessage>() {
             @Override
-            public Object onEventRead(IStreamingEventItem<String> eventItem) {
+            public Object onEventRead(IStreamingEventItem<ModernMajorGeneralMessage> eventItem) {
                 System.out.println("Message received: (sequenceId: " + eventItem.getSequenceId().toString() +
                         "), (position: " + eventItem.getPosition() +
-                        "), (isLast: " + Boolean.toString(eventItem.isLast()) + "), \nEvent Value: " + eventItem.getEvent() );
+                        "), (isLast: " + Boolean.toString(eventItem.isLast()) + "), \nEvent Value: " + eventItem.getEvent().getContent() );
                 return null;
             }
 
@@ -31,12 +32,12 @@ public class StreamingReaderSubscriber {
             }
 
             @Override
-            public Class getEventType() {
-                return String.class;
+            public Class<ModernMajorGeneralMessage> getEventType() {
+                return ModernMajorGeneralMessage.class;
             }
 
             @Override
-            public Object handle(String event, Map<String, String> headers) {
+            public Object handle(ModernMajorGeneralMessage event, Map<String, String> headers) {
                 System.out.println("Handle called");
                 return null;
             }
