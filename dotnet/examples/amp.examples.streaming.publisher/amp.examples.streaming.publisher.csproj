@@ -102,6 +102,12 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\amp.examples.streaming.common\amp.examples.streaming.common.csproj">
+      <Project>{94e1b11c-9b67-40b4-b6cc-ff7fc434f9d5}</Project>
+      <Name>amp.examples.streaming.common</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

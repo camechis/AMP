@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using amp.examples.streaming.common;
+
 namespace amp.examples.streaming.publisher
 {
     public class ChunkedSequencePublisher
@@ -19,24 +21,25 @@ namespace amp.examples.streaming.publisher
                 typeof(IStandardStreamingEventBus).FullName)
                 as IStandardStreamingEventBus;
 
+            
             IList<object> streamMessages = new List<object>();
-            streamMessages.Add("I am");
-            streamMessages.Add("the very ");
-            streamMessages.Add("model of ");
-            streamMessages.Add("a Modern ");
-            streamMessages.Add("Major-General ");
-            streamMessages.Add("I've information ");
-            streamMessages.Add("vegetable, animal, ");
-            streamMessages.Add("and mineral, ");
-            streamMessages.Add("I know the kings of England, ");
-            streamMessages.Add("and I quote the fights historical, ");
-            streamMessages.Add("From Marathon to Waterloo, ");
-            streamMessages.Add("in order categorical; ");
+            streamMessages.Add(new ModernMajorGeneralMessage("I am "));
+            streamMessages.Add(new ModernMajorGeneralMessage("the very "));
+            streamMessages.Add(new ModernMajorGeneralMessage("model of "));
+            streamMessages.Add(new ModernMajorGeneralMessage("a Modern "));
+            streamMessages.Add(new ModernMajorGeneralMessage("Major-General "));
+            streamMessages.Add(new ModernMajorGeneralMessage("I've information "));
+            streamMessages.Add(new ModernMajorGeneralMessage("vegetable, animal, "));
+            streamMessages.Add(new ModernMajorGeneralMessage("and mineral, "));
+            streamMessages.Add(new ModernMajorGeneralMessage("I know the kings of England, "));
+            streamMessages.Add(new ModernMajorGeneralMessage("and I quote the fights historical, "));
+            streamMessages.Add(new ModernMajorGeneralMessage("From Marathon to Waterloo, "));
+            streamMessages.Add(new ModernMajorGeneralMessage("in order categorical; "));
 
             streamingEventBus.BatchLimit = 2;
             streamingEventBus.PublishChunkedSequence(streamMessages, (element) => 
             {
-                return (string)element;
+                return (ModernMajorGeneralMessage)element;
             });
 
             Environment.Exit(0);
