@@ -1,6 +1,8 @@
 package amp.examples.streaming.publisher;
 
 import amp.eventing.streaming.DefaultStreamingBus;
+import amp.eventing.streaming.IStandardStreamingEventBus;
+import amp.examples.streaming.common.ModernMajorGeneralMessage;
 import cmf.eventing.patterns.streaming.IEventStream;
 import cmf.eventing.patterns.streaming.IStreamingEventBus;
 import cmf.eventing.patterns.streaming.IStreamingMapperCallback;
@@ -18,26 +20,26 @@ public class ChunkedSequencePublisher {
     public static void main(String[] args) throws Exception {
         ClassPathXmlApplicationContext injector = new ClassPathXmlApplicationContext("classpath:META-INF/spring/eventBusContext.xml");
 
-        IStreamingEventBus streamingEventBus = injector.getBean("eventBus", DefaultStreamingBus.class);
+        IStandardStreamingEventBus streamingEventBus = injector.getBean("eventBus", DefaultStreamingBus.class);
 
         ArrayList<Object> streamMessages = new ArrayList<Object>();
-        streamMessages.add("I am ");
-        streamMessages.add("the very ");
-        streamMessages.add("model of ");
-        streamMessages.add("a Modern ");
-        streamMessages.add("Major-General, ");
-        streamMessages.add("I've information ");
-        streamMessages.add("vegetable, animal, ");
-        streamMessages.add("and mineral, ");
-        streamMessages.add("I know the kings of England, ");
-        streamMessages.add("and I quote the fights historical, ");
-        streamMessages.add("From Marathon to Waterloo, ");
-        streamMessages.add("in order categorical; ");
+        streamMessages.add(new ModernMajorGeneralMessage("I am "));
+        streamMessages.add(new ModernMajorGeneralMessage("the very "));
+        streamMessages.add(new ModernMajorGeneralMessage("model of "));
+        streamMessages.add(new ModernMajorGeneralMessage("a Modern "));
+        streamMessages.add(new ModernMajorGeneralMessage("Major-General, "));
+        streamMessages.add(new ModernMajorGeneralMessage("I've information "));
+        streamMessages.add(new ModernMajorGeneralMessage("vegetable, animal, "));
+        streamMessages.add(new ModernMajorGeneralMessage("and mineral, "));
+        streamMessages.add(new ModernMajorGeneralMessage("I know the kings of England, "));
+        streamMessages.add(new ModernMajorGeneralMessage("and I quote the fights historical, "));
+        streamMessages.add(new ModernMajorGeneralMessage("From Marathon to Waterloo, "));
+        streamMessages.add(new ModernMajorGeneralMessage("in order categorical; "));
 
-        IStreamingMapperCallback<String> mapper = new IStreamingMapperCallback<String>() {
+        IStreamingMapperCallback<ModernMajorGeneralMessage> mapper = new IStreamingMapperCallback<ModernMajorGeneralMessage>() {
             @Override
-            public String map(Object element) {
-                return (String) element;
+            public ModernMajorGeneralMessage map(Object element) {
+                return (ModernMajorGeneralMessage) element;
             }
         };
 

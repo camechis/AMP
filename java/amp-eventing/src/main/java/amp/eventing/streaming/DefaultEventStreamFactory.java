@@ -1,15 +1,14 @@
 package amp.eventing.streaming;
 
-import cmf.eventing.IEventBus;
 import cmf.eventing.patterns.streaming.IEventStream;
 
 public class DefaultEventStreamFactory implements IEventStreamFactory {
 
-    private DefaultStreamingBus eventBus;
+    private IStandardStreamingEventBus eventBus;
     private String topic;
 
     @Override
-    public void setEventBus(DefaultStreamingBus bus) {
+    public void setEventBus(IStandardStreamingEventBus bus) {
         this.eventBus = bus;
     }
 

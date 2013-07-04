@@ -1,6 +1,8 @@
 package amp.examples.streaming.subscriber;
 
 import amp.eventing.streaming.DefaultStreamingBus;
+import amp.eventing.streaming.IStandardStreamingEventBus;
+import amp.examples.streaming.common.ModernMajorGeneralMessage;
 import cmf.eventing.patterns.streaming.IStreamingCollectionHandler;
 import cmf.eventing.patterns.streaming.IStreamingEventBus;
 import cmf.eventing.patterns.streaming.IStreamingProgressUpdater;
@@ -10,9 +12,9 @@ public class StreamingCollectionSubscriber {
     public static void main(String[] args) throws Exception {
         ClassPathXmlApplicationContext injector = new ClassPathXmlApplicationContext("classpath:META-INF/spring/eventBusContext.xml");
 
-        IStreamingEventBus streamingEventBus = injector.getBean("eventBus", DefaultStreamingBus.class);
+        IStandardStreamingEventBus streamingEventBus = injector.getBean("eventBus", DefaultStreamingBus.class);
 
-        IStreamingCollectionHandler<String> handler = new CollectionHandler();
+        IStreamingCollectionHandler<ModernMajorGeneralMessage> handler = new CollectionHandler();
         IStreamingProgressUpdater notifier = new IStreamingProgressUpdater() {
             @Override
             public void updateProgress(String sequenceId, int numEventsProcessed) {

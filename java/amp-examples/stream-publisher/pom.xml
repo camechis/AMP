@@ -80,6 +80,11 @@
             <artifactId>amp.topology.client</artifactId>
             <version>${cmf.version}</version>
         </dependency>
+        <dependency>
+            <groupId>amp</groupId>
+            <artifactId>amp.examples.streaming.common</artifactId>
+            <version>${cmf.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>junit</groupId>

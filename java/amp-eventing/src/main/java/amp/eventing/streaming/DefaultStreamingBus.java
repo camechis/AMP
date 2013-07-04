@@ -2,7 +2,6 @@ package amp.eventing.streaming;
 
 
 import amp.eventing.*;
-import cmf.bus.Envelope;
 import cmf.bus.IEnvelopeBus;
 import cmf.eventing.IEventFilterPredicate;
 import cmf.eventing.IEventHandler;
@@ -10,7 +9,7 @@ import cmf.eventing.patterns.streaming.*;
 
 import java.util.*;
 
-public class DefaultStreamingBus extends DefaultEventBus implements IStreamingEventBus, IInboundProcessorCallback {
+public class DefaultStreamingBus extends DefaultEventBus implements IStandardStreamingEventBus, IInboundProcessorCallback {
     private IEventStreamFactory eventStreamFactory;
     private Map<String, IEventStream> eventStreams;
     /**
@@ -117,16 +116,16 @@ public class DefaultStreamingBus extends DefaultEventBus implements IStreamingEv
         }
     }
 
-    private void validateEventIterator(Iterator<Object> eventStream) throws Exception {
-        if (null == eventStream) {
-            throw new IllegalArgumentException("Cannot publish a null event stream");
+    private void validateEventIterator(Iterator<Object> eventIterator) throws Exception {
+        if (null == eventIterator) {
+            throw new IllegalArgumentException("Cannot publish a null event iterator");
         }
     }
 
     private <TEVENT> boolean isValidMapper(IStreamingMapperCallback<TEVENT> objectMapper) {
         boolean doMap = true;
         if (null == objectMapper) {
-            log.warn("No IStreamingMapperCallback supplied. Will not perform transformational mapping of elements in event stream");
+            log.warn("No IStreamingMapperCallback supplied. Will not perform transformational mapping of elements in chunked sequence");
             doMap = false;
         }
         return doMap;
@@ -162,17 +161,19 @@ public class DefaultStreamingBus extends DefaultEventBus implements IStreamingEv
         }
     }
 
+    @Override
     public List<IEventProcessor> getInboundProcessors() {
         return this.inboundProcessors;
     }
 
+    @Override
     public List<IEventProcessor> getOutboundProcessors() {
         return this.outboundProcessors;
     }
 
+    @Override
     public IEnvelopeBus getEnvelopeBus() {
         return this.envelopeBus;
     }
-
 
 }
