@@ -147,7 +147,7 @@ namespace amp.eventing.streaming
             _envBus.Register(registration);
         }
 
-        public void SubscribeToReader<TEvent>(IStreamingReaderHandler<TEvent> handler) where TEvent : IStreamingEventItem<TEvent>
+        public void SubscribeToReader<TEvent>(IStreamingReaderHandler<TEvent> handler)
         {
             StreamingReaderRegistration<TEvent> registration = new StreamingReaderRegistration<TEvent>(handler, this.InterceptEvent);
             _envBus.Register(registration);
@@ -178,7 +178,21 @@ namespace amp.eventing.streaming
             }
         }
 
+        public override object InterceptEvent(IEventHandler handler, Envelope env)
+        {
+            _log.Debug("Enter InterceptEvent");
 
+            var context = new EventContext(EventContext.Directions.In, env);
+
+            this.ProcessEvent(context, this.InboundChain.Sort(), () =>
+            {
+                _log.Info("Completed inbound processing - invoking IEventHandler");
+
+            });
+
+            _log.Debug("Leave InterceptEvent");
+            return context.Event;
+        }
         
     }
 }

@@ -36,11 +36,11 @@
     <AssemblyOriginatorKeyFile>amp.eventing.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="cmf.bus, Version=3.1.4828.39825, Culture=neutral, PublicKeyToken=bbbef7830e900844, processorArchitecture=MSIL">
+    <Reference Include="cmf.bus">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\binaries\libraries\cmf.bus.dll</HintPath>
     </Reference>
-    <Reference Include="cmf.eventing, Version=3.1.4828.39826, Culture=neutral, PublicKeyToken=b0e0f46569419490, processorArchitecture=MSIL">
+    <Reference Include="cmf.eventing">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\binaries\libraries\cmf.eventing.dll</HintPath>
     </Reference>

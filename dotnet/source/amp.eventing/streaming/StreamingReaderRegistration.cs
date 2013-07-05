@@ -10,63 +10,73 @@ using SEC = amp.eventing.streaming.StreamingEnvelopeConstants;
 
 namespace amp.eventing.streaming
 {
-    public class StreamingReaderRegistration<TEvent> : IRegistration, IObservable<TEvent> where TEvent : IStreamingEventItem<TEvent> 
+    public class StreamingReaderRegistration<TEvent> : IRegistration, IObservable<IStreamingEventItem<TEvent>> 
     {
         protected ILog _log;
         protected IStreamingReaderHandler<TEvent> _eventHandler;
         protected Func<IEventHandler, Envelope, object> _processorCallback;
         protected IDictionary<string, string> _registrationInfo;
-        private IList<IObserver<TEvent>> _observers;
+        private IList<IObserver<IStreamingEventItem<TEvent>>> _observers;
 
         public StreamingReaderRegistration(IStreamingReaderHandler<TEvent> eventHandler, Func<IEventHandler, Envelope, object> processorCallback)
         {
-            _observers = new List<IObserver<TEvent>>();
-            
+            //IStreamingReaderHandler implements IObserver<IStreamingEventItem<TEvent>>
+            _observers = new List<IObserver<IStreamingEventItem<TEvent>>>();
+            _observers.Add(eventHandler);
+
             _eventHandler = eventHandler;
             _processorCallback = processorCallback;
 
             _registrationInfo = new Dictionary<string, string>();
-            _registrationInfo.Add(EnvelopeHeaderConstants.MESSAGE_TOPIC, eventHandler.GetType().AssemblyQualifiedName);
+            _registrationInfo.Add(EnvelopeHeaderConstants.MESSAGE_TOPIC, typeof(TEvent).FullName);
+            _log = LogManager.GetLogger(typeof(StreamingReaderRegistration<TEvent>).Name);
         }
 
         public Predicate<Envelope> Filter
         {
-            get { throw new NotImplementedException(); }
+            get { return null; }
         }
+
+        private static readonly object padLock = new object();
 
         public object Handle(Envelope env)
         {
-            TEvent evt = (TEvent)_processorCallback(_eventHandler, env);
-            object result = null;
-
-            if (null != evt)
+            lock (padLock)
             {
-                try
-                {
-                    bool isLast = bool.Parse(env.Headers[SEC.IS_LAST]);
+                _log.Debug("enter Handle for StreamingReaderRegistration");
+                TEvent evt = (TEvent)_processorCallback(_eventHandler, env);
+                object result = null;
 
-                    IStreamingEventItem<TEvent> eventItem = new StreamingEventItem<TEvent>(evt, env.Headers);
-                   
-                    foreach (IObserver<IStreamingEventItem<TEvent>> o in _observers)
+                if (null != evt)
+                {
+                    try
                     {
-                        o.OnNext(eventItem);    
-                    }
-                    
-                    if (isLast)
-                    {
+                        bool isLast = bool.Parse(env.Headers[SEC.IS_LAST]);
+
+                        IStreamingEventItem<TEvent> eventItem = new StreamingEventItem<TEvent>(evt, env.Headers);
+
                         foreach (IObserver<IStreamingEventItem<TEvent>> o in _observers)
                         {
-                            o.OnCompleted();
+                            o.OnNext(eventItem);
                         }
-                        _eventHandler.Dispose();
+
+                        if (isLast)
+                        {
+                            foreach (IObserver<IStreamingEventItem<TEvent>> o in _observers)
+                            {
+                                o.OnCompleted();
+                            }
+                            _eventHandler.Dispose();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        result = HandleFailed(env, ex);
                     }
                 }
-                catch (Exception ex)
-                {
-                    result = HandleFailed(env, ex);
-                }
+                _log.Debug("leaving Handle for StreamingReaderRegistration");
+                return result;
             }
-            return result;
         }
 
         public object HandleFailed(Envelope env, Exception ex)
@@ -86,7 +96,7 @@ namespace amp.eventing.streaming
             get { return _registrationInfo; }
         }
 
-        public IDisposable Subscribe(IObserver<TEvent> observer)
+        public IDisposable Subscribe(IObserver<IStreamingEventItem<TEvent>> observer)
         {
             if (false == _observers.Contains(observer))
             {
@@ -95,16 +105,16 @@ namespace amp.eventing.streaming
             return new StreamingReaderUnsubscriber<TEvent>(_observers, observer);
         }
 
-        private class StreamingReaderUnsubscriber<TEvent> : IDisposable where TEvent : IStreamingEventItem<TEvent>
+        private class StreamingReaderUnsubscriber<TEvent>: IDisposable 
         { 
             /// <summary>
             /// A reference to a list of observers being maintained by implementation of IObservable.
             /// </summary>
-            private IList<IObserver<TEvent>> _observers;
-            private IObserver<TEvent> _observer;
+            private IList<IObserver<IStreamingEventItem<TEvent>>> _observers;
+            private IObserver<IStreamingEventItem<TEvent>> _observer;
 
-            public StreamingReaderUnsubscriber(IList<IObserver<TEvent>> observers,
-                IObserver<TEvent> observer)
+            public StreamingReaderUnsubscriber(IList<IObserver<IStreamingEventItem<TEvent>>> observers,
+                IObserver<IStreamingEventItem<TEvent>> observer)
             {
                 _observers = observers;
                 _observer = observer;

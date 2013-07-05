@@ -37,48 +37,53 @@ namespace amp.eventing.streaming
             get { return _filterPredicate; }
         }
 
+        private static readonly object padLock = new object();
+
         public object Handle(Envelope env)
         {
-            TEvent streamEvent = (TEvent)_processInbound(_eventHandler, env);
-            object result = null;
-
-            if (null != streamEvent)
+            lock (padLock)
             {
-                try
+                TEvent streamEvent = (TEvent)_processInbound(_eventHandler, env);
+                object result = null;
+
+                if (null != streamEvent)
                 {
-                    string sequenceId = env.Headers[SEC.SEQUENCE_ID];
-                    bool isLast = bool.Parse(env.Headers[SEC.IS_LAST]);
-
-                    if (!_collectedEvents.ContainsKey(sequenceId))
-                    { 
-                        _collectedEvents.Add(sequenceId, new List<IStreamingEventItem<TEvent>>());
-                    }
-                    
-
-                    IStreamingEventItem<TEvent> eventItem = new StreamingEventItem<TEvent>(streamEvent, env.Headers);
-                    _collectedEvents[sequenceId].Add(eventItem);
-                    IStreamingProgressUpdater notifier = _eventHandler.Progress;
-                    if (null != notifier)
+                    try
                     {
-                        notifier.UpdateProgress(sequenceId, 
-                            _collectedEvents[sequenceId].Count);
-                    }
+                        string sequenceId = env.Headers[SEC.SEQUENCE_ID];
+                        bool isLast = bool.Parse(env.Headers[SEC.IS_LAST]);
 
-                    if (isLast)
-                    { 
-                        result = _eventHandler.HandleCollection(
-                            new List<IStreamingEventItem<TEvent>>(_collectedEvents[sequenceId]), 
-                            env.Headers);
-                    }
+                        if (!_collectedEvents.ContainsKey(sequenceId))
+                        {
+                            _collectedEvents.Add(sequenceId, new List<IStreamingEventItem<TEvent>>());
+                        }
 
+
+                        IStreamingEventItem<TEvent> eventItem = new StreamingEventItem<TEvent>(streamEvent, env.Headers);
+                        _collectedEvents[sequenceId].Add(eventItem);
+                        Action<string, int> notifier = _eventHandler.Progress;
+                        if (null != notifier)
+                        {
+                            notifier(sequenceId,
+                                _collectedEvents[sequenceId].Count);
+                        }
+
+                        if (isLast)
+                        {
+                            result = _eventHandler.HandleCollection(
+                                new List<IStreamingEventItem<TEvent>>(_collectedEvents[sequenceId]),
+                                env.Headers);
+                        }
+
+                    }
+                    catch (Exception ex)
+                    {
+                        result = HandleFailed(env, ex);
+                    }
                 }
-                catch (Exception ex)
-                { 
-                    result = HandleFailed(env, ex);    
-                }
+
+                return result;
             }
-            
-            return result;
         }
 
         public object HandleFailed(Envelope env, Exception ex)

@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "amp.examples.streaming.publ
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "amp.examples.streaming.common", "examples\amp.examples.streaming.common\amp.examples.streaming.common.csproj", "{94E1B11C-9B67-40B4-B6CC-FF7FC434F9D5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "amp.examples.streaming.subscriber", "examples\amp.examples.streaming.subscriber\amp.examples.streaming.subscriber.csproj", "{63389086-F5BF-46CC-87A3-2C8C9CAAD267}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,6 +61,16 @@ Global
 		{94E1B11C-9B67-40B4-B6CC-FF7FC434F9D5}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{94E1B11C-9B67-40B4-B6CC-FF7FC434F9D5}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{94E1B11C-9B67-40B4-B6CC-FF7FC434F9D5}.Release|x86.ActiveCfg = Release|Any CPU
+		{63389086-F5BF-46CC-87A3-2C8C9CAAD267}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63389086-F5BF-46CC-87A3-2C8C9CAAD267}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63389086-F5BF-46CC-87A3-2C8C9CAAD267}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{63389086-F5BF-46CC-87A3-2C8C9CAAD267}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{63389086-F5BF-46CC-87A3-2C8C9CAAD267}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{63389086-F5BF-46CC-87A3-2C8C9CAAD267}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63389086-F5BF-46CC-87A3-2C8C9CAAD267}.Release|Any CPU.Build.0 = Release|Any CPU
+		{63389086-F5BF-46CC-87A3-2C8C9CAAD267}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{63389086-F5BF-46CC-87A3-2C8C9CAAD267}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{63389086-F5BF-46CC-87A3-2C8C9CAAD267}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
