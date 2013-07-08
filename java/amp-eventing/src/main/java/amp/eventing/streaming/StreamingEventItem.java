@@ -5,7 +5,7 @@ import cmf.eventing.patterns.streaming.IStreamingEventItem;
 import java.util.Map;
 import java.util.UUID;
 
-import static amp.eventing.streaming.StreamingEnvelopeConstants.*;
+import static cmf.eventing.patterns.streaming.StreamingEnvelopeConstants.*;
 
 /**
  * Contains the elements needed to receive an event from an event stream.

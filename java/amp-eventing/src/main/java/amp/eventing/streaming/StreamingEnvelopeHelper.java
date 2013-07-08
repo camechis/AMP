@@ -2,7 +2,7 @@ package amp.eventing.streaming;
 
 import cmf.bus.Envelope;
 
-import static amp.eventing.streaming.StreamingEnvelopeConstants.*;
+import static cmf.eventing.patterns.streaming.StreamingEnvelopeConstants.*;
 
 public class StreamingEnvelopeHelper {
 

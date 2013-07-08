@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
-import static amp.eventing.streaming.StreamingEnvelopeConstants.*;
+import static cmf.eventing.patterns.streaming.StreamingEnvelopeConstants.*;
 /**
  * Specialized {@link cmf.bus.IRegistration} that handles the event by placing them in a
  * {@link java.util.Iterator} from which they can be extracted as they become available.

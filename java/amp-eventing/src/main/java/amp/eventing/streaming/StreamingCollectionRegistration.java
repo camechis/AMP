@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static amp.eventing.streaming.StreamingEnvelopeConstants.*;
+import static cmf.eventing.patterns.streaming.StreamingEnvelopeConstants.*;
 /**
  * Specialized {@link cmf.bus.IRegistration} that handles the event by aggregating events from a common sequence
  * and publishing them to a {@link java.util.Collection}.

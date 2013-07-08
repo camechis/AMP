@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
+import static cmf.eventing.patterns.streaming.StreamingEnvelopeConstants.*;
+
 public class DefaultEventStream implements IEventStream {
     protected static final Logger log = LoggerFactory.getLogger(DefaultEventStream.class);
     private final IStandardStreamingEventBus eventBus;
@@ -109,7 +111,7 @@ public class DefaultEventStream implements IEventStream {
         int counter = 0;
         for (EventStreamQueueItem item : queuedEvents) {
             if (counter == (queuedEvents.size() - 1)) {
-                item.getEnvelope().setHeader(StreamingEnvelopeConstants.IS_LAST, Boolean.toString(true));
+                item.getEnvelope().setHeader(IS_LAST, Boolean.toString(true));
             }
             counter++;
         }
