@@ -82,7 +82,6 @@
     <Compile Include="streaming\IEventStreamFactory.cs" />
     <Compile Include="streaming\IStandardStreamingEventBus.cs" />
     <Compile Include="streaming\StreamingCollectionRegistration.cs" />
-    <Compile Include="streaming\StreamingEnvelopeConstants.cs" />
     <Compile Include="streaming\StreamingEnvelopeHelper.cs" />
     <Compile Include="streaming\StreamingEventItem.cs" />
     <Compile Include="streaming\StreamingReaderRegistration.cs" />

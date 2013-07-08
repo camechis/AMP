@@ -1,11 +1,9 @@
-﻿using System;
+﻿using cmf.eventing.patterns.streaming;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
-using cmf.eventing.patterns.streaming;
-
-using SEC = amp.eventing.streaming.StreamingEnvelopeConstants;
+using SEC = cmf.eventing.patterns.streaming.StreamingEnvelopeConstants;
 
 namespace amp.eventing.streaming
 {

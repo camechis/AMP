@@ -1,12 +1,11 @@
-﻿using System;
+﻿using amp.bus;
+using cmf.bus;
+using cmf.eventing.patterns.streaming;
+using Common.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
-using cmf.eventing.patterns.streaming;
-using amp.bus;
-using Common.Logging;
-using cmf.bus;
 
 namespace amp.eventing.streaming
 {

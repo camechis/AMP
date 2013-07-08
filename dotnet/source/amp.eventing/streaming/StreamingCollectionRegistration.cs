@@ -1,14 +1,12 @@
-﻿using System;
+﻿using cmf.bus;
+using cmf.eventing;
+using cmf.eventing.patterns.streaming;
+using Common.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
-using cmf.bus;
-using cmf.eventing.patterns.streaming;
-using Common.Logging;
-
-using SEC = amp.eventing.streaming.StreamingEnvelopeConstants;
-using cmf.eventing;
+using SEC = cmf.eventing.patterns.streaming.StreamingEnvelopeConstants;
 
 namespace amp.eventing.streaming
 {
