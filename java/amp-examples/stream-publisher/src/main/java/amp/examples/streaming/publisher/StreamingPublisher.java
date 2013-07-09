@@ -4,7 +4,6 @@ import amp.eventing.streaming.DefaultStreamingBus;
 import amp.examples.streaming.common.ModernMajorGeneralMessage;
 import cmf.eventing.patterns.streaming.IEventStream;
 import cmf.eventing.patterns.streaming.IStreamingEventBus;
-import cmf.eventing.patterns.streaming.IStreamingMapperCallback;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.util.ArrayList;

@@ -3,9 +3,6 @@ package amp.examples.streaming.publisher;
 import amp.eventing.streaming.DefaultStreamingBus;
 import amp.eventing.streaming.IStandardStreamingEventBus;
 import amp.examples.streaming.common.ModernMajorGeneralMessage;
-import cmf.eventing.patterns.streaming.IEventStream;
-import cmf.eventing.patterns.streaming.IStreamingEventBus;
-import cmf.eventing.patterns.streaming.IStreamingMapperCallback;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.util.ArrayList;
@@ -36,15 +33,8 @@ public class ChunkedSequencePublisher {
         streamMessages.add(new ModernMajorGeneralMessage("From Marathon to Waterloo, "));
         streamMessages.add(new ModernMajorGeneralMessage("in order categorical; "));
 
-        IStreamingMapperCallback<ModernMajorGeneralMessage> mapper = new IStreamingMapperCallback<ModernMajorGeneralMessage>() {
-            @Override
-            public ModernMajorGeneralMessage map(Object element) {
-                return (ModernMajorGeneralMessage) element;
-            }
-        };
 
-        streamingEventBus.setBatchLimit(2);
-        streamingEventBus.publishChunkedSequence(streamMessages.iterator(), mapper);
+        streamingEventBus.publishChunkedSequence(streamMessages.iterator());
         System.exit(0);
     }
 }

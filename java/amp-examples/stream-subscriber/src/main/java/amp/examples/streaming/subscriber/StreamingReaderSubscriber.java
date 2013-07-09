@@ -4,8 +4,7 @@ import amp.eventing.streaming.DefaultStreamingBus;
 import amp.eventing.streaming.IStandardStreamingEventBus;
 import amp.examples.streaming.common.ModernMajorGeneralMessage;
 import cmf.bus.Envelope;
-import cmf.eventing.patterns.streaming.IStreamingEventBus;
-import cmf.eventing.patterns.streaming.IStreamingEventItem;
+import cmf.eventing.patterns.streaming.StreamingEventItem;
 import cmf.eventing.patterns.streaming.IStreamingReaderHandler;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -18,11 +17,10 @@ public class StreamingReaderSubscriber {
         IStandardStreamingEventBus streamingEventBus = injector.getBean("eventBus", DefaultStreamingBus.class);
         IStreamingReaderHandler<ModernMajorGeneralMessage> handler = new IStreamingReaderHandler<ModernMajorGeneralMessage>() {
             @Override
-            public Object onEventRead(IStreamingEventItem<ModernMajorGeneralMessage> eventItem) {
+            public void onEventRead(StreamingEventItem<ModernMajorGeneralMessage> eventItem) {
                 System.out.println("Message received: (sequenceId: " + eventItem.getSequenceId().toString() +
                         "), (position: " + eventItem.getPosition() +
-                        "), (isLast: " + Boolean.toString(eventItem.isLast()) + "), \nEvent Value: " + eventItem.getEvent().getContent() );
-                return null;
+                        "), \nEvent Value: " + eventItem.getEvent().getContent() );
             }
 
             @Override
@@ -34,18 +32,6 @@ public class StreamingReaderSubscriber {
             @Override
             public Class<ModernMajorGeneralMessage> getEventType() {
                 return ModernMajorGeneralMessage.class;
-            }
-
-            @Override
-            public Object handle(ModernMajorGeneralMessage event, Map<String, String> headers) {
-                System.out.println("Handle called");
-                return null;
-            }
-
-            @Override
-            public Object handleFailed(Envelope envelope, Exception e) {
-                System.out.println("Handle Failed called");
-                return null;
             }
         };
 
