@@ -10,8 +10,8 @@
     <version>3.2.0-SNAPSHOT</version>
     <name>Advanced Modular Platform</name>
     <packaging>pom</packaging>
-    <url>https://github.com/Berico-Technologies/AMP</url>
-    
+    <url>http://ampere.berico.us</url>
+
 
     <!-- Shared properties -->
     <properties>
@@ -153,6 +153,16 @@
     </organization>
 
 
+    <!-- License governing use -->
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+
     <!-- Points of Contact, also list of people to blame :) -->
     <developers>
         <developer>
@@ -174,11 +184,20 @@
             <timezone>-5</timezone>
         </developer>
         <developer>
+            <name>Jared Holmberg</name>
+            <organization>Berico Technologies</organization>
+            <email>jholmberg@bericotechnologies.com</email>
+            <roles>
+                <role>General Do-Gooder</role>
+            </roles>
+            <timezone>-5</timezone>
+        </developer>
+        <developer>
             <name>Minh Nguyen</name>
             <organization>Berico Technologies</organization>
             <email>mnguyen@bericotechnologies.com</email>
             <roles>
-                <role>Developer</role>
+                <role>Global Event Log Developer</role>
             </roles>
             <timezone>-5</timezone>
         </developer>
@@ -187,9 +206,17 @@
             <organization>Berico Technologies</organization>
             <email>bisrael@bericotechnologies.com</email>
             <roles>
-                <role>Developer</role>
+                <role>Complex Event Processing Developer</role>
             </roles>
             <timezone>-5</timezone>
+        </developer>
+        <developer>
+            <name>Drew Tayman</name>
+            <organization>Berico Technologies</organization>
+            <email>dtayman@bericotechnologies.com</email>
+            <roles>
+                <role>JavaScript Client Developer</role>
+            </roles>
         </developer>
     </developers>
 

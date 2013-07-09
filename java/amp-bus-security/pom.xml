@@ -16,7 +16,8 @@
     <artifactId>amp.bus.security</artifactId>
     <name>AMP Security Implementations</name>
     <packaging>jar</packaging>
-
+    <url>http://ampere.berico.us/clients/java</url>
+    
 
     <dependencies>
         <dependency>

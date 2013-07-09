@@ -15,6 +15,7 @@
     <artifactId>amp.bus</artifactId>
     <name>AMP implementation of the CMF Envelope Bus</name>
     <packaging>jar</packaging>
+    <url>http://ampere.berico.us/clients/java</url>
 
 
     <dependencies>

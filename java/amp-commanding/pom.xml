@@ -16,7 +16,8 @@
     <artifactId>amp.commanding</artifactId>
     <name>AMP Command Channel API</name>
     <packaging>jar</packaging>
-
+    <url>http://ampere.berico.us/services/command-channel</url>
+    
 
     <dependencies>
         <dependency>

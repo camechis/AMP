@@ -15,7 +15,8 @@
 	<artifactId>amp.examples.busguitester</artifactId>
 	<name>AMP Example - Bus GUI Tester</name>
     <packaging>jar</packaging>
-
+    <url>http://ampere.berico.us/examples</url>
+    
 
 	<properties>
 		<logback.version>1.0.6</logback.version>

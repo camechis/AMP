@@ -16,7 +16,8 @@
     <artifactId>amp.eventing</artifactId>
     <name>AMP implementation of the CMF Event Bus</name>
     <packaging>jar</packaging>
-
+    <url>http://ampere.berico.us/clients/java</url>
+    
 
     <properties>
         <gson.version>2.2.2</gson.version>

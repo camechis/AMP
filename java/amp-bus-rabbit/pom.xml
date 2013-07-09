@@ -16,7 +16,8 @@
     <artifactId>amp.bus.rabbit</artifactId>
     <name>AMP RabbitMQ Transport Provider</name>
     <packaging>jar</packaging>
-
+    <url>http://ampere.berico.us/clients/java</url>
+    
 
     <dependencies>
 

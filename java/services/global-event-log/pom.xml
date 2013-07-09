@@ -13,8 +13,8 @@
 	</parent>
 
 
-	<groupId>amp</groupId>
-	<artifactId>amp-gel</artifactId>
+	<groupId>${project.groupId}</groupId>
+	<artifactId>amp.gel</artifactId>
 	<packaging>jar</packaging>
 	<name>AMP Global Event Log</name>
     <url>http://ampere.berico.us/services/global-event-log</url>
@@ -210,9 +210,7 @@
 
 
 	<build>
-
 		<plugins>
-
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
@@ -257,9 +255,7 @@
 					</execution>
 				</executions>
 			</plugin>
-
 		</plugins>
-
 	</build>
 
 

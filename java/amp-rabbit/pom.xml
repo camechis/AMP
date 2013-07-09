@@ -18,7 +18,8 @@
     <artifactId>amp.rabbit</artifactId>
     <name>AMP RabbitMQ Shared Constructs</name>
     <packaging>jar</packaging>
-
+    <url>http://ampere.berico.us/clients/java</url>
+    
 
     <dependencies>
 

@@ -15,10 +15,10 @@
 
 
     <groupId>amp</groupId>
-    <artifactId>amp.esp.service</artifactId>
+    <artifactId>amp.esp.api</artifactId>
     <packaging>jar</packaging>
-    <name>Event Stream Processing Service</name>
-    <url>http://labs.beri.co/cmf/esp</url>
+    <name>Event Stream Processing API</name>
+    <url>http://ampere.berico.us/services/stream-processing</url>
 
 
     <properties>
@@ -133,7 +133,6 @@
 
 
     <build>
-
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -176,7 +175,7 @@
                 </executions>
             </plugin>
         </plugins>
-
     </build>
+
 
 </project>
