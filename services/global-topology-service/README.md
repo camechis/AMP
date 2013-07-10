@@ -16,8 +16,15 @@ The following documentation describes how to build, configure and implement the 
 
 ### Building GTS
 
-Building the Global Topology Service is pretty easy:
+Before building the GTS, make sure that you have nodejs, npm, and mimosa installed.  This is typically pretty easy:
+```bash
+sudo yum install nodejs npm
+sudo npm install -g mimosa
+```
 
+Once the dependencies are installed, building the Global Topology Service is pretty easy:
+
+(run this command from the AMP/services/global-topology-service directory)
 ```bash
 mvn package
 ```

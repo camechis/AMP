@@ -32,7 +32,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>amp.examples.streaming.subscriber.StreamingReaderSubscriber</StartupObject>
+    <StartupObject>amp.examples.streaming.subscriber.StreamingCollectionSubscriber</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>false</SignAssembly>

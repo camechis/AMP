@@ -3,7 +3,7 @@ package amp.topology.core;
 import java.util.Map;
 import java.util.UUID;
 
-import amp.bus.rabbit.topology.Exchange;
+import amp.rabbit.topology.Exchange;
 
 public class ExtendedExchange extends Exchange {
 

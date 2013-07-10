@@ -19,24 +19,40 @@
     <packaging>jar</packaging>
 
 
-    <properties>
-        <rabbitmq.version>3.0.2</rabbitmq.version>
-    </properties>
-
-
     <dependencies>
 
+        <!-- Dependencies specific to this project -->
         <dependency>
             <groupId>amp</groupId>
             <artifactId>amp.bus</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.rabbitmq</groupId>
-            <artifactId>amqp-client</artifactId>
-            <version>${rabbitmq.version}</version>
+            <groupId>amp</groupId>
+            <artifactId>amp.rabbit</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>amp</groupId>
+            <artifactId>amp.commanding</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>amp</groupId>
+            <artifactId>amp.commanding.rabbit</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>amp</groupId>
+            <artifactId>amp.commands</artifactId>
+            <version>${project.parent.version}</version>
         </dependency>
 
+        <!-- Shared dependencies -->
+        <dependency>
+            <groupId>com.rabbitmq</groupId>
+            <artifactId>amqp-client</artifactId>
+        </dependency>
         <dependency>
             <groupId>cmf</groupId>
             <artifactId>cmf.bus</artifactId>

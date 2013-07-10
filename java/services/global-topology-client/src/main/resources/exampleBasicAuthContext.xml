@@ -17,7 +17,7 @@
 	<bean id="fallbackProvider" class="amp.topology.client.DefaultApplicationExchangeProvider" />
 	
 	<bean id="topologyService" class="amp.topology.client.GlobalTopologyService" 
-		c:routingInfoRetriever-ref="routingInfoRetriever" c:cacheExpiryTime="10000"
+		c:routingInfoRetriever-ref="routingInfoRetriever"
 		c:fallbackProvider-ref="fallbackProvider" />
 		
 </beans>

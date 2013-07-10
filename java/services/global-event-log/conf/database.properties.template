@@ -1,0 +1,16 @@
+# Apache Derby
+
+derby.port=1527
+derby.username:root
+derby.password:root
+jpa.show_sql:false
+jpa.format_sql:false
+
+
+# Accumulo
+
+accumulo.instance=gel
+accumulo.zookeepers=10.1.30.133
+accumulo.user=root
+accumulo.password=root
+accumulo.tableName=envelope

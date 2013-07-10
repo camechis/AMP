@@ -9,7 +9,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import amp.bus.rabbit.topology.RoutingInfo;
+import amp.rabbit.topology.RoutingInfo;
 import amp.topology.client.integration.BasicAuthIntegrationTest;
 
 import com.berico.test.RequireProperties;
@@ -26,9 +26,8 @@ public class GlobalTopologyServiceTest {
 	public void gts_fails_when_it_cant_find_a_route_for_a_topic() {
 		
 		IRoutingInfoRetriever retriever = mock(IRoutingInfoRetriever.class);
-		
+
 		GlobalTopologyService gts = new GlobalTopologyService(retriever);
-		
 		gts.getRoutingInfo(TestUtils.buildRoutingHints("A nonexistent topic!"));
 	}
 	
@@ -51,7 +50,7 @@ public class GlobalTopologyServiceTest {
 		String eventType = System.getProperty("amp.gtc.test.event");
 		
 		logger.debug("Calling GTS with Basic Auth.");
-		
+
 		HttpClientProvider provider = 
 				new BasicAuthHttpClientProvider(hostname, port, username, password);
 		
@@ -59,7 +58,7 @@ public class GlobalTopologyServiceTest {
 		
 		IRoutingInfoRetriever routingInfoRetriever = 
 			new HttpRoutingInfoRetriever(provider, serviceUrlExpression, serializer);
-		
+
 		DefaultApplicationExchangeProvider fallback = new DefaultApplicationExchangeProvider();
 		
 		fallback.setHostname(hostname);
@@ -69,7 +68,7 @@ public class GlobalTopologyServiceTest {
 		fallback.setExchangeName("amp.fallback");
 		
 		GlobalTopologyService gts = new GlobalTopologyService(
-			routingInfoRetriever, 10 * 60 * 1000, fallback);
+			routingInfoRetriever, fallback);
 		
 		RoutingInfo routingInfo = gts.getRoutingInfo(TestUtils.buildRoutingHints(eventType));
 		

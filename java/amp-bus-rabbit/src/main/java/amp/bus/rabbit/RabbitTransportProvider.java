@@ -8,7 +8,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
+import amp.rabbit.IListenerCloseCallback;
+import amp.rabbit.RabbitListener;
+import amp.rabbit.ReconnectOnConnectionErrorCallback;
 import cmf.bus.Envelope;
+import cmf.bus.EnvelopeHeaderConstants;
 import cmf.bus.IRegistration;
 import com.rabbitmq.client.AMQP.BasicProperties;
 import com.rabbitmq.client.Channel;
@@ -18,10 +22,11 @@ import org.slf4j.LoggerFactory;
 import amp.bus.IEnvelopeDispatcher;
 import amp.bus.IEnvelopeReceivedCallback;
 import amp.bus.ITransportProvider;
-import amp.bus.rabbit.topology.Exchange;
-import amp.bus.rabbit.topology.ITopologyService;
-import amp.bus.rabbit.topology.RouteInfo;
-import amp.bus.rabbit.topology.RoutingInfo;
+import amp.rabbit.IRabbitChannelFactory;
+import amp.rabbit.topology.Exchange;
+import amp.rabbit.topology.ITopologyService;
+import amp.rabbit.topology.RouteInfo;
+import amp.rabbit.topology.RoutingInfo;
 
 
 /**
@@ -31,24 +36,32 @@ import amp.bus.rabbit.topology.RoutingInfo;
  */
 public class RabbitTransportProvider implements ITransportProvider {
 
+    private static final Logger LOG = LoggerFactory.getLogger(RabbitTransportProvider.class);
+
     protected IRabbitChannelFactory channelFactory;
     protected List<IEnvelopeReceivedCallback> envCallbacks = new ArrayList<IEnvelopeReceivedCallback>();
     protected ConcurrentHashMap<IRegistration, RabbitListener> listeners = new ConcurrentHashMap<IRegistration, RabbitListener>();
-    protected Logger log;
     protected ITopologyService topologyService;
-    
+    protected IRoutingInfoCache routingInfoCache;
+
+
+
     /**
      * Initialize the Transport Provider with the Topology Service and the Channel Factory.
      * @param topologyService Service that determines the correct exchange and broker to send messages to.
      * @param channelFactory Service that uses topology information to establish connections to the broker.
      */
-    public RabbitTransportProvider(ITopologyService topologyService, IRabbitChannelFactory channelFactory) {
-
-		log = LoggerFactory.getLogger(this.getClass());
+    public RabbitTransportProvider(
+            ITopologyService topologyService,
+            IRabbitChannelFactory channelFactory,
+            IRoutingInfoCache routingInfoCache) {
 	
 		this.topologyService = topologyService;
 		this.channelFactory = channelFactory;
+        this.routingInfoCache = routingInfoCache;
     }
+
+
 
     /**
      * Register a new Envelope handler for the specified routes.
@@ -57,17 +70,20 @@ public class RabbitTransportProvider implements ITransportProvider {
     @Override
     public void register(IRegistration registration) throws Exception {
     		
-        log.debug("Enter Register");
+        LOG.debug("Enter Register");
 
         // first, get the topology based on the registration info
-        RoutingInfo routing = topologyService.getRoutingInfo(registration.getRegistrationInfo());
+        RoutingInfo routing = this.getRoutingFromCacheOrService(
+                routingInfoCache,
+                topologyService,
+                registration.getRegistrationInfo());
 
         // next, pull out all the producer exchanges
         List<Exchange> exchanges = new ArrayList<Exchange>();
         
         for (RouteInfo route : routing.getRoutes()) {
         
-        		exchanges.add(route.getConsumerExchange());
+            exchanges.add(route.getConsumerExchange());
         }
 
         for (Exchange exchange : exchanges) {
@@ -78,13 +94,145 @@ public class RabbitTransportProvider implements ITransportProvider {
             listeners.put(registration, listener);
         }
 
-        log.debug("Leave Register");
+        LOG.debug("Leave Register");
     }
+
+    @Override
+    @SuppressWarnings({ "deprecation", "unchecked" })
+    public void send(Envelope env) throws Exception {
+
+        LOG.debug("Enter Send");
+
+        // first, get the topology based on the headers
+        RoutingInfo routing = this.getRoutingFromCacheOrService(routingInfoCache, topologyService, env.getHeaders());
+
+        // next, pull out all the producer exchanges
+        List<Exchange> exchanges = new ArrayList<Exchange>();
+
+        for (RouteInfo route : routing.getRoutes()) {
+
+            exchanges.add(route.getProducerExchange());
+        }
+
+        // for each exchange, send the envelope
+        for (Exchange ex : exchanges) {
+            LOG.info("Sending to exchange: " + ex.toString());
+
+            Channel channel = null;
+
+            try {
+                channel = channelFactory.getChannelFor(ex);
+
+                BasicProperties props = new BasicProperties.Builder().build();
+
+                Map<String, Object> headers = new HashMap<String, Object>();
+
+                for (Entry<String, String> entry : env.getHeaders().entrySet()) {
+
+                    headers.put(entry.getKey(), entry.getValue());
+                }
+
+                props.setHeaders(headers);
+
+                channel.exchangeDeclare(
+                        ex.getName(), ex.getExchangeType(), ex.getIsDurable(),
+                        ex.getIsAutoDelete(), ex.getArguments());
+
+                channel.basicPublish(ex.getName(), ex.getRoutingKey(), props, env.getPayload());
+
+            } catch (Exception e) {
+                LOG.error("Failed to send an envelope", e);
+                throw e;
+            }
+        }
+
+        LOG.debug("Leave Send");
+    }
+
+    /**
+     * Unregister a registration with the bus (canceling the listener
+     * and stopping consumption from the broker).
+     * @param registration The original registration used to create
+     * the listener.
+     */
+    @Override
+    public void unregister(IRegistration registration) {
+
+        RabbitListener listener = listeners.remove(registration);
+
+        if (listener != null) {
+
+            listener.stopListening();
+        }
+    }
+
+    /**
+     * Register a callback for the EnvelopeReceived event.
+     * @param callback Called when an envelope is received.
+     */
+    @Override
+    public void onEnvelopeReceived(IEnvelopeReceivedCallback callback) {
+        envCallbacks.add(callback);
+    }
+
+    /**
+     * Gets routing info - based on routing hints - from the cache if present, or the service if not.
+     * @param cache the cache to check for routing info
+     * @param service the service to use if routing isn't cached
+     * @param hints the routing hints that specify routing info
+     * @return RoutingInfo, or null
+     */
+    public RoutingInfo getRoutingFromCacheOrService(IRoutingInfoCache cache, ITopologyService service, Map<String, String> hints) {
+
+        // if there are no hints, we have no idea what to do
+        if ( (null == hints) || (hints.isEmpty())) { return null; }
+
+        // pull the topic from the hints
+        String topic = hints.get(EnvelopeHeaderConstants.MESSAGE_TOPIC);
+
+        // first, check the cache
+        RoutingInfo routing = cache.getIfPresent(topic);
+
+        // if nothing, use the service
+        if (null == routing) {
+            LOG.debug("No routing information cached for {}; using the topology service.", topic);
+            routing = service.getRoutingInfo(hints);
+
+            // if we got something from the service, cache it
+            if (null != routing) {
+                cache.put(topic, routing);
+            }
+        }
+        else {
+            LOG.debug("Routing information for {} was found in the cache.", topic);
+        }
+
+        // whatever we end up with, return it
+        return routing;
+    }
+
+    /**
+     * Gracefully shutdown all the services associated with the Transport Provider.
+     */
+    @Override
+    public void dispose() {
+
+        try {  channelFactory.dispose(); } catch (Exception ex) { }
+
+        try {  topologyService.dispose(); } catch (Exception ex) { }
+
+        for (RabbitListener l : listeners.values()) {
+
+            try { l.dispose(); } catch (Exception ex) { }
+        }
+    }
+
+
 
     protected RabbitListener createListener(
 			IRegistration registration, Exchange exchange) throws Exception {
     	
-    		// create a channel
+        // create a channel
         Channel channel = channelFactory.getChannelFor(exchange);
 
         // create a listener
@@ -126,87 +274,9 @@ public class RabbitTransportProvider implements ITransportProvider {
      * @return Listener that will pull messages from the broker and call the handlers
      * on the registration.
      */
-    protected RabbitListener getListener(IRegistration registration, Exchange exchange){
+    protected RabbitListener getListener(IRegistration registration, Exchange exchange) {
     		
-    		return new RabbitListener(registration, exchange);
-    }
-    
-    @Override
-    @SuppressWarnings({ "deprecation", "unchecked" })
-    public void send(Envelope env) throws Exception {
-    	
-        log.debug("Enter Send");
-
-        // first, get the topology based on the headers
-        RoutingInfo routing = topologyService.getRoutingInfo(env.getHeaders());
-
-        // next, pull out all the producer exchanges
-        List<Exchange> exchanges = new ArrayList<Exchange>();
-        
-        for (RouteInfo route : routing.getRoutes()) {
-        	
-            exchanges.add(route.getProducerExchange());
-        }
-
-        // for each exchange, send the envelope
-        for (Exchange ex : exchanges) {
-            log.info("Sending to exchange: " + ex.toString());
-
-            Channel channel = null;
-            
-            try {
-                channel = channelFactory.getChannelFor(ex);
-
-                BasicProperties props = new BasicProperties.Builder().build();
-                
-                Map<String, Object> headers = new HashMap<String, Object>();
-                
-                for (Entry<String, String> entry : env.getHeaders().entrySet()) {
-                
-                		headers.put(entry.getKey(), entry.getValue());
-                }
-                
-                props.setHeaders(headers);
-                
-                channel.exchangeDeclare(
-                		ex.getName(), ex.getExchangeType(), ex.getIsDurable(), 
-                		ex.getIsAutoDelete(), ex.getArguments());
-                
-                channel.basicPublish(ex.getName(), ex.getRoutingKey(), props, env.getPayload());
-                
-            } catch (Exception e) {
-                log.error("Failed to send an envelope", e);
-                throw e;
-            } 
-        }
-
-        log.debug("Leave Send");
-    }
-
-    /**
-     * Unregister a registration with the bus (canceling the listener
-     * and stopping consumption from the broker).
-     * @param registration The original registration used to create
-     * the listener.
-     */
-    @Override
-    public void unregister(IRegistration registration) {
-    	
-    		RabbitListener listener = listeners.remove(registration);
-    	
-        if (listener != null) {
-            
-        		listener.stopListening();
-        }
-    }
-    
-    /**
-     * Register a callback for the EnvelopeReceived event.
-     * @param callback Called when an envelope is received.
-     */
-    @Override
-    public void onEnvelopeReceived(IEnvelopeReceivedCallback callback) {
-        envCallbacks.add(callback);
+        return new RabbitListener(registration, exchange);
     }
 
     /**
@@ -220,24 +290,8 @@ public class RabbitTransportProvider implements ITransportProvider {
             try {
                 callback.handleReceive(dispatcher);
             } catch (Exception ex) {
-                log.error("Caught an unhandled exception raising the onEnvelopeReceived event", ex);
+                LOG.error("Caught an unhandled exception raising the onEnvelopeReceived event", ex);
             }
-        }
-    }
-    
-    /**
-     * Gracefully shutdown all the services associated with the Transport Provider.
-     */
-    @Override
-    public void dispose() {
-    		
-        try {  channelFactory.dispose(); } catch (Exception ex) { }
-
-        try {  topologyService.dispose(); } catch (Exception ex) { }
-
-        for (RabbitListener l : listeners.values()) {
-            
-        		try { l.dispose(); } catch (Exception ex) { }
         }
     }
 

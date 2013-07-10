@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
-import amp.bus.rabbit.topology.Exchange;
-import amp.bus.rabbit.topology.RouteInfo;
-import amp.bus.rabbit.topology.RoutingInfo;
-import amp.bus.rabbit.topology.ITopologyService;
+import amp.rabbit.topology.Exchange;
+import amp.rabbit.topology.RouteInfo;
+import amp.rabbit.topology.RoutingInfo;
+import amp.rabbit.topology.ITopologyService;
 import cmf.bus.EnvelopeHeaderConstants;
 
 

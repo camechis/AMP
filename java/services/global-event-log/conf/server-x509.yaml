@@ -1,0 +1,25 @@
+applicationContext: ['conf/applicationContext.xml', 'conf/x509SecurityContext.xml']
+
+useSpringSecurity: true
+
+exampleProperty: This was your example property
+
+logging:
+    level: INFO
+    console:
+        enabled: true
+        threshold: DEBUG
+        
+http:
+    port: 8443
+    adminUsername: admin
+    adminPassword: admin
+    rootPath: /service/*
+    connectorType: nonblocking+ssl
+    ssl:
+        keyStore: ./ssl/keystore.jks
+        keyStorePassword: password
+        trustStore: ./ssl/truststore.jks
+        trustStorePassword: password
+        needClientAuth: true
+        wantClientAuth: true
