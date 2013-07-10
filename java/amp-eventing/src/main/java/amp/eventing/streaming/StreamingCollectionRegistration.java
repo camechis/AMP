@@ -106,6 +106,7 @@ public class StreamingCollectionRegistration<TEVENT> implements IRegistration {
 
         this.eventHandler.handleCollection(sortedEvents);
         collectedEvents.remove(sequenceId);
+        collectionSizes.remove(sequenceId);
     }
 
     private void storeExpectedCollectionSize(Envelope env) throws Exception {
