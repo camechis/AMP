@@ -81,11 +81,12 @@ namespace amp.eventing.streaming
                     if (!_collectedEvents.ContainsKey(sequenceId))
                     {
                         _collectedEvents.Add(sequenceId, new Dictionary<int, StreamingEventItem<TEvent>>());
-                        StreamingEventItem<TEvent> eventItem = new StreamingEventItem<TEvent>(evt, env.Headers);
-                        IDictionary<int, StreamingEventItem<TEvent>> eventMap = _collectedEvents[sequenceId];
-                        eventMap.Add(eventItem.Position, eventItem);
-                        UpdatePercentProcessed(sequenceId, eventMap.Count);
                     }
+                    StreamingEventItem<TEvent> eventItem = new StreamingEventItem<TEvent>(evt, env.Headers);
+                    IDictionary<int, StreamingEventItem<TEvent>> eventMap = _collectedEvents[sequenceId];
+                    eventMap.Add(eventItem.Position, eventItem);
+                    UpdatePercentProcessed(sequenceId, eventMap.Count);
+                    
                 }
             }
         }
@@ -97,7 +98,7 @@ namespace amp.eventing.streaming
 
             if (collectionSize > 0) 
             {
-                percentProcessed = Math.Round((100 * (double.Parse(numProcessed + "") / double.Parse(collectionSize + ""))), 2);
+                percentProcessed = Math.Round(((double.Parse(numProcessed + "") / double.Parse(collectionSize + ""))), 2) * 100;
             }
             _eventHandler.OnPercentCollectionReceived(percentProcessed);
         }

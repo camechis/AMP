@@ -53,6 +53,7 @@ namespace amp.eventing.streaming
                 _log.Debug("flushing " + _batchLimit + " event(s) to stream.");
                 FlushStreamBuffer();
             }
+            _position++;
         }
 
         public string SequenceId

@@ -32,7 +32,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>amp.examples.streaming.publisher.ChunkedSequencePublisher</StartupObject>
+    <StartupObject>amp.examples.streaming.publisher.StreamingPublisher</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>false</SignAssembly>
