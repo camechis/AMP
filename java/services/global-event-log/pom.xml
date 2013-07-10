@@ -13,7 +13,7 @@
 	</parent>
 
 
-	<groupId>${project.groupId}</groupId>
+	<groupId>${project.parent.groupId}</groupId>
 	<artifactId>amp.gel</artifactId>
 	<packaging>jar</packaging>
 	<name>AMP Global Event Log</name>
