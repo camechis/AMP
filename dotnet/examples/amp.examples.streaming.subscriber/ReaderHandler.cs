@@ -10,16 +10,6 @@ namespace amp.examples.streaming.subscriber
 {
     public class ReaderHandler : IStreamingReaderHandler<ModernMajorGeneralMessage>
     {
-               
-        public object Handle(object ev, IDictionary<string, string> headers)
-        {
-            throw new NotImplementedException();
-        }
-
-        public object HandleFailed(cmf.bus.Envelope env, Exception ex)
-        {
-            throw new NotImplementedException();
-        }
 
         public string Topic
         {
@@ -43,11 +33,16 @@ namespace amp.examples.streaming.subscriber
             throw new NotImplementedException();
         }
 
-        public void OnNext(IStreamingEventItem<ModernMajorGeneralMessage> eventItem) 
+        public void OnNext(StreamingEventItem<ModernMajorGeneralMessage> eventItem) 
         {
             ModernMajorGeneralMessage mmg = eventItem.Event;
-            Console.WriteLine(string.Format("Message received: (sequenceId: {0}), (position: {1}), (isLast: {2}), Event Value: {3}", 
-                eventItem.SequenceId, eventItem.Position, eventItem.IsLast, mmg.Content));
+            Console.WriteLine(string.Format("Message received: (sequenceId: {0}), (position: {1}), Event Value: {2}", 
+                eventItem.SequenceId, eventItem.Position, mmg.Content));
+        }
+
+        public Type EventType
+        {
+            get { return typeof(ModernMajorGeneralMessage); }
         }
     }
 }

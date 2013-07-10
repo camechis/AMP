@@ -10,25 +10,25 @@ using SEC = cmf.eventing.patterns.streaming.StreamingEnvelopeConstants;
 
 namespace amp.eventing.streaming
 {
-    public class StreamingReaderRegistration<TEvent> : IRegistration, IObservable<IStreamingEventItem<TEvent>> 
+    public class StreamingReaderRegistration<TEvent> : IRegistration, IObservable<StreamingEventItem<TEvent>> 
     {
         protected ILog _log;
         protected IStreamingReaderHandler<TEvent> _eventHandler;
-        protected Func<IEventHandler, Envelope, object> _processorCallback;
+        protected Func<Envelope, object> _processorCallback;
         protected IDictionary<string, string> _registrationInfo;
-        private IList<IObserver<IStreamingEventItem<TEvent>>> _observers;
+        private IList<IObserver<StreamingEventItem<TEvent>>> _observers;
 
-        public StreamingReaderRegistration(IStreamingReaderHandler<TEvent> eventHandler, Func<IEventHandler, Envelope, object> processorCallback)
+        public StreamingReaderRegistration(IStreamingReaderHandler<TEvent> eventHandler, Func<Envelope, object> processorCallback)
         {
             //IStreamingReaderHandler implements IObserver<IStreamingEventItem<TEvent>>
-            _observers = new List<IObserver<IStreamingEventItem<TEvent>>>();
+            _observers = new List<IObserver<StreamingEventItem<TEvent>>>();
             _observers.Add(eventHandler);
 
             _eventHandler = eventHandler;
             _processorCallback = processorCallback;
 
             _registrationInfo = new Dictionary<string, string>();
-            _registrationInfo.Add(EnvelopeHeaderConstants.MESSAGE_TOPIC, typeof(TEvent).FullName);
+            _registrationInfo.Add(EnvelopeHeaderConstants.MESSAGE_TOPIC, _eventHandler.EventType.FullName);
             _log = LogManager.GetLogger(typeof(StreamingReaderRegistration<TEvent>).Name);
         }
 
@@ -44,46 +44,57 @@ namespace amp.eventing.streaming
             lock (padLock)
             {
                 _log.Debug("enter Handle for StreamingReaderRegistration");
-                TEvent evt = (TEvent)_processorCallback(_eventHandler, env);
                 object result = null;
-
-                if (null != evt)
+                
+                try
                 {
-                    try
+                    if (IsEndOfStream(env))
                     {
-                        bool isLast = bool.Parse(env.Headers[SEC.IS_LAST]);
-
-                        IStreamingEventItem<TEvent> eventItem = new StreamingEventItem<TEvent>(evt, env.Headers);
-
-                        foreach (IObserver<IStreamingEventItem<TEvent>> o in _observers)
+                        foreach (IObserver<StreamingEventItem<TEvent>> o in _observers)
                         {
-                            o.OnNext(eventItem);
+                            o.OnCompleted();
                         }
-
-                        if (isLast)
-                        {
-                            foreach (IObserver<IStreamingEventItem<TEvent>> o in _observers)
-                            {
-                                o.OnCompleted();
-                            }
-                            _eventHandler.Dispose();
-                        }
+                        _eventHandler.Dispose();
                     }
-                    catch (Exception ex)
+                    else
                     {
-                        result = HandleFailed(env, ex);
+                        TEvent evt = (TEvent)_processorCallback(env);
+                        if (null != evt)
+                        {
+                            StreamingEventItem<TEvent> eventItem = new StreamingEventItem<TEvent>(evt, env.Headers);
+                            foreach (IObserver<StreamingEventItem<TEvent>> o in _observers)
+                            {
+                                o.OnNext(eventItem);
+                            }
+                        }
                     }
                 }
+                catch (Exception ex)
+                {
+                    result = HandleFailed(env, ex);
+                }
+                
                 _log.Debug("leaving Handle for StreamingReaderRegistration");
                 return result;
             }
+        }
+
+        private bool IsEndOfStream(Envelope env)
+        {
+            string messageType = env.GetMessageType();
+            if (messageType == typeof(EndOfStream).FullName)
+            {
+                return true;
+            }
+            return false;
         }
 
         public object HandleFailed(Envelope env, Exception ex)
         {
             try
             {
-                return _eventHandler.HandleFailed(env, ex);
+                _log.Error("Unable to process envelope with message topic: " + env.GetMessageTopic() + " from stream.", ex);
+                return null;
             }
             catch (Exception failedToFail)
             {
@@ -96,7 +107,7 @@ namespace amp.eventing.streaming
             get { return _registrationInfo; }
         }
 
-        public IDisposable Subscribe(IObserver<IStreamingEventItem<TEvent>> observer)
+        public IDisposable Subscribe(IObserver<StreamingEventItem<TEvent>> observer)
         {
             if (false == _observers.Contains(observer))
             {
@@ -110,11 +121,11 @@ namespace amp.eventing.streaming
             /// <summary>
             /// A reference to a list of observers being maintained by implementation of IObservable.
             /// </summary>
-            private IList<IObserver<IStreamingEventItem<TEvent>>> _observers;
-            private IObserver<IStreamingEventItem<TEvent>> _observer;
+            private IList<IObserver<StreamingEventItem<TEvent>>> _observers;
+            private IObserver<StreamingEventItem<TEvent>> _observer;
 
-            public StreamingReaderUnsubscriber(IList<IObserver<IStreamingEventItem<TEvent>>> observers,
-                IObserver<IStreamingEventItem<TEvent>> observer)
+            public StreamingReaderUnsubscriber(IList<IObserver<StreamingEventItem<TEvent>>> observers,
+                IObserver<StreamingEventItem<TEvent>> observer)
             {
                 _observers = observers;
                 _observer = observer;

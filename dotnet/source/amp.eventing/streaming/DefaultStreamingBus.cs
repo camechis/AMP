@@ -1,6 +1,7 @@
 ﻿using cmf.bus;
 using cmf.eventing;
 using cmf.eventing.patterns.streaming;
+using Common.Logging;
 using System;
 using System.Collections.Generic;
 
@@ -8,6 +9,7 @@ namespace amp.eventing.streaming
 {
     public class DefaultStreamingBus : DefaultEventBus, IStandardStreamingEventBus
     {
+        protected ILog _log;
         private IEventStreamFactory _eventStreamFactory;
         private Dictionary<string, IEventStream> _eventStreams;
         
@@ -15,6 +17,7 @@ namespace amp.eventing.streaming
 
         public DefaultStreamingBus(IEnvelopeBus envelopeBus) : base(envelopeBus)
         {
+            _log = LogManager.GetLogger(this.GetType());
             InboundChain = new Dictionary<int, IEventProcessor>();
             OutboundChain = new Dictionary<int, IEventProcessor>();
 
@@ -24,6 +27,7 @@ namespace amp.eventing.streaming
         public DefaultStreamingBus(IEnvelopeBus envelopeBus, 
                                     IEventStreamFactory eventStreamFactory) : base(envelopeBus)
         {
+            _log = LogManager.GetLogger(this.GetType());
             _eventStreamFactory = eventStreamFactory;
             _eventStreams = new Dictionary<string, IEventStream>();
            
@@ -59,38 +63,29 @@ namespace amp.eventing.streaming
             }
         }
 
-        public void PublishChunkedSequence<TEvent>(IEnumerable<object> dataSet,
-                                            Func<object, TEvent> objectMapper)
+        public void PublishChunkedSequence<TEvent>(ICollection<TEvent> dataSet)
         {
             _log.Debug("enter publish to chunked sequence");
             IEventStream eventStream = null;
             string topic = null;
 
-            ValidateEventEnumerator(dataSet);
-            bool doMap = IsValidMapper(objectMapper);
-
+            ValidateEventCollection(dataSet);
+            
             try
             {
-                foreach (object eventItem in dataSet)
+                foreach (TEvent eventItem in dataSet)
                 {
-                    object item = eventItem;
-                    if (doMap)
-                    {
-                        //This may look a little strange, but just reusing eventItem again for efficiency.
-                        //The eventItem is now of type TEvent which was converted to conform to the sender's desired format
-                        //before getting serialized
-                        item = objectMapper(eventItem);
-                    }
-
                     if (null == eventStream)
                     {
-                        topic = item.GetType().ToString();
+                        topic = eventItem.GetType().ToString();
                         eventStream = new DefaultEventStream(this, topic); //Skipping use of the factory so that we ensure sequencing based event stream is used
                         eventStream.BatchLimit = _batchLimit;
+                        //Notify the receiver what the size of the collection will be
+                        Publish(new CollectionSizeNotifier(dataSet.Count, topic, eventStream.SequenceId));
                         _eventStreams.Add(topic, eventStream);
                     }
 
-                    eventStream.Publish(item);
+                    eventStream.Publish(eventItem);
                 }
             }
             finally
@@ -104,23 +99,7 @@ namespace amp.eventing.streaming
             _log.Debug("leave publish to chunked sequence");
         }
 
-        public int BatchLimit 
-        { 
-            set 
-            {
-                if (value <= 0)
-                {
-                    _log.Warn("Message batch limit cannot be less than or equal to zero, using 10 as the default limit.");
-                    _batchLimit = 10;
-                }
-                else
-                {
-                    _batchLimit = value;
-                }
-            } 
-        }
-
-        private void ValidateEventEnumerator(IEnumerable<object> eventEnumerator)
+        private void ValidateEventCollection<TEvent>(ICollection<TEvent> eventEnumerator)
         {
             if (null == eventEnumerator)
             {
@@ -128,27 +107,20 @@ namespace amp.eventing.streaming
             }
         }
 
-        private bool IsValidMapper<TEvent>(Func<object, TEvent> objectMapper)
-        {
-            bool doMap = true;
-            if (null == objectMapper) 
-            {
-                _log.Warn("No object mapper supplied. Will not perform transformational mapping of elements in chunked sequence");
-                doMap = false;
-            }
-            return doMap;
-        }
-
         public void SubscribeToCollection<TEvent>(IStreamingCollectionHandler<TEvent> handler)
         {
-            StreamingCollectionRegistration<TEvent> registration = new StreamingCollectionRegistration<TEvent>(handler, this.InterceptEvent);
+            _log.Debug("enter SubscribeToCollection");
+            StreamingCollectionRegistration<TEvent> registration = new StreamingCollectionRegistration<TEvent>(handler, this.ProcessInboundCallback);
             _envBus.Register(registration);
+            _log.Debug("leave SubscribetoCollection");
         }
 
         public void SubscribeToReader<TEvent>(IStreamingReaderHandler<TEvent> handler)
         {
-            StreamingReaderRegistration<TEvent> registration = new StreamingReaderRegistration<TEvent>(handler, this.InterceptEvent);
+            _log.Debug("enter SubscribeToReader");
+            StreamingReaderRegistration<TEvent> registration = new StreamingReaderRegistration<TEvent>(handler, this.ProcessInboundCallback);
             _envBus.Register(registration);
+            _log.Debug("leave SubscribeToReader");
         }
 
         
@@ -176,7 +148,7 @@ namespace amp.eventing.streaming
             }
         }
 
-        public override object InterceptEvent(IEventHandler handler, Envelope env)
+        public object ProcessInboundCallback(Envelope env)
         {
             _log.Debug("Enter InterceptEvent");
 
