@@ -67,21 +67,25 @@ public class DefaultStreamingBus extends DefaultEventBus implements IStandardStr
     }
 
     @Override
-    public <TEVENT> void publishChunkedSequence(Iterator<TEVENT> dataSet) throws Exception {
+    public <TEVENT> void publishChunkedSequence(Collection<TEVENT> dataSet) throws Exception {
         log.debug("enter publish to chunked sequence");
         IEventStream eventStream = null;
         String topic = null;
 
-        validateEventIterator(dataSet);
+        validateEventCollection(dataSet);
 
         try {
-            while (dataSet.hasNext()) {
-                TEVENT eventItem = dataSet.next();
 
+            for (TEVENT eventItem : dataSet) {
                 if (null == eventStream) {
                     topic = eventItem.getClass().getCanonicalName();
+                    //Notify the receiver what the size of the collection will be
+
+
                     eventStream = new DefaultEventStream(this, topic); //Skipping use of the factory so that we ensure sequencing based event stream is used
                     eventStream.setBatchLimit(this.batchLimit);
+
+                    this.publish(new CollectionSizeNotifier(dataSet.size(), topic, eventStream.getSequenceId()));
                     eventStreams.put(topic, eventStream);
                 }
 
@@ -97,7 +101,7 @@ public class DefaultStreamingBus extends DefaultEventBus implements IStandardStr
     }
 
 
-    private <TEVENT> void validateEventIterator(Iterator<TEVENT> eventIterator) throws Exception {
+    private <TEVENT> void validateEventCollection(Collection<TEVENT> eventIterator) throws Exception {
         if (null == eventIterator) {
             throw new IllegalArgumentException("Cannot publish a null event iterator");
         }

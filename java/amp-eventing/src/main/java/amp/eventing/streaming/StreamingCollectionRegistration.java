@@ -31,6 +31,7 @@ public class StreamingCollectionRegistration<TEVENT> implements IRegistration {
     protected IInboundProcessorCallback processorCallback;
     protected Map<String, String> registrationInfo;
     protected ConcurrentHashMap<String, Map<Integer,StreamingEventItem<TEVENT>>> collectedEvents;
+    protected ConcurrentHashMap<String, Integer> collectionSizes;
 
     @Override
     public IEnvelopeFilterPredicate getFilterPredicate() {
@@ -49,6 +50,7 @@ public class StreamingCollectionRegistration<TEVENT> implements IRegistration {
         registrationInfo = new HashMap<String, String>();
         registrationInfo.put(EnvelopeHeaderConstants.MESSAGE_TOPIC, eventHandler.getEventType().getCanonicalName());
         this.collectedEvents = new ConcurrentHashMap<String, Map<Integer, StreamingEventItem<TEVENT>>>();
+        this.collectionSizes = new ConcurrentHashMap<String, Integer>();
     }
 
     @Override
@@ -58,7 +60,9 @@ public class StreamingCollectionRegistration<TEVENT> implements IRegistration {
         try {
             if (isEndOfStream(env)) {
                 closeStream(env);
-            }  else {
+            } else if (isCollectionSizeNotification(env)) {
+                storeExpectedCollectionSize(env);
+            } else {
                 queueEvent(env);
             }
         } catch (Exception ex) {
@@ -78,9 +82,20 @@ public class StreamingCollectionRegistration<TEVENT> implements IRegistration {
                 StreamingEventItem<TEVENT> eventItem = new StreamingEventItem(event, env.getHeaders());
                 Map<Integer, StreamingEventItem<TEVENT>> eventMap = collectedEvents.get(sequenceId);
                 eventMap.put(eventItem.getPosition(), eventItem);
-                eventHandler.onIncrement(eventMap.size());
+                updatePercentProcessed(sequenceId, eventMap.size());
             }
         }
+    }
+
+    private void updatePercentProcessed(String sequenceId, int numProcessed) {
+        int collectionSize = collectionSizes.get(sequenceId);
+        double percentProcessed = 0.00;
+
+        if (collectionSize > 0) {
+            percentProcessed = Math.round(100 * (Double.valueOf(numProcessed+"") / Double.valueOf(collectionSize+"")));
+        }
+
+        eventHandler.onPercentCollectionReceived(percentProcessed);
     }
 
     private void closeStream(Envelope env) throws Exception {
@@ -93,10 +108,24 @@ public class StreamingCollectionRegistration<TEVENT> implements IRegistration {
         collectedEvents.remove(sequenceId);
     }
 
+    private void storeExpectedCollectionSize(Envelope env) throws Exception {
+        CollectionSizeNotifier collectionSizeNotifier = (CollectionSizeNotifier)this.processorCallback.ProcessInbound(env);
+        collectionSizes.put(collectionSizeNotifier.getSequenceId(), collectionSizeNotifier.getSize());
+    }
+
     private boolean isEndOfStream(Envelope env) {
         EnvelopeHelper envelope = new EnvelopeHelper(env);
         String messageType = envelope.getMessageType();
         if (messageType.equals(EndOfStream.class.getCanonicalName())) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isCollectionSizeNotification(Envelope env) throws Exception {
+        EnvelopeHelper envelope = new EnvelopeHelper(env);
+        String messageType = envelope.getMessageType();
+        if (messageType.equals(CollectionSizeNotifier.class.getCanonicalName())) {
             return true;
         }
         return false;

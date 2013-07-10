@@ -34,7 +34,7 @@ public class ChunkedSequencePublisher {
         streamMessages.add(new ModernMajorGeneralMessage("in order categorical; "));
 
 
-        streamingEventBus.publishChunkedSequence(streamMessages.iterator());
+        streamingEventBus.publishChunkedSequence(streamMessages);
         System.exit(0);
     }
 }

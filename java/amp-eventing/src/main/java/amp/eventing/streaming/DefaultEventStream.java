@@ -63,6 +63,11 @@ public class DefaultEventStream implements IEventStream {
         return this.topic;
     }
 
+    @Override
+    public String getSequenceId() {
+        return this.sequenceId.toString();
+    }
+
     /**
      * When processing a stream of an unknown size, it becomes a challenge to know when you have dealt with the
      * last object in that stream. This class utilizes the dispose() method to indicate that stream processing
@@ -72,8 +77,6 @@ public class DefaultEventStream implements IEventStream {
      */
     private void flushStreamBuffer() throws Exception {
 
-        //We'll flush out the batch of messages == batchLimit and leave one left in the queue to either
-        //be sent with the next batch or to be sent when dispose gets called.
         while (queuedEvents.size() > 0) {
             final EventStreamQueueItem eventItem = queuedEvents.remove();
             eventBus.processEvent(eventItem.getEventContext(),

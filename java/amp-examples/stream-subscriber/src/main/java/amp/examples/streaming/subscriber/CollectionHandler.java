@@ -24,8 +24,8 @@ public class CollectionHandler implements IStreamingCollectionHandler<ModernMajo
     }
 
     @Override
-    public void onIncrement(int count) {
-        System.out.println("Processed " + count + " event(s) so far.");
+    public void onPercentCollectionReceived(double percent) {
+        System.out.println("Percent of events received: " + percent + "%");
     }
 
     @Override
