@@ -79,12 +79,9 @@ public class DefaultStreamingBus extends DefaultEventBus implements IStandardStr
             for (TEVENT eventItem : dataSet) {
                 if (null == eventStream) {
                     topic = eventItem.getClass().getCanonicalName();
-                    //Notify the receiver what the size of the collection will be
-
-
                     eventStream = new DefaultEventStream(this, topic); //Skipping use of the factory so that we ensure sequencing based event stream is used
                     eventStream.setBatchLimit(this.batchLimit);
-
+                    //Notify the receiver what the size of the collection will be
                     this.publish(new CollectionSizeNotifier(dataSet.size(), topic, eventStream.getSequenceId()));
                     eventStreams.put(topic, eventStream);
                 }
