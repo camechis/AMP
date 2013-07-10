@@ -26,7 +26,7 @@
 
     <bean id="filterBasedLdapUserSearch" class="amp.anubis.ldap.NoSpacesFilterBasedLdapUserSearch">
         <constructor-arg value="cn=Users" />
-        <constructor-arg value="(dn={0})" />
+        <constructor-arg value="(distinguishedName={0})" />
         <constructor-arg ref="johnruizLdapServer" />
         <property name="searchSubtree" value="true" />
         <property name="derefLinkFlag" value="true" />
