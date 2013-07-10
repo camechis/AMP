@@ -4,7 +4,6 @@ import amp.eventing.streaming.DefaultStreamingBus;
 import amp.examples.streaming.common.ModernMajorGeneralMessage;
 import cmf.eventing.patterns.streaming.IEventStream;
 import cmf.eventing.patterns.streaming.IStreamingEventBus;
-import cmf.eventing.patterns.streaming.IStreamingMapperCallback;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.util.ArrayList;
@@ -21,7 +20,7 @@ public class StreamingPublisher {
 
         IStreamingEventBus streamingEventBus = injector.getBean("eventBus", DefaultStreamingBus.class);
 
-        ArrayList<Object> streamMessages = new ArrayList<Object>();
+        ArrayList<ModernMajorGeneralMessage> streamMessages = new ArrayList<ModernMajorGeneralMessage>();
         streamMessages.add(new ModernMajorGeneralMessage("I am "));
         streamMessages.add(new ModernMajorGeneralMessage("the very "));
         streamMessages.add(new ModernMajorGeneralMessage("model of "));
@@ -39,7 +38,7 @@ public class StreamingPublisher {
         IEventStream stream = streamingEventBus.createStream(ModernMajorGeneralMessage.class.getCanonicalName());
         stream.setBatchLimit(2);
 
-        for (Object message : streamMessages) {
+        for (ModernMajorGeneralMessage message : streamMessages) {
             stream.publish(message);
         }
         stream.dispose();

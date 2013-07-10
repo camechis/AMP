@@ -6,10 +6,13 @@ import cmf.bus.IEnvelopeBus;
 import cmf.eventing.IEventFilterPredicate;
 import cmf.eventing.IEventHandler;
 import cmf.eventing.patterns.streaming.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
 public class DefaultStreamingBus extends DefaultEventBus implements IStandardStreamingEventBus, IInboundProcessorCallback {
+    protected static final Logger log = LoggerFactory.getLogger(DefaultStreamingBus.class);
     private IEventStreamFactory eventStreamFactory;
     private Map<String, IEventStream> eventStreams;
     /**
@@ -64,29 +67,22 @@ public class DefaultStreamingBus extends DefaultEventBus implements IStandardStr
     }
 
     @Override
-    public <TEVENT> void publishChunkedSequence(Iterator<Object> dataSet,
-                                                IStreamingMapperCallback<TEVENT> objectMapper) throws Exception {
+    public <TEVENT> void publishChunkedSequence(Collection<TEVENT> dataSet) throws Exception {
         log.debug("enter publish to chunked sequence");
         IEventStream eventStream = null;
         String topic = null;
 
-        validateEventIterator(dataSet);
-        boolean doMap = isValidMapper(objectMapper);
+        validateEventCollection(dataSet);
 
         try {
-            while (dataSet.hasNext()) {
-                Object eventItem = dataSet.next();
-                if (doMap) {
-                    //This may look a little strange, but just reusing eventItem again for efficiency.
-                    //The eventItem is now of type TEVENT which was converted to conform to the sender's desired format
-                    //before getting serialized
-                    eventItem = objectMapper.map(eventItem);
-                }
 
+            for (TEVENT eventItem : dataSet) {
                 if (null == eventStream) {
                     topic = eventItem.getClass().getCanonicalName();
                     eventStream = new DefaultEventStream(this, topic); //Skipping use of the factory so that we ensure sequencing based event stream is used
                     eventStream.setBatchLimit(this.batchLimit);
+                    //Notify the receiver what the size of the collection will be
+                    this.publish(new CollectionSizeNotifier(dataSet.size(), topic, eventStream.getSequenceId()));
                     eventStreams.put(topic, eventStream);
                 }
 
@@ -101,64 +97,34 @@ public class DefaultStreamingBus extends DefaultEventBus implements IStandardStr
         log.debug("leave publish to chunked sequence");
     }
 
-    /**
-     * Publishes messages on the {@link cmf.eventing.patterns.streaming.IStreamingEventBus} after the numberOfEvents limit has been met.
-     *
-     * @param numberOfEvents
-     */
-    @Override
-    public void setBatchLimit(int numberOfEvents) {
-        if (numberOfEvents <= 0) {
-            log.warn("Message batch limit cannot be less than or equal to zero, using 10 as the default limit.");
-            this.batchLimit = 10;
-        } else {
-            this.batchLimit = numberOfEvents;
-        }
-    }
 
-    private void validateEventIterator(Iterator<Object> eventIterator) throws Exception {
+    private <TEVENT> void validateEventCollection(Collection<TEVENT> eventIterator) throws Exception {
         if (null == eventIterator) {
             throw new IllegalArgumentException("Cannot publish a null event iterator");
         }
     }
 
-    private <TEVENT> boolean isValidMapper(IStreamingMapperCallback<TEVENT> objectMapper) {
-        boolean doMap = true;
-        if (null == objectMapper) {
-            log.warn("No IStreamingMapperCallback supplied. Will not perform transformational mapping of elements in chunked sequence");
-            doMap = false;
-        }
-        return doMap;
-    }
-
     @Override
     public <TEVENT> void subscribeToCollection(IStreamingCollectionHandler<TEVENT> handler) throws Exception {
-        Class<TEVENT> type = handler.getEventType();
-        IEventFilterPredicate filterPredicate = new TypeEventFilterPredicate(type);
-        subscribe(handler, filterPredicate);
+        log.debug("enter subscribeToCollection");
+        StreamingCollectionRegistration<TEVENT> registration = new StreamingCollectionRegistration<TEVENT>(handler, this);
+        envelopeBus.register(registration);
+        log.debug("leave subscribeToCollection");
     }
 
     @Override
     public <TEVENT> void subscribeToReader(IStreamingReaderHandler<TEVENT> handler) throws Exception {
-        Class<TEVENT> type = handler.getEventType();
-        IEventFilterPredicate filterPredicate = new TypeEventFilterPredicate(type);
-        subscribe(handler, filterPredicate);
+        log.debug("enter subscribeToReader");
+        StreamingReaderRegistration<TEVENT> registration = new StreamingReaderRegistration<TEVENT>(handler, this);
+        envelopeBus.register(registration);
+        log.debug("leave subscribeToReader");
     }
 
     @Override
     public <TEVENT> void subscribe(final IEventHandler<TEVENT> eventHandler, final IEventFilterPredicate filterPredicate)
             throws Exception {
+        log.debug("enter default streaming bus subscribe.");
 
-        if (eventHandler instanceof IStreamingCollectionHandler) {
-            StreamingCollectionRegistration registration = new StreamingCollectionRegistration(
-                    (IStreamingCollectionHandler)eventHandler, this);
-            envelopeBus.register(registration);
-
-        } else if (eventHandler instanceof IStreamingReaderHandler) {
-            StreamingReaderRegistration registration = new StreamingReaderRegistration(
-                    (IStreamingReaderHandler)eventHandler, this);
-            envelopeBus.register(registration);
-        }
     }
 
     @Override

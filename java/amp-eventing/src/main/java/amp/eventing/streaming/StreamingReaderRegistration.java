@@ -1,18 +1,19 @@
 package amp.eventing.streaming;
 
+import amp.eventing.EnvelopeHelper;
 import amp.eventing.IInboundProcessorCallback;
 import cmf.bus.Envelope;
 import cmf.bus.EnvelopeHeaderConstants;
 import cmf.bus.IEnvelopeFilterPredicate;
 import cmf.bus.IRegistration;
-import cmf.eventing.patterns.streaming.IStreamingEventItem;
+import cmf.eventing.patterns.streaming.StreamingEventItem;
 import cmf.eventing.patterns.streaming.IStreamingReaderHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
-import static amp.eventing.streaming.StreamingEnvelopeConstants.*;
+import static cmf.eventing.patterns.streaming.StreamingEnvelopeConstants.*;
 /**
  * Specialized {@link cmf.bus.IRegistration} that handles the event by placing them in a
  * {@link java.util.Iterator} from which they can be extracted as they become available.
@@ -47,29 +48,39 @@ public class StreamingReaderRegistration<TEVENT> implements IRegistration {
 
     @Override
     public Object handle(Envelope env) throws Exception {
-        TEVENT event = (TEVENT) this.processorCallback.ProcessInbound(env);
         Object result = null;
 
-        if (null != event) {
-            try {
-                boolean isLast = Boolean.parseBoolean(env.getHeader(IS_LAST));
-
-                IStreamingEventItem<TEVENT> eventItem = new StreamingEventItem<TEVENT>(event, env.getHeaders());
-                result = this.eventHandler.onEventRead(eventItem);
-                if (isLast) {
-                    this.eventHandler.dispose();
+        try {
+            if (isEndOfStream(env)) {
+                this.eventHandler.dispose();
+            } else {
+                TEVENT event = (TEVENT) this.processorCallback.ProcessInbound(env);
+                if (null != event) {
+                    StreamingEventItem<TEVENT> eventItem = new StreamingEventItem(event, env.getHeaders());
+                    this.eventHandler.onEventRead(eventItem);
                 }
-            } catch (Exception ex) {
-                result = handleFailed(env, ex);
             }
+        } catch (Exception ex) {
+          result = handleFailed(env, ex);
         }
         return result;
+    }
+
+    private boolean isEndOfStream(Envelope env) {
+        EnvelopeHelper envelope = new EnvelopeHelper(env);
+        String messageType = envelope.getMessageType();
+        if (messageType.equals(EndOfStream.class.getCanonicalName())) {
+            return true;
+        }
+        return false;
     }
 
     @Override
     public Object handleFailed(Envelope env, Exception ex) throws Exception {
         try {
-            return eventHandler.handleFailed(env, ex);
+            EnvelopeHelper envelope = new EnvelopeHelper(env);
+            log.error("Unable to process envelope with message topic: " + envelope.getMessageTopic() + " from stream.", ex);
+            return null;
         } catch (Exception failedToFail) {
             throw failedToFail;
         }

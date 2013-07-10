@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
+import static cmf.eventing.patterns.streaming.StreamingEnvelopeConstants.*;
+
 public class DefaultEventStream implements IEventStream {
     protected static final Logger log = LoggerFactory.getLogger(DefaultEventStream.class);
     private final IStandardStreamingEventBus eventBus;
@@ -35,24 +37,22 @@ public class DefaultEventStream implements IEventStream {
     @Override
     public void publish(Object event) throws Exception {
         log.debug("enter publish to stream");
-        boolean isLast = false;
         String sequence = sequenceId.toString();
-        String isLastFlag = Boolean.toString(isLast);
 
-        Envelope env = StreamingEnvelopeHelper.buildStreamingEnvelope(sequence, position, isLastFlag);
+
+        Envelope env = StreamingEnvelopeHelper.buildStreamingEnvelope(sequence, position);
         EnvelopeHelper envHelper = new EnvelopeHelper(env);
         envHelper.setMessageTopic(getTopic());
 
         EventContext context = new EventContext(EventContext.Directions.Out, env, event);
         EventStreamQueueItem eventItem = new EventStreamQueueItem(context);
 
-        log.debug("buffering event with sequenceId: " + sequence + ", position: " + position + ", isLast: " + isLastFlag);
+        log.debug("buffering event with sequenceId: " + sequence + ", position: " + position);
         this.queuedEvents.add(eventItem);
 
-        if (this.queuedEvents.size() == (this.batchLimit + 1)) {
+        if (this.queuedEvents.size() == this.batchLimit) {
             log.debug("flushing " + batchLimit + " event(s) to stream.");
-            boolean isComplete = false;
-            flushStreamBuffer(isComplete);
+            flushStreamBuffer();
         }
 
         position++;
@@ -63,6 +63,11 @@ public class DefaultEventStream implements IEventStream {
         return this.topic;
     }
 
+    @Override
+    public String getSequenceId() {
+        return this.sequenceId.toString();
+    }
+
     /**
      * When processing a stream of an unknown size, it becomes a challenge to know when you have dealt with the
      * last object in that stream. This class utilizes the dispose() method to indicate that stream processing
@@ -70,11 +75,9 @@ public class DefaultEventStream implements IEventStream {
      * set to true. The trick here is to ensure that the streamBuffer is not entirely empty when
      * dispose gets called.
      */
-    private void flushStreamBuffer(boolean isComplete) throws Exception {
-        int boundary = (isComplete) ? 0 : 1;
-        //We'll flush out the batch of messages == batchLimit and leave one left in the queue to either
-        //be sent with the next batch or to be sent when dispose gets called.
-        while (queuedEvents.size() > boundary) {
+    private void flushStreamBuffer() throws Exception {
+
+        while (queuedEvents.size() > 0) {
             final EventStreamQueueItem eventItem = queuedEvents.remove();
             eventBus.processEvent(eventItem.getEventContext(),
                     eventBus.getOutboundProcessors(),
@@ -93,25 +96,13 @@ public class DefaultEventStream implements IEventStream {
      */
     @Override
     public void dispose() {
-        boolean isComplete = true;
         try {
-            markLastElementInQueue();
-            flushStreamBuffer(isComplete);
+            flushStreamBuffer();
+            eventBus.publish(new EndOfStream(this.getTopic(), sequenceId.toString()));
+
         } catch (Exception e) {
             log.error("Unable to send last batch of messages in buffer to event stream.", e);
         }
     }
 
-    /**
-     * Ensures that the last element in the queue has the isLast header set to true marking the end of the stream.
-     */
-    private void markLastElementInQueue() {
-        int counter = 0;
-        for (EventStreamQueueItem item : queuedEvents) {
-            if (counter == (queuedEvents.size() - 1)) {
-                item.getEnvelope().setHeader(StreamingEnvelopeConstants.IS_LAST, Boolean.toString(true));
-            }
-            counter++;
-        }
-    }
 }
