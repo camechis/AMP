@@ -1,12 +1,11 @@
-﻿using System;
+﻿using amp.bus;
+using cmf.bus;
+using cmf.eventing.patterns.streaming;
+using Common.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
-using cmf.eventing.patterns.streaming;
-using amp.bus;
-using Common.Logging;
-using cmf.bus;
 
 namespace amp.eventing.streaming
 {
@@ -40,22 +39,26 @@ namespace amp.eventing.streaming
         {
             _log.Debug("enter publish to stream");
             string sequence = _sequenceId.ToString();
-            string isLastFlag = bool.FalseString;
 
-            Envelope env = StreamingEnvelopeHelper.BuildStreamingEnvelope(sequence, _position, isLastFlag);
+            Envelope env = StreamingEnvelopeHelper.BuildStreamingEnvelope(sequence, _position);
             env.SetMessageTopic(Topic);
 
             EventContext context = new EventContext(EventContext.Directions.Out, env, evt);
             EventStreamQueueItem eventItem = new EventStreamQueueItem(context);
 
-            _log.Debug("buffering event with sequenceId: " + sequence + ", position: " + _position + ", isLast: " + isLastFlag);
+            _log.Debug("buffering event with sequenceId: " + sequence + ", position: " + _position);
             _queuedEvents.Enqueue(eventItem);
 
-            if (_queuedEvents.Count == (_batchLimit + 1)) {
+            if (_queuedEvents.Count == (_batchLimit)) {
                 _log.Debug("flushing " + _batchLimit + " event(s) to stream.");
-                bool isComplete = false;
-                FlushStreamBuffer(isComplete);
+                FlushStreamBuffer();
             }
+            _position++;
+        }
+
+        public string SequenceId
+        {
+            get { return _sequenceId.ToString(); }
         }
 
         public string Topic
@@ -70,13 +73,9 @@ namespace amp.eventing.streaming
         /// set to true.  The trick here is to ensure that the streamBuffer is not entirely empty when 
         /// dispose gets called.
         /// </summary>
-        /// <param name="isComplete"></param>
-        private void FlushStreamBuffer(bool isComplete) 
+        private void FlushStreamBuffer() 
         {
-            int boundary = (isComplete) ? 0 : 1;
-            //We'll flush out the batch of messages == _batchLimit and leave one left in the queue to either
-            //be sent with the next batch or to be sent when dispose gets called.
-            while (_queuedEvents.Count > boundary) {
+            while (_queuedEvents.Count > 0) {
                 EventStreamQueueItem eventItem = _queuedEvents.Dequeue();
                 _eventBus.ProcessEvent(eventItem.EventContext, _eventBus.OutboundProcessors, () =>
                 {
@@ -87,11 +86,10 @@ namespace amp.eventing.streaming
 
         public void Dispose()
         {
-            bool isComplete = true;
             try
             {
-                MarkLastElementInQueue();
-                FlushStreamBuffer(isComplete);
+                FlushStreamBuffer();
+                _eventBus.Publish(new EndOfStream(Topic, _sequenceId.ToString()));
             }
             catch (Exception e) 
             {
@@ -99,16 +97,9 @@ namespace amp.eventing.streaming
             }
         }
 
-        private void MarkLastElementInQueue() {
-            int counter = 0;
-            foreach (EventStreamQueueItem item in _queuedEvents)
-            { 
-                if (counter == (_queuedEvents.Count - 1))
-                {
-                    item.Envelope.Headers[StreamingEnvelopeConstants.IS_LAST] = bool.TrueString;
-                }
-                counter++;
-            }
-        }
+
+
+
+        
     }
 }

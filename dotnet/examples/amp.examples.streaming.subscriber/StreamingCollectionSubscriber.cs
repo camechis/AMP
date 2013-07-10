@@ -22,11 +22,6 @@ namespace amp.examples.streaming.subscriber
                 as IStandardStreamingEventBus;
 
             IStreamingCollectionHandler<ModernMajorGeneralMessage> handler = new CollectionHandler();
-            handler.Progress = (sequenceId, numEventsProcessed) => 
-            {
-                Console.WriteLine(string.Format("SequenceId: {0} has processed {1} event(s).", sequenceId, numEventsProcessed));
-            };
-
             streamingEventBus.SubscribeToCollection<ModernMajorGeneralMessage>(handler);
 
 

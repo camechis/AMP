@@ -22,7 +22,7 @@ namespace amp.examples.streaming.publisher
                 as IStandardStreamingEventBus;
 
             
-            IList<object> streamMessages = new List<object>();
+            IList<ModernMajorGeneralMessage> streamMessages = new List<ModernMajorGeneralMessage>();
             streamMessages.Add(new ModernMajorGeneralMessage("I am "));
             streamMessages.Add(new ModernMajorGeneralMessage("the very "));
             streamMessages.Add(new ModernMajorGeneralMessage("model of "));
@@ -36,11 +36,7 @@ namespace amp.examples.streaming.publisher
             streamMessages.Add(new ModernMajorGeneralMessage("From Marathon to Waterloo, "));
             streamMessages.Add(new ModernMajorGeneralMessage("in order categorical; "));
 
-            streamingEventBus.BatchLimit = 2;
-            streamingEventBus.PublishChunkedSequence(streamMessages, (element) => 
-            {
-                return (ModernMajorGeneralMessage)element;
-            });
+            streamingEventBus.PublishChunkedSequence(streamMessages);
 
             Environment.Exit(0);
         }

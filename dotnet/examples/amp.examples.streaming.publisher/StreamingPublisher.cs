@@ -21,7 +21,7 @@ namespace amp.examples.streaming.publisher
                 typeof(IStandardStreamingEventBus).FullName)
                 as IStandardStreamingEventBus;
 
-            IList<object> streamMessages = new List<object>();
+            IList<ModernMajorGeneralMessage> streamMessages = new List<ModernMajorGeneralMessage>();
             streamMessages.Add(new ModernMajorGeneralMessage("I am "));
             streamMessages.Add(new ModernMajorGeneralMessage("the very "));
             streamMessages.Add(new ModernMajorGeneralMessage("model of "));
@@ -36,14 +36,15 @@ namespace amp.examples.streaming.publisher
             streamMessages.Add(new ModernMajorGeneralMessage("in order categorical; "));
 
 
-            IEventStream stream = streamingEventBus.CreateStream(typeof(ModernMajorGeneralMessage).FullName);
-            stream.BatchLimit = 2;
-
-            foreach (object message in streamMessages)
+            using (IEventStream stream = streamingEventBus.CreateStream(typeof(ModernMajorGeneralMessage).FullName))
             {
-                stream.Publish(message);
+                stream.BatchLimit = 2;
+
+                foreach (ModernMajorGeneralMessage message in streamMessages)
+                {
+                    stream.Publish(message);
+                }
             }
-            stream.Dispose();
             
             Environment.Exit(0);
         }
