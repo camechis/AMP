@@ -67,6 +67,10 @@ window.RouteEditCtrl = ($scope, $http, $routeParams, $location) ->
 
 window.RouteNewCtrl = ($scope, $http, $routeParams, $location) ->
 
+	$scope.route =
+		clients: []
+		topics: []
+	
 	$scope.routeId = $routeParams.routeId
 	
 	$scope.action = "new"

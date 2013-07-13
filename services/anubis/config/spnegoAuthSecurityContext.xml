@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:c="http://www.springframework.org/schema/c"
+       xmlns:sec="http://www.springframework.org/schema/security"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+
+    <sec:http entry-point-ref="spnegoEntryPoint" use-expressions="true">
+        <sec:intercept-url pattern="/anubis/manage/**" access="hasRole('ROLE_DOMAIN ADMINS')" />
+        <sec:intercept-url pattern="/anubis/rabbitmq/**" access="permitAll" />
+        <sec:intercept-url pattern="/anubis/**" access="hasAnyRole('ROLE_DOMAIN USERS', 'ROLE_USERS')" />
+        <sec:custom-filter ref="spnegoAuthenticationProcessingFilter" position="BASIC_AUTH_FILTER" />
+    </sec:http>
+
+    <bean id="spnegoEntryPoint" class="org.springframework.security.extensions.kerberos.web.SpnegoEntryPoint" />
+
+    <bean id="spnegoAuthenticationProcessingFilter" class="org.springframework.security.extensions.kerberos.web.SpnegoAuthenticationProcessingFilter">
+        <property name="authenticationManager" ref="authenticationManager" />
+    </bean>
+
+    <sec:authentication-manager alias="authenticationManager">
+        <sec:authentication-provider ref="kerberosServiceAuthenticationProvider" />
+    </sec:authentication-manager>
+
+    <bean id="kerberosServiceAuthenticationProvider" class="org.springframework.security.extensions.kerberos.KerberosServiceAuthenticationProvider">
+        <property name="ticketValidator">
+            <bean class="org.springframework.security.extensions.kerberos.SunJaasKerberosTicketValidator">
+                <property name="servicePrincipal" value="HTTP/anubis.johnruiz.com" />
+                <property name="keyTabLocation" value="file:/opt/anubis/keys/anubis.johnruiz.com.keytab" />
+                <property name="debug" value="true" />
+            </bean>
+        </property>
+        <property name="userDetailsService" ref="ldapUserDetailsService" />
+    </bean>
+
+    <sec:ldap-server id="johnruizLdapServer"
+                     url="ldap://dc01.johnruiz.com:389/DC=johnruiz,DC=com"
+                     manager-dn="CN=LDAP Bind Account,CN=Users,DC=johnruiz,DC=com"
+                     manager-password="1qaz@WSX3edc$RFV" />
+
+    <bean id="filterBasedLdapUserSearch" class="org.springframework.security.ldap.search.FilterBasedLdapUserSearch">
+        <constructor-arg value="cn=Users" />
+        <constructor-arg value="(|(sAMAccountName={0})(userPrincipalName={0}))" />
+        <constructor-arg ref="johnruizLdapServer" />
+        <property name="searchSubtree" value="true" />
+        <property name="derefLinkFlag" value="true" />
+    </bean>
+
+    <bean id="authoritiesPopulator" class="org.springframework.security.ldap.userdetails.DefaultLdapAuthoritiesPopulator">
+        <constructor-arg ref="johnruizLdapServer" />
+        <constructor-arg value="cn=Users" />
+        <!-- <property name="groupSearchFilter" value="(member:1.2.840.113556.1.4.1941:=({0}))" /> -->
+        <property name="searchSubtree" value="true" />
+    </bean>
+
+    <bean id="ldapUserDetailsService" class="org.springframework.security.ldap.userdetails.LdapUserDetailsService">
+        <constructor-arg ref="filterBasedLdapUserSearch" />
+        <constructor-arg ref="authoritiesPopulator"/>
+    </bean>
+
+    <bean id="adAuthenticationProvider"
+          class="org.springframework.security.ldap.authentication.ad.ActiveDirectoryLdapAuthenticationProvider">
+        <constructor-arg value="johnruiz.com" />
+        <constructor-arg value="ldap://dc01.johnruiz.com/" />
+    </bean>
+
+    <bean id="dummyRabbitAccessManager" class="amp.anubis.resources.DummyRabbitAccessManager">
+        <constructor-arg ref="adAuthenticationProvider" />
+    </bean>
+
+    <bean id="rabbitAuthorizationResource" class="amp.anubis.resources.RabbitAuthorizationResource">
+        <constructor-arg ref="ldapUserDetailsService" />
+        <constructor-arg ref="dummyRabbitAccessManager" />
+    </bean>
+
+</beans>

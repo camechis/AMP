@@ -1,0 +1,31 @@
+applicationContext: ['config/applicationContext.xml', 'config/adAuthSecurityContext.xml']
+
+useSpringSecurity: true
+
+logging:
+    level: DEBUG
+    loggers:
+        "org.springframework.core.env.StandardEnvironment": INFO
+        "org.eclipse.jetty.util.component.AbstractLifeCycle": INFO
+        "org.eclipse.jetty.util.component.Container": INFO
+        "org.eclipse.jetty.server.handler.AbstractHandler": INFO
+        "org.eclipse.jetty.servlet.ServletHandler": INFO
+        "org.springframework.beans.factory.support.DefaultListableBeanFactory": INFO
+        "org.springframework.beans.factory.xml": INFO
+    console:
+        enabled: true
+        threshold: DEBUG
+    file:
+        enabled: true
+        threshold: ALL
+        currentLogFilename: ./logs/anubis.log
+        archivedLogFilenamePattern: ./logs/anubis-%d.log.gz
+        archivedFileCount: 5
+        timeZone: UTC
+
+http:
+    port: 15678
+    adminPort: 8082
+    adminUsername: admin
+    adminPassword: admin
+    rootPath: /anubis/*

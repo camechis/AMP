@@ -17,7 +17,7 @@
     <groupId>amp</groupId>
     <artifactId>amp.commands</artifactId>
     <name>AMP Built-in Commands</name>
-    <url>http://ampere.berico.us/features/commanding</url>
+    <url>http://ampere.berico.us/services/command-channel</url>
 
 
     <properties>

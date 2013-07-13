@@ -11,8 +11,8 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
     
-    <groupId>amp.archetypes</groupId>
-	<artifactId>quickstart</artifactId>
+    <groupId>${parent.groupId}</groupId>
+	<artifactId>archetype.quickstart</artifactId>
 	<packaging>jar</packaging>
 	<name>AMP Archetypes - Quickstart</name>
     <url>http://ampere.berico.us/archetypes/</url>

@@ -2,17 +2,11 @@ package amp.topology.resources;
 
 import java.util.Collection;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.fasterxml.jackson.databind.util.JSONPObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,97 +34,129 @@ public class RouteInfoResource {
 	@GET
 	@Path("/{id}")
     @Timed
-	public ExtendedRouteInfo getRouteById(@PathParam("id") String id){
+	public Object getRouteById(@PathParam("id") String id, @QueryParam("callback") String callback){
 		
 		logger.info("Getting route by Id: {}", id);
-		
-		return topologyRepository.getRoute(id);
+        ExtendedRouteInfo routeInfo = topologyRepository.getRoute(id);
+        if(callback != null && callback.length()>0){
+            return new JSONPObject(callback, routeInfo);
+        }
+        return routeInfo;
 	}
 	
 	@GET
 	@Path("/client/{client}")
     @Timed
-	public Collection<ExtendedRouteInfo> getRoutesByClient(@PathParam("client") String client){
+	public Object getRoutesByClient(@PathParam("client") String client, @QueryParam("callback") String callback){
 		
 		logger.info("Getting routes by client: {}", client);
-		
-		return topologyRepository.getRoutesByClient(client);
+
+        Collection<ExtendedRouteInfo>  routes = topologyRepository.getRoutesByClient(client);
+        if(callback != null && callback.length()>0){
+            return new JSONPObject(callback, routes);
+        }
+        return routes;
 	}
 	
 	@GET
 	@Path("/clients")
     @Timed
-	public Collection<String> getClients(){
+	public Object getClients(@QueryParam("callback") String callback){
 		
 		logger.info("Getting all registered clients.");
-		
-		return topologyRepository.getClients();
+        Collection<String> clients = topologyRepository.getClients();
+        if(callback != null && callback.length()>0){
+            return new JSONPObject(callback, clients);
+        }
+        return clients;
 	}
     
 	@GET
 	@Path("/topic/{topic}")
     @Timed
-	public Collection<ExtendedRouteInfo> getRoutesByTopic(@PathParam("topic") String topic){
+	public Object getRoutesByTopic(@PathParam("topic") String topic, @QueryParam("callback") String callback){
 		
 		logger.info("Getting routes by topic: {}", topic);
-		
-		return topologyRepository.getRoutesByTopic(topic);
+
+        Collection<ExtendedRouteInfo> routes = topologyRepository.getRoutesByTopic(topic);
+        if(callback != null && callback.length()>0){
+            return new JSONPObject(callback, routes);
+        }
+        return routes;
 	}
 	
 	@GET
 	@Path("/topics")
     @Timed
-	public Collection<String> getTopics(){
+	public Object getTopics(@QueryParam("callback") String callback){
 		
 		logger.info("Getting all registered topics.");
-		
-		return topologyRepository.getTopics();
+        Collection<String> topics =  topologyRepository.getTopics();
+        if(callback != null && callback.length()>0){
+            return new JSONPObject(callback, topics);
+        }
+        return topics;
 	}
 	
 	@GET
     @Timed
-	public Collection<ExtendedRouteInfo> getRoutes(){
+	public Object getRoutes(@QueryParam("callback") String callback){
 		
 		logger.info("Getting routes");
-		
-		return topologyRepository.getRoutes();
+        Collection<ExtendedRouteInfo> routes =  topologyRepository.getRoutes();
+        if(callback != null && callback.length()>0){
+            return new JSONPObject(callback, routes);
+        }
+        return routes;
 	}
 	
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Timed
-	public String createRoute(ExtendedRouteInfo route){
+	public Object createRoute(ExtendedRouteInfo route, @QueryParam("callback") String callback){
 		
 		logger.info("Creating route: {}", route);
 		
 		topologyRepository.createRoute(route);
-		
+
+        String output = String.format("{ \"id\": \"%s\" }", route.getId());
+        if(callback != null && callback.length()>0){
+            return new JSONPObject(callback, output);
+        }
 		// JSON.parse will barf if you don't use double quotes
-		return String.format("{ \"id\": \"%s\" }", route.getId());
+		return output;
 	}
 	
 	@POST
 	@Path("/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Timed
-	public Response updateRoute(ExtendedRouteInfo route){
+	public Object updateRoute(ExtendedRouteInfo route, @QueryParam("callback") String callback){
 		
 		logger.info("Updating route: {}", route);
 		
 		topologyRepository.updateRoute(route);
-		
-		return Response.ok().build();
+
+        Response response = Response.ok().build();
+        if(callback != null && callback.length()>0){
+            return new JSONPObject(callback, response);
+        }
+        return response;
 	}
 	
 	@DELETE
 	@Path("/{id}")
     @Timed
-	public Response removeRoute(@PathParam("id") String id){
+	public Object removeRoute(@PathParam("id") String id, @QueryParam("callback") String callback){
 		
 		logger.info("Deleting route by Id: {}", id);
 		
 		topologyRepository.removeRoute(id);
-		
-		return Response.ok().build();
+
+        Response response = Response.ok().build();
+        if(callback != null && callback.length()>0){
+            return new JSONPObject(callback, response);
+        }
+        return response;
 	}
 }
