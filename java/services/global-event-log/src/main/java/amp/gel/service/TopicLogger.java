@@ -94,6 +94,7 @@ public class TopicLogger implements EnvelopeLogger, IRegistration,
 		datastoreWriter.initialize();
 		envelopeBus.register(this);
 
+        Thread.sleep(1500);
 		logger.info("Started TopicLogger.");
 	}
 
