@@ -11,7 +11,7 @@
 		<security:intercept-url pattern="/service/route/*" access="ROLE_ADMIN" />
 		<security:intercept-url pattern="/service/exchange/*" access="ROLE_ADMIN" />
 		<security:intercept-url pattern="/service/topology/**/*" access="ROLE_USER" />
-		<security:x509 subject-principal-regex="CN=(.*?)," />
+		<security:x509 subject-principal-regex="CN=(.*?)\." />
 	</security:http>
  	
 	<security:authentication-manager>
@@ -20,6 +20,8 @@
 		   		<security:user name="App01" authorities="ROLE_USER" />
 		   		<security:user name="App02" authorities="ROLE_USER" />
 		   		<security:user name="Admin" authorities="ROLE_USER, ROLE_ADMIN" />
+				<security:user name="jmclientbox" authorities="ROLE_USER, ROLE_ADMIN" />
+
 	       </security:user-service>
 	   </security:authentication-provider>
 	</security:authentication-manager>

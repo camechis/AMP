@@ -3,7 +3,7 @@ applicationContext: ['configuration/applicationContext.xml', 'configuration/inme
 useSpringSecurity: true
 
 logging:
-    level: INFO
+    level: DEBUG
     console:
         enabled: true
         threshold: DEBUG
@@ -15,9 +15,13 @@ http:
     rootPath: /service/*
     connectorType: nonblocking+ssl
     ssl:
-        keyStore: ./ssl/gts.jks
+        #keyStore: ./ssl/gts.jks
+        #keyStorePassword: password
+        #trustStore: ./ssl/gts.jks
+        #trustStorePassword: password
+        keyStore: /Users/jmccune/bprojx/_UTILITIES/ssl/server/jmserverbox.jks
         keyStorePassword: password
-        trustStore: ./ssl/gts.jks
+        trustStore: /Users/jmccune/bprojx/_UTILITIES/ssl/jmtruststore.jks
         trustStorePassword: password
         # When using Basic Auth, you will want these set to 'false',
         # and most certainly 'true' for x509 authentication.

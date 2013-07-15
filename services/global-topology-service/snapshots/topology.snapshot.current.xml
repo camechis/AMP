@@ -1,90 +1,142 @@
 <topology>
-  <timestamp>1365128706042</timestamp>
+  <timestamp>1373658464768</timestamp>
   <exchanges>
     <exchange>
-      <id>e65853ae-4075-4ef3-94d9-143d3c3e6622</id>
-      <description>Applications Exchange</description>
-      <exchangeType>direct</exchangeType>
-      <hostName>localhost</hostName>
-      <isAutoDelete>false</isAutoDelete>
-      <isDurable>false</isDurable>
-      <name>cmf.apps</name>
-      <port>5672</port>
+      <id>107e3808-3451-4bfc-980d-87995213d8ca</id>
+      <description>DocumentSearchRequestEvent</description>
+      <exchangeType>topic</exchangeType>
+      <hostName>jmrabbitbox.berico.com</hostName>
+      <isAutoDelete>true</isAutoDelete>
+      <isDurable>true</isDurable>
+      <name>DocumentSearchRequestEvent</name>
+      <port>5671</port>
       <queueName></queueName>
-      <routingKey>amq.direct</routingKey>
+      <routingKey>pegasus.core.search.event.DocumentSearchRequestEvent</routingKey>
       <virtualHost>/</virtualHost>
     </exchange>
     <exchange>
-      <id>18790620-d752-463e-b538-9fa3779d3c74</id>
-      <description>Security Exchange</description>
+      <id>4d13c4ba-bf55-4846-91f2-ba3c3027d906</id>
+      <description>FacetSearchResultEvent</description>
       <exchangeType>topic</exchangeType>
-      <hostName>localhost</hostName>
-      <isAutoDelete>false</isAutoDelete>
-      <isDurable>false</isDurable>
-      <name>cmf.security</name>
-      <port>5672</port>
-      <queueName>security-service</queueName>
-      <routingKey>cmf.security</routingKey>
-      <virtualHost>/</virtualHost>
-    </exchange>
-    <exchange>
-      <id>e65853ae-4075-4ef3-94d9-143d3c3e6628</id>
-      <description>Applications Exchange</description>
-      <exchangeType>topic</exchangeType>
-      <hostName>localhost</hostName>
-      <isAutoDelete>false</isAutoDelete>
-      <isDurable>false</isDurable>
-      <name>cmf.apps</name>
-      <port>5672</port>
-      <queueName>~UNIQUE~</queueName>
-      <routingKey>cmf.apps</routingKey>
-      <virtualHost>/</virtualHost>
-    </exchange>
-    <exchange>
-      <id>e65asdfadasdfasdf</id>
-      <description>Test Exchange</description>
-      <exchangeType>topic</exchangeType>
-      <hostName>localhost</hostName>
-      <isAutoDelete>false</isAutoDelete>
-      <isDurable>false</isDurable>
-      <name>cmf.apps</name>
-      <port>5672</port>
+      <hostName>jmrabbitbox.berico.com</hostName>
+      <isAutoDelete>true</isAutoDelete>
+      <isDurable>true</isDurable>
+      <name>FacetSearchResultEvent</name>
+      <port>5671</port>
       <queueName></queueName>
-      <routingKey>cmf.apps.test</routingKey>
+      <routingKey>pegasus.core.search.event.FacetSearchResultEvent</routingKey>
+      <virtualHost>/</virtualHost>
+    </exchange>
+    <exchange>
+      <id>d6e1557d-e49f-4f7f-bb8e-1cadd26624ae</id>
+      <description>pegasus.core.search.event.DocumentSearchResultEvent</description>
+      <exchangeType>topic</exchangeType>
+      <hostName>jmrabbitbox.berico.com</hostName>
+      <isAutoDelete>true</isAutoDelete>
+      <isDurable>true</isDurable>
+      <name>DocumentSearch</name>
+      <port>5671</port>
+      <queueName></queueName>
+      <routingKey>pegasus.core.search.event.DocumentSearchResultEvent</routingKey>
+      <virtualHost>/</virtualHost>
+    </exchange>
+    <exchange>
+      <id>2dd4f772-845c-4256-822d-512c88dd40cf</id>
+      <description>DocumentRequestEvent</description>
+      <exchangeType>topic</exchangeType>
+      <hostName>jmrabbitbox.berico.com</hostName>
+      <isAutoDelete>true</isAutoDelete>
+      <isDurable>true</isDurable>
+      <name>DocumentRequestEvent</name>
+      <port>5671</port>
+      <queueName></queueName>
+      <routingKey>pegasus.core.search.event.DocumentRequestEvent</routingKey>
+      <virtualHost>/</virtualHost>
+    </exchange>
+    <exchange>
+      <id>a203e28f-55f9-499b-bf90-dc80e82fe216</id>
+      <description>DocumentResultEvent</description>
+      <exchangeType>topic</exchangeType>
+      <hostName>jmrabbitbox.berico.com</hostName>
+      <isAutoDelete>true</isAutoDelete>
+      <isDurable>true</isDurable>
+      <name>DocumentSearchResultEvent</name>
+      <port>5671</port>
+      <queueName></queueName>
+      <routingKey>pegasus.core.search.event.DocumentResultEvent</routingKey>
       <virtualHost>/</virtualHost>
     </exchange>
   </exchanges>
   <routes>
     <route>
-      <id>f9795b51-b10a-4266-a0d5-3da341180ee2</id>
-      <description>Security Routes</description>
+      <id>FacetSearchResultRoute</id>
+      <description>FacetSearchResultRoute</description>
       <clients>
-        <string>App01</string>
-        <string>app01</string>
-        <string>App02</string>
-        <string>Topology Client</string>
+        <string>jmclientbox</string>
+        <string>jmserverbox</string>
+        <string>jmrabbitbox</string>
       </clients>
       <topics>
-        <string>AccessEvent</string>
-        <string>cmf.security.AccessEvent</string>
+        <string>pegasus.core.search.event.FacetSearchResultEvent</string>
       </topics>
-      <consumerExchangeId>18790620-d752-463e-b538-9fa3779d3c74</consumerExchangeId>
-      <producerExchangeId>18790620-d752-463e-b538-9fa3779d3c74</producerExchangeId>
+      <consumerExchangeId>4d13c4ba-bf55-4846-91f2-ba3c3027d906</consumerExchangeId>
+      <producerExchangeId>4d13c4ba-bf55-4846-91f2-ba3c3027d906</producerExchangeId>
     </route>
     <route>
-      <id>f9795b51-b10a-4266-a0d5-3da341180e34</id>
-      <description>Security Routes</description>
+      <id>DocumentRequestRoute</id>
+      <description>DocumentRequestRoute</description>
       <clients>
-        <string>app01</string>
-        <string>App02</string>
-        <string>Topology Client</string>
+        <string>jmclientbox</string>
+        <string>jmserverbox</string>
+        <string>jmrabbitbox</string>
       </clients>
       <topics>
-        <string>UserNotification</string>
-        <string>amp.examples.notifier.core.UserNotification</string>
+        <string>pegasus.core.search.event.DocumentRequestEvent</string>
       </topics>
-      <consumerExchangeId>e65853ae-4075-4ef3-94d9-143d3c3e6622</consumerExchangeId>
-      <producerExchangeId>e65853ae-4075-4ef3-94d9-143d3c3e6622</producerExchangeId>
+      <consumerExchangeId>2dd4f772-845c-4256-822d-512c88dd40cf</consumerExchangeId>
+      <producerExchangeId>2dd4f772-845c-4256-822d-512c88dd40cf</producerExchangeId>
+    </route>
+    <route>
+      <id>DocumentSearchRoute</id>
+      <description>DocumentResultRoute</description>
+      <clients>
+        <string>jmclientbox</string>
+        <string>jmserverbox</string>
+        <string>jmrabbitbox</string>
+      </clients>
+      <topics>
+        <string>pegasus.core.search.event.DocumentResultEvent</string>
+      </topics>
+      <consumerExchangeId>a203e28f-55f9-499b-bf90-dc80e82fe216</consumerExchangeId>
+      <producerExchangeId>a203e28f-55f9-499b-bf90-dc80e82fe216</producerExchangeId>
+    </route>
+    <route>
+      <id>DocumentSearchRequestRoute</id>
+      <description>DocumentSearchRequestRoute</description>
+      <clients>
+        <string>jmclientbox</string>
+        <string>jmserverbox</string>
+        <string>jmrabbitbox</string>
+      </clients>
+      <topics>
+        <string>pegasus.core.search.event.DocumentSearchRequestEvent</string>
+      </topics>
+      <consumerExchangeId>107e3808-3451-4bfc-980d-87995213d8ca</consumerExchangeId>
+      <producerExchangeId>107e3808-3451-4bfc-980d-87995213d8ca</producerExchangeId>
+    </route>
+    <route>
+      <id>DocumentSearchResult</id>
+      <description>DocumentSearchResult</description>
+      <clients>
+        <string>jmclientbox</string>
+        <string>jmserverbox</string>
+        <string>jmrabbitbox</string>
+      </clients>
+      <topics>
+        <string>pegasus.core.search.event.DocumentSearchResultEvent</string>
+      </topics>
+      <consumerExchangeId>d6e1557d-e49f-4f7f-bb8e-1cadd26624ae</consumerExchangeId>
+      <producerExchangeId>d6e1557d-e49f-4f7f-bb8e-1cadd26624ae</producerExchangeId>
     </route>
   </routes>
 </topology>
