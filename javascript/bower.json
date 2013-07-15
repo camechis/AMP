@@ -1,0 +1,32 @@
+{
+  "name": "ampjs",
+  "version": "0.0.5",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "components"
+  ],
+  "main":"public/javascripts/src/app.js",
+  "dependencies":{
+    "jquery": "2.0.2",
+    "jshashes": "*",
+    "sockjs": "0.3.4",
+    "flog": "0.0.1",
+    "modernizr": "2.6.2",
+    "node-uuid": "1.3.3",
+    "requirejs-domready": "2.0.1",
+    "requirejs-i18n": "2.0.2",
+    "stomp-websocket": "git://github.com/jmesnil/stomp-websocket.git",
+    "underscore-amd": "1.4.4",
+    "node-lru-cache": "git://github.com/Berico-Technologies/node-lru-cache"
+  },
+  "ignore":[
+    "assets/",
+    "test/",
+    "views/",
+    "karma.conf.js",
+    "mimosa-config.coffee",
+    ".bowerrc",
+    "public/javascripts/vendor"
+  ]
+}
