@@ -1,9 +1,9 @@
-applicationContext: ['configuration/applicationContext.xml', 'configuration/inmemContext.xml', 'configuration/x509SecurityContext.xml', 'configuration/snapshotContext.xml']
+applicationContext: ['configuration/applicationContext.xml', 'configuration/inmemContext.xml', 'configuration/x509SecurityContext.xml', 'configuration/snapshotContext.xml', 'configuration/configModifications.xml']
 
 useSpringSecurity: true
 
 logging:
-    level: DEBUG
+    level: INFO
     console:
         enabled: true
         threshold: DEBUG
@@ -11,18 +11,14 @@ logging:
 http:
     port: 15677
     adminUsername: admin
-    adminPassword: admin123
+    adminPassword: ENCRYPTED:5A234BD7EF879B6F412BA0AA3BCD0775F5AA1F07102DB7A9E2B2
     rootPath: /service/*
     connectorType: nonblocking+ssl
     ssl:
-        #keyStore: ./ssl/gts.jks
-        #keyStorePassword: password
-        #trustStore: ./ssl/gts.jks
-        #trustStorePassword: password
         keyStore: /Users/jmccune/bprojx/_UTILITIES/ssl/server/jmserverbox.jks
-        keyStorePassword: password
+        keyStorePassword: ENCRYPTED:4B96B58181EEBA87B69729922F98071EEC9E7D1FBC0D89D8EB2D
         trustStore: /Users/jmccune/bprojx/_UTILITIES/ssl/jmtruststore.jks
-        trustStorePassword: password
+        trustStorePassword: ENCRYPTED:520000DC111DA85E0567D9BB4BF536302F0001D524DC2BC8DF2E
         # When using Basic Auth, you will want these set to 'false',
         # and most certainly 'true' for x509 authentication.
         needClientAuth: true
