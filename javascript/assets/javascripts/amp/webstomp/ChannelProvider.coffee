@@ -8,12 +8,10 @@ define [
 (Stomp, Logger, SockJS, _, $)->
   class ChannelProvider
     @DefaultConnectionStrategy = (exchange) ->
-      return "http://#{exchange.hostName}:#{exchange.port}#{exchange.vHost}"
+      return "https://#{exchange.hostName}:#{exchange.port}#{exchange.vHost}"
 
     constructor: (config) ->
       config = config ? {}
-      @username = if _.isString config.username then config.username else "guest"
-      @password = if _.isString config.password then config.password else "guest"
       @connectionPool = {}
       @connectionStrategy = config.connectionStrategy ? ChannelProvider.DefaultConnectionStrategy
       Logger.log.info "ChannelProvider.ctor >> instantiated."
@@ -59,7 +57,7 @@ define [
       client.heartbeat =
         outgoing: 0
         incoming: 0
-      client.connect(@username, @password,
+      client.connect("guest","guest",
         ->
           Logger.log.info "ChannelProvider._createConnection >> successfully connected"
           deferred.resolve client, false

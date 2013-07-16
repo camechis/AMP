@@ -9,6 +9,8 @@ define [
         #and it *should* create its dummy topic since the gts route lookup should fail
         shortBus = ShortBus.getBus({
           publishTopicOverride: "my.cool.topic.123"
+          hostname: "gts.archnet.mil"
+          port: 15677
           })
         shortBus.subscribe({
           getEventType: ->
