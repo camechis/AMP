@@ -10,7 +10,7 @@ define [
 ],
 (uuid, Logger, RoutingInfo, RouteInfo, Exchange, _,EnvelopeHeaderConstants, $)->
   class SimpleTopologyService
-    constructor: (@clientProfile=uuid.v4(), @name='cmf.simple.exchange', @hostname='127.0.0.1', @virtualHost='/stomp', @port=15674, @QUEUE_NUMBER=0) ->
+    constructor: (@clientProfile=uuid.v4(), @name='cmf.simple.exchange', @hostname='127.0.0.1', @virtualHost='/stomp', @port=15678, @QUEUE_NUMBER=0) ->
 
 
     getRoutingInfo: (headers) ->

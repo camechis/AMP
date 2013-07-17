@@ -103,3 +103,6 @@ java/examples/lib/jgoodies-src/
 java/examples/lib/net/miginfocom/
 java/cmf.bus.iml
 java/examples/cmf.examples.iml
+managed
+/javascript/coverage
+/javascript/test-results.xml

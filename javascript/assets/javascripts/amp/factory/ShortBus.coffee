@@ -30,13 +30,11 @@ define [
       config = {} if !_.isObject config
       hostname = if _.isString config.hostname then config.hostname else 'localhost'
       port= if _.isNumber config.port then config.port else 15677
-      username= if _.isString config.username then config.username else 'app01'
-      password= if _.isString config.password then config.password else 'password'
       publishTopicOverride = if _.isString config.publishTopicOverride then config.publishTopicOverride else null
 
-      retriever = new RoutingInfoRetriever(username, password, hostname, port, ShortBus.ROUTING_INFO_URL)
+      retriever = new RoutingInfoRetriever(hostname, port, ShortBus.ROUTING_INFO_URL)
 
-      fallbackProvider = new DefaultApplicationExchangeProvider(hostname,port, ShortBus.ROUTE_CREATE_URL)
+      fallbackProvider = new DefaultApplicationExchangeProvider(hostname,port, ShortBus.ROUTE_CREATE_URL, undefined, undefined, 'rabbit02.archnet.mil')
 
       globalTopologyService = new GlobalTopologyService(retriever, null, fallbackProvider)
 

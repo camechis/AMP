@@ -14,7 +14,7 @@ define [
       createRoute: (exchange)->
         deferred = $.Deferred()
         req = $.ajax
-          url: "http://#{@managementHostname}:#{@managementPort}#{@managementServiceUrl}"
+          url: "https://#{@managementHostname}:#{@managementPort}#{@managementServiceUrl}"
           dataType: 'jsonp'
           data: data: JSON.stringify exchange
         req.done (data, textStatus, jqXHR)->

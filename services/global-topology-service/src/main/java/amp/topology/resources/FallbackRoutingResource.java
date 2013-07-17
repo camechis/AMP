@@ -26,7 +26,6 @@ import javax.ws.rs.core.Response;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.IOException;
 import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -44,7 +43,7 @@ public class FallbackRoutingResource {
         @Override
         public String deserialize(JsonParser jsonParser,
           DeserializationContext deserializationContext) throws IOException {
-            return URLEncoder.encode(jsonParser.getValueAsString(), StandardCharsets.UTF_8.toString());
+            return URLEncoder.encode(jsonParser.getValueAsString(), "UTF-8");
         }
     }
     /*
