@@ -27,8 +27,8 @@ logging:
 http:
     connectorType: nonblocking+ssl
     ssl:
-        keyStore: ./keys/rabbit02.jks
-        keyStorePassword: Berico123
+        keyStore: ./keys/anubis.johnruiz.com.jks
+        keyStorePassword: 1qaz@WSX3edc$RFV
     port: 15678
     adminPort: 8082
     adminUsername: admin
