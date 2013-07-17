@@ -20,10 +20,14 @@
         <property name="derefLinkFlag" value="true" />
     </bean>
 
-    <bean id="authoritiesPopulator" class="org.springframework.security.ldap.userdetails.DefaultLdapAuthoritiesPopulator">
+    <bean id="authoritiesPopulator" class="amp.anubis.ldap.IncludeDomainUsersLdapAuthoritiesPopulator">
         <constructor-arg ref="johnruizLdapServer" />
         <constructor-arg value="cn=Users" />
         <property name="searchSubtree" value="true" />
+        <property name="rolePrefix" value="" />
+        <property name="convertToUpperCase" value="false" />
+        <!-- see: http://stackoverflow.com/questions/5163597/is-there-a-spring-security-defaultldapauthoritiespopulator-implementation-that-s -->
+        <property name="groupSearchFilter" value="(&amp;(objectClass=group)(member:1.2.840.113556.1.4.1941:={0}))" />
     </bean>
 
     <bean id="ldapUserDetailsService" class="org.springframework.security.ldap.userdetails.LdapUserDetailsService">
