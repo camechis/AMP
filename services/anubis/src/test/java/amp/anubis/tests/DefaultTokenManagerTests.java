@@ -9,8 +9,6 @@ import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.nio.file.attribute.UserDefinedFileAttributeView;
-
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
