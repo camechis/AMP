@@ -10,13 +10,14 @@ define [
     @DefaultConnectionStrategy = (exchange) ->
       return "https://#{exchange.hostName}:#{exchange.port}#{exchange.vHost}"
 
-    constructor: (config) ->
-      config = config ? {}
-      @connectionPool = {}
-      @connectionStrategy = config.connectionStrategy ? ChannelProvider.DefaultConnectionStrategy
+    connectionPool: {}
+    constructor: (config={}) ->
+
+      {@connectionStrategy, @connectionFactory} = config
+      unless _.isFunction @connectionStrategy then @connectionStrategy = ChannelProvider.DefaultConnectionStrategy
+      unless _.isFunction @connectionFactory then @connectionFactory = SockJS
       Logger.log.info "ChannelProvider.ctor >> instantiated."
-      @connectionFactory = if _.isFunction config.connectionFactory then config.connectionFactory else SockJS
-      Logger.log.info "ChannelProvider.ctor >> using default connection factory" unless _.isFunction config.connectionFactory
+
 
     getConnection: (exchange) ->
       deferred = $.Deferred()
