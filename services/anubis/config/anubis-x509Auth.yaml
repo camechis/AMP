@@ -1,4 +1,4 @@
-applicationContext: ['config/applicationContext.xml', 'config/x509AuthSecurityContext.xml']
+applicationContext: ['config/ldapUserDetailsContext.xml', 'config/applicationContext.xml', 'config/x509AuthSecurityContext.xml']
 
 useSpringSecurity: true
 
