@@ -1,4 +1,4 @@
-applicationContext: ['config/applicationContext.xml', 'config/spnegoAuthSecurityContext.xml']
+applicationContext: ['config/ldapUserDetailsContext.xml', 'config/applicationContext.xml', 'config/spnegoAuthSecurityContext.xml']
 
 useSpringSecurity: true
 

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:c="http://www.springframework.org/schema/c"
+       xmlns:sec="http://www.springframework.org/schema/security"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+
+
+    <sec:ldap-server id="ampereLdapServer"
+                     url="ldap://ampere.berico.us:389/DC=ampere,DC=berico,DC=us"
+                     manager-dn="CN=LDAP Bind Account,DC=ampere,DC=berico,DC=us"
+                     manager-password="1qaz@WSX3edc$RFV" />
+
+    <bean id="filterBasedLdapUserSearch" class="amp.anubis.ldap.NoSpacesFilterBasedLdapUserSearch">
+        <constructor-arg value="cn=Users" />
+        <constructor-arg value="(distinguishedName={0})" />
+        <constructor-arg ref="ampereLdapServer" />
+        <property name="searchSubtree" value="true" />
+        <property name="derefLinkFlag" value="true" />
+    </bean>
+
+    <bean id="authoritiesPopulator" class="org.springframework.security.ldap.userdetails.DefaultLdapAuthoritiesPopulator">
+        <constructor-arg ref="ampereLdapServer" />
+        <constructor-arg value="cn=Users" />
+        <property name="searchSubtree" value="true" />
+    </bean>
+
+    <bean id="ldapUserDetailsService" class="org.springframework.security.ldap.userdetails.LdapUserDetailsService">
+        <constructor-arg ref="filterBasedLdapUserSearch" />
+        <constructor-arg ref="authoritiesPopulator"/>
+    </bean>
+
+    <bean id="adAuthenticationProvider"
+          class="org.springframework.security.ldap.authentication.ad.ActiveDirectoryLdapAuthenticationProvider">
+        <constructor-arg value="ampere.berico.us" />
+        <constructor-arg value="ldap://ampere.berico.us/" />
+    </bean>
+
+</beans>

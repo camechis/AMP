@@ -1,5 +1,6 @@
-package amp.anubis.resources;
+package amp.anubis.services;
 
+import amp.anubis.core.AttributedNamedToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -7,44 +8,44 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.ldap.authentication.ad.ActiveDirectoryLdapAuthenticationProvider;
 
 import java.util.Collection;
 
-public class DummyRabbitAccessManager implements IRabbitAccessManager {
+public class BasicAuthRabbitAccessManager implements IRabbitAccessManager {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DummyRabbitAccessManager.class);
+    private static final Logger LOG = LoggerFactory.getLogger(BasicAuthRabbitAccessManager.class);
 
     private AuthenticationProvider _authProvider;
 
 
-    public DummyRabbitAccessManager(AuthenticationProvider authProvider) {
+    public BasicAuthRabbitAccessManager(AuthenticationProvider authProvider) {
 
         _authProvider = authProvider;
     }
 
 
-    public String authorizeUser(String username, String password) {
+    public AccessLevel authorizeUser(AttributedNamedToken authzToken) {
 
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
+                authzToken.getIdentity(),
+                authzToken.getToken());
+
         Authentication result = _authProvider.authenticate(token);
 
-        this.logUser(username, result.getAuthorities());
-        return result.isAuthenticated() ? "allow administrator management" : "deny";
+        this.logUser(authzToken.getIdentity(), result.getAuthorities());
+        return result.isAuthenticated() ? AccessLevel.ADMIN : AccessLevel.NONE;
     }
 
-    @Override
-    public String authorizeVHost(UserDetails userDetails, String vhost) {
+    public AccessLevel authorizeVHost(UserDetails userDetails, String vhost) {
 
         this.logUser(userDetails);
-        return "allow";
+        return AccessLevel.USER;
     }
 
-    @Override
-    public String authorizeResource(UserDetails userDetails, String vhost, String resource, String name, String permission) {
+    public AccessLevel authorizeResource(UserDetails userDetails, String vhost, String resource, String name, String permission) {
 
         this.logUser(userDetails);
-        return "allow";
+        return AccessLevel.USER;
     }
 
 

@@ -6,11 +6,10 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
 
+
     <security:http use-expressions="true">
-        <security:intercept-url pattern="/anubis/manage/**" access="ROLE_ADMIN" />
+        <security:intercept-url pattern="/anubis/identity/**" access="hasRole('ROLE_DOMAIN USERS')" />
         <security:intercept-url pattern="/anubis/rabbitmq/**" access="permitAll" />
-        <security:intercept-url pattern="/anubis/**" access="ROLE_USER" />
-        <!-- <security:intercept-url pattern="/anubis/info/*" access="ROLE_USER" /> -->
         <security:http-basic />
     </security:http>
 
@@ -23,5 +22,6 @@
             </security:user-service>
         </security:authentication-provider>
     </security:authentication-manager>
+
 
 </beans>

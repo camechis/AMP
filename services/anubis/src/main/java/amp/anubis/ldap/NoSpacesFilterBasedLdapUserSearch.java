@@ -28,8 +28,12 @@ public class NoSpacesFilterBasedLdapUserSearch extends FilterBasedLdapUserSearch
             buffer.append(",");
         }
 
+
         // due to the way I loop, there's an extra comma which we need to remove
-        buffer.deleteCharAt(buffer.length() - 1);
+        // but only if we had tokens (not a garauntee),
+        if (tokens.length > 0) {
+            buffer.deleteCharAt(buffer.length() - 1);
+        }
 
         // return the result of the parent class with the new de-spaced string
         return super.searchForUser(buffer.toString());
