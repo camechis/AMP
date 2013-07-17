@@ -21,7 +21,7 @@ import javax.ws.rs.core.MediaType;
 @Produces(MediaType.APPLICATION_JSON)
 public class IdentityResource {
 
-    private static final Logger LOG = LoggerFactory.getLogger(IdentityResource.class);
+    private static final Logger Log = LoggerFactory.getLogger(IdentityResource.class);
 
     private ITokenManager _tokenManager;
 
@@ -44,6 +44,8 @@ public class IdentityResource {
             @QueryParam("callback") String callback)
             throws AnubisException {
 
+        Log.debug("Received a request for a NamedToken from {}", requestor.getUsername());
+
         // use the token manager to get a token for the requestor
         NamedToken token = _tokenManager.generateToken(requestor);
 
@@ -59,6 +61,7 @@ public class IdentityResource {
     public Object buildReturnObject(Object unwrappedObject, String maybeCallback) {
 
         if ( (null != maybeCallback) && (maybeCallback.length() > 0) ) {
+            Log.debug("Returning JSONPObject instead of naked object.");
             return new JSONPObject(maybeCallback, unwrappedObject);
         }
         else {

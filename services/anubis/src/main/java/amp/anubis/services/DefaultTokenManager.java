@@ -4,6 +4,8 @@ import amp.anubis.core.NamedToken;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import org.apache.commons.codec.binary.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.security.SecureRandom;
@@ -13,7 +15,9 @@ import java.util.concurrent.TimeUnit;
 
 public class DefaultTokenManager implements ITokenManager {
 
-    private static final int DEFAULT_PASSWORD_SIZE = 128;
+    private static final Logger Log = LoggerFactory.getLogger(DefaultTokenManager.class);
+
+    private static final int DEFAULT_PASSWORD_SIZE = 16;
     private static final int DEFAULT_CACHE_ACCESS_TIMEOUT_DURATION = 10;
     private static final TimeUnit DEFAULT_CACHE_ACCESS_TIMEOUT_UNITS = TimeUnit.MINUTES;
     private static final int DEFAULT_CACHE_ABSOLUTE_EXPIRATION_DURATION = 8;
@@ -59,20 +63,24 @@ public class DefaultTokenManager implements ITokenManager {
 
         // the actor for whom we're generating a token
         String identity = requestor.getUsername();
+        Log.debug("Now generating a {} byte token for {}", _passwordSize, identity);
 
         // the 128 byte password we're going to generate
         byte[] password = new byte[_passwordSize];
 
-        // generate a secure, random 128-byte password
+        // generate a secure, random 128-bit (16 byte) password
         SecureRandom passwordGenerator = new SecureRandom();
-        passwordGenerator.setSeed(passwordGenerator.generateSeed(128));
+        passwordGenerator.setSeed(passwordGenerator.generateSeed(16));
         passwordGenerator.nextBytes(password);
 
+        Log.debug("Token successfully generated.  Encoding into Base64.");
         // use the identity and password to create a named token
         NamedToken token = new NamedToken(identity, Base64.encodeBase64String(password));
+        Log.debug("Token successfully Base64 encoded");
 
         // add the token to the user's list of tokens
         this.cacheToken(token);
+        Log.debug("Token added to authentication cache");
 
         return token;
     }
@@ -84,10 +92,13 @@ public class DefaultTokenManager implements ITokenManager {
         if (this.isNullOrEmpty(token))
             throw new IllegalArgumentException("Cannot verify a null or empty token.");
 
+        // get the identity of the token
+        String identity = token.getIdentity();
+        Log.debug("Verifying a token from {}", identity);
 
         boolean verified = false;
 
-        Collection<String> tokens = _tokenCache.getIfPresent(token.getIdentity());
+        Collection<String> tokens = _tokenCache.getIfPresent(identity);
 
         if (null != tokens) {
             if (tokens.contains(token.getToken())) {
@@ -95,6 +106,7 @@ public class DefaultTokenManager implements ITokenManager {
             }
         }
 
+        Log.debug("Was user '{}' token valid? {}", verified);
         return verified;
     }
 

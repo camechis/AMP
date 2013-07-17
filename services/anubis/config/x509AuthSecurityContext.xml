@@ -9,8 +9,9 @@
 
     <sec:http use-expressions="true">
         <sec:x509 subject-principal-regex="(.*)" />
-        <sec:intercept-url pattern="/anubis/identity/**" access="hasRole('ROLE_DOMAIN USERS')" />
+        <sec:intercept-url pattern="/anubis/identity/**" access="hasRole('ROLE_DOMAIN ADMINS')" />
         <sec:intercept-url pattern="/anubis/rabbitmq/**" access="permitAll" />
+        <sec:intercept-url pattern="/anubis/**" access="permitAll" />
     </sec:http>
 
     <sec:authentication-manager>

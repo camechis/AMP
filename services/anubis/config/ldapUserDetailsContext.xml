@@ -7,21 +7,21 @@
 		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
 
 
-    <sec:ldap-server id="ampereLdapServer"
-                     url="ldap://ampere.berico.us:389/DC=ampere,DC=berico,DC=us"
-                     manager-dn="CN=LDAP Bind Account,DC=ampere,DC=berico,DC=us"
+    <sec:ldap-server id="johnruizLdapServer"
+                     url="ldap://dc01.johnruiz.com:389/DC=johnruiz,DC=com"
+                     manager-dn="CN=LDAP Bind Account,CN=Users,DC=johnruiz,DC=com"
                      manager-password="1qaz@WSX3edc$RFV" />
 
     <bean id="filterBasedLdapUserSearch" class="amp.anubis.ldap.NoSpacesFilterBasedLdapUserSearch">
         <constructor-arg value="cn=Users" />
         <constructor-arg value="(distinguishedName={0})" />
-        <constructor-arg ref="ampereLdapServer" />
+        <constructor-arg ref="johnruizLdapServer" />
         <property name="searchSubtree" value="true" />
         <property name="derefLinkFlag" value="true" />
     </bean>
 
     <bean id="authoritiesPopulator" class="org.springframework.security.ldap.userdetails.DefaultLdapAuthoritiesPopulator">
-        <constructor-arg ref="ampereLdapServer" />
+        <constructor-arg ref="johnruizLdapServer" />
         <constructor-arg value="cn=Users" />
         <property name="searchSubtree" value="true" />
     </bean>
@@ -33,8 +33,8 @@
 
     <bean id="adAuthenticationProvider"
           class="org.springframework.security.ldap.authentication.ad.ActiveDirectoryLdapAuthenticationProvider">
-        <constructor-arg value="ampere.berico.us" />
-        <constructor-arg value="ldap://ampere.berico.us/" />
+        <constructor-arg value="johnruiz.com" />
+        <constructor-arg value="ldap://dc01.johnruiz.com/" />
     </bean>
 
 </beans>

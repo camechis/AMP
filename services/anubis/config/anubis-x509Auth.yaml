@@ -28,7 +28,11 @@ http:
     connectorType: nonblocking+ssl
     ssl:
         keyStore: ./keys/anubis.johnruiz.com.jks
-        keyStorePassword: 1qaz@WSX3edc$RFV
+        keyStorePassword: "1qaz@WSX3edc$RFV"
+        trustStore: ./keys/trust.johnruiz.com.jks
+        trustStorePassword: "1qaz@WSX3edc$RFV"
+        wantClientAuth: true
+        needClientAuth: true
     port: 15678
     adminPort: 8082
     adminUsername: admin
