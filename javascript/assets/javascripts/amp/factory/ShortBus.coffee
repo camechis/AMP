@@ -16,6 +16,7 @@ define [
 
   class HeaderOverrider
     constructror: (@override)->
+
     processOutbound: (context)=>
       env = new EnvelopeHelper(context.getEnvelope())
       env.setMessageType @override
@@ -23,22 +24,48 @@ define [
       Logger.log.info "HeaderOverrider.processOutbound >> overrode type and topic headers to #{@override}"
 
   class ShortBus
-    @ROUTING_INFO_URL = "/service/topology/get-routing-info"
-    @ROUTE_CREATE_URL = '/service/fallbackRouting/routeCreator'
 
-    @getBus: (config)->
-      config = {} if !_.isObject config
-      hostname = if _.isString config.hostname then config.hostname else 'localhost'
-      port= if _.isNumber config.port then config.port else 15677
-      publishTopicOverride = if _.isString config.publishTopicOverride then config.publishTopicOverride else null
+    @getBus: (config={})->
+      {
+        routingInfoHostname, routingInfoPort, routingInfoServiceUrl, routingInfoConnectionStrategy,
+        exchangeProviderHostname, exchangeProviderPort, exchangeProviderServiceUrl, exchangeProviderConnectionStrategy,
+        fallbackTopoClientProfile, fallbackTopoExchangeName, fallbackTopoExchangeHostname, fallbackTopoExchangeVhost, fallbackTopoExchangePort,
+        gtsCacheExpiryTime, gtsExchangeOverrides,
+        channelProviderConnectionStrategy, channelProviderConnectionFactory,
+        publishTopicOverride
+      } = config
 
-      retriever = new RoutingInfoRetriever(hostname, port, ShortBus.ROUTING_INFO_URL)
 
-      fallbackProvider = new DefaultApplicationExchangeProvider(hostname,port, ShortBus.ROUTE_CREATE_URL, undefined, undefined, 'rabbit02.archnet.mil')
+      routingInfoRetriever = new RoutingInfoRetriever({
+        hostname: routingInfoHostname
+        port: routingInfoPort
+        serviceUrlExpression: routingInfoServiceUrl
+        connectionStrategy: routingInfoConnectionStrategy
+      })
 
-      globalTopologyService = new GlobalTopologyService(retriever, null, fallbackProvider)
+      fallbackProvider = new DefaultApplicationExchangeProvider({
+        managementHostname: exchangeProviderHostname
+        managementPort: exchangeProviderPort
+        managementServiceUrl: exchangeProviderServiceUrl
+        connectionStrategy: exchangeProviderConnectionStrategy
+        clientProfile: fallbackTopoClientProfile
+        exchangeName: fallbackTopoExchangeName
+        exchangeHostname: fallbackTopoExchangeHostname
+        exchangeVhost: fallbackTopoExchangeVhost
+        exchangePort: fallbackTopoExchangePort
+        })
 
-      channelProvider = new ChannelProvider()
+      globalTopologyService = new GlobalTopologyService({
+        routingInfoRetriever: routingInfoRetriever
+        cacheExpiryTime: gtsCacheExpiryTime
+        fallbackProvider: fallbackProvider
+        exchangeOverrides: gtsExchangeOverrides
+        })
+
+      channelProvider = new ChannelProvider({
+        connectionStrategy: channelProviderConnectionStrategy
+        connectionFactory: channelProviderConnectionFactory
+        })
 
       transportProvider = TransportProviderFactory.getTransportProvider({
         topologyService: globalTopologyService
