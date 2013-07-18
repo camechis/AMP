@@ -15,6 +15,24 @@ import static org.mockito.Mockito.*;
 @RunWith(Enclosed.class)
 public class DefaultTokenManagerTests {
 
+    @Test
+    public void should_successfully_verify_newly_generated_token() {
+
+        // create
+        DefaultTokenManager tokenManager = new DefaultTokenManager();
+        UserDetails mockUser = mock(UserDetails.class);
+
+        // setup
+        when(mockUser.getUsername()).thenReturn("CN=Test User,CN=Users,DC=example,DC=com");
+
+        NamedToken generatedToken = tokenManager.generateToken(mockUser);
+        boolean shouldBeTrue = tokenManager.verifyToken(generatedToken);
+
+        assertTrue(shouldBeTrue);
+    }
+
+
+
     public static class GenerateTokenTests {
 
         @Test(expected = IllegalArgumentException.class)
@@ -153,6 +171,39 @@ public class DefaultTokenManagerTests {
 
             // assert
             fail("Should have thrown an IllegalArgumentException but didn't.");
+        }
+    }
+
+
+
+    public static class SnipTokenTests {
+
+        @Test
+        public void snipped_token_should_be_empty_if_token_not_long_enough() {
+
+            // create
+            DefaultTokenManager tokenManager = new DefaultTokenManager();
+            String fakeToken = "cat";
+
+            // test
+            String snippedToken = tokenManager.snipToken(fakeToken, 4);
+
+            // assert
+            assertEquals("", snippedToken);
+        }
+
+        @Test
+        public void snipped_token_should_be_length_passed_to_method() {
+
+            // create
+            DefaultTokenManager tokenManager = new DefaultTokenManager();
+            String fakeToken = "+OeP87G0qJ4jO4JWyLsgOA==";
+
+            // test
+            String snippedToken = tokenManager.snipToken(fakeToken, 4);
+
+            // assert
+            assertEquals("OA==", snippedToken);
         }
     }
 }

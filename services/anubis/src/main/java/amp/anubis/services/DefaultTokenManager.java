@@ -3,6 +3,8 @@ package amp.anubis.services;
 import amp.anubis.core.NamedToken;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.RemovalListener;
+import com.google.common.cache.RemovalNotification;
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +25,7 @@ public class DefaultTokenManager implements ITokenManager {
     private static final int DEFAULT_CACHE_ABSOLUTE_EXPIRATION_DURATION = 8;
     private static final TimeUnit DEFAULT_CACHE_ABSOLUTE_EXPIRATION_UNITS = TimeUnit.HOURS;
 
-    private Cache<String, Collection<String>> _tokenCache;
+    private Cache<String, String> _tokenCache;
     private int _passwordSize;
     private int _cacheAccessTimeoutDuration;
     private TimeUnit _cacheAccessTimeoutUnits;
@@ -49,6 +51,13 @@ public class DefaultTokenManager implements ITokenManager {
         _tokenCache = CacheBuilder.newBuilder()
                 .expireAfterAccess(_cacheAccessTimeoutDuration, _cacheAccessTimeoutUnits)
                 .expireAfterWrite(_cacheAbsoluteExpirationDuration, _cacheAbsoluteExpirationUnits)
+                .removalListener(new RemovalListener<String, String>() {
+                    @Override
+                    public void onRemoval(RemovalNotification<String, String> removalNotification) {
+                        String snippedToken = snipToken(removalNotification.getKey(), 4);
+                        Log.info("Token ending in {} removed for user {}.", snippedToken, removalNotification.getValue());
+                    }
+                })
                 .build();
     }
 
@@ -65,22 +74,33 @@ public class DefaultTokenManager implements ITokenManager {
         String identity = requestor.getUsername();
         Log.debug("Now generating a {} byte token for {}", _passwordSize, identity);
 
-        // the 128 byte password we're going to generate
-        byte[] password = new byte[_passwordSize];
+        NamedToken token;
+        boolean badToken = true;
 
-        // generate a secure, random 128-bit (16 byte) password
-        SecureRandom passwordGenerator = new SecureRandom();
-        passwordGenerator.setSeed(passwordGenerator.generateSeed(16));
-        passwordGenerator.nextBytes(password);
+        // it's possible for us to "randomly" generate a password that's already in use,
+        // so let's generate passwords in a loop until we generate one that's unused.
+        do {
+            // the 128 byte password we're going to generate
+            byte[] password = new byte[_passwordSize];
 
-        Log.debug("Token successfully generated.  Encoding into Base64.");
-        // use the identity and password to create a named token
-        NamedToken token = new NamedToken(identity, Base64.encodeBase64String(password));
-        Log.debug("Token successfully Base64 encoded");
+            // generate a secure, random 128-bit (16 byte) password
+            SecureRandom passwordGenerator = new SecureRandom();
+            passwordGenerator.setSeed(passwordGenerator.generateSeed(16));
+            passwordGenerator.nextBytes(password);
+
+            Log.debug("Token successfully generated.  Encoding into Base64.");
+            // use the identity and password to create a named token
+            token = new NamedToken(identity, Base64.encodeBase64String(password));
+            Log.debug("Token successfully Base64 encoded");
+
+            // if this token is already in use, it's bad
+            badToken = this.verifyToken(token);
+        }
+        while (badToken);
 
         // add the token to the user's list of tokens
         this.cacheToken(token);
-        Log.debug("Token added to authentication cache");
+        Log.debug("Token ending {} added to authentication cache for {}.", snipToken(token.getToken(), 4), identity);
 
         return token;
     }
@@ -92,43 +112,30 @@ public class DefaultTokenManager implements ITokenManager {
         if (this.isNullOrEmpty(token))
             throw new IllegalArgumentException("Cannot verify a null or empty token.");
 
-        // get the identity of the token
+        // get the details of the token
         String identity = token.getIdentity();
-        Log.debug("Verifying a token from {}", identity);
+        String password = token.getToken();
+        Log.debug("Verifying a token ending in {} from {}", this.snipToken(password, 4), identity);
 
         boolean verified = false;
 
-        Collection<String> tokens = _tokenCache.getIfPresent(identity);
+        String username = _tokenCache.getIfPresent(password);
 
-        if (null != tokens) {
-            if (tokens.contains(token.getToken())) {
-                verified = true;
-            }
+        if ( (null != username) && (username.equalsIgnoreCase(identity)) ) {
+            verified = true;
         }
 
-        Log.debug("Was user '{}' token valid? {}", verified);
+        Log.debug("Was token ending {} valid for user {}?: {}", this.snipToken(password, 4), identity, verified);
         return verified;
     }
 
 
     public void cacheToken(NamedToken token) {
 
-        Collection<String> tokens = _tokenCache.getIfPresent(token.getIdentity());
-
-        // there may be no entry in the cache
-        if (null == tokens) {
-
-            // and if not, create it
-            tokens = new ArrayList<String>();
-            tokens.add(token.getToken());
-
-            _tokenCache.put(token.getIdentity(), tokens);
-        }
-        else {
-
-            // merely add this new token to the existing collection of tokens
-            tokens.add(token.getToken());
-        }
+        // it might be a good idea to check that the password already exists, but
+        // I know that I check for that in generateToken, so until someone extends
+        // this code or uses it elsewhere, it will never already exist.
+        _tokenCache.put(token.getToken(), token.getIdentity());
     }
 
     public boolean isNullOrEmpty(NamedToken token) {
@@ -148,5 +155,16 @@ public class DefaultTokenManager implements ITokenManager {
         }
 
         return nullOrEmpty;
+    }
+
+
+    public final String snipToken(String token, int charsToShow) {
+
+        String snippedToken = "";
+
+        if (token.length() > charsToShow)
+            snippedToken = token.substring(token.length() - charsToShow);
+
+        return snippedToken;
     }
 }

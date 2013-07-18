@@ -75,7 +75,10 @@ public class RabbitAuthorizationResource {
             // do nothing: this will return AccessLevel.NONE, which is what we want
         }
 
-        return this.buildResponse(access, true);
+        String response = this.buildResponse(access, true);
+        LOG.debug("Authorization result for {}: {}", username, response);
+
+        return response;
     }
 
     @GET
@@ -98,7 +101,10 @@ public class RabbitAuthorizationResource {
             LOG.debug("user {} not found.", username);
         }
 
-        return this.buildResponse(access);
+        String response = this.buildResponse(access);
+        LOG.debug("Authorization result for {}: {}", username, response);
+
+        return response;
     }
 
     @GET
@@ -125,7 +131,10 @@ public class RabbitAuthorizationResource {
             LOG.debug("user {} not found.", username);
         }
 
-        return this.buildResponse(access);
+        String response = this.buildResponse(access);
+        LOG.debug("Authorization result for {}: {}", username, response);
+
+        return response;
     }
 
 
