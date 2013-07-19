@@ -40,6 +40,7 @@ define [
           publishTopicOverride: "my.cool.topic.123"
           exchangeProviderHostname: "gts.archnet.mil"
           routingInfoHostname: "gts.archnet.mil"
+          authenticationProviderHostname: "anubis.archnet.mil"
           fallbackTopoExchangeHostname: "rabbit02.archnet.mil"
           })
 

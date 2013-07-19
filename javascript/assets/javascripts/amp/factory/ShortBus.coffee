@@ -11,8 +11,9 @@ define [
   'underscore'
   '../util/Logger'
   '../bus/berico/EnvelopeHelper'
+  '../webstomp/topology/DefaultAuthenticationProvider'
 ],
-(TransportProviderFactory, GlobalTopologyService, ChannelProvider, DefaultApplicationExchangeProvider, EnvelopeBus, JsonEventSerializer, OutboundHeadersProcessor, EventBus, RoutingInfoRetriever, _, Logger, EnvelopeHelper)->
+(TransportProviderFactory, GlobalTopologyService, ChannelProvider, DefaultApplicationExchangeProvider, EnvelopeBus, JsonEventSerializer, OutboundHeadersProcessor, EventBus, RoutingInfoRetriever, _, Logger, EnvelopeHelper, DefaultAuthenticationProvider)->
 
   class HeaderOverrider
     constructror: (@override)->
@@ -27,12 +28,14 @@ define [
 
     @getBus: (config={})->
       {
-        routingInfoHostname, routingInfoPort, routingInfoServiceUrl, routingInfoConnectionStrategy,
-        exchangeProviderHostname, exchangeProviderPort, exchangeProviderServiceUrl, exchangeProviderConnectionStrategy,
-        fallbackTopoClientProfile, fallbackTopoExchangeName, fallbackTopoExchangeHostname, fallbackTopoExchangeVhost, fallbackTopoExchangePort,
-        gtsCacheExpiryTime, gtsExchangeOverrides,
-        channelProviderConnectionStrategy, channelProviderConnectionFactory,
-        publishTopicOverride
+        routingInfoHostname, routingInfoPort, routingInfoServiceUrl,
+        routingInfoConnectionStrategy, exchangeProviderHostname, exchangeProviderPort,
+        exchangeProviderServiceUrl, exchangeProviderConnectionStrategy, fallbackTopoClientProfile,
+        fallbackTopoExchangeName, fallbackTopoExchangeHostname, fallbackTopoExchangeVhost,
+        fallbackTopoExchangePort, gtsCacheExpiryTime, gtsExchangeOverrides,
+        channelProviderConnectionStrategy, channelProviderConnectionFactory, publishTopicOverride,
+        authenticationProviderHostname, authenticationProviderPort, authenticationProviderServiceUrl,
+        authenticationProviderConnectionStrategy
       } = config
 
 
@@ -62,9 +65,17 @@ define [
         exchangeOverrides: gtsExchangeOverrides
         })
 
+      authenticationProvider = new DefaultAuthenticationProvider({
+        hostname: authenticationProviderHostname
+        port: authenticationProviderPort
+        serviceUrl: authenticationProviderServiceUrl
+        connectionStrategy: authenticationProviderConnectionStrategy
+      })
+
       channelProvider = new ChannelProvider({
         connectionStrategy: channelProviderConnectionStrategy
         connectionFactory: channelProviderConnectionFactory
+        authenticationProvider: authenticationProvider
         })
 
       transportProvider = TransportProviderFactory.getTransportProvider({
