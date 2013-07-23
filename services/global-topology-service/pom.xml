@@ -4,7 +4,7 @@
 
 	<groupId>amp</groupId>
 	<artifactId>amp.topology.service</artifactId>
-	<version>3.2.0-SNAPSHOT</version>
+	<version>3.2.0-ORION-R20.V.1.0</version>
 	<packaging>jar</packaging>
 
 	<name>Global Topology Service</name>
@@ -15,7 +15,7 @@
 		<dropwizard.version>0.6.1</dropwizard.version>
 		<spring.version>3.2.1.RELEASE</spring.version>
 		<spring.security.version>3.1.3.RELEASE</spring.security.version>
-		<cmf.version>3.1.0</cmf.version>
+		<cmf.version>3.2.0</cmf.version>
 		<amp.version>${project.version}</amp.version>
 	</properties>
 
@@ -170,7 +170,7 @@
 		<dependency>
 			<groupId>com.berico</groupId>
 			<artifactId>crypto</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>0.0.1-ORION-R20.V.1.0</version>
 		</dependency>
 	</dependencies>
 

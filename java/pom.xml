@@ -7,7 +7,7 @@
     <!-- Information about this project -->
     <groupId>amp</groupId>
     <artifactId>amp</artifactId>
-    <version>3.2.0-SNAPSHOT</version>
+    <version>3.2.0-ORION-R20.V.1.0</version>
     <name>Advanced Modular Platform</name>
     <packaging>pom</packaging>
     <url>https://github.com/Berico-Technologies/AMP</url>
@@ -16,7 +16,7 @@
     <!-- Shared properties -->
     <properties>
         <bundle.vendor>Berico Technologies</bundle.vendor>
-        <cmf.version>3.2.0-SNAPSHOT</cmf.version>
+        <cmf.version>3.2.0</cmf.version>
         <commons-codec.version>1.6</commons-codec.version>
         <commons-lang.version>2.6</commons-lang.version>
         <gson.version>2.2.2</gson.version>

@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>amp</groupId>
 		<artifactId>amp</artifactId>
-		<version>3.2.0-SNAPSHOT</version>
+		<version>3.2.0-ORION-R20.V.1.0</version>
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
@@ -17,7 +17,7 @@
 	<artifactId>amp-gel</artifactId>
 	<packaging>jar</packaging>
 	<name>AMP Global Event Log</name>
-    <url>http://ampere.berico.us/services/global-event-log</url>
+  <url>http://ampere.berico.us/services/global-event-log</url>
 
 
 	<properties>
@@ -62,10 +62,12 @@
 		<dependency>
 			<groupId>cmf</groupId>
 			<artifactId>cmf.bus</artifactId>
+			<version>3.2.0</version>
 		</dependency>
 		<dependency>
 			<groupId>cmf</groupId>
 			<artifactId>cmf.eventing</artifactId>
+			<version>3.2.0</version>
 		</dependency>
         <dependency>
             <groupId>amp</groupId>

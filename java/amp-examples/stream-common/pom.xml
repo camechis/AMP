@@ -8,7 +8,7 @@
         <groupId>amp</groupId>
         <artifactId>amp</artifactId>
         <relativePath>../../pom.xml</relativePath>
-        <version>3.2.0-SNAPSHOT</version>
+        <version>3.2.0-ORION-R20.V.1.0</version>
     </parent>
 
 
@@ -17,12 +17,13 @@
 
     <groupId>amp</groupId>
     <artifactId>amp.examples.streaming.common</artifactId>
-    <version>3.2.0-SNAPSHOT</version>
+    <version>3.2.0-ORION-R20.V.1.0</version>
     <packaging>jar</packaging>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <cmf.version>3.2.0-SNAPSHOT</cmf.version>
+        <cmf.version>3.2.0</cmf.version>
+        <amp.version>3.2.0-ORION-R20.V.1.0</amp.version>
     </properties>
 
     <repositories>
@@ -58,27 +59,27 @@
         <dependency>
             <groupId>amp</groupId>
             <artifactId>amp.bus</artifactId>
-            <version>${cmf.version}</version>
+            <version>${amp.version}</version>
         </dependency>
         <dependency>
             <groupId>amp</groupId>
             <artifactId>amp.eventing</artifactId>
-            <version>${cmf.version}</version>
+            <version>${amp.version}</version>
         </dependency>
         <dependency>
             <groupId>amp</groupId>
             <artifactId>amp.bus.rabbit</artifactId>
-            <version>${cmf.version}</version>
+            <version>${amp.version}</version>
         </dependency>
         <dependency>
             <groupId>amp</groupId>
             <artifactId>amp.bus.security</artifactId>
-            <version>${cmf.version}</version>
+            <version>${amp.version}</version>
         </dependency>
         <dependency>
             <groupId>amp</groupId>
             <artifactId>amp.topology.client</artifactId>
-            <version>${cmf.version}</version>
+            <version>${amp.version}</version>
         </dependency>
 
         <dependency>

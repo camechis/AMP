@@ -9,7 +9,7 @@
     <parent>
         <groupId>amp</groupId>
         <artifactId>amp</artifactId>
-        <version>3.2.0-SNAPSHOT</version>
+        <version>3.2.0-ORION-R20.V.1.0</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -32,6 +32,7 @@
         <dependency>
             <groupId>cmf</groupId>
             <artifactId>cmf.bus</artifactId>
+            <version>3.2.0</version>
         </dependency>
         <dependency>
             <groupId>amp</groupId>

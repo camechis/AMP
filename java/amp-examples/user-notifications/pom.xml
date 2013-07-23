@@ -9,13 +9,13 @@
         <groupId>amp</groupId>
         <artifactId>amp</artifactId>
         <relativePath>../../pom.xml</relativePath>
-        <version>3.2.0-SNAPSHOT</version>
+        <version>3.2.0-ORION-R20.V.1.0</version>
     </parent>
 
 
     <groupId>amp</groupId>
     <artifactId>amp.examples.usernotifications</artifactId>
-  <version>3.2.0-SNAPSHOT</version>
+  <version>3.2.0-ORION-R20.V.1.0</version>
     <packaging>jar</packaging>
     <name>AMP Example - User Notifications</name>
     <url>http://ampere.berico.us/examples/user-notification</url>
