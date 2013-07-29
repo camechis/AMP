@@ -108,9 +108,9 @@ public class DefaultTokenManager implements ITokenManager {
     @Override
     public boolean verifyToken(NamedToken token) throws IllegalArgumentException {
 
-        // make sure we have something to verify
+        // if there's no token, we can't verify anything
         if (this.isNullOrEmpty(token))
-            throw new IllegalArgumentException("Cannot verify a null or empty token.");
+            return false;
 
         // get the details of the token
         String identity = token.getIdentity();

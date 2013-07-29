@@ -107,69 +107,69 @@ public class DefaultTokenManagerTests {
 
     public static class VerifyTokenTests {
 
-        @Test(expected = IllegalArgumentException.class)
-        public void should_throw_IllegalArgumentException_if_token_is_null() {
+        @Test
+        public void should_return_false_if_token_is_null() {
 
             DefaultTokenManager tokenManager = new DefaultTokenManager();
-            tokenManager.verifyToken(null);
+            boolean shouldBeFalse = tokenManager.verifyToken(null);
 
-            fail("Should have thrown an IllegalArgumentException but didn't.");
+            assertFalse(shouldBeFalse);
         }
 
-        @Test(expected = IllegalArgumentException.class)
-        public void should_throw_IllegalArgumentException_if_token_has_null_identity() {
+        @Test
+        public void should_return_false_if_token_has_null_identity() {
 
             // create
             NamedToken fakeToken = new NamedToken(null, null);
 
             // test
             DefaultTokenManager tokenManager = new DefaultTokenManager();
-            tokenManager.verifyToken(fakeToken);
+            boolean shouldBeFalse = tokenManager.verifyToken(fakeToken);
 
             // assert
-            fail("Should have thrown an IllegalArgumentException but didn't.");
+            assertFalse(shouldBeFalse);
         }
 
-        @Test(expected = IllegalArgumentException.class)
-        public void should_throw_IllegalArgumentException_if_token_has_empty_identity() {
+        @Test
+        public void should_return_false_if_token_has_empty_identity() {
 
             // create
             NamedToken fakeToken = new NamedToken("", null);
 
             // test
             DefaultTokenManager tokenManager = new DefaultTokenManager();
-            tokenManager.verifyToken(fakeToken);
+            boolean shouldBeFalse = tokenManager.verifyToken(fakeToken);
 
             // assert
-            fail("Should have thrown an IllegalArgumentException but didn't.");
+            assertFalse(shouldBeFalse);
         }
 
-        @Test(expected = IllegalArgumentException.class)
-        public void should_throw_IllegalArgumentException_if_token_has_null_token() {
+        @Test
+        public void should_return_false_if_token_has_null_token() {
 
             // create
             NamedToken fakeToken = new NamedToken("testUser", null);
 
             // test
             DefaultTokenManager tokenManager = new DefaultTokenManager();
-            tokenManager.verifyToken(fakeToken);
+            boolean shouldBeFalse = tokenManager.verifyToken(fakeToken);
 
             // assert
-            fail("Should have thrown an IllegalArgumentException but didn't.");
+            assertFalse(shouldBeFalse);
         }
 
-        @Test(expected = IllegalArgumentException.class)
-        public void should_throw_IllegalArgumentException_if_token_has_empty_token() {
+        @Test
+        public void should_return_false_if_token_has_empty_token() {
 
             // create
             NamedToken fakeToken = new NamedToken("testUser", "");
 
             // test
             DefaultTokenManager tokenManager = new DefaultTokenManager();
-            tokenManager.verifyToken(fakeToken);
+            boolean shouldBeFalse = tokenManager.verifyToken(fakeToken);
 
             // assert
-            fail("Should have thrown an IllegalArgumentException but didn't.");
+            assertFalse(shouldBeFalse);
         }
 
         @Test

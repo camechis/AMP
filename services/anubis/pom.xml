@@ -185,6 +185,19 @@
 	
 	<build>
 		<plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.15</version>
+                <configuration>
+                    <includes>
+                        <include>**/*Tests.java</include>
+                        <include>**/*Test*.java</include>
+                        <include>**/*Test.java</include>
+                        <include>**/*TestCase.java</include>
+                    </includes>
+                </configuration>
+            </plugin>
 			<!-- this plugin takes my code, and all dependencies in this pom, and 
 				rolls them into one big executable fat jar. It does this during 'mvn package' -->
 			<plugin>
