@@ -44,6 +44,7 @@
         <module>amp-commanding</module>
         <module>amp-commanding-rabbit</module>
         <module>amp-commands</module>
+        <module>amp-utility</module>
         <module>amp-examples/bus-gui-tester</module>
         <module>amp-examples/user-notifications</module>
         <module>amp-examples/service-adaptor</module>
@@ -51,6 +52,7 @@
         <module>amp-examples/stream-subscriber</module>
         <module>amp-examples/stream-common</module>
         <module>extensions/amp-commons</module>
+        <module>services/amp-anubis-core</module>
         <module>services/global-topology-client</module>
         <module>services/global-event-log</module>
 		<module>archetypes/amp-quickstart</module>

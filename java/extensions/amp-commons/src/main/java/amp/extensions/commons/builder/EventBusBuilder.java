@@ -10,7 +10,7 @@ import cmf.eventing.patterns.rpc.IRpcEventBus;
 import amp.bus.security.InMemoryUserInfoRepository;
 import amp.eventing.DefaultEventBus;
 import amp.eventing.DefaultRpcBus;
-import amp.eventing.GsonSerializer;
+import amp.utility.serialization.GsonSerializer;
 import amp.eventing.IEventProcessor;
 import amp.eventing.OutboundHeadersProcessor;
 import amp.eventing.RpcFilter;

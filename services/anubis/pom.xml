@@ -60,6 +60,11 @@
 			<version>${amp.version}</version>
 		</dependency>
         <dependency>
+            <groupId>amp</groupId>
+            <artifactId>amp.anubis.core</artifactId>
+            <version>${amp.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.yammer.dropwizard</groupId>
             <artifactId>dropwizard-core</artifactId>
             <version>${dropwizard.version}</version>

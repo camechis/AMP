@@ -2,15 +2,15 @@ package amp.extensions.commons.builder;
 
 import amp.commanding.ICommandReceiver;
 import amp.rabbit.topology.Exchange;
-import amp.eventing.ISerializer;
-import amp.topology.client.BasicAuthHttpClientProvider;
+import amp.utility.serialization.ISerializer;
 import amp.topology.client.DefaultApplicationExchangeProvider;
 import amp.topology.client.FallbackRoutingInfoProvider;
 import amp.topology.client.GlobalTopologyService;
-import amp.topology.client.HttpClientProvider;
 import amp.topology.client.HttpRoutingInfoRetriever;
 import amp.topology.client.JsonRoutingInfoSerializer;
-import amp.topology.client.SslHttpClientProvider;
+import amp.utility.http.HttpClientProvider;
+import amp.utility.http.BasicAuthHttpClientProvider;
+import amp.utility.http.SslHttpClientProvider;
 
 /**
  * Build up the Global Topology Client.

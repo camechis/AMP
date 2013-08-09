@@ -34,7 +34,7 @@
         <constructor-arg name="serializer" ref="serializer" />
     </bean>
 
-    <bean id="serializer" class="amp.eventing.GsonSerializer" />
+    <bean id="serializer" class="amp.utility.serialization.GsonSerializer" />
 
     <bean id="outboundHeadersProcessor" class="amp.eventing.OutboundHeadersProcessor">
         <constructor-arg name="userInfoRepository" ref="userInfoRepository"  />

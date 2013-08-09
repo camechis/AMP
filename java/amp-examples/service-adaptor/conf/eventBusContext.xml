@@ -31,7 +31,7 @@
     <bean id="serializationProcessor" class="amp.eventing.serializers.JsonEventSerializer"
     		c:serializer-ref="serializer" />
 
-    <bean id="serializer" class="amp.eventing.GsonSerializer" />
+    <bean id="serializer" class="amp.utility.serialization.GsonSerializer" />
 
     <bean id="outboundHeadersProcessor" class="amp.eventing.OutboundHeadersProcessor" 
     		c:userInfoRepository-ref="userInfoRepository"  />

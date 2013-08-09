@@ -11,12 +11,12 @@ import com.berico.test.RequireProperties;
 import com.berico.test.TestProperties;
 
 import amp.rabbit.topology.RoutingInfo;
-import amp.topology.client.BasicAuthHttpClientProvider;
-import amp.topology.client.HttpClientProvider;
 import amp.topology.client.HttpRoutingInfoRetriever;
 import amp.topology.client.IRoutingInfoRetriever;
 import amp.topology.client.JsonRoutingInfoSerializer;
 import amp.topology.client.TestUtils;
+import amp.utility.http.BasicAuthHttpClientProvider;
+import amp.utility.http.HttpClientProvider;
 
 public class BasicAuthIntegrationTest {
 

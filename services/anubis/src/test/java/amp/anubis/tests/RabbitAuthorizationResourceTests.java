@@ -2,7 +2,7 @@ package amp.anubis.tests;
 
 import amp.anubis.core.AnubisException;
 import amp.anubis.resources.RabbitAuthorizationResource;
-import amp.anubis.services.IRabbitAccessManager;
+import amp.anubis.core.IRabbitAccessManager;
 import org.junit.Test;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

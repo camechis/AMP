@@ -1,6 +1,7 @@
 package amp.anubis.services;
 
 import amp.anubis.core.AttributedNamedToken;
+import amp.anubis.core.IRabbitAccessManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationProvider;

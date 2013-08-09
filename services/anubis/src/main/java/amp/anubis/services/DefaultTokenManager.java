@@ -1,5 +1,6 @@
 package amp.anubis.services;
 
+import amp.anubis.core.ITokenManager;
 import amp.anubis.core.NamedToken;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -11,8 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
 public class DefaultTokenManager implements ITokenManager {

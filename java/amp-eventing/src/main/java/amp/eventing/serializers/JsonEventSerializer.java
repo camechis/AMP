@@ -9,7 +9,7 @@ import amp.eventing.EventContext;
 import amp.eventing.EventContext.Directions;
 import amp.eventing.IContinuationCallback;
 import amp.eventing.IEventProcessor;
-import amp.eventing.ISerializer;
+import amp.utility.serialization.ISerializer;
 
 
 public class JsonEventSerializer implements IEventProcessor {

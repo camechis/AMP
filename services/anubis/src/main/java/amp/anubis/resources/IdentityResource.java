@@ -1,14 +1,13 @@
 package amp.anubis.resources;
 
 import amp.anubis.core.AnubisException;
+import amp.anubis.core.ITokenManager;
 import amp.anubis.core.NamedToken;
-import amp.anubis.services.ITokenManager;
 import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.yammer.dropwizard.auth.Auth;
 import com.yammer.metrics.annotation.Timed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.ws.rs.*;

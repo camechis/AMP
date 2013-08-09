@@ -1,6 +1,8 @@
 package amp.anubis.services;
 
 import amp.anubis.core.AttributedNamedToken;
+import amp.anubis.core.IRabbitAccessManager;
+import amp.anubis.core.ITokenManager;
 import org.springframework.security.core.userdetails.UserDetails;
 
 public class TokenRabbitAccessManager implements IRabbitAccessManager {

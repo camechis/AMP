@@ -8,7 +8,7 @@ import javax.ws.rs.core.MediaType;
 
 import amp.anubis.core.AnubisException;
 import amp.anubis.core.AttributedNamedToken;
-import amp.anubis.services.IRabbitAccessManager;
+import amp.anubis.core.IRabbitAccessManager;
 import com.yammer.metrics.annotation.Timed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

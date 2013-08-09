@@ -13,7 +13,7 @@ import com.google.gson.JsonParser;
 
 import amp.rabbit.topology.RouteInfo;
 import amp.rabbit.topology.RoutingInfo;
-import amp.eventing.ISerializer;
+import amp.utility.serialization.ISerializer;
 
 /**
  * This is a fix until the Iterable is removed from RoutingInfo.

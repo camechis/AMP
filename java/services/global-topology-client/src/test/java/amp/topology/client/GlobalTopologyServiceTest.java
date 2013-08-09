@@ -10,7 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import amp.rabbit.topology.RoutingInfo;
-import amp.topology.client.integration.BasicAuthIntegrationTest;
+import amp.utility.http.HttpClientProvider;
+import amp.utility.http.BasicAuthHttpClientProvider;
 
 import com.berico.test.RequireProperties;
 import com.berico.test.TestProperties;

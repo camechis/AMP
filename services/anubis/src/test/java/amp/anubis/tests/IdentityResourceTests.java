@@ -4,9 +4,9 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import amp.anubis.core.AnubisException;
+import amp.anubis.core.ITokenManager;
 import amp.anubis.core.NamedToken;
 import amp.anubis.resources.IdentityResource;
-import amp.anubis.services.ITokenManager;
 import com.fasterxml.jackson.databind.util.JSONPObject;
 import org.junit.Before;
 import org.junit.Test;
