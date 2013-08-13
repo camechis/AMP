@@ -15,13 +15,7 @@
 	</security:http>
  	
 	<security:authentication-manager>
-	   <security:authentication-provider>
-	       <security:user-service>
-		   		<security:user name="App01" authorities="ROLE_USER" />
-		   		<security:user name="App02" authorities="ROLE_USER" />
-		   		<security:user name="Admin" authorities="ROLE_USER, ROLE_ADMIN" />
-	       </security:user-service>
-	   </security:authentication-provider>
+        <security:authentication-provider user-service-ref="ldapUserDetailsService" />
 	</security:authentication-manager>
 	
 </beans>
