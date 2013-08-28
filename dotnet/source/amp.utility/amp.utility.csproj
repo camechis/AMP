@@ -46,11 +46,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="http\BasicAuthWebRequestFactory.cs" />
+    <Compile Include="http\IWebRequestFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="amp.utility.snk" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>IF NOT EXIST "$(SolutionDir)binaries" MKDIR "$(SolutionDir)binaries"

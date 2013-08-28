@@ -48,11 +48,9 @@
     <Reference Include="System.Runtime.Caching" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BasicAuthWebRequestFactory.cs" />
     <Compile Include="DefaultApplicationExchangeProvider.cs" />
     <Compile Include="HttpRoutingInfoRetreiver.cs" />
     <Compile Include="IRoutingDeserializer.cs" />
-    <Compile Include="IWebRequestFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="..\..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
@@ -68,6 +66,10 @@
     <ProjectReference Include="..\..\amp.rabbit\amp.rabbit.csproj">
       <Project>{1d9a3ed8-779b-4f1b-93f5-837320af4656}</Project>
       <Name>amp.rabbit</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\amp.utility\amp.utility.csproj">
+      <Project>{964930B6-0B9A-48E2-BC0C-F5ADFA60C005}</Project>
+      <Name>amp.utility</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
