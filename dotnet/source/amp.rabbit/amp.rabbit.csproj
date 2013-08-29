@@ -58,6 +58,7 @@
     <Compile Include="BaseConnectionFactory.cs" />
     <Compile Include="BasicConnectionFactory.cs" />
     <Compile Include="CertificateConnectionFactory.cs" />
+    <Compile Include="TokenConnectionFactory.cs" />
     <Compile Include="DeliveryOutcomes.cs" />
     <Compile Include="IRabbitConnectionFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -80,6 +81,10 @@
     <ProjectReference Include="..\amp.bus\amp.bus.csproj">
       <Project>{d96a6d2b-e427-406a-bd73-9961447b3557}</Project>
       <Name>amp.bus</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\amp.utility\amp.utility.csproj">
+      <Project>{964930B6-0B9A-48E2-BC0C-F5ADFA60C005}</Project>
+      <Name>amp.utility</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
