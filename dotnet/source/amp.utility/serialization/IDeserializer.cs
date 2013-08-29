@@ -1,8 +1,7 @@
 ﻿using System;
 using System.IO;
 
-
-namespace amp.topology.client
+namespace amp.utility.serialization
 {
     public interface IDeserializer<T> : IDisposable
     {

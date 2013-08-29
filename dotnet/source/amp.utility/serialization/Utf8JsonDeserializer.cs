@@ -1,11 +1,9 @@
 ﻿using System.IO;
 using System.Text;
-
 using log4net;
 using Newtonsoft.Json;
 
-
-namespace amp.topology.client
+namespace amp.utility.serialization
 {
     public class Utf8JsonDeserializer<T> : IDeserializer<T> 
     {
@@ -47,7 +45,7 @@ namespace amp.topology.client
             string jsonUtf8 = Encoding.UTF8.GetString(buffer.ToArray());
 
             // log the string for debugging
-            Log.DebugFormat("Deserializing the following string into RoutingInfo: {0}", jsonUtf8);
+            Log.DebugFormat("Deserializing the following string into {1}: {0}", jsonUtf8, typeof(T));
 
             // use Json.NET to deserialize the JSON string
             return JsonConvert.DeserializeObject<T>(jsonUtf8);

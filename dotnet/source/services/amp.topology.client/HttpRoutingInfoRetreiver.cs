@@ -3,6 +3,7 @@ using System.IO;
 using System.Net;
 
 using amp.utility.http;
+using amp.utility.serialization;
 using log4net;
 
 using amp.rabbit.topology;
