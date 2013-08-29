@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Text;
 
@@ -9,7 +7,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
 using cmf.bus;
-using amp.bus;
 
 namespace amp.eventing.serializers
 {

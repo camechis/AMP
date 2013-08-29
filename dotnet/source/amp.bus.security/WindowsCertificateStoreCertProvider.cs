@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.DirectoryServices.AccountManagement;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
-using System.Text;
-
 using Common.Logging;
 
 namespace amp.bus.security

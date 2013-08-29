@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
+using amp.bus;
 using Common.Logging;
 using RabbitMQ.Client;
 
 using cmf.bus;
-using amp.bus;
 
 namespace amp.rabbit
 {
