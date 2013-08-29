@@ -17,16 +17,13 @@ namespace amp.rabbit
         }
 
 
-        protected override IConnection CreateConnection(Exchange exchange)
+        protected override void ConfigureConnectionFactory(ConnectionFactory factory, Exchange exchange)
         {
-            ConnectionFactory cf = new ConnectionFactory();
-            cf.HostName = exchange.HostName;
-            cf.VirtualHost = exchange.VirtualHost;
-            cf.Port = exchange.Port;
-            cf.UserName = _username;
-            cf.Password = _password;
+            base.ConfigureConnectionFactory(factory, exchange);
 
-            return cf.CreateConnection();
+            factory.UserName = _username;
+            factory.Password = _password;
         }
+
     }
 }

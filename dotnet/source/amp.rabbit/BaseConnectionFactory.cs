@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 using amp.rabbit.topology;
 using Common.Logging;
 using RabbitMQ.Client;
@@ -53,6 +54,30 @@ namespace amp.rabbit
             }
         }
 
-        protected abstract IConnection CreateConnection(Exchange exchange);
+        private IConnection CreateConnection(Exchange exchange)
+        {
+            _log.Debug("Enter CreateConnection");
+
+            ConnectionFactory cf = new ConnectionFactory();
+            ConfigureConnectionFactory(cf, exchange);
+            try
+            {
+                IConnection connection = cf.CreateConnection();
+                _log.Debug("Leave CreateConnection");
+                return connection;
+            }
+            catch (Exception e)
+            {
+                _log.Error("Unable to establish connection with RabbitMQ.", e);
+                throw e;
+            }
+        }
+
+        protected virtual void ConfigureConnectionFactory(ConnectionFactory factory, Exchange exchange)
+        {
+            factory.HostName = exchange.HostName;
+            factory.VirtualHost = exchange.VirtualHost;
+            factory.Port = exchange.Port;
+        }
     }
 }
