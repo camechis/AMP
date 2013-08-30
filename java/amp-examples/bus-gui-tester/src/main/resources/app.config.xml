@@ -63,7 +63,7 @@
 
     <!-- If you are using a local version of the Global Topology Service
 
-    <bean id="httpClientProvider" class="amp.topology.client.BasicAuthHttpClientProvider"
+    <bean id="httpClientProvider" class="amp.utility.http.BasicAuthHttpClientProvider"
           c:hostname="localhost" c:port="15677" c:username="app01" c:password="password" />
 
     <bean id="routingInfoRetriever" class="amp.topology.client.HttpRoutingInfoRetriever"
@@ -71,7 +71,7 @@
           c:urlExpression="http://localhost:15677/service/topology/get-routing-info/%s" />
     -->
 
-    <bean id="httpClientProvider" class="amp.topology.client.BasicAuthHttpClientProvider"
+    <bean id="httpClientProvider" class="amp.utility.http.BasicAuthHttpClientProvider"
           c:hostname="devexample.com" c:port="15677" c:username="devexample" c:password="devexample" />
 
     <bean id="routingInfoRetriever" class="amp.topology.client.HttpRoutingInfoRetriever"

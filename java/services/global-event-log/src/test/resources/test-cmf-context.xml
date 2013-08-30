@@ -59,7 +59,7 @@
         <constructor-arg name="password" value="devexample" />
     </bean>
 
-    <bean id="httpClientProvider" class="amp.topology.client.BasicAuthHttpClientProvider">
+    <bean id="httpClientProvider" class="amp.utility.http.BasicAuthHttpClientProvider">
         <constructor-arg name="hostname" value="devexample.com" />
         <constructor-arg name="port" value="15677" />
         <constructor-arg name="username" value="devexample" />

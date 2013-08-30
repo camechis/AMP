@@ -57,7 +57,7 @@
           c:routingInfoRetriever-ref="routingInfoRetriever"
           c:fallbackProvider-ref="fallbackProvider" />
 
-    <bean id="httpClientProvider" class="amp.topology.client.BasicAuthHttpClientProvider"
+    <bean id="httpClientProvider" class="amp.utility.http.BasicAuthHttpClientProvider"
           c:hostname="devexample.com" c:port="15677" c:username="devexample" c:password="devexample" />
 
     <bean id="routingSerializer" class="amp.topology.client.JsonRoutingInfoSerializer" />

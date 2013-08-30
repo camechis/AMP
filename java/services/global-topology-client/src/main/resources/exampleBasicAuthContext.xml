@@ -5,7 +5,7 @@
 	xmlns:p="http://www.springframework.org/schema/p"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<bean id="httpClientProvider" class="amp.topology.client.BasicAuthHttpClientProvider"
+	<bean id="httpClientProvider" class="amp.utility.http.BasicAuthHttpClientProvider"
 		c:hostname="gts" c:port="15677" c:username="App01" c:password="password" />
 
 	<bean id="serializer" class="amp.topology.client.JsonRoutingInfoSerializer" />

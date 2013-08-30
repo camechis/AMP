@@ -5,7 +5,7 @@
 	xmlns:p="http://www.springframework.org/schema/p"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<bean id="httpClientProvider" class="amp.topology.client.SslHttpClientProvider"
+	<bean id="httpClientProvider" class="amp.utility.http.SslHttpClientProvider"
 		c:keystore="ssl/app01.jks" c:keystorePassword="password" 
 		c:truststore="ssl/app01.jks" c:trustStorePassword="password" c:port="15677" />
 
