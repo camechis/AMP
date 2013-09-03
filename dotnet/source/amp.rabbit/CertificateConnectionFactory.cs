@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Cryptography.X509Certificates;
-using Common.Logging;
 using RabbitMQ.Client;
 
 using amp.rabbit.topology;
@@ -10,55 +7,16 @@ using amp.bus.security;
 
 namespace amp.rabbit
 {
-    public class CertificateConnectionFactory : IRabbitConnectionFactory, IDisposable
+    public class CertificateConnectionFactory : BaseConnectionFactory
     {
         protected ICertificateProvider _certProvider;
-        protected IDictionary<Exchange, IConnection> _connections;
-        protected ILog _log;
-
-
+    
         public CertificateConnectionFactory(ICertificateProvider certificateProvider)
         {
             _certProvider = certificateProvider;
-            _connections = new Dictionary<Exchange, IConnection>();
-
-            _log = LogManager.GetLogger(this.GetType());
         }
 
-
-        public IConnection ConnectTo(Exchange exchange)
-        {
-            _log.Debug("Enter ConnectTo");
-
-            IConnection conn = null;
-
-            if (_connections.ContainsKey(exchange))
-            {
-                conn = _connections[exchange];
-                if (!conn.IsOpen)
-                {
-                    _log.Info("Cached connection to RabbitMQ was closed: reconnecting");
-                    conn = this.CreateConnection(exchange);
-                }
-            }
-            else
-            {
-                conn = this.CreateConnection(exchange);
-                _connections[exchange] = conn;
-            }
-
-            _log.Debug("Leave ConnectTo");
-            return conn;
-        }
-
-        public void Dispose()
-        {
-            try { _connections.ToList().ForEach(kvp => kvp.Value.Dispose()); }
-            catch { }
-        }
-
-
-        protected virtual IConnection CreateConnection(Exchange ex)
+        protected override IConnection CreateConnection(Exchange ex)
         {
             _log.Debug("Enter CreateConnection");
 
