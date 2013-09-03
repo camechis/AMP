@@ -28,6 +28,12 @@
     <WarningLevel>4</WarningLevel>
     <Externalconsole>True</Externalconsole>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>amp.topology.client.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="cmf.bus">
       <HintPath>..\..\..\binaries\libraries\cmf.bus.dll</HintPath>
@@ -63,6 +69,9 @@
       <Project>{1d9a3ed8-779b-4f1b-93f5-837320af4656}</Project>
       <Name>amp.rabbit</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="amp.topology.client.snk" />
   </ItemGroup>
   <PropertyGroup>
     <PreBuildEvent>
