@@ -1,6 +1,4 @@
 ﻿using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 
 // Global Descriptive Stuff
 [assembly: AssemblyProduct("Advanced Modular Platform")]

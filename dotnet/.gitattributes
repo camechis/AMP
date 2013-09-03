@@ -1,0 +1,9 @@
+#Ensures that all files in the dotnet directory have crlf line endings when checked out.
+#See http://git-scm.com/docs/gitattributes#_checking-out_and_checking-in
+*.* eol=crlf
+
+#These are not text files and should not be handled as such.
+*.dll -text
+*.exe -text
+*.pdb -text
+*.snk -text
