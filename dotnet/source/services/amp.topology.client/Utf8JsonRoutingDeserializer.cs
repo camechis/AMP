@@ -5,7 +5,7 @@ using System.Text;
 using log4net;
 using Newtonsoft.Json;
 
-using amp.bus.rabbit.topology;
+using amp.rabbit.topology;
 
 
 namespace amp.topology.client

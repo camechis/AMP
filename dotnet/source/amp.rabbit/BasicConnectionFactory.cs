@@ -6,9 +6,9 @@ using System.Text;
 using Common.Logging;
 using RabbitMQ.Client;
 
-using amp.bus.rabbit.topology;
+using amp.rabbit.topology;
 
-namespace amp.bus.rabbit
+namespace amp.rabbit
 {
     public class BasicConnectionFactory : IRabbitConnectionFactory
     {

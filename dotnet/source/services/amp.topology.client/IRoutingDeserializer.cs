@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-using amp.bus.rabbit.topology;
+using amp.rabbit.topology;
 
 
 namespace amp.topology.client

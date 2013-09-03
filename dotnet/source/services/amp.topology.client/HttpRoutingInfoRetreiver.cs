@@ -7,7 +7,7 @@ using System.Text;
 
 using log4net;
 
-using amp.bus.rabbit.topology;
+using amp.rabbit.topology;
 
 
 namespace amp.topology.client

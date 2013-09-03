@@ -5,9 +5,9 @@ using System.Text;
 
 using RabbitMQ.Client;
 
-using amp.bus.rabbit.topology;
+using amp.rabbit.topology;
 
-namespace amp.bus.rabbit
+namespace amp.rabbit
 {
     public interface IRabbitConnectionFactory : IDisposable
     {

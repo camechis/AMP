@@ -7,10 +7,10 @@ using System.Text;
 using Common.Logging;
 using RabbitMQ.Client;
 
-using amp.bus.rabbit.topology;
+using amp.rabbit.topology;
 using amp.bus.security;
 
-namespace amp.bus.rabbit
+namespace amp.rabbit
 {
     public class CertificateConnectionFactory : IRabbitConnectionFactory, IDisposable
     {

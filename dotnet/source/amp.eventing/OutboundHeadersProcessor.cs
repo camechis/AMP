@@ -54,6 +54,10 @@ namespace amp.eventing
             }
             env.SetMessageTopic(messageTopic);
 
+            DateTime creation = env.GetCreationTime();
+            creation = (DateTime.MinValue == creation) ? DateTime.UtcNow : creation;
+            env.SetCreationTime(creation);
+
             string senderIdentity = env.GetSenderIdentity();
             if (string.IsNullOrEmpty(senderIdentity) && 
                 false == string.IsNullOrEmpty(_alternateIdentity))
