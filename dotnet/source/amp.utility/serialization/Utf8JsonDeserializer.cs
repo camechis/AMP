@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using System.Text;
-using log4net;
+using Common.Logging;
 using Newtonsoft.Json;
 
 namespace amp.utility.serialization
@@ -45,7 +45,7 @@ namespace amp.utility.serialization
             string jsonUtf8 = Encoding.UTF8.GetString(buffer.ToArray());
 
             // log the string for debugging
-            Log.DebugFormat("Deserializing the following string into {1}: {0}", jsonUtf8, typeof(T));
+            Log.Debug(string.Format("Deserializing the following string into {1}: {0}", jsonUtf8, typeof(T)));
 
             // use Json.NET to deserialize the JSON string
             return JsonConvert.DeserializeObject<T>(jsonUtf8);

@@ -37,8 +37,8 @@
     <AssemblyOriginatorKeyFile>amp.utility.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="log4net">
-      <HintPath>..\..\binaries\libraries\log4net.dll</HintPath>
+    <Reference Include="Common.Logging">
+      <HintPath>..\..\binaries\libraries\Common.Logging.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\binaries\libraries\Newtonsoft.Json.dll</HintPath>
