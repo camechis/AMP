@@ -8,7 +8,6 @@ using cmf.bus;
 
 namespace amp.bus.rabbit
 {
-    //TODO: Should this really go in amp.commanding.rabbit?  Why not in amp.bus.rabbit?
     public class RabbitEnvelopeReceiver : IEnvelopeReceiver
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(RabbitTransportProvider));

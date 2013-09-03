@@ -2,14 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 
 using Common.Logging;
 using RabbitMQ.Client;
 
 using cmf.bus;
-using amp.bus;
 using amp.rabbit;
 using amp.rabbit.topology;
 
