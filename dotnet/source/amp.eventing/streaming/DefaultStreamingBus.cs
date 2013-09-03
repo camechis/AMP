@@ -1,5 +1,4 @@
 ﻿using cmf.bus;
-using cmf.eventing;
 using cmf.eventing.patterns.streaming;
 using Common.Logging;
 using System;

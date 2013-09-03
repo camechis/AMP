@@ -83,6 +83,10 @@
       <Project>{1d9a3ed8-779b-4f1b-93f5-837320af4656}</Project>
       <Name>amp.rabbit</Name>
     </ProjectReference>
+    <ProjectReference Include="..\amp.utility\amp.utility.csproj">
+      <Project>{964930B6-0B9A-48E2-BC0C-F5ADFA60C005}</Project>
+      <Name>amp.utility</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="amp.bus.rabbit.snk" />

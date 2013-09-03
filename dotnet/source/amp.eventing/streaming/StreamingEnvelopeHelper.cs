@@ -1,9 +1,4 @@
 ﻿using cmf.bus;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 using SEC = cmf.eventing.patterns.streaming.StreamingEnvelopeConstants;
 
 namespace amp.eventing.streaming

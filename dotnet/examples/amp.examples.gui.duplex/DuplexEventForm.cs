@@ -1,15 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
 using Common.Logging;
-
-using cmf.eventing;
 using cmf.eventing.patterns.rpc;
 using amp.examples.gui.messages;
 
@@ -90,10 +84,17 @@ namespace amp.examples.gui.duplex
 
         protected void Log(string message)
         {
-            StringBuilder sb = new StringBuilder(_output.Text);
-            sb.Insert(0, string.Format("{0}{1}", message, Environment.NewLine));
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new MethodInvoker(() => Log(message)));
+            }
+            else
+            {
+                StringBuilder sb = new StringBuilder(_output.Text);
+                sb.Insert(0, string.Format("{0}{1}", message, Environment.NewLine));
 
-            _output.Text = sb.ToString();
+                _output.Text = sb.ToString();
+            }
         }
 
         protected void InformUser(string message)
