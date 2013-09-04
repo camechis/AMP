@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-
+using System.Threading;
 using Common.Logging;
 
 using amp.rabbit;
@@ -97,7 +97,10 @@ namespace amp.bus.rabbit
             //TODO: Resolve that RabbitListener does not implement OnConnectionError
             //listener.OnConnectionError(new ReconnectOnConnectionErrorCallback(_channelFactory));
 
-            listener.Start();
+            // put it on another thread so as not to block this one
+            Thread listenerThread = new Thread(listener.Start);
+            listenerThread.Name = string.Format("{0} on {1}:{2}{3}", exchange.QueueName, exchange.HostName, exchange.Port, exchange.VirtualHost);
+            listenerThread.Start();
 
             return listener;
         }
