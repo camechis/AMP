@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2010
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "source", "source", "{2FC2F03F-C4F2-403A-82B2-6DD31EA80D5C}"
 	ProjectSection(SolutionItems) = preProject
 		source\GlobalAssemblyInfo.cs = source\GlobalAssemblyInfo.cs
@@ -27,7 +27,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "amp.commands", "source\amp.commands\amp.commands.csproj", "{61B5D5A6-4B11-4433-BA42-0F96C92C3380}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "amp.commanding", "source\amp.commanding\amp.commanding.csproj", "{93150A91-3D0A-4753-94A4-B6280994A18A}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "amp.utility", "source\amp.utility\amp.utility.csproj", "{964930B6-0B9A-48E2-BC0C-F5ADFA60C005}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "amp.tests.integration", "tests\amp.tests.integration\amp.tests.integration.csproj", "{88F59A07-5F3C-453D-B029-D209CC07C467}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -75,6 +78,10 @@ Global
 		{964930B6-0B9A-48E2-BC0C-F5ADFA60C005}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{964930B6-0B9A-48E2-BC0C-F5ADFA60C005}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{964930B6-0B9A-48E2-BC0C-F5ADFA60C005}.Release|Any CPU.Build.0 = Release|Any CPU
+		{88F59A07-5F3C-453D-B029-D209CC07C467}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{88F59A07-5F3C-453D-B029-D209CC07C467}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{88F59A07-5F3C-453D-B029-D209CC07C467}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{88F59A07-5F3C-453D-B029-D209CC07C467}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -91,6 +98,7 @@ Global
 		{964930B6-0B9A-48E2-BC0C-F5ADFA60C005} = {2FC2F03F-C4F2-403A-82B2-6DD31EA80D5C}
 		{57759359-756D-4309-BC23-C3BBA2700974} = {69DE7173-19BC-44FB-B803-A36FD9D064AB}
 		{1553D312-9ABE-42FA-9A25-09BE1AE5EB67} = {576AB125-5A4B-40F5-A363-E7DB2DF848F5}
+		{88F59A07-5F3C-453D-B029-D209CC07C467} = {576AB125-5A4B-40F5-A363-E7DB2DF848F5}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = source\amp.bus\amp.bus.csproj
