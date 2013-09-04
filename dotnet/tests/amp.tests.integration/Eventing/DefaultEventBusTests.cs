@@ -8,20 +8,20 @@ using Spring.Context.Support;
 namespace amp.tests.integration.Eventing
 {
     [TestFixture]
-    public class PubSubTests
+    public class DefaultEventBusTests
     {
-        private IApplicationContext _context;
-        private IEventBus _bus;
+        protected IApplicationContext _context;
+        protected IEventBus _bus;
 
-        [SetUp]
-        public void Setup()
+        [TestFixtureSetUp]
+        public virtual void TestFixtureSetUp()
         {
             _context = new XmlApplicationContext(Constants.BASIC_AUTH_CONFIG);
-            _bus = _context.GetObject("IRpcEventBus") as IEventBus;
+            _bus = _context.GetObject("IEventBus") as IEventBus;
         }
 
-        [TearDown]
-        public void TearDown()
+        [TestFixtureTearDown]
+        public virtual void TestFixtureTearDown()
         {
             _context.Dispose();
         }

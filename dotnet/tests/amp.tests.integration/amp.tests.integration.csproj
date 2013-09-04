@@ -51,7 +51,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constants.cs" />
-    <Compile Include="Eventing\PubSubTests.cs" />
+    <Compile Include="Eventing\DefaultEventBusTests.cs" />
+    <Compile Include="Eventing\DefaultRpcBusTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
