@@ -3,9 +3,6 @@ using Spring.Context;
 using Spring.Context.Support;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using amp.examples.streaming.common;
 
