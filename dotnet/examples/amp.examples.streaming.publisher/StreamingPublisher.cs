@@ -5,9 +5,6 @@ using Spring.Context;
 using Spring.Context.Support;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace amp.examples.streaming.publisher
 {

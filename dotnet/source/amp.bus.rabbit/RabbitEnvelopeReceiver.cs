@@ -1,5 +1,6 @@
-﻿using System.Collections.Generic;
-
+﻿using System;
+using System.Collections.Generic;
+using System.Threading;
 using Common.Logging;
 
 using amp.rabbit;
@@ -8,7 +9,7 @@ using cmf.bus;
 
 namespace amp.bus.rabbit
 {
-    public class RabbitEnvelopeReceiver : IEnvelopeReceiver
+    public class RabbitEnvelopeReceiver : IEnvelopeReceiver, IDisposable
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(RabbitTransportProvider));
 
@@ -63,19 +64,11 @@ namespace amp.bus.rabbit
             }
         }
 
-        //TODO: Address fact that IEnvelopeReceiver does not implement IDisposable
         public void Dispose()
         {
-
-            try {  _connFactory.Dispose(); } catch { }
-
-            //TODO: Resolve that toposervice does not implement IDisposable
-            //try {  _topologyService.Dispose; } catch { }
-
             foreach (RabbitListener listener in _listeners.Values) 
             {
-                //TODO: Resolve that RabbitListener does not implement IDisposable
-                //try { listener.Dispose(); } catch { }
+                try { listener.Stop(); } catch { }
             }
         }
 
@@ -97,7 +90,10 @@ namespace amp.bus.rabbit
             //TODO: Resolve that RabbitListener does not implement OnConnectionError
             //listener.OnConnectionError(new ReconnectOnConnectionErrorCallback(_channelFactory));
 
-            listener.Start();
+            // put it on another thread so as not to block this one
+            Thread listenerThread = new Thread(listener.Start);
+            listenerThread.Name = string.Format("{0} on {1}:{2}{3}", exchange.QueueName, exchange.HostName, exchange.Port, exchange.VirtualHost);
+            listenerThread.Start();
 
             return listener;
         }

@@ -1,10 +1,6 @@
 ﻿using cmf.eventing.patterns.streaming;
 using amp.examples.streaming.common;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace amp.examples.streaming.subscriber
 {
@@ -25,7 +21,7 @@ namespace amp.examples.streaming.subscriber
         public void OnCompleted()
         {
             Console.WriteLine("Notified that last event has been processed for the stream.");
-            StreamingReaderSubscriber.isDone = true;
+            StreamingReaderSubscriber.IsDone = true;
         }
 
         public void OnError(Exception error)
@@ -36,8 +32,7 @@ namespace amp.examples.streaming.subscriber
         public void OnNext(StreamingEventItem<ModernMajorGeneralMessage> eventItem) 
         {
             ModernMajorGeneralMessage mmg = eventItem.Event;
-            Console.WriteLine(string.Format("Message received: (sequenceId: {0}), (position: {1}), Event Value: {2}", 
-                eventItem.SequenceId, eventItem.Position, mmg.Content));
+            Console.WriteLine("Message received: (sequenceId: {0}), (position: {1}), Event Value: {2}", eventItem.SequenceId, eventItem.Position, mmg.Content);
         }
 
         public Type EventType

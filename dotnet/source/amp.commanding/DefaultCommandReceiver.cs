@@ -77,11 +77,12 @@ namespace amp.commanding
 
         public void Dispose()
         {
-            _processingChain.ToList().ForEach(p =>
-            {
-                try { p.Dispose(); }
-                catch { }
-            });
+            if(_processingChain != null)
+                foreach (var processor in _processingChain)
+                {
+                    try { processor.Dispose(); }
+                    catch { }
+                }
         }
 
         public void ProcessCommand(

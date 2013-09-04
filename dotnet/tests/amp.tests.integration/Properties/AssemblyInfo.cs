@@ -1,14 +1,15 @@
 ﻿using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("amp.examples.streaming.common")]
+[assembly: AssemblyTitle("amp.tests.integration")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("amp.examples.streaming.common")]
+[assembly: AssemblyProduct("amp.tests.integration")]
 [assembly: AssemblyCopyright("Copyright ©  2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -19,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("f462b5bf-25f6-43b1-9918-830d9ac2bccd")]
+[assembly: Guid("9971d32b-8a2f-468f-a585-2487311b82f4")]
 
 // Version information for an assembly consists of the following four values:
 //
