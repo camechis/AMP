@@ -7,26 +7,40 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
-    <bean id="busTester" class="amp.examples.gui.BusTester"
-          c:eventBus-ref="eventBus" />
-
     <!-- The following components are for our Event Bus, which uses our Envelope Bus -->
     <bean id="eventBus" class="amp.eventing.DefaultEventBus"
-          destroy-method="dispose"
-          c:envelopeBus-ref="envelopeBus"
-          c:outboundProcessors-ref="outboundEventProcessors"
-          c:inboundProcessors-ref="inboundEventProcessors" />
+          destroy-method="dispose">
+          <constructor-arg ref="envelopeBus" />
+          <constructor-arg >
+		    <util:list value-type="amp.eventing.IEventProcessor">
+		        <ref bean="serializationProcessor" />
+		    </util:list>
+          </constructor-arg>
+          <constructor-arg >
+		    <util:list value-type="amp.eventing.IEventProcessor">
+		        <ref bean="serializationProcessor" />
+		        <ref bean="outboundHeadersProcessor" />
+		    </util:list>
+          </constructor-arg>
+    </bean>
 
-    <util:list id="inboundEventProcessors" value-type="amp.eventing.IEventProcessor">
-        <ref bean="rpcFilter" />
-        <ref bean="serializationProcessor" />
-    </util:list>
-
-    <util:list id="outboundEventProcessors" value-type="amp.eventing.IEventProcessor">
-        <ref bean="serializationProcessor" />
-        <ref bean="outboundHeadersProcessor" />
-        <ref bean="rpcFilter"/>
-    </util:list>
+    <bean id="rpcEventBus" class="amp.eventing.DefaultRpcBus"
+          destroy-method="dispose">
+          <constructor-arg ref="envelopeBus" />
+          <constructor-arg >
+		    <util:list value-type="amp.eventing.IEventProcessor">
+		        <ref bean="rpcFilter" />
+		        <ref bean="serializationProcessor" />
+		    </util:list>
+          </constructor-arg>
+          <constructor-arg >
+		    <util:list value-type="amp.eventing.IEventProcessor">
+		        <ref bean="serializationProcessor" />
+		        <ref bean="outboundHeadersProcessor" />
+		        <ref bean="rpcFilter"/>
+		    </util:list>
+          </constructor-arg>
+    </bean>
 
     <bean id="serializationProcessor" class="amp.eventing.serializers.JsonEventSerializer"
           c:serializer-ref="serializer" />
