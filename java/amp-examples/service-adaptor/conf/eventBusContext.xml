@@ -47,7 +47,7 @@
     <bean id="envelopeBus" class="amp.bus.DefaultEnvelopeBus" destroy-method="dispose"
     		c:transportProvider-ref="transportProvider" />
 
-    <bean id="transportProvider" class="amp.bus.rabbit.RabbitTransportProvider" 
+    <bean id="transportProvider" class="amp.rabbit.transport.RabbitTransportProvider" 
     		c:topologyService-ref="topologyService" c:channelFactory-ref="channelFactory" />
 
     <bean id="channelFactory" class="amp.rabbit.BasicChannelFactory"
@@ -69,7 +69,7 @@
     <bean id="fallbackProvider" class="amp.topology.client.DefaultApplicationExchangeProvider"
     		p:hostname="devexample.com" p:port="5672" p:exchangeName="amp.adaptation" />
 
-    <bean id="routingInfoCache" class="amp.bus.rabbit.CommandableCache"
+    <bean id="routingInfoCache" class="amp.rabbit.transport.CommandableCache"
           c:commandReceiver-ref="commandReceiver"
           c:cacheExpiryInSeconds-value="600" />
 

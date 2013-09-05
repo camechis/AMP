@@ -1,14 +1,14 @@
 package amp.extensions.commons.builder;
 
 import amp.bus.ITransportProvider;
-import amp.bus.rabbit.CommandableCache;
-import amp.bus.rabbit.IRoutingInfoCache;
 import amp.commanding.DefaultCommandReceiver;
 import amp.commanding.ICommandReceiver;
 import amp.rabbit.IRabbitChannelFactory;
-import amp.bus.rabbit.RabbitTransportProvider;
 import amp.rabbit.topology.ITopologyService;
+import amp.rabbit.transport.CommandableCache;
+import amp.rabbit.transport.IRoutingInfoCache;
 import amp.rabbit.transport.RabbitEnvelopeReceiver;
+import amp.rabbit.transport.RabbitTransportProvider;
 
 /**
  * A little fluent interface for configuring the

@@ -52,7 +52,7 @@
     <bean id="envelopeBus" class="amp.bus.DefaultEnvelopeBus" destroy-method="dispose"
     		c:transportProvider-ref="transportProvider" />
 
-    <bean id="transportProvider" class="amp.bus.rabbit.RabbitTransportProvider" 
+    <bean id="transportProvider" class="amp.rabbit.transport.RabbitTransportProvider" 
     		c:topologyService-ref="topologyService" c:channelFactory-ref="channelFactory" />
 
     <bean id="channelFactory" class="amp.bus.rabbit.BasicChannelFactory"

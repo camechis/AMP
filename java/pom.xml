@@ -38,7 +38,6 @@
     <!-- Child modules -->
     <modules>
         <module>amp-bus</module>
-        <module>amp-bus-rabbit</module>
         <module>amp-bus-security</module>
         <module>amp-eventing</module>
         <module>amp-rabbit</module>

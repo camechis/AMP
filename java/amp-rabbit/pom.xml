@@ -16,7 +16,7 @@
 
     <groupId>amp</groupId>
     <artifactId>amp.rabbit</artifactId>
-    <name>AMP RabbitMQ Shared Constructs</name>
+    <name>RabbitMQ specific components of AMP</name>
     <packaging>jar</packaging>
     <url>http://ampere.berico.us/clients/java</url>
     
@@ -37,6 +37,11 @@
         <dependency>
             <groupId>amp</groupId>
             <artifactId>amp.anubis.core</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>amp</groupId>
+            <artifactId>amp.commanding</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         
