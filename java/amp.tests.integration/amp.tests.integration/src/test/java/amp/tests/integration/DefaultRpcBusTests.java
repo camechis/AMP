@@ -1,5 +1,6 @@
 package amp.tests.integration;
 
+import java.util.Collection;
 import java.util.Map;
 
 import org.joda.time.Duration;
@@ -27,7 +28,28 @@ public class DefaultRpcBusTests extends DefaultEventBusTests{
 
 		backendContext = new FileSystemXmlApplicationContext("src/test/resources/BasicAuthRabbitConfig.xml");
 		backendBus = (IRpcEventBus) backendContext.getBean("rpcEventBus");
-}
+
+        try {
+			backendBus.subscribe( new IEventHandler<TestRequest>(){
+
+				public Class<TestRequest> getEventType() {
+					return TestRequest.class;
+				}
+
+				public Object handle(TestRequest event, Map<String, String> headers) { 
+			        backendBus.respondTo(headers, new TestResponse(event.Id));
+					return null;
+				}
+
+				public Object handleFailed(Envelope env, Exception ex) {
+					return null;
+				}
+
+			});
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 	
 	@AfterClass
 	public static void AfterAllTests(){
@@ -37,30 +59,29 @@ public class DefaultRpcBusTests extends DefaultEventBusTests{
 	}
 	
     @Test
-    public void Should_be_able_to_send_and_receive_via_rpc() throws Exception
+    public void Should_be_able_to_send_and_receive_via_rpc() 
     {
-        backendBus.subscribe( new IEventHandler<TestRequest>(){
+        TestRequest request = new TestRequest(1);
 
-			public Class<TestRequest> getEventType() {
-				return TestRequest.class;
-			}
-
-			public Object handle(TestRequest event, Map<String, String> headers) { 
-	            backendBus.respondTo(headers, new TestResponse(event.Id));
-				return null;
-			}
-
-			public Object handleFailed(Envelope env, Exception ex) {
-				return null;
-			}
-
-        });
-
-        TestRequest request = new TestRequest();
-
-        TestResponse response = rpcBus.getResponseTo(request, Duration.standardSeconds(10), TestResponse.class);
+        TestResponse response = rpcBus.getResponseTo(request, Duration.standardSeconds(5), TestResponse.class);
 
         assertNotNull("RPC Response not received within timeout period.", response);
         assertEquals("The RPC Response did not match the request.", request.Id, response.Id);
     }
+    
+    @Test
+    @Ignore("GatherResponsesTo is not implemented yet.")
+    public void Should_be_able_to_send_and_gather_via_rpc() 
+    {
+        TestRequest request = new TestRequest(2);
+
+        Collection<TestResponse> responses = rpcBus.gatherResponsesTo(request, Duration.standardSeconds(5));
+
+        assertNotNull("RPC Response not received within timeout period.", responses);
+        assertEquals("The wrong number of responses were gathered.", 2, responses.size());
+        for(TestResponse response : responses){
+            assertEquals("The RPC Response did not match the request.", request.Id, response.Id);
+        }
+    }
+
 }
