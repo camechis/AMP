@@ -94,7 +94,7 @@
 
     <bean id="routingInfoCache" class="amp.bus.rabbit.CommandableCache"
           c:commandReceiver-ref="commandReceiver"
-          c:cacheExpiryInSeconds-value="600" />
+          c:cacheExpiryInSeconds="600" />
 
     <bean id="commandReceiver" class="amp.commanding.DefaultCommandReceiver" c:envelopeReceiver-ref="envelopeReceiver" />
 
