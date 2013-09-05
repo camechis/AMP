@@ -7,7 +7,7 @@ import java.util.concurrent.locks.Lock;
 import com.google.common.cache.Cache;
 
 import amp.commanding.ICommandHandler;
-import amp.commands.BurstRoutingCacheCommand;
+import amp.rabbit.commands.BurstRoutingCacheCommand;
 import amp.rabbit.topology.RoutingInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

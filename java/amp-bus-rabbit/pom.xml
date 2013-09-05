@@ -43,11 +43,6 @@
             <artifactId>amp.commanding.rabbit</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
-        <dependency>
-            <groupId>amp</groupId>
-            <artifactId>amp.commands</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
 
         <!-- Shared dependencies -->
         <dependency>

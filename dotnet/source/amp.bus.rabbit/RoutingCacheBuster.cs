@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Caching;
-
+using amp.rabbit.commands;
 using Common.Logging;
 
 using amp.commanding;
-using amp.commands;
 using amp.rabbit.topology;
 
 namespace amp.bus.rabbit
