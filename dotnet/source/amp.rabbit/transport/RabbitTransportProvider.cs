@@ -3,15 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-
+using amp.bus;
+using amp.rabbit.topology;
+using cmf.bus;
 using Common.Logging;
 using RabbitMQ.Client;
 
-using cmf.bus;
-using amp.rabbit;
-using amp.rabbit.topology;
-
-namespace amp.bus.rabbit
+namespace amp.rabbit.transport
 {
     public class RabbitTransportProvider : ITransportProvider, IDisposable
     {

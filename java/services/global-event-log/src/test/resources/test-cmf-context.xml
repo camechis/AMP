@@ -48,7 +48,7 @@
         <constructor-arg name="transportProvider" ref="transportProvider" />
     </bean>
 
-    <bean id="transportProvider" class="amp.bus.rabbit.RabbitTransportProvider">
+    <bean id="transportProvider" class="amp.rabbit.transport.RabbitTransportProvider">
         <constructor-arg name="topologyService" ref="topologyService" />
         <constructor-arg name="channelFactory" ref="channelFactory" />
         <constructor-arg name="routingInfoCache" ref="routingInfoCache" />
@@ -85,7 +85,7 @@
         <property name="exchangeName" value="amp.fallback" />
     </bean>
 
-    <bean id="routingInfoCache" class="amp.bus.rabbit.CommandableCache">
+    <bean id="routingInfoCache" class="amp.rabbit.transport.CommandableCache">
         <constructor-arg name="commandReceiver" ref="commandReceiver" />
         <constructor-arg name="cacheExpiryInSeconds" value="600" />
     </bean>
@@ -94,7 +94,7 @@
         <constructor-arg name="envelopeReceiver" ref="envelopeReceiver" />
     </bean>
 
-    <bean id="envelopeReceiver" class="amp.commanding.rabbit.RabbitEnvelopeReceiver">
+    <bean id="envelopeReceiver" class="amp.rabbit.transport.RabbitEnvelopeReceiver">
         <constructor-arg name="topologyService" ref="topologyService" />
         <constructor-arg name="channelFactory" ref="channelFactory" />
     </bean>

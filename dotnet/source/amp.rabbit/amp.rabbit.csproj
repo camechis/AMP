@@ -48,6 +48,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -58,6 +59,11 @@
     <Compile Include="BaseConnectionFactory.cs" />
     <Compile Include="BasicConnectionFactory.cs" />
     <Compile Include="CertificateConnectionFactory.cs" />
+    <Compile Include="transport\CommandableCache.cs" />
+    <Compile Include="transport\IRoutingInfoCache.cs" />
+    <Compile Include="transport\RabbitEnvelopeReceiver.cs" />
+    <Compile Include="transport\RabbitEnvelopeSender.cs" />
+    <Compile Include="commands\BurstRoutingCacheCommand.cs" />
     <Compile Include="TokenConnectionFactory.cs" />
     <Compile Include="DeliveryOutcomes.cs" />
     <Compile Include="IRabbitConnectionFactory.cs" />
@@ -72,6 +78,8 @@
     <Compile Include="topology\RoutingInfo.cs" />
     <Compile Include="topology\SimpleTopologyService.cs" />
     <Compile Include="topology\TopologyExtensions.cs" />
+    <Compile Include="transport\RabbitTransportProvider.cs" />
+    <Compile Include="transport\RoutingCacheBuster.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\amp.bus.security\amp.bus.security.csproj">
@@ -81,6 +89,10 @@
     <ProjectReference Include="..\amp.bus\amp.bus.csproj">
       <Project>{d96a6d2b-e427-406a-bd73-9961447b3557}</Project>
       <Name>amp.bus</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\amp.commanding\amp.commanding.csproj">
+      <Project>{93150A91-3D0A-4753-94A4-B6280994A18A}</Project>
+      <Name>amp.commanding</Name>
     </ProjectReference>
     <ProjectReference Include="..\amp.utility\amp.utility.csproj">
       <Project>{964930B6-0B9A-48E2-BC0C-F5ADFA60C005}</Project>

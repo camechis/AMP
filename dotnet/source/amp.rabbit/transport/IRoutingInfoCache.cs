@@ -1,7 +1,7 @@
 ﻿using System;
 using amp.rabbit.topology;
 
-namespace amp.bus.rabbit
+namespace amp.rabbit.transport
 {
     public interface IRoutingInfoCache : IDisposable
     {

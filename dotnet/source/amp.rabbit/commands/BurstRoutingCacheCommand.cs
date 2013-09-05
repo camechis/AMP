@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using amp.rabbit.topology;
 
-namespace amp.commands
+namespace amp.rabbit.commands
 {
     public class BurstRoutingCacheCommand
     {

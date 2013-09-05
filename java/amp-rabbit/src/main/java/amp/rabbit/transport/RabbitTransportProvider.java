@@ -1,4 +1,4 @@
-package amp.bus.rabbit;
+package amp.rabbit.transport;
 
 
 import java.util.ArrayList;

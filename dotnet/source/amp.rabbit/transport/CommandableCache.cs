@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Runtime.Caching;
-using Common.Logging;
-
 using amp.commanding;
 using amp.rabbit.topology;
+using Common.Logging;
 
-namespace amp.bus.rabbit
+namespace amp.rabbit.transport
 {
     public class CommandableCache : IRoutingInfoCache
     {
