@@ -33,8 +33,6 @@ namespace amp.tests.integration.Eventing
         [Test]
         public void Should_be_able_to_send_and_receive_via_rpc()
         {
-            Assert.AreNotSame(_rpcBus, _backendBus);
-
             _backendBus.Subscribe<TestRequest>((@event, headers) =>
             {
                 _backendBus.RespondTo(headers, new TestResponse { Id = @event.Id });
