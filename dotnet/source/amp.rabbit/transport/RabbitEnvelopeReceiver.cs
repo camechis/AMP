@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
-using Common.Logging;
-
-using amp.rabbit;
 using amp.rabbit.topology;
 using cmf.bus;
+using Common.Logging;
 
-namespace amp.bus.rabbit
+namespace amp.rabbit.transport
 {
     public class RabbitEnvelopeReceiver : IEnvelopeReceiver, IDisposable
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(RabbitTransportProvider));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(RabbitEnvelopeReceiver));
 
         protected IDictionary<IRegistration, RabbitListener> _listeners;
         protected ITopologyService _topologyService;

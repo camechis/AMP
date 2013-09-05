@@ -97,7 +97,7 @@
     <constructor-arg name="envelopeReceiver" ref="IEnvelopeReceiver" />
   </object>
 
-  <object id="IEnvelopeReceiver" type="amp.bus.rabbit.RabbitEnvelopeReceiver, amp.bus.rabbit">
+  <object id="IEnvelopeReceiver" type="amp.rabbit.transport.RabbitEnvelopeReceiver, amp.rabbit">
     <constructor-arg name="topologyService" ref="ITopologyService" />
     <constructor-arg name="connFactory" ref="IRabbitConnectionFactory" />
   </object>

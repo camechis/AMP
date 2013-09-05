@@ -60,8 +60,6 @@
     </Compile>
     <Compile Include="CommandableCache.cs" />
     <Compile Include="IRoutingInfoCache.cs" />
-    <Compile Include="RabbitEnvelopeReceiver.cs" />
-    <Compile Include="RabbitEnvelopeSender.cs" />
     <Compile Include="RabbitTransportProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RoutingCacheBuster.cs" />

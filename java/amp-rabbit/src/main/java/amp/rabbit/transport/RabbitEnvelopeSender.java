@@ -1,4 +1,4 @@
-package amp.commanding.rabbit;
+package amp.rabbit.transport;
 
 import amp.rabbit.IRabbitChannelFactory;
 import amp.rabbit.topology.Exchange;

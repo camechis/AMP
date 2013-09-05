@@ -98,7 +98,7 @@
 
     <bean id="commandReceiver" class="amp.commanding.DefaultCommandReceiver" c:envelopeReceiver-ref="envelopeReceiver" />
 
-    <bean id="envelopeReceiver" class="amp.commanding.rabbit.RabbitEnvelopeReceiver"
+    <bean id="envelopeReceiver" class="amp.rabbit.transport.RabbitEnvelopeReceiver"
           c:topologyService-ref="topologyService"
           c:channelFactory-ref="channelFactory" />
 

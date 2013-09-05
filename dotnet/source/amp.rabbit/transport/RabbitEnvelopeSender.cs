@@ -2,13 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using amp.rabbit;
 using amp.rabbit.topology;
 using cmf.bus;
 using Common.Logging;
 using RabbitMQ.Client;
 
-namespace amp.bus.rabbit
+namespace amp.rabbit.transport
 {
     public class RabbitEnvelopeSender : IEnvelopeSender
     {

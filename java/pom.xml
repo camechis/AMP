@@ -43,7 +43,6 @@
         <module>amp-eventing</module>
         <module>amp-rabbit</module>
         <module>amp-commanding</module>
-        <module>amp-commanding-rabbit</module>
         <module>amp-utility</module>
         <module>amp.tests.integration</module>
         <module>amp-examples/bus-gui-tester</module>

@@ -5,10 +5,10 @@ import amp.bus.rabbit.CommandableCache;
 import amp.bus.rabbit.IRoutingInfoCache;
 import amp.commanding.DefaultCommandReceiver;
 import amp.commanding.ICommandReceiver;
-import amp.commanding.rabbit.RabbitEnvelopeReceiver;
 import amp.rabbit.IRabbitChannelFactory;
 import amp.bus.rabbit.RabbitTransportProvider;
 import amp.rabbit.topology.ITopologyService;
+import amp.rabbit.transport.RabbitEnvelopeReceiver;
 
 /**
  * A little fluent interface for configuring the

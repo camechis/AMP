@@ -58,6 +58,8 @@
     <Compile Include="BaseConnectionFactory.cs" />
     <Compile Include="BasicConnectionFactory.cs" />
     <Compile Include="CertificateConnectionFactory.cs" />
+    <Compile Include="transport\RabbitEnvelopeReceiver.cs" />
+    <Compile Include="transport\RabbitEnvelopeSender.cs" />
     <Compile Include="commands\BurstRoutingCacheCommand.cs" />
     <Compile Include="TokenConnectionFactory.cs" />
     <Compile Include="DeliveryOutcomes.cs" />

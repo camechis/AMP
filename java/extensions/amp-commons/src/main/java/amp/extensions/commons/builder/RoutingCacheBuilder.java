@@ -3,9 +3,9 @@ package amp.extensions.commons.builder;
 import amp.bus.rabbit.CommandableCache;
 import amp.commanding.DefaultCommandReceiver;
 import amp.commanding.ICommandReceiver;
-import amp.commanding.rabbit.RabbitEnvelopeReceiver;
 import amp.rabbit.IRabbitChannelFactory;
 import amp.rabbit.topology.ITopologyService;
+import amp.rabbit.transport.RabbitEnvelopeReceiver;
 
 /**
  * Created with IntelliJ IDEA.

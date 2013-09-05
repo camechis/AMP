@@ -94,7 +94,7 @@
         <constructor-arg name="envelopeReceiver" ref="envelopeReceiver" />
     </bean>
 
-    <bean id="envelopeReceiver" class="amp.commanding.rabbit.RabbitEnvelopeReceiver">
+    <bean id="envelopeReceiver" class="amp.rabbit.transport.RabbitEnvelopeReceiver">
         <constructor-arg name="topologyService" ref="topologyService" />
         <constructor-arg name="channelFactory" ref="channelFactory" />
     </bean>
