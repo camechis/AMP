@@ -33,7 +33,7 @@
     <SignAssembly>True</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>amp.eventing.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\amp.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="cmf.bus">
@@ -100,7 +100,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="amp.eventing.snk" />
+    <None Include="..\amp.snk">
+      <Link>amp.snk</Link>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

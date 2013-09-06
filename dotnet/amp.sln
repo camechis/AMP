@@ -3,6 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2010
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "source", "source", "{2FC2F03F-C4F2-403A-82B2-6DD31EA80D5C}"
 	ProjectSection(SolutionItems) = preProject
+		source\amp.snk = source\amp.snk
 		source\GlobalAssemblyInfo.cs = source\GlobalAssemblyInfo.cs
 	EndProjectSection
 EndProject
