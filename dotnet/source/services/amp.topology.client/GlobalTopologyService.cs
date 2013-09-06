@@ -16,7 +16,7 @@ namespace amp.topology.client
     /// is not found, it will default to a "fallback" configuration.
     /// </summary>
     /// <author>John Ruiz (Berico Technologies)</author>
-    public class GlobalTopologyService : ITopologyService, IDisposable
+    public class GlobalTopologyService : ITopologyService
     {
         private readonly IRoutingInfoRetreiver _routingRepo;
         private readonly IFallbackRoutingInfoProvider _fallbackProvider;

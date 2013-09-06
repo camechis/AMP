@@ -64,5 +64,11 @@ namespace amp.rabbit.transport
 
             Log.Debug("Leave Send");        
         }
+
+        public void Dispose()
+        {
+            _topologyService.Dispose();
+            _connFactory.Dispose();
+        }
     }
 }

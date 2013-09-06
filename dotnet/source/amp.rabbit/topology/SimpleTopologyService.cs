@@ -43,5 +43,9 @@ namespace amp.rabbit.topology
 
             return new RoutingInfo(new RouteInfo[] { theOneRoute });
         }
+
+        public void Dispose()
+        {
+        }
     }
 }
