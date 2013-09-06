@@ -38,6 +38,7 @@
   <object id="OutboundHeadersProcessor" type="amp.eventing.OutboundHeadersProcessor, amp.eventing">
     <constructor-arg name="alternateSenderIdentity" value="integration-test" />
   </object>
+  
   <object id="RpcFilter" type="amp.eventing.RpcFilter, amp.eventing" />
 
   <object id="IEnvelopeBus" type="amp.bus.DefaultEnvelopeBus, amp.bus">
@@ -93,13 +94,44 @@
     <constructor-arg name="cacheExpiryInSeconds" value="600" />
   </object>
 
+  <object id="ICommandBus" type="amp.commanding.DefaultCommandBus, amp.commanding">
+    <constructor-arg name="commandSender" ref="ICommandSender" />
+    <constructor-arg name="commandReceiver" ref="ICommandReceiver" />
+  </object>
+
   <object id="ICommandReceiver" type="amp.commanding.DefaultCommandReceiver, amp.commanding">
     <constructor-arg name="envelopeReceiver" ref="IEnvelopeReceiver" />
+    <constructor-arg name="processingChain">
+      <list element-type="amp.commanding.ICommandProcessor, amp.commanding">
+        <ref object="Cmd-JsonEventSerializer" />
+      </list>
+    </constructor-arg>
+  </object>
+
+  <object id="ICommandSender" type="amp.commanding.DefaultCommandSender, amp.commanding">
+    <constructor-arg name="envelopeSender" ref="IEnvelopeSender" />
+    <constructor-arg name="processingChain">
+      <list element-type="amp.commanding.ICommandProcessor, amp.commanding">
+        <ref object="Cmd-JsonEventSerializer" />
+        <ref object="Cmd-OutboundHeadersProcessor" />
+      </list>
+    </constructor-arg>
   </object>
 
   <object id="IEnvelopeReceiver" type="amp.rabbit.transport.RabbitEnvelopeReceiver, amp.rabbit">
     <constructor-arg name="topologyService" ref="ITopologyService" />
     <constructor-arg name="connFactory" ref="IRabbitConnectionFactory" />
+  </object>
+
+  <object id="IEnvelopeSender" type="amp.rabbit.transport.RabbitEnvelopeSender, amp.rabbit">
+    <constructor-arg name="topologyService" ref="ITopologyService" />
+    <constructor-arg name="connFactory" ref="IRabbitConnectionFactory" />
+  </object>
+
+  <object id="Cmd-JsonEventSerializer" type="amp.commanding.JsonSerializationProcessor, amp.commanding" />
+
+  <object id="Cmd-OutboundHeadersProcessor" type="amp.commanding.OutboundHeadersProcessor, amp.commanding">
+    <constructor-arg name="alternateSenderIdentity" value="integration-test" />
   </object>
 
 </objects>

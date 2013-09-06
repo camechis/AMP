@@ -20,7 +20,7 @@ namespace amp.eventing
         /// <summary>
         /// Sets an alternate user Identity to user if not found in the envelope when ProcessEvent executes.
         /// </summary>
-        /// <param name="alternateUserIdentity"></param>
+        /// <param name="alternateSenderIdentity"></param>
         public OutboundHeadersProcessor(string alternateSenderIdentity)
         {
             _alternateIdentity = alternateSenderIdentity;
@@ -56,19 +56,26 @@ namespace amp.eventing
             env.SetCreationTime(creation);
 
             string senderIdentity = env.GetSenderIdentity();
-            if (string.IsNullOrEmpty(senderIdentity) && 
-                false == string.IsNullOrEmpty(_alternateIdentity))
+            if (string.IsNullOrEmpty(senderIdentity))
             {
-                senderIdentity = _alternateIdentity;
+                if(!string.IsNullOrEmpty(_alternateIdentity))
+                {
+                    senderIdentity = _alternateIdentity;
+                }
+                else
+                {
+                    //This line will raise an exception if there is no active directory server available
+                    try
+                    {
+                        senderIdentity = UserPrincipal.Current.DistinguishedName.Replace(",", ", ");
+                    }
+                    catch
+                    {
+                        senderIdentity = UserPrincipal.Current.Name;
+                    }
+                }
+                env.SetSenderIdentity(senderIdentity);
             }
-            else
-            {
-                //This line will raise an exception if there is no active directory server available
-                senderIdentity = string.IsNullOrEmpty(senderIdentity) ? UserPrincipal.Current.DistinguishedName.Replace(",", ", ") : senderIdentity;
-                senderIdentity = string.IsNullOrEmpty(senderIdentity) ? UserPrincipal.Current.Name : senderIdentity;
-            }
-            env.SetSenderIdentity(senderIdentity);
-
             continueProcessing();
         }
 
