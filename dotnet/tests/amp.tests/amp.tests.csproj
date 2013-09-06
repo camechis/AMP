@@ -53,6 +53,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\source\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="DefaultEnvelopeBusTests.cs" />
     <Compile Include="DefaultEventBusTests.cs" />
     <Compile Include="InMemoryEnvBusTests.cs" />

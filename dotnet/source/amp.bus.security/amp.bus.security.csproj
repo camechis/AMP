@@ -33,7 +33,7 @@
     <SignAssembly>True</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>amp.bus.security.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\amp.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Common.Logging">
@@ -57,7 +57,9 @@
     <Compile Include="WindowsCertificateStoreCertProvider.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="amp.bus.security.snk" />
+    <None Include="..\amp.snk">
+      <Link>amp.snk</Link>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

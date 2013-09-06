@@ -34,7 +34,7 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>amp.commanding.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\amp.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="cmf.bus">
@@ -53,6 +53,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="CommandAttribute.cs" />
     <Compile Include="CommandContext.cs" />
     <Compile Include="CommandException.cs" />
@@ -71,7 +74,9 @@
     <Compile Include="TypedCommandHandler.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="amp.commanding.snk" />
+    <None Include="..\amp.snk">
+      <Link>amp.snk</Link>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
