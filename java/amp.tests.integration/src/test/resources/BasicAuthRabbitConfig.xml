@@ -110,11 +110,19 @@
           c:commandReceiver-ref="commandReceiver"
           c:cacheExpiryInSeconds="600" />
 
-    <bean id="commandReceiver" class="amp.commanding.DefaultCommandReceiver" c:envelopeReceiver-ref="envelopeReceiver" />
+    <bean id="commandReceiver" class="amp.commanding.DefaultCommandReceiver" >
+        <constructor-arg ref="envelopeReceiver" />
+        <constructor-arg >
+		    <util:list value-type="amp.eventing.IEventProcessor">
+		        <ref bean="JsonSerializationProcessor" />
+		    </util:list>
+        </constructor-arg>
+    </bean>
 
     <bean id="envelopeReceiver" class="amp.rabbit.transport.RabbitEnvelopeReceiver"
           c:topologyService-ref="topologyService"
           c:channelFactory-ref="channelFactory" />
 
+    <bean id="JsonSerializationProcessor" class="amp.commanding.JsonSerializationProcessor" />
 
 </beans>
