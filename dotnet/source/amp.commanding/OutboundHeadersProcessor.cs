@@ -12,6 +12,21 @@ namespace amp.commanding
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(OutboundHeadersProcessor));
 
+        protected string _alternateIdentity;
+
+        public OutboundHeadersProcessor()
+        {
+
+        }
+
+        /// <summary>
+        /// Sets an alternate user Identity to user if not found in the envelope when ProcessEvent executes.
+        /// </summary>
+        /// <param name="alternateSenderIdentity"></param>
+        public OutboundHeadersProcessor(string alternateSenderIdentity)
+        {
+            _alternateIdentity = alternateSenderIdentity;
+        }
 
         public void ProcessCommand(CommandContext context, Action continueProcessing)
         {
@@ -37,10 +52,31 @@ namespace amp.commanding
                 }
                 env.SetMessageTopic(messageTopic);
 
+                DateTime creation = env.GetCreationTime();
+                creation = (DateTime.MinValue == creation) ? DateTime.UtcNow : creation;
+                env.SetCreationTime(creation);
+
                 string senderIdentity = env.GetSenderIdentity();
-                senderIdentity = string.IsNullOrEmpty(senderIdentity) ? UserPrincipal.Current.DistinguishedName.Replace(",", ", ") : senderIdentity;
-                senderIdentity = string.IsNullOrEmpty(senderIdentity) ? UserPrincipal.Current.Name : senderIdentity;
-                env.SetSenderIdentity(senderIdentity);
+                if (string.IsNullOrEmpty(senderIdentity))
+                {
+                    if (!string.IsNullOrEmpty(_alternateIdentity))
+                    {
+                        senderIdentity = _alternateIdentity;
+                    }
+                    else
+                    {
+                        //This line will raise an exception if there is no active directory server available
+                        try
+                        {
+                            senderIdentity = UserPrincipal.Current.DistinguishedName.Replace(",", ", ");
+                        }
+                        catch
+                        {
+                            senderIdentity = UserPrincipal.Current.Name;
+                        }
+                    }
+                    env.SetSenderIdentity(senderIdentity);
+                }
             }
 
             // either way, continue processing
