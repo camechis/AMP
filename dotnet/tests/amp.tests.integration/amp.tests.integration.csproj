@@ -53,6 +53,7 @@
     <Compile Include="..\..\source\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Commanding\DefaultCommandBusTests.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Eventing\DefaultEventBusTests.cs" />
     <Compile Include="Eventing\DefaultRpcBusTests.cs" />
@@ -66,8 +67,12 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Commanding\" />
+    <ProjectReference Include="..\..\source\amp.commanding\amp.commanding.csproj">
+      <Project>{93150A91-3D0A-4753-94A4-B6280994A18A}</Project>
+      <Name>amp.commanding</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
