@@ -7,7 +7,7 @@ using Common.Logging;
 
 namespace amp.rabbit.transport
 {
-    public class RabbitEnvelopeReceiver : IEnvelopeReceiver, IDisposable
+    public class RabbitEnvelopeReceiver : IEnvelopeReceiver
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(RabbitEnvelopeReceiver));
 
@@ -68,6 +68,9 @@ namespace amp.rabbit.transport
             {
                 try { listener.Stop(); } catch { }
             }
+
+            _topologyService.Dispose();
+            _connFactory.Dispose();
         }
 
         protected RabbitListener createListener(IRegistration registration, Exchange exchange) 

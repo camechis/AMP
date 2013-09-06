@@ -11,7 +11,7 @@ using RabbitMQ.Client;
 
 namespace amp.rabbit.transport
 {
-    public class RabbitTransportProvider : ITransportProvider, IDisposable
+    public class RabbitTransportProvider : ITransportProvider
     {
         public event Action<IEnvelopeDispatcher> OnEnvelopeReceived;
 
