@@ -40,7 +40,7 @@ namespace amp.tests.integration.Eventing
             _bus.Publish(sentEvent);
 
             var end = DateTime.Now.AddSeconds(5);
-            while (receivedEvent == null || DateTime.Now > end)
+            while (receivedEvent == null && DateTime.Now < end)
             {
                 Thread.Sleep(100);
             }
