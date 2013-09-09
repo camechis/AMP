@@ -66,6 +66,9 @@
     <Compile Include="DefaultEventConsumer.cs" />
     <Compile Include="DefaultEventProducer.cs" />
     <Compile Include="DefaultEventBus.cs" />
+    <Compile Include="DigitalSignatureProcessor.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
