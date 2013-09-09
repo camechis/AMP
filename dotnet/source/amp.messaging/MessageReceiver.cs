@@ -11,7 +11,7 @@ namespace amp.messaging
         private static readonly ILog Log = LogManager.GetLogger(typeof(MessageReceiver));
 
         private IEnvelopeReceiver _envelopeReceiver;
-        private IList<IMessageProcessor> _processingChain;
+        private List<IMessageProcessor> _processingChain;
 
 
         public MessageReceiver(IEnvelopeReceiver envelopeReceiver)
@@ -19,7 +19,7 @@ namespace amp.messaging
             _envelopeReceiver = envelopeReceiver;
         }
 
-        public MessageReceiver(IEnvelopeReceiver envelopeReceiver, IList<IMessageProcessor> processingChain)
+        public MessageReceiver(IEnvelopeReceiver envelopeReceiver, List<IMessageProcessor> processingChain)
             : this(envelopeReceiver)
         {
             _processingChain = processingChain;
@@ -105,13 +105,13 @@ namespace amp.messaging
             IMessageProcessor processor = processingChain.First();
 
             // create a processing chain that no longer contains this processor
-            IEnumerable<IMessageProcessor> newChain = processingChain.Skip(1);
+            List<IMessageProcessor> newChain = processingChain.Skip(1).ToList();
 
             // let it process the command and pass its "next" processor: a method that
             // recursively calls this function with the current processor removed
             processor.ProcessMessage(context, () =>
             {
-                this.ProcessMessage(context, processingChain.Skip(1), onComplete);
+                this.ProcessMessage(context, newChain, onComplete);
             });
 
             Log.Debug("Leave processMessage");

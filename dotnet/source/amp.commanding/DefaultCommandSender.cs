@@ -11,7 +11,7 @@ namespace amp.commanding
         {
         }
 
-        public DefaultCommandSender(IEnvelopeSender envelopeSender, IList<IMessageProcessor> processingChain) 
+        public DefaultCommandSender(IEnvelopeSender envelopeSender, List<IMessageProcessor> processingChain) 
             : base(envelopeSender, processingChain)
         {
         }

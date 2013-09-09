@@ -13,7 +13,7 @@ namespace amp.commanding
         {
         }
 
-        public DefaultCommandReceiver(IEnvelopeReceiver envelopeReceiver, IList<IMessageProcessor> processingChain) 
+        public DefaultCommandReceiver(IEnvelopeReceiver envelopeReceiver, List<IMessageProcessor> processingChain) 
             : base(envelopeReceiver, processingChain)
         {
         }
