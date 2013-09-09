@@ -39,7 +39,7 @@ namespace amp.messaging
                 _envelopeReceiver.Register(registration);
             }
             catch (Exception ex) {
-                const string message = "Failed to register for a command";
+                const string message = "Failed to register for a message";
                 Log.Error(message, ex);
                 throw new MessageException(message, ex);
             }
@@ -66,7 +66,7 @@ namespace amp.messaging
             }
             catch(Exception ex)
             {
-                const string msg = "Failed to open a command envelope.";
+                const string msg = "Failed to open an envelope.";
                 Log.Error(msg, ex);
                 throw new MessageException(msg, ex);
             }
@@ -107,7 +107,7 @@ namespace amp.messaging
             // create a processing chain that no longer contains this processor
             List<IMessageProcessor> newChain = processingChain.Skip(1).ToList();
 
-            // let it process the command and pass its "next" processor: a method that
+            // let it process the message and pass its "next" processor: a method that
             // recursively calls this function with the current processor removed
             processor.ProcessMessage(context, () =>
             {

@@ -44,12 +44,12 @@ namespace amp.messaging
             }
         }
 
-        public void ReceiveCommand(IMessageHandler handler)
+        public void ReceiveMessage(IMessageHandler handler)
         {
             _messageReceiver.ReceiveMessage(handler);
         }
 
-        public void ReceiveCommand<TCommand>(Action<TCommand, IDictionary<string, string>> handler) where TCommand : class
+        public void ReceiveMessage<TCommand>(Action<TCommand, IDictionary<string, string>> handler) where TCommand : class
         {
             _messageReceiver.ReceiveMessage(handler);
         }

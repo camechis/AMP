@@ -26,17 +26,17 @@ namespace amp.messaging
         }
 
 
-        public void Send(object command)
+        public void Send(object message)
         {
-            // create an envelope for the command
+            // create an envelope for the message
             Envelope newEnvelope = new Envelope();
 
-            // create a command context for command processing
+            // create a message context for message processing
             MessageContext ctx = new MessageContext(
-                MessageContext.Directions.Out, newEnvelope, command);
+                MessageContext.Directions.Out, newEnvelope, message);
 
-            // process the command
-            this.ProcessCommand(ctx, _processingChain, () =>
+            // process the message
+            this.ProcessMessage(ctx, _processingChain, () =>
             {
                 try
                 {
@@ -44,19 +44,19 @@ namespace amp.messaging
                 }
                 catch (Exception ex)
                 {
-                    string msg = "Failed to send a command envelope.";
+                    string msg = "Failed to send a message envelope.";
                     Log.Error(msg, ex);
                     throw new MessageException(msg, ex);
                 }
             });
         }
 
-        public void ProcessCommand(
+        public void ProcessMessage(
             MessageContext context,
             List<IMessageProcessor> processingChain,
             Action onComplete)
         {
-            Log.Debug("Enter processCommand");
+            Log.Debug("Enter ProcessMessage");
 
             // if the chain is null or empty, complete processing
             if ((null == processingChain) || (!processingChain.Any()))
@@ -73,11 +73,11 @@ namespace amp.messaging
             // create a processing chain that no longer contains this processor
             List<IMessageProcessor> newChain = processingChain.Skip(1).ToList();
 
-            // let it process the command and pass its "next" processor: a method that
+            // let it process the message and pass its "next" processor: a method that
             // recursively calls this function with the current processor removed
-            processor.ProcessMessage(context, () => this.ProcessCommand(context, newChain, onComplete));
+            processor.ProcessMessage(context, () => this.ProcessMessage(context, newChain, onComplete));
 
-            Log.Debug("Leave processCommand");
+            Log.Debug("Leave ProcessMessage");
         }
 
         public void Dispose()

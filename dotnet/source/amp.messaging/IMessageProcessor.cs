@@ -3,7 +3,7 @@
 namespace amp.messaging
 {
     /// <summary>
-    /// Defines the interface of a component that can process commands on 
+    /// Defines the interface of a component that can process messages on 
     /// their way to and from the client.
     /// <remarks>
     /// If processing should continue, call the provided continuation method.  
