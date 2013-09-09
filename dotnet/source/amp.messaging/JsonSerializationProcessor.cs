@@ -103,7 +103,7 @@ namespace amp.messaging
                 }
                 else // otherwise, throw an exception
                 {
-                    throw new Exception("Cannot deserialize an event of topic '" + type + "' because no Type could be found for it");
+                    throw new Exception("Cannot deserialize an event of topic '" + eventType + "' because no type definition could be found for it");
                 }
             }
             catch (Exception ex)
