@@ -66,10 +66,19 @@
     <Compile Include="DefaultEventConsumer.cs" />
     <Compile Include="DefaultEventProducer.cs" />
     <Compile Include="DefaultEventBus.cs" />
+    <Compile Include="DefaultRpcBus.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DigitalSignatureProcessor.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RpcFilter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="RpcRegistration.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\amp.bus\amp.bus.csproj">

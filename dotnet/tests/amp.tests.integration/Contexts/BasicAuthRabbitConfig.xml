@@ -16,26 +16,25 @@
     </constructor-arg>
   </object>
 
-  <!--
   <object id="IRpcEventBus" type="amp.eventing.DefaultRpcBus, amp.eventing">
-    <constructor-arg name="envBus" ref="IEnvelopeBus" />
-    <property name="inboundChain">
-      <dictionary key-type="System.Int32" value-type="amp.eventing.IEventProcessor, amp.eventing">
-        <entry key="0" value-ref="RpcFilter" />
-        <entry key="2" value-ref="JsonEventSerializer" />
-      </dictionary>
-    </property>
-    <property name="outboundChain">
-      <dictionary key-type="System.Int32" value-type="amp.eventing.IEventProcessor, amp.eventing">
-        <entry key="0" value-ref="JsonEventSerializer" />
-        <entry key="1" value-ref="OutboundHeadersProcessor" />
-        <entry key="3" value-ref="RpcFilter" />
-      </dictionary>
-    </property>
+    <constructor-arg name="envelopeBus" ref="IEnvelopeBus" />
+    <constructor-arg name="inboundChain">
+      <list element-type="amp.messaging.IMessageProcessor, amp.messaging">
+        <ref object="RpcFilter" />
+        <ref object="Msg-JsonEventSerializer" />
+      </list>
+    </constructor-arg>
+    <constructor-arg name="outboundChain">
+      <list element-type="amp.messaging.IMessageProcessor, amp.messaging">
+        <ref object="Msg-JsonEventSerializer" />
+        <ref object="Msg-OutboundHeadersProcessor" />
+        <ref object="RpcFilter" />
+      </list>
+    </constructor-arg>
   </object>
 
   <object id="RpcFilter" type="amp.eventing.RpcFilter, amp.eventing" />
--->
+
   <object id="IEnvelopeBus" type="amp.bus.DefaultEnvelopeBus, amp.bus">
     <constructor-arg name="transportProvider" ref="ITransportProvider" />
   </object>

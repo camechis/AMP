@@ -9,14 +9,8 @@ namespace amp.eventing
 {
     public class DefaultEventBus : IEventBus
     {
-        protected readonly IEventConsumer _eventConsumer;
-        protected readonly IEventProducer _eventProducer;
-
-        public DefaultEventBus(IEventConsumer eventConsumer, IEventProducer eventProducer)
-        {
-            _eventConsumer = eventConsumer;
-            _eventProducer = eventProducer;
-        }
+        protected readonly DefaultEventConsumer _eventConsumer;
+        protected readonly DefaultEventProducer _eventProducer;
 
         public DefaultEventBus(IEnvelopeBus envelopeBus
             , List<IMessageProcessor> inboundChain

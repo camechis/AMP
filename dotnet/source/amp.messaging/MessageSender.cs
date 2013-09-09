@@ -6,7 +6,7 @@ using Common.Logging;
 
 namespace amp.messaging
 {
-    public class MessageSender 
+    public class MessageSender
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(MessageSender));
 
@@ -34,9 +34,9 @@ namespace amp.messaging
             // create a message context for message processing
             MessageContext ctx = new MessageContext(
                 MessageContext.Directions.Out, newEnvelope, message);
-
+            
             // process the message
-            this.ProcessMessage(ctx, _processingChain, () =>
+            this.ProcessMessage(ctx, () =>
             {
                 try
                 {
@@ -44,11 +44,18 @@ namespace amp.messaging
                 }
                 catch (Exception ex)
                 {
-                    string msg = "Failed to send a message envelope.";
+                    string msg = "Failed to send an envelope.";
                     Log.Error(msg, ex);
                     throw new MessageException(msg, ex);
                 }
             });
+        }
+
+        public void ProcessMessage(
+            MessageContext context,
+            Action onComplete)
+        {
+            ProcessMessage(context, _processingChain, onComplete);
         }
 
         public void ProcessMessage(
