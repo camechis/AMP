@@ -57,7 +57,9 @@
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="DefaultEnvelopeBusTests.cs" />
-    <Compile Include="DefaultEventBusTests.cs" />
+    <Compile Include="DefaultEventBusTests.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="InMemoryEnvBusTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -69,6 +71,10 @@
     <ProjectReference Include="..\..\source\amp.eventing\amp.eventing.csproj">
       <Project>{24D9184A-81B9-4D67-86E4-1B8B4EAB27BB}</Project>
       <Name>amp.eventing</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\source\amp.messaging\amp.messaging.csproj">
+      <Project>{80F80EE5-5C74-48FF-9F25-225CFD77D0EC}</Project>
+      <Name>amp.messaging</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -12,11 +12,17 @@ namespace amp.messaging
         private readonly IMessageHandler _handler;
         private readonly Predicate<Envelope> _filterPredicate;
         private readonly Func<Envelope, MessageContext> _envelopeOpener;
+        private IDictionary<string, string> _info;
 
 
         public Predicate<Envelope> Filter
         {
             get { return _filterPredicate; }
+        }
+
+        public IDictionary<string, string> Info
+        {
+            get { return _info; }
         }
 
         public object Handle(Envelope env)
@@ -52,35 +58,43 @@ namespace amp.messaging
 
         public object HandleFailed(Envelope env, Exception ex)
         {
-            Log.Error("Failed to handle a message.", ex);
-            return null;
+            Log.Debug("Enter HandleFailed");
+
+            // either succeed & return the result or fail & return null
+            try
+            {
+                object handleFailed = _handler.HandleFailed(env, ex);
+                Log.Debug("Leave HandleFailed");
+                return handleFailed;
+            }
+            catch (Exception failedToFail)
+            {
+                Log.Warn("Caught an exception attempting to handle the failed event", failedToFail);
+                return null;
+            }
         }
 
-        public IDictionary<string, string> Info { get; set; }
-
-
-
         public MessageRegistration(Func<Envelope, MessageContext> envelopeOpener, IMessageHandler handler)
+            :this(envelopeOpener, handler, env => true)
         {
-            _envelopeOpener = envelopeOpener;
-            _handler = handler;
-
-            string handledType = _handler.Topic;
-
-            this.Info = new Dictionary<string, string>
-            {
-                {EnvelopeHeaderConstants.MESSAGE_TOPIC, handledType},
-                {EnvelopeHeaderConstants.MESSAGE_TYPE, handledType}
-            };
         }
 
         public MessageRegistration(
             Func<Envelope, MessageContext> envelopeOpener,
             IMessageHandler handler,
             Predicate<Envelope> filterPredicate)
-            : this(envelopeOpener, handler)
         {
+            _envelopeOpener = envelopeOpener;
+            _handler = handler;
             _filterPredicate = filterPredicate;
+
+            string handledType = _handler.Topic;
+
+            _info = new Dictionary<string, string>
+            {
+                {EnvelopeHeaderConstants.MESSAGE_TOPIC, handledType},
+                {EnvelopeHeaderConstants.MESSAGE_TYPE, handledType}
+            };
         }
     }
 }
