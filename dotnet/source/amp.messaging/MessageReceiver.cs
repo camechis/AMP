@@ -10,8 +10,8 @@ namespace amp.messaging
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(MessageReceiver));
 
-        private IEnvelopeReceiver _envelopeReceiver;
-        private List<IMessageProcessor> _processingChain;
+        private readonly IEnvelopeReceiver _envelopeReceiver;
+        private readonly List<IMessageProcessor> _processingChain;
 
 
         public MessageReceiver(IEnvelopeReceiver envelopeReceiver)
@@ -39,7 +39,7 @@ namespace amp.messaging
                 _envelopeReceiver.Register(registration);
             }
             catch (Exception ex) {
-                String message = "Failed to register for a command";
+                const string message = "Failed to register for a command";
                 Log.Error(message, ex);
                 throw new MessageException(message, ex);
             }
@@ -66,7 +66,7 @@ namespace amp.messaging
             }
             catch(Exception ex)
             {
-                string msg = "Failed to open a command envelope.";
+                const string msg = "Failed to open a command envelope.";
                 Log.Error(msg, ex);
                 throw new MessageException(msg, ex);
             }
@@ -81,13 +81,13 @@ namespace amp.messaging
                 foreach (var processor in _processingChain)
                 {
                     try { processor.Dispose(); }
-                    catch { }
+                    catch (Exception ex) { Log.Warn(string.Format("Exception disposing of processor {0}", processor), ex); }
                 }
         }
 
         public void ProcessMessage(
             MessageContext context,
-            IEnumerable<IMessageProcessor> processingChain,
+            List<IMessageProcessor> processingChain,
             Action onComplete)
         {
             Log.Debug("Enter processMessage");

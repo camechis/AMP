@@ -10,8 +10,8 @@ namespace amp.messaging
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(MessageSender));
 
-        private IEnvelopeSender _envelopeSender;
-        private List<IMessageProcessor> _processingChain;
+        private readonly IEnvelopeSender _envelopeSender;
+        private readonly List<IMessageProcessor> _processingChain;
 
 
         public MessageSender(IEnvelopeSender envelopeSender)
@@ -85,7 +85,7 @@ namespace amp.messaging
             _processingChain.ToList().ForEach(p =>
             {
                 try { p.Dispose(); }
-                catch { }
+                catch (Exception ex) { Log.Warn("Exception disposing of processor " + p, ex); }
             });
         }
     }

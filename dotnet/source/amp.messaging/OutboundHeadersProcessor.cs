@@ -12,7 +12,7 @@ namespace amp.messaging
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(OutboundHeadersProcessor));
 
-        protected string _alternateIdentity;
+        protected readonly string _alternateIdentity;
 
         public OutboundHeadersProcessor()
         {

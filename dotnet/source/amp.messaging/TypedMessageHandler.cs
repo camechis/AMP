@@ -10,7 +10,7 @@ namespace amp.messaging
         private static readonly ILog Log = LogManager.GetLogger("TypedMessageHandler");
 
         private Action<TMessage, IDictionary<string, string>> _handler;
-        private Func<Envelope, Exception, Object> _faildHandler;
+        private readonly Func<Envelope, Exception, Object> _failedHandler;
 
 
         public string Topic
@@ -31,10 +31,10 @@ namespace amp.messaging
         }
 
         public TypedMessageHandler(Action<TMessage, IDictionary<string, string>> handler,
-            Func<Envelope, Exception, Object> faildHandler)
+            Func<Envelope, Exception, Object> failedHandler)
         {
             _handler = handler;
-            _faildHandler = faildHandler;
+            _failedHandler = failedHandler;
         }
 
         protected TypedMessageHandler()
@@ -61,7 +61,7 @@ namespace amp.messaging
 
         public object HandleFailed(Envelope env, Exception ex)
         {
-            return _faildHandler(env, ex);
+            return _failedHandler(env, ex);
         }
     }
 }

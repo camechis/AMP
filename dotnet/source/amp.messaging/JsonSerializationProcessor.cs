@@ -10,8 +10,8 @@ namespace amp.messaging
 {
     public class JsonSerializationProcessor : IMessageProcessor
     {
-        protected ILog _log;
-        protected JsonSerializerSettings _settings;
+        protected readonly ILog _log;
+        protected readonly JsonSerializerSettings _settings;
 
         /// <summary>
         /// We need to resolve properties to lowercase in order to be interoperable
@@ -32,9 +32,11 @@ namespace amp.messaging
         {
             _log = LogManager.GetLogger(this.GetType());
 
-            _settings = new JsonSerializerSettings();
-            _settings.ContractResolver = new LowercaseContractResolver();
-            _settings.TypeNameHandling = TypeNameHandling.Objects;
+            _settings = new JsonSerializerSettings
+            {
+                ContractResolver = new LowercaseContractResolver(),
+                TypeNameHandling = TypeNameHandling.Objects
+            };
         }
 
 

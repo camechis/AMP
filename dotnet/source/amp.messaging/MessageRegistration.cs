@@ -42,7 +42,7 @@ namespace amp.messaging
                 }
             }
             catch (MessageException ex) {
-                String message = "Failed to process an incoming message envelope.";
+                const string message = "Failed to process an incoming message envelope.";
                 Log.Error(message, ex);
                 throw new Exception(message, ex);
             }

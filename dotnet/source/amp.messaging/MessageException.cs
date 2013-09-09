@@ -5,7 +5,7 @@ namespace amp.messaging
 {
     public class MessageException : Exception
     {
-        public MessageException() : base()
+        public MessageException() 
         {
         }
 
