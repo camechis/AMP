@@ -96,6 +96,10 @@
       <Project>{93150A91-3D0A-4753-94A4-B6280994A18A}</Project>
       <Name>amp.commanding</Name>
     </ProjectReference>
+    <ProjectReference Include="..\amp.messaging\amp.messaging.csproj">
+      <Project>{80F80EE5-5C74-48FF-9F25-225CFD77D0EC}</Project>
+      <Name>amp.messaging</Name>
+    </ProjectReference>
     <ProjectReference Include="..\amp.utility\amp.utility.csproj">
       <Project>{964930B6-0B9A-48E2-BC0C-F5ADFA60C005}</Project>
       <Name>amp.utility</Name>

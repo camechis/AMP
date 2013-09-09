@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.Caching;
 using amp.commanding;
+using amp.messaging;
 using amp.rabbit.topology;
 using Common.Logging;
 
@@ -27,7 +28,7 @@ namespace amp.rabbit.transport
                 // reference into the cache buster that handles incoming BurstRoutingCache commands
                 _commandReceiver.ReceiveCommand(new RoutingCacheBuster(_routingInfoCache, _cacheLock, _cacheExpiryInSeconds));
             }
-            catch (CommandException cex) {
+            catch (MessageException cex) {
                 Log.Warn("Failed to subscribe for Routing Cache Bust commands - the cache cannot be remotely commanded.", cex);
             }
         }

@@ -102,8 +102,8 @@
   <object id="ICommandReceiver" type="amp.commanding.DefaultCommandReceiver, amp.commanding">
     <constructor-arg name="envelopeReceiver" ref="IEnvelopeReceiver" />
     <constructor-arg name="processingChain">
-      <list element-type="amp.commanding.ICommandProcessor, amp.commanding">
-        <ref object="Cmd-JsonEventSerializer" />
+      <list element-type="amp.messaging.IMessageProcessor, amp.messaging">
+        <ref object="Msg-JsonEventSerializer" />
       </list>
     </constructor-arg>
   </object>
@@ -111,9 +111,9 @@
   <object id="ICommandSender" type="amp.commanding.DefaultCommandSender, amp.commanding">
     <constructor-arg name="envelopeSender" ref="IEnvelopeSender" />
     <constructor-arg name="processingChain">
-      <list element-type="amp.commanding.ICommandProcessor, amp.commanding">
-        <ref object="Cmd-JsonEventSerializer" />
-        <ref object="Cmd-OutboundHeadersProcessor" />
+      <list element-type="amp.messaging.IMessageProcessor, amp.messaging">
+        <ref object="Msg-JsonEventSerializer" />
+        <ref object="Msg-OutboundHeadersProcessor" />
       </list>
     </constructor-arg>
   </object>
@@ -128,9 +128,9 @@
     <constructor-arg name="connFactory" ref="IRabbitConnectionFactory" />
   </object>
 
-  <object id="Cmd-JsonEventSerializer" type="amp.commanding.JsonSerializationProcessor, amp.commanding" />
+  <object id="Msg-JsonEventSerializer" type="amp.messaging.JsonSerializationProcessor, amp.messaging" />
 
-  <object id="Cmd-OutboundHeadersProcessor" type="amp.commanding.OutboundHeadersProcessor, amp.commanding">
+  <object id="Msg-OutboundHeadersProcessor" type="amp.messaging.OutboundHeadersProcessor, amp.messaging">
     <constructor-arg name="alternateSenderIdentity" value="integration-test" />
   </object>
 
