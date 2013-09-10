@@ -1,6 +1,6 @@
 package amp.commanding;
 
-import cmf.bus.IRegistration;
+import amp.messaging.MessageException;
 
 /**
  * Created with IntelliJ IDEA.
@@ -22,12 +22,12 @@ public class DefaultCommandBus implements ICommandBus {
 
 
     @Override
-    public void onCommandReceived(ICommandHandler handler) throws CommandException, IllegalArgumentException {
+    public void onCommandReceived(ICommandHandler handler) throws MessageException, IllegalArgumentException {
         _receiver.onCommandReceived(handler);
     }
 
     @Override
-    public void send(Object command) throws CommandException {
+    public void send(Object command) throws MessageException {
         _sender.send(command);
     }
 

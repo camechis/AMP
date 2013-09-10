@@ -117,8 +117,8 @@
     <bean id="commandReceiver" class="amp.commanding.DefaultCommandReceiver" >
         <constructor-arg ref="envelopeReceiver" />
         <constructor-arg >
-		    <util:list value-type="amp.eventing.IEventProcessor">
-		        <ref bean="Cmd-JsonSerializationProcessor" />
+		    <util:list value-type="amp.messaging.IMessageProcessor">
+		        <ref bean="Msg-JsonSerializationProcessor" />
 		    </util:list>
         </constructor-arg>
     </bean>
@@ -126,9 +126,9 @@
     <bean id="commandSender" class="amp.commanding.DefaultCommandSender" >
         <constructor-arg ref="envelopeSender" />
         <constructor-arg >
-		    <util:list value-type="amp.eventing.IEventProcessor">
-		        <ref bean="Cmd-JsonSerializationProcessor" />
-		        <ref bean="Cmd-OutboundHeadersProcessor" />
+		    <util:list value-type="amp.messaging.IMessageProcessor">
+		        <ref bean="Msg-JsonSerializationProcessor" />
+		        <ref bean="Msg-OutboundHeadersProcessor" />
 		    </util:list>
         </constructor-arg>
     </bean>
@@ -141,8 +141,8 @@
           c:topologyService-ref="topologyService"
           c:channelFactory-ref="channelFactory" />
 
-    <bean id="Cmd-JsonSerializationProcessor" class="amp.commanding.JsonSerializationProcessor" />
+    <bean id="Msg-JsonSerializationProcessor" class="amp.messaging.JsonSerializationProcessor" />
     
-    <bean id="Cmd-OutboundHeadersProcessor" class="amp.commanding.OutboundHeadersProcessor" />
+    <bean id="Msg-OutboundHeadersProcessor" class="amp.messaging.OutboundHeadersProcessor" />
 
 </beans>

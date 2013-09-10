@@ -10,9 +10,9 @@ import static org.hamcrest.Matchers.*;
 
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
-import amp.commanding.CommandException;
 import amp.commanding.ICommandBus;
 import amp.commanding.ICommandHandler;
+import amp.messaging.MessageException;
 
 public class DefaultCommandBusTests {
     
@@ -32,7 +32,7 @@ public class DefaultCommandBusTests {
 	}
 	
     @Test
-    public void Should_be_able_to_publish_and_subscribe() throws Exception, CommandException
+    public void Should_be_able_to_publish_and_subscribe() throws Exception, MessageException
     {
     	TestHandler handler = new TestHandler();
         bus.onCommandReceived(handler);

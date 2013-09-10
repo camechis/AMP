@@ -2,15 +2,20 @@ package amp.commanding;
 
 
 import java.util.List;
-import javax.annotation.Nullable;
+import java.util.Map;
 
-import cmf.bus.Envelope;
-import cmf.bus.IEnvelopeReceiver;
-import cmf.bus.IRegistration;
-import com.google.common.base.Function;
-import com.google.common.base.Functions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import amp.messaging.IContinuationCallback;
+import amp.messaging.IMessageChainProcessor;
+import amp.messaging.IMessageHandler;
+import amp.messaging.IMessageProcessor;
+import amp.messaging.MessageContext;
+import amp.messaging.MessageException;
+import amp.messaging.MessageRegistration;
+import cmf.bus.Envelope;
+import cmf.bus.IEnvelopeReceiver;
 
 
 /**
@@ -18,37 +23,38 @@ import org.slf4j.LoggerFactory;
  * User: jar349
  * Date: 5/1/13
  */
-public class DefaultCommandReceiver implements ICommandReceiver, ICommandChainProcessor {
+public class DefaultCommandReceiver implements ICommandReceiver, IMessageChainProcessor {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultCommandReceiver.class);
 
     private IEnvelopeReceiver _envelopeReceiver;
-    private List<ICommandProcessor> _processingChain;
+    private List<IMessageProcessor> _processingChain;
 
 
-    public List<ICommandProcessor> getProcessingChain() { return _processingChain; }
-    public void setProcessingChain(List<ICommandProcessor> value) { _processingChain = value; }
+    public List<IMessageProcessor> getProcessingChain() { return _processingChain; }
+    public void setProcessingChain(List<IMessageProcessor> value) { _processingChain = value; }
 
 
     public DefaultCommandReceiver(IEnvelopeReceiver envelopeReceiver) {
         _envelopeReceiver = envelopeReceiver;
     }
 
-    public DefaultCommandReceiver(IEnvelopeReceiver envelopeReceiver, List<ICommandProcessor> processorChain) {
+    public DefaultCommandReceiver(IEnvelopeReceiver envelopeReceiver, List<IMessageProcessor> processorChain) {
         _envelopeReceiver = envelopeReceiver;
         _processingChain = processorChain;
     }
 
 
     @Override
-    public <TCOMMAND> void onCommandReceived(ICommandHandler<TCOMMAND> handler) throws CommandException, IllegalArgumentException {
+    public <TCOMMAND> void onCommandReceived(ICommandHandler<TCOMMAND> handler) throws MessageException, IllegalArgumentException {
 
         LOG.debug("Enter onCommandReceived");
         if (null == handler) { throw new IllegalArgumentException("Cannot register a null handler"); }
 
 
         // create a registration object
-        final CommandRegistration registration = new CommandRegistration(this, _processingChain, handler);
+        final MessageRegistration registration = new MessageRegistration(
+        		this, _processingChain, new CommandMessageHandler<TCOMMAND>(handler));
 
         // and register it with the envelope receiver
         try {
@@ -57,7 +63,7 @@ public class DefaultCommandReceiver implements ICommandReceiver, ICommandChainPr
         catch (Exception ex) {
             String message = "Failed to register for a command";
             LOG.error(message, ex);
-            throw new CommandException(message, ex);
+            throw new MessageException(message, ex);
         }
 
 
@@ -66,10 +72,10 @@ public class DefaultCommandReceiver implements ICommandReceiver, ICommandChainPr
 
 
     @Override
-    public void processCommand(
-            final CommandContext context,
-            final List<ICommandProcessor> processingChain,
-            final IContinuationCallback onComplete) throws CommandException {
+    public void processMessage(
+            final MessageContext context,
+            final List<IMessageProcessor> processingChain,
+            final IContinuationCallback onComplete) throws MessageException {
 
         LOG.debug("Enter processCommand");
 
@@ -81,18 +87,18 @@ public class DefaultCommandReceiver implements ICommandReceiver, ICommandChainPr
         }
 
         // get the first processor
-        ICommandProcessor processor = processingChain.get(0);
+        IMessageProcessor processor = processingChain.get(0);
 
         // create a processing chain that no longer contains this processor
-        final List<ICommandProcessor> newChain = processingChain.subList(1, processingChain.size());
+        final List<IMessageProcessor> newChain = processingChain.subList(1, processingChain.size());
 
         // let it process the event and pass its "next" processor: a method that
         // recursively calls this function with the current processor removed
-        processor.processCommand(context, new IContinuationCallback() {
+        processor.processMessage(context, new IContinuationCallback() {
 
             @Override
-            public void continueProcessing() throws CommandException {
-                processCommand(context, newChain, onComplete);
+            public void continueProcessing() throws MessageException {
+            	processMessage(context, newChain, onComplete);
             }
 
         });
@@ -103,5 +109,31 @@ public class DefaultCommandReceiver implements ICommandReceiver, ICommandChainPr
     @Override
     public void dispose() {
         _envelopeReceiver.dispose();
+    }
+    
+    private static class CommandMessageHandler<TCOMMAND> implements IMessageHandler<TCOMMAND>{
+    	private static final Logger LOG = LoggerFactory.getLogger(CommandMessageHandler.class);
+
+        private final ICommandHandler<TCOMMAND> _handler;
+  
+        public CommandMessageHandler(ICommandHandler<TCOMMAND> handler){
+            _handler = handler;
+        }
+
+        public Class<TCOMMAND> getMessageType(){
+            return _handler.getCommandType(); 
+        }
+
+        @Override
+		public Object handle(TCOMMAND message, Map<String, String> headers){
+            _handler.handle(message, headers);
+            return null;
+        }
+
+        @Override
+        public Object handleFailed(Envelope env, Exception ex){
+        	LOG.warn("Failed to handle envelope.", ex);
+            return null;
+        }
     }
 }

@@ -1,9 +1,7 @@
 package amp.commanding;
 
+import amp.messaging.MessageException;
 import cmf.bus.IDisposable;
-import cmf.bus.IRegistration;
-
-import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -12,5 +10,5 @@ import java.util.Map;
  */
 public interface ICommandReceiver extends IDisposable {
 
-    <TCOMMAND> void onCommandReceived(ICommandHandler<TCOMMAND> handler) throws CommandException, IllegalArgumentException;
+    <TCOMMAND> void onCommandReceived(ICommandHandler<TCOMMAND> handler) throws MessageException, IllegalArgumentException;
 }
