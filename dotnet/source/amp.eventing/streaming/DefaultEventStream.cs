@@ -1,4 +1,5 @@
-﻿using cmf.bus;
+﻿using amp.messaging;
+using cmf.bus;
 using cmf.eventing.patterns.streaming;
 using Common.Logging;
 using System;
@@ -40,7 +41,7 @@ namespace amp.eventing.streaming
             Envelope env = StreamingEnvelopeHelper.BuildStreamingEnvelope(sequence, _position);
             env.SetMessageTopic(Topic);
 
-            EventContext context = new EventContext(EventContext.Directions.Out, env, evt);
+            MessageContext context = new MessageContext(MessageContext.Directions.Out, env, evt);
             EventStreamQueueItem eventItem = new EventStreamQueueItem(context);
 
             _log.Debug("buffering event with sequenceId: " + sequence + ", position: " + _position);
@@ -74,7 +75,7 @@ namespace amp.eventing.streaming
         {
             while (_queuedEvents.Count > 0) {
                 EventStreamQueueItem eventItem = _queuedEvents.Dequeue();
-                _eventBus.ProcessEvent(eventItem.EventContext, _eventBus.OutboundProcessors, () =>
+                _eventBus.ProcessMessage(eventItem.MessageContext, () =>
                 {
                     _eventBus.EnvelopeBus.Send(eventItem.Envelope);
                 });

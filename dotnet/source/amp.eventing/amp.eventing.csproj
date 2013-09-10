@@ -79,6 +79,42 @@
     <Compile Include="RpcRegistration.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="streaming\CollectionSizeNotifier.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="streaming\DefaultEventStream.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="streaming\DefaultEventStreamFactory.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="streaming\DefaultStreamingBus.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="streaming\EndOfStream.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="streaming\EventStreamQueueItem.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="streaming\IEventStreamFactory.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="streaming\IStandardStreamingEventBus.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="streaming\StreamingCollectionRegistration.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="streaming\StreamingEnvelopeHelper.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="streaming\StreamingHeadersProcessor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="streaming\StreamingReaderRegistration.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\amp.bus\amp.bus.csproj">

@@ -144,7 +144,7 @@ namespace amp.eventing.streaming
         {
             try
             {
-                _log.Error("Unable to process envelop wth message topic: " + env.GetMessageTopic() + " from stream.");
+                _log.Error("Unable to process envelop wth message topic: " + env.GetMessageTopic() + " from stream.", ex);
                 return null;
             }
             catch (Exception failedToFail)
