@@ -33,7 +33,25 @@
     </constructor-arg>
   </object>
 
+  <object id="IStreamingEventBus" type="amp.eventing.streaming.DefaultStreamingBus, amp.eventing">
+    <constructor-arg name="envelopeBus" ref="IEnvelopeBus" />
+    <constructor-arg name="inboundChain">
+      <list element-type="amp.messaging.IMessageProcessor, amp.messaging">
+        <ref object="Msg-JsonEventSerializer" />
+      </list>
+    </constructor-arg>
+    <constructor-arg name="outboundChain">
+      <list element-type="amp.messaging.IMessageProcessor, amp.messaging">
+        <ref object="Msg-JsonEventSerializer" />
+        <ref object="Msg-OutboundHeadersProcessor" />
+        <ref object="StreamingHeadersProcessor" />
+      </list>
+    </constructor-arg>
+  </object>
+
   <object id="RpcFilter" type="amp.eventing.RpcFilter, amp.eventing" />
+
+  <object id="StreamingHeadersProcessor" type="amp.eventing.streaming.StreamingHeadersProcessor, amp.eventing" />
 
   <object id="IEnvelopeBus" type="amp.bus.DefaultEnvelopeBus, amp.bus">
     <constructor-arg name="transportProvider" ref="ITransportProvider" />
