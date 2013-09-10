@@ -39,6 +39,7 @@
     <modules>
         <module>amp-bus</module>
         <module>amp-bus-security</module>
+        <module>amp-messaging</module>
         <module>amp-eventing</module>
         <module>amp-rabbit</module>
         <module>amp-commanding</module>
