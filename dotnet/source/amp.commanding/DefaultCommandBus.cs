@@ -1,19 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using amp.messaging;
+using cmf.bus;
 
 namespace amp.commanding
 {
     public class DefaultCommandBus : ICommandBus
     {
-        private readonly ICommandSender _commandSender;
-        private readonly ICommandReceiver _commandReceiver;
+        protected readonly ICommandSender _commandSender;
+        protected readonly ICommandReceiver _commandReceiver;
 
 
-        public DefaultCommandBus(ICommandSender commandSender, ICommandReceiver commandReceiver)
+        public DefaultCommandBus(IEnvelopeBus envelopeBus
+            , List<IMessageProcessor> inboundChain
+            , List<IMessageProcessor> outboundChain)
         {
-            _commandSender = commandSender;
-            _commandReceiver = commandReceiver;
+            _commandReceiver = new DefaultCommandReceiver(envelopeBus, inboundChain);
+            _commandSender = new DefaultCommandSender(envelopeBus, outboundChain);
         }
 
 
