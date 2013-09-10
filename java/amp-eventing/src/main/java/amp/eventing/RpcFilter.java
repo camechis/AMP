@@ -12,10 +12,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import amp.eventing.EnvelopeHelper;
-import amp.eventing.EventContext.Directions;
+import amp.messaging.MessageContext.Directions;
+import amp.messaging.IContinuationCallback;
+import amp.messaging.IMessageProcessor;
+import amp.messaging.MessageContext;
+import amp.messaging.MessageException;
 
 
-public class RpcFilter implements IEventProcessor {
+public class RpcFilter implements IMessageProcessor {
 
     protected static final Logger log = LoggerFactory.getLogger(RpcFilter.class);
     protected List<UUID> sentRequests;
@@ -27,7 +31,7 @@ public class RpcFilter implements IEventProcessor {
 
     
     @Override
-    public void processEvent(EventContext context, IContinuationCallback continuation) throws Exception {
+    public void processMessage(MessageContext context, IContinuationCallback continuation) throws MessageException  {
     	
     	if (Directions.In == context.getDirection()) {
     		this.processInbound(context, continuation);
@@ -38,7 +42,7 @@ public class RpcFilter implements IEventProcessor {
     }
     
     
-    public void processInbound(EventContext context, IContinuationCallback continuation) throws Exception {
+    public void processInbound(MessageContext context, IContinuationCallback continuation) throws MessageException {
 
         boolean ourOwnRequest = false;
         EnvelopeHelper env = new EnvelopeHelper(context.getEnvelope());
@@ -61,7 +65,7 @@ public class RpcFilter implements IEventProcessor {
         if (!ourOwnRequest) { continuation.continueProcessing(); }
     }
 
-    public void processOutbound(EventContext context, IContinuationCallback continuation) throws Exception {
+    public void processOutbound(MessageContext context, IContinuationCallback continuation) throws MessageException {
 
         EnvelopeHelper env = new EnvelopeHelper(context.getEnvelope());
 

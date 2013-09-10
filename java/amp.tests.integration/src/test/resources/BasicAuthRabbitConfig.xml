@@ -8,18 +8,18 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
     <!-- The following components are for our Event Bus, which uses our Envelope Bus -->
-    <bean id="eventBus" class="amp.eventing.DefaultEventBus"
+    <bean id="eventBus" class="amp.eventing.DefaultEventBusX"
           destroy-method="dispose">
           <constructor-arg ref="envelopeBus" />
           <constructor-arg >
-		    <util:list value-type="amp.eventing.IEventProcessor">
-		        <ref bean="serializationProcessor" />
+		    <util:list value-type="amp.messaging.IMessageProcessor">
+		        <ref bean="Msg-JsonSerializationProcessor" />
 		    </util:list>
           </constructor-arg>
           <constructor-arg >
-		    <util:list value-type="amp.eventing.IEventProcessor">
-		        <ref bean="serializationProcessor" />
-		        <ref bean="outboundHeadersProcessor" />
+		    <util:list value-type="amp.messaging.IMessageProcessor">
+		        <ref bean="Msg-JsonSerializationProcessor" />
+		        <ref bean="Msg-OutboundHeadersProcessor" />
 		    </util:list>
           </constructor-arg>
     </bean>

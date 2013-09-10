@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
-public class DefaultStreamingBus extends DefaultEventBus implements IStandardStreamingEventBus, IInboundProcessorCallback {
+public class DefaultStreamingBus extends DefaultEventBusX implements IStandardStreamingEventBus, IInboundProcessorCallback {
     protected static final Logger log = LoggerFactory.getLogger(DefaultStreamingBus.class);
     private IEventStreamFactory eventStreamFactory;
     private Map<String, IEventStream> eventStreams;

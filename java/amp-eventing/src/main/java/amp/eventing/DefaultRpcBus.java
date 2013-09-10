@@ -16,7 +16,7 @@ import amp.eventing.EnvelopeHelper;
 import amp.eventing.EventContext.Directions;
 
 
-public class DefaultRpcBus extends DefaultEventBus implements IRpcEventBus, IInboundProcessorCallback {
+public class DefaultRpcBus extends DefaultEventBusX implements IRpcEventBus, IInboundProcessorCallback {
 
 	
     public DefaultRpcBus(IEnvelopeBus envelopeBus) {

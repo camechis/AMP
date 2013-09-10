@@ -8,7 +8,7 @@ import cmf.eventing.IEventBus;
 import cmf.eventing.patterns.rpc.IRpcEventBus;
 
 import amp.bus.security.InMemoryUserInfoRepository;
-import amp.eventing.DefaultEventBus;
+import amp.eventing.DefaultEventBusX;
 import amp.eventing.DefaultRpcBus;
 import amp.utility.serialization.GsonSerializer;
 import amp.eventing.IEventProcessor;
@@ -123,7 +123,7 @@ public class EventBusBuilder extends FluentExtension {
 		
 		IEnvelopeBus envelopeBus = this.parent.envelopeBus().getInstance();
 		
-		return new DefaultEventBus(envelopeBus, inbound, outbound);
+		return new DefaultEventBusX(envelopeBus, inbound, outbound);
 	}
 	
 	/**

@@ -7,7 +7,7 @@ package amp.messaging;
  * Time: 1:21 PM
  * To change this template use File | Settings | File Templates.
  */
-public class MessageException extends Throwable {
+public class MessageException extends Exception {
 
     public MessageException() { }
 
