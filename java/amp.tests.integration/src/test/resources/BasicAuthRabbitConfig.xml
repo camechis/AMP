@@ -110,9 +110,20 @@
           c:commandReceiver-ref="commandReceiver"
           c:cacheExpiryInSeconds="600" />
 
-    <bean id="commandBus" class="amp.commanding.DefaultCommandBus"
-          c:sender-ref="commandSender"
-          c:receiver-ref="commandReceiver" />
+    <bean id="commandBus" class="amp.commanding.DefaultCommandBus">
+          <constructor-arg ref="envelopeBus" />
+          <constructor-arg >
+		    <util:list value-type="amp.messaging.IMessageProcessor">
+		        <ref bean="Msg-JsonSerializationProcessor" />
+		    </util:list>
+          </constructor-arg>
+          <constructor-arg >
+		    <util:list value-type="amp.messaging.IMessageProcessor">
+		        <ref bean="Msg-JsonSerializationProcessor" />
+		        <ref bean="Msg-OutboundHeadersProcessor" />
+		    </util:list>
+          </constructor-arg>
+    </bean>
  
     <bean id="commandReceiver" class="amp.commanding.DefaultCommandReceiver" >
         <constructor-arg ref="envelopeReceiver" />
@@ -123,21 +134,7 @@
         </constructor-arg>
     </bean>
 
-    <bean id="commandSender" class="amp.commanding.DefaultCommandSender" >
-        <constructor-arg ref="envelopeSender" />
-        <constructor-arg >
-		    <util:list value-type="amp.messaging.IMessageProcessor">
-		        <ref bean="Msg-JsonSerializationProcessor" />
-		        <ref bean="Msg-OutboundHeadersProcessor" />
-		    </util:list>
-        </constructor-arg>
-    </bean>
-
     <bean id="envelopeReceiver" class="amp.rabbit.transport.RabbitEnvelopeReceiver"
-          c:topologyService-ref="topologyService"
-          c:channelFactory-ref="channelFactory" />
-
-    <bean id="envelopeSender" class="amp.rabbit.transport.RabbitEnvelopeSender"
           c:topologyService-ref="topologyService"
           c:channelFactory-ref="channelFactory" />
 

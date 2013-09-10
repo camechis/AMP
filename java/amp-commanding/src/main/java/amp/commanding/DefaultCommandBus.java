@@ -1,5 +1,9 @@
 package amp.commanding;
 
+import java.util.List;
+
+import cmf.bus.IEnvelopeBus;
+import amp.messaging.IMessageProcessor;
 import amp.messaging.MessageException;
 
 /**
@@ -15,9 +19,11 @@ public class DefaultCommandBus implements ICommandBus {
     private ICommandReceiver _receiver;
 
 
-    public DefaultCommandBus(ICommandSender sender, ICommandReceiver receiver) {
-        _sender = sender;
-        _receiver = receiver;
+    public DefaultCommandBus(IEnvelopeBus envelopeBus, 
+    		List<IMessageProcessor> inboundProcessors,
+    		List<IMessageProcessor> outboundProcessors) {
+        _sender = new DefaultCommandSender(envelopeBus, outboundProcessors);
+        _receiver = new DefaultCommandReceiver(envelopeBus, inboundProcessors);
     }
 
 
