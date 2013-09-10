@@ -80,7 +80,12 @@ public class DefaultEventConsumer implements IEventConsumer, IMessageChainProces
         LOG.debug("Leave onEventReceived");
     }
 
-
+    public void processMessage(
+            final MessageContext context,
+            final IContinuationCallback onComplete) throws MessageException {
+    	this.processMessage(context, _processingChain, onComplete);
+    }
+    
     @Override
     public void processMessage(
             final MessageContext context,

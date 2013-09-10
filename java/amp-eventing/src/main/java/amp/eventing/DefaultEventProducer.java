@@ -50,7 +50,7 @@ public class DefaultEventProducer implements IEventProducer, IMessageChainProces
 
         try {
 
-            this.processMessage(context, _processorChain, new IContinuationCallback() {
+            this.processMessage(context, new IContinuationCallback() {
 
                 @Override
                 public void continueProcessing() throws MessageException {
@@ -75,6 +75,13 @@ public class DefaultEventProducer implements IEventProducer, IMessageChainProces
         LOG.debug("Leave send");
     }
 
+    public void processMessage(
+            final MessageContext context,
+            final IContinuationCallback onComplete) throws MessageException {
+    
+    	this.processMessage(context, _processorChain, onComplete);
+    }
+    
     @Override
     public void processMessage(
             final MessageContext context,
