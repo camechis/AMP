@@ -1,20 +1,17 @@
 package amp.extensions.commons.builder;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 
 import cmf.bus.IEnvelopeBus;
 import cmf.eventing.IEventBus;
 import cmf.eventing.patterns.rpc.IRpcEventBus;
 
-import amp.bus.security.InMemoryUserInfoRepository;
-import amp.eventing.DefaultEventBusX;
+import amp.eventing.DefaultEventBus;
 import amp.eventing.DefaultRpcBus;
-import amp.utility.serialization.GsonSerializer;
-import amp.eventing.IEventProcessor;
-import amp.eventing.OutboundHeadersProcessor;
+import amp.messaging.IMessageProcessor;
+import amp.messaging.OutboundHeadersProcessor;
 import amp.eventing.RpcFilter;
-import amp.eventing.serializers.JsonEventSerializer;
+import amp.messaging.JsonSerializationProcessor;;
 
 /**
  * Fluent for constructing an EventBus.
@@ -27,8 +24,8 @@ import amp.eventing.serializers.JsonEventSerializer;
  */
 public class EventBusBuilder extends FluentExtension {
 
-	LinkedList<IEventProcessor> inbound = new LinkedList<IEventProcessor>();
-	LinkedList<IEventProcessor> outbound = new LinkedList<IEventProcessor>();
+	LinkedList<IMessageProcessor> inbound = new LinkedList<IMessageProcessor>();
+	LinkedList<IMessageProcessor> outbound = new LinkedList<IMessageProcessor>();
 	boolean usingDefaults = true;
 	
 	/**
@@ -51,15 +48,11 @@ public class EventBusBuilder extends FluentExtension {
 		RpcFilter rpcFilter = new RpcFilter();
 		
 		// Got to marshall objects (Default is JSON)
-		JsonEventSerializer jsonEventSerializer = 
-				new JsonEventSerializer(new GsonSerializer());
-		
-		// I still don't know what this is.
-		InMemoryUserInfoRepository userInfoRepository = 
-				new InMemoryUserInfoRepository(new HashMap<String, String>());
-		
+		JsonSerializationProcessor jsonEventSerializer = 
+				new JsonSerializationProcessor();
+				
 		// Manipulates the headers for use by the Event Bus.
-		OutboundHeadersProcessor headersProcessor = new OutboundHeadersProcessor(userInfoRepository);
+		OutboundHeadersProcessor headersProcessor = new OutboundHeadersProcessor();
 		
 		// These are order dependent.
 		this.inbound.add(rpcFilter);
@@ -77,7 +70,7 @@ public class EventBusBuilder extends FluentExtension {
 	 * @param processor Processor to add.
 	 * @return This.
 	 */
-	public EventBusBuilder addInbound(IEventProcessor processor){
+	public EventBusBuilder addInbound(IMessageProcessor processor){
 		
 		voidWarranty();
 		
@@ -92,7 +85,7 @@ public class EventBusBuilder extends FluentExtension {
 	 * @param processor Processor to add.
 	 * @return This.
 	 */
-	public EventBusBuilder addOutbound(IEventProcessor processor){
+	public EventBusBuilder addOutbound(IMessageProcessor processor){
 		
 		voidWarranty();
 		
@@ -123,7 +116,7 @@ public class EventBusBuilder extends FluentExtension {
 		
 		IEnvelopeBus envelopeBus = this.parent.envelopeBus().getInstance();
 		
-		return new DefaultEventBusX(envelopeBus, inbound, outbound);
+		return new DefaultEventBus(envelopeBus, inbound, outbound);
 	}
 	
 	/**
