@@ -1,7 +1,7 @@
 package amp.gel.dao.impl.derby.data.processors;
 
-import amp.eventing.IEventProcessor;
+import amp.messaging.IMessageProcessor;
 
-public interface EventSequenceProcessor extends IEventProcessor {
+public interface EventSequenceProcessor extends IMessageProcessor {
 	void restartEventSequence() throws Exception;
 }

@@ -58,6 +58,10 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
+    <ProjectReference Include="..\..\amp.messaging\amp.messaging.csproj">
+      <Project>{80F80EE5-5C74-48FF-9F25-225CFD77D0EC}</Project>
+      <Name>amp.messaging</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\amp.rabbit\amp.rabbit.csproj">
       <Project>{1d9a3ed8-779b-4f1b-93f5-837320af4656}</Project>
       <Name>amp.rabbit</Name>

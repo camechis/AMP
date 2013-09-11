@@ -10,10 +10,10 @@ import java.util.concurrent.LinkedBlockingQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import amp.eventing.EventContext;
-import amp.eventing.EventContext.Directions;
-import amp.eventing.IContinuationCallback;
-import amp.eventing.IEventProcessor;
+import amp.messaging.MessageContext;
+import amp.messaging.MessageContext.Directions;
+import amp.messaging.IContinuationCallback;
+import amp.messaging.IMessageProcessor;
 import amp.gel.dao.impl.derby.data.events.core.Event;
 import amp.gel.dao.impl.derby.data.generators.EventSequenceGenerator;
 import amp.gel.dao.impl.derby.data.processors.EventSequenceProcessor;
@@ -29,7 +29,7 @@ public class EnvelopeGenerator implements Iterable<Envelope>,
 			.getLogger(EnvelopeGenerator.class);
 
 	private static final IContinuationCallback DEFAULT_CONTINUATION_CALLBACK = new IContinuationCallback() {
-		public void continueProcessing() throws Exception {
+		public void continueProcessing() {
 		}
 	};
 
@@ -93,12 +93,12 @@ public class EnvelopeGenerator implements Iterable<Envelope>,
 		}
 
 		for (Event event : eventSequence) {
-			EventContext context = new EventContext(Directions.Out,
-					new Envelope(), event);
+			MessageContext context = new MessageContext(Directions.Out, new Envelope(),
+					event);
 
-			for (IEventProcessor processor : outboundProcessors) {
+			for (IMessageProcessor processor : outboundProcessors) {
 				try {
-					processor.processEvent(context,
+					processor.processMessage(context,
 							DEFAULT_CONTINUATION_CALLBACK);
 				} catch (Exception e) {
 					logger.error("Unable to process event: " + event, e);

@@ -1,4 +1,5 @@
-﻿using cmf.bus;
+﻿using amp.messaging;
+using cmf.bus;
 
 namespace amp.eventing.streaming
 {
@@ -7,15 +8,15 @@ namespace amp.eventing.streaming
     /// </summary>
     public class EventStreamQueueItem
     {
-        private readonly EventContext _eventContext;
+        private readonly MessageContext _eventContext;
 
-        public EventStreamQueueItem(EventContext eventContext)
+        public EventStreamQueueItem(MessageContext eventContext)
         {
             _eventContext = eventContext;
         }
 
         public Envelope Envelope { get { return _eventContext.Envelope; } }
 
-        public EventContext EventContext { get { return _eventContext; } }
+        public MessageContext MessageContext { get { return _eventContext; } }
     }
 }

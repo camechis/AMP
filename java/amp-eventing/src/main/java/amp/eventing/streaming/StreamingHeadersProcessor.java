@@ -1,26 +1,27 @@
 package amp.eventing.streaming;
 
-import amp.eventing.EnvelopeHelper;
-import amp.eventing.EventContext;
-import amp.eventing.IContinuationCallback;
-import amp.eventing.IEventProcessor;
+import amp.messaging.EnvelopeHelper;
+import amp.messaging.IContinuationCallback;
+import amp.messaging.IMessageProcessor;
+import amp.messaging.MessageContext;
+import amp.messaging.MessageException;
 
-public class StreamingHeadersProcessor implements IEventProcessor {
+public class StreamingHeadersProcessor implements IMessageProcessor {
     @Override
-    public void processEvent(EventContext context, IContinuationCallback continuation) throws Exception {
+    public void processMessage(MessageContext context, IContinuationCallback continuation) throws MessageException  {
         final String endOfStreamTopic = EndOfStream.class.getCanonicalName();
         final String collectionSizeTopic = CollectionSizeNotifier.class.getCanonicalName();
 
         EnvelopeHelper env = new EnvelopeHelper(context.getEnvelope());
 
-        if (context.getDirection().equals(EventContext.Directions.Out)) {
+        if (context.getDirection().equals(MessageContext.Directions.Out)) {
 
             if (env.getMessageTopic().equals(endOfStreamTopic)) {
-                env.setMessageTopic(((EndOfStream)context.getEvent()).getStreamType());
+                env.setMessageTopic(((EndOfStream)context.getMessage()).getStreamType());
             }
 
             if (env.getMessageTopic().equals(collectionSizeTopic)) {
-                env.setMessageTopic(((CollectionSizeNotifier)context.getEvent()).getCollectionType());
+                env.setMessageTopic(((CollectionSizeNotifier)context.getMessage()).getCollectionType());
             }
         }
 

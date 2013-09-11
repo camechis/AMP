@@ -11,7 +11,7 @@
 		http://www.springframework.org/schema/util/spring-util.xsd">
                       
 	<!-- The following components are for our Event Bus, which uses our Envelope Bus -->
-    <bean id="eventBus" class="amp.eventing.DefaultEventBus" 
+    <bean id="eventBus" class="amp.eventing.DefaultEventBusX" 
     		destroy-method="dispose"
     		c:envelopeBus-ref="envelopeBus"
     		c:outboundProcessors-ref="outboundEventProcessors"

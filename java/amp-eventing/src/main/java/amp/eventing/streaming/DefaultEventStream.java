@@ -1,16 +1,15 @@
 package amp.eventing.streaming;
 
-import amp.eventing.EventContext;
-import amp.eventing.IContinuationCallback;
-import amp.eventing.EnvelopeHelper;
+import amp.messaging.EnvelopeHelper;
+import amp.messaging.MessageContext;
+import amp.messaging.IContinuationCallback;
+import amp.messaging.MessageException;
 import cmf.bus.Envelope;
 import cmf.eventing.patterns.streaming.IEventStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
-
-import static cmf.eventing.patterns.streaming.StreamingEnvelopeConstants.*;
 
 public class DefaultEventStream implements IEventStream {
     protected static final Logger log = LoggerFactory.getLogger(DefaultEventStream.class);
@@ -44,7 +43,7 @@ public class DefaultEventStream implements IEventStream {
         EnvelopeHelper envHelper = new EnvelopeHelper(env);
         envHelper.setMessageTopic(getTopic());
 
-        EventContext context = new EventContext(EventContext.Directions.Out, env, event);
+        MessageContext context = new MessageContext(MessageContext.Directions.Out, env, event);
         EventStreamQueueItem eventItem = new EventStreamQueueItem(context);
 
         log.debug("buffering event with sequenceId: " + sequence + ", position: " + position);
@@ -79,12 +78,16 @@ public class DefaultEventStream implements IEventStream {
 
         while (queuedEvents.size() > 0) {
             final EventStreamQueueItem eventItem = queuedEvents.remove();
-            eventBus.processEvent(eventItem.getEventContext(),
-                    eventBus.getOutboundProcessors(),
+            eventBus.processMessage(eventItem.getMessageContext(),
                     new IContinuationCallback() {
                         @Override
-                        public void continueProcessing() throws Exception {
-                            eventBus.getEnvelopeBus().send(eventItem.getEnvelope());
+                        public void continueProcessing() throws MessageException {
+                            try {
+								eventBus.getEnvelopeBus().send(eventItem.getEnvelope());
+							} catch (Exception ex) {
+								log.error("Error sending streaming eventItem.", ex);
+								throw new MessageException("Error sending streaming eventItem.", ex);
+							}
                         }
                     });
         }

@@ -1,7 +1,7 @@
 package amp.eventing.streaming;
 
-import amp.eventing.EnvelopeHelper;
-import amp.eventing.IInboundProcessorCallback;
+import amp.messaging.EnvelopeHelper;
+import amp.messaging.IInboundProcessorCallback;
 import cmf.bus.Envelope;
 import cmf.bus.EnvelopeHeaderConstants;
 import cmf.bus.IEnvelopeFilterPredicate;
@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
-import static cmf.eventing.patterns.streaming.StreamingEnvelopeConstants.*;
 /**
  * Specialized {@link cmf.bus.IRegistration} that handles the event by placing them in a
  * {@link java.util.Iterator} from which they can be extracted as they become available.

@@ -24,12 +24,14 @@ namespace amp.tests.integration.Eventing
             _backendContext = new XmlApplicationContext(Constants.BASIC_AUTH_CONFIG);
             _backendBus = _backendContext.GetObject("IRpcEventBus") as IRpcEventBus;
 
-            _backendBus.Subscribe<TestRequest>((@event, headers) =>
-            {
-                for (int i = 0; i < @event.ResponseCount; i++)
-                    _backendBus.RespondTo(headers, new TestResponse { Id = @event.Id });
+            _backendBus.Subscribe<TestRequest>(
+                (@event, headers) =>
+                    {
+                        for (int i = 0; i < @event.ResponseCount; i++)
+                            _backendBus.RespondTo(headers, new TestResponse { Id = @event.Id });
 
-            });
+                    }, 
+                env => true);
         }
 
         [TestFixtureTearDown]
