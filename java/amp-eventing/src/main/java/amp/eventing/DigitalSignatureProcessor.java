@@ -10,7 +10,7 @@ import amp.bus.security.IUserInfoRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import amp.eventing.EnvelopeHelper;
+import amp.messaging.EnvelopeHelper;
 import amp.messaging.IContinuationCallback;
 import amp.messaging.IMessageProcessor;
 import amp.messaging.MessageContext;
