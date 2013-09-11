@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using cmf.bus;
 using Common.Logging;
 
@@ -11,18 +10,23 @@ namespace amp.messaging
         private static readonly ILog Log = LogManager.GetLogger(typeof(MessageReceiver));
 
         private readonly IEnvelopeReceiver _envelopeReceiver;
-        private readonly List<IMessageProcessor> _processingChain;
-
+        private readonly IMessageProcessor _messageProcessor;
+        
 
         public MessageReceiver(IEnvelopeReceiver envelopeReceiver)
         {
             _envelopeReceiver = envelopeReceiver;
         }
 
-        public MessageReceiver(IEnvelopeReceiver envelopeReceiver, List<IMessageProcessor> processingChain)
+        public MessageReceiver(IEnvelopeReceiver envelopeReceiver, IMessageProcessor messageProcessor)
             : this(envelopeReceiver)
         {
-            _processingChain = processingChain;
+            _messageProcessor = messageProcessor;
+        }
+
+        public MessageReceiver(IEnvelopeReceiver envelopeReceiver, List<IMessageProcessor> processingChain)
+            : this(envelopeReceiver, new MessageProcessorChain(processingChain))
+        {
         }
 
 
@@ -60,7 +64,7 @@ namespace amp.messaging
 
             try
             {
-                this.ProcessMessage(ctx, _processingChain, () => {
+                _messageProcessor.ProcessMessage(ctx, () => {
                     isOpen = true;
                 });
             }
@@ -77,44 +81,7 @@ namespace amp.messaging
 
         public void Dispose()
         {
-            if(_processingChain != null)
-                foreach (var processor in _processingChain)
-                {
-                    try { processor.Dispose(); }
-                    catch (Exception ex) { Log.Warn(string.Format("Exception disposing of processor {0}", processor), ex); }
-                }
-        }
-
-        public void ProcessMessage(
-            MessageContext context,
-            List<IMessageProcessor> processingChain,
-            Action onComplete)
-        {
-            Log.Debug("Enter processMessage");
-
-            // if the chain is null or empty, complete processing
-            if ((null == processingChain) || (!processingChain.Any()))
-            {
-                Log.Debug("Message processing complete");
-                onComplete();
-                return;
-            }
-
-
-            // get the first processor
-            IMessageProcessor processor = processingChain.First();
-
-            // create a processing chain that no longer contains this processor
-            List<IMessageProcessor> newChain = processingChain.Skip(1).ToList();
-
-            // let it process the message and pass its "next" processor: a method that
-            // recursively calls this function with the current processor removed
-            processor.ProcessMessage(context, () =>
-            {
-                this.ProcessMessage(context, newChain, onComplete);
-            });
-
-            Log.Debug("Leave processMessage");
+            _messageProcessor.Dispose();
         }
     }
 }

@@ -22,8 +22,7 @@ public class MessageRegistration implements IRegistration {
 
     private static final Logger LOG = LoggerFactory.getLogger(MessageRegistration.class);
 
-    private IMessageChainProcessor _processor;
-    private List<IMessageProcessor> _processingChain;
+    private IMessageProcessor _processor;
     private IMessageHandler _handler;
     private Map<String, String> _regInfo;
 
@@ -36,12 +35,10 @@ public class MessageRegistration implements IRegistration {
 
 
     public MessageRegistration(
-            IMessageChainProcessor processor,
-            List<IMessageProcessor> processingChain,
+            IMessageProcessor processor,
             IMessageHandler handler) {
 
         _processor = processor;
-        _processingChain = processingChain;
         _handler = handler;
 
         _regInfo = new HashMap<String, String>();
@@ -59,7 +56,7 @@ public class MessageRegistration implements IRegistration {
             // create a context to send through the processors
             final MessageContext ctx = new MessageContext(MessageContext.Directions.In, env);
 
-            _processor.processMessage(ctx, _processingChain, new IContinuationCallback() {
+            _processor.processMessage(ctx, new IContinuationCallback() {
 
                 @Override
                 public void continueProcessing() throws MessageException {

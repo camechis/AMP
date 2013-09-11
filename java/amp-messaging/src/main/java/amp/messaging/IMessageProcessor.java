@@ -9,5 +9,5 @@ package amp.messaging;
  */
 public interface IMessageProcessor {
 
-    void processMessage(MessageContext context, IContinuationCallback next) throws MessageException;
+    void processMessage(MessageContext context, IContinuationCallback onComplete) throws MessageException;
 }

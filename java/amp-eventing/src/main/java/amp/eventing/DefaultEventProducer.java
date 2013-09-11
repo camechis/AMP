@@ -3,18 +3,11 @@ package amp.eventing;
 
 import java.util.List;
 
-import amp.messaging.IContinuationCallback;
-import amp.messaging.IMessageChainProcessor;
 import amp.messaging.IMessageProcessor;
-import amp.messaging.MessageContext;
 import amp.messaging.MessageException;
 import amp.messaging.MessageSender;
-import cmf.bus.Envelope;
 import cmf.bus.IEnvelopeSender;
 import cmf.eventing.IEventProducer;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -22,7 +15,7 @@ import org.slf4j.LoggerFactory;
  * User: jar349
  * Date: 5/1/13
  */
-public class DefaultEventProducer extends MessageSender implements IEventProducer, IMessageChainProcessor {
+public class DefaultEventProducer extends MessageSender implements IEventProducer {
 
     public DefaultEventProducer(IEnvelopeSender envelopeSender) {
         super(envelopeSender);

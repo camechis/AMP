@@ -59,7 +59,7 @@ public class DefaultEventBus implements IEventBus {
     public Object ProcessInbound(Envelope envelope) throws Exception {
         final MessageContext context = new MessageContext(Directions.In, envelope);
 
-        this._eventConsumer.processMessage(
+        this._eventConsumer.getMessageProcessor().processMessage(
                 context,
                 new IContinuationCallback() {
 

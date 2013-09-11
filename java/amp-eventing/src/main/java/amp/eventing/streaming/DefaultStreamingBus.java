@@ -133,7 +133,7 @@ public class DefaultStreamingBus extends DefaultEventBus implements IStandardStr
 	@Override
 	public void processMessage(MessageContext context,
 			IContinuationCallback next) throws MessageException {
-		_eventProducer.processMessage(context, next);
+		_eventProducer.getMessageProcessor().processMessage(context, next);
 		
 	}
 }

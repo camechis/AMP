@@ -7,14 +7,10 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import amp.messaging.IContinuationCallback;
-import amp.messaging.IMessageChainProcessor;
 import amp.messaging.IMessageHandler;
 import amp.messaging.IMessageProcessor;
-import amp.messaging.MessageContext;
 import amp.messaging.MessageException;
 import amp.messaging.MessageReceiver;
-import amp.messaging.MessageRegistration;
 import cmf.bus.Envelope;
 import cmf.bus.IEnvelopeReceiver;
 import cmf.eventing.IEventConsumer;
@@ -27,7 +23,7 @@ import cmf.eventing.IEventHandler;
  * User: jar349
  * Date: 5/1/13
  */
-public class DefaultEventConsumer extends MessageReceiver implements IEventConsumer, IMessageChainProcessor {
+public class DefaultEventConsumer extends MessageReceiver implements IEventConsumer {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultEventConsumer.class);
 

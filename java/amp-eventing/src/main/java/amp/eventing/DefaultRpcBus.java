@@ -82,7 +82,7 @@ public class DefaultRpcBus extends DefaultEventBus implements IRpcEventBus, IInb
             final IInboundProcessorCallback envelopeOpener = this;
             
             // process the event
-            this._eventProducer.processMessage(
+            this._eventProducer.getMessageProcessor().processMessage(
         		context, 
         		new IContinuationCallback() {
 
@@ -147,7 +147,7 @@ public class DefaultRpcBus extends DefaultEventBus implements IRpcEventBus, IInb
 
             final MessageContext context = new MessageContext(Directions.Out, env, response);
 
-            this._eventProducer.processMessage(context, new IContinuationCallback() {
+            this._eventProducer.getMessageProcessor().processMessage(context, new IContinuationCallback() {
             
             	@Override
             	public void continueProcessing() throws MessageException {
