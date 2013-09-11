@@ -30,13 +30,13 @@ namespace amp.messaging
         }
 
 
-        public void ReceiveMessage(IMessageHandler handler)
+        public void ReceiveMessage(IMessageHandler handler, Predicate<Envelope> envelopeFilter)
         {
             Log.Debug("Enter ReceiveMessage");
             if (null == handler) { throw new ArgumentNullException("Cannot register a null handler"); }
 
             // create a registration object
-            MessageRegistration registration = new MessageRegistration(this.OpenEnvelope, handler);
+            MessageRegistration registration = new MessageRegistration(this.OpenEnvelope, handler, envelopeFilter);
 
             // and register it with the envelope receiver
             try {
@@ -49,9 +49,9 @@ namespace amp.messaging
             }
         }
 
-        public void ReceiveMessage<TMessage>(Action<TMessage, IDictionary<string, string>> handler) where TMessage : class
+        public void ReceiveMessage<TMessage>(Action<TMessage, IDictionary<string, string>> handler, Predicate<Envelope> envelopeFilter) where TMessage : class
         {
-            this.ReceiveMessage(new TypedMessageHandler<TMessage>(handler));
+            this.ReceiveMessage(new TypedMessageHandler<TMessage>(handler), envelopeFilter);
         }
 
         public MessageContext OpenEnvelope(Envelope envelope)

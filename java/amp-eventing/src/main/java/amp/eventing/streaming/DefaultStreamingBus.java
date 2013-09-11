@@ -3,12 +3,11 @@ package amp.eventing.streaming;
 
 import amp.eventing.*;
 import amp.messaging.IContinuationCallback;
-import amp.messaging.IInboundProcessorCallback;
 import amp.messaging.IMessageProcessor;
 import amp.messaging.MessageContext;
 import amp.messaging.MessageException;
 import cmf.bus.IEnvelopeBus;
-import cmf.eventing.IEventFilterPredicate;
+import cmf.bus.IEnvelopeFilterPredicate;
 import cmf.eventing.IEventHandler;
 import cmf.eventing.patterns.streaming.*;
 
@@ -119,7 +118,7 @@ public class DefaultStreamingBus extends DefaultEventBus implements IStandardStr
     }
 
     @Override
-    public <TEVENT> void subscribe(final IEventHandler<TEVENT> eventHandler, final IEventFilterPredicate filterPredicate)
+    public <TEVENT> void subscribe(final IEventHandler<TEVENT> eventHandler, final IEnvelopeFilterPredicate filterPredicate)
             throws Exception {
         log.debug("enter default streaming bus subscribe.");
 

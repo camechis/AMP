@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="cmf.bus">
+      <HintPath>..\..\binaries\libraries\cmf.bus.dll</HintPath>
+    </Reference>
     <Reference Include="cmf.eventing">
       <HintPath>..\..\binaries\libraries\cmf.eventing.dll</HintPath>
     </Reference>

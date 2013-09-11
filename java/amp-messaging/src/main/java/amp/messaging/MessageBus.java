@@ -1,5 +1,7 @@
 package amp.messaging;
 
+import cmf.bus.IEnvelopeFilterPredicate;
+
 /**
  * Created with IntelliJ IDEA.
  * User: jar349
@@ -19,8 +21,8 @@ public class MessageBus {
     }
 
 
-    public void onMessageReceived(IMessageHandler handler) throws MessageException, IllegalArgumentException {
-        _receiver.onMessageReceived(handler);
+    public void onMessageReceived(IMessageHandler handler, IEnvelopeFilterPredicate filterPredicate) throws MessageException, IllegalArgumentException {
+        _receiver.onMessageReceived(handler, filterPredicate);
     }
 
     public void send(Object message) throws MessageException {

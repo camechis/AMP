@@ -12,9 +12,9 @@ import amp.messaging.IMessageProcessor;
 import amp.messaging.MessageException;
 import amp.messaging.MessageReceiver;
 import cmf.bus.Envelope;
+import cmf.bus.IEnvelopeFilterPredicate;
 import cmf.bus.IEnvelopeReceiver;
 import cmf.eventing.IEventConsumer;
-import cmf.eventing.IEventFilterPredicate;
 import cmf.eventing.IEventHandler;
 
 
@@ -37,16 +37,20 @@ public class DefaultEventConsumer extends MessageReceiver implements IEventConsu
 
     @Override
     public <TEVENT> void subscribe(IEventHandler<TEVENT> handler) throws MessageException, IllegalArgumentException {
-        Class<TEVENT> type = handler.getEventType();
-        IEventFilterPredicate filterPredicate = new TypeEventFilterPredicate(type);
-        subscribe(handler, filterPredicate);
+        subscribe(handler, new IEnvelopeFilterPredicate() {
+			
+			@Override
+			public boolean filter(Envelope envelope) {
+				return true;
+			}
+		});
     }
     
     @Override
 	public <TEVENT> void subscribe(IEventHandler<TEVENT> handler,
-			IEventFilterPredicate predicate) throws MessageException {
+			IEnvelopeFilterPredicate predicate) throws MessageException {
 
-    	onMessageReceived(new EventMessageHandler<TEVENT>(handler));
+    	onMessageReceived(new EventMessageHandler<TEVENT>(handler), predicate);
     }
     
     private static class EventMessageHandler<TEVENT> implements IMessageHandler<TEVENT>{

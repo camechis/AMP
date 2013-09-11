@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using cmf.bus;
 using Common.Logging;
 
 namespace amp.messaging
@@ -44,14 +45,14 @@ namespace amp.messaging
             }
         }
 
-        public void ReceiveMessage(IMessageHandler handler)
+        public void ReceiveMessage(IMessageHandler handler, Predicate<Envelope> envelopeFilter)
         {
-            _messageReceiver.ReceiveMessage(handler);
+            _messageReceiver.ReceiveMessage(handler, envelopeFilter);
         }
 
-        public void ReceiveMessage<TCommand>(Action<TCommand, IDictionary<string, string>> handler) where TCommand : class
+        public void ReceiveMessage<TCommand>(Action<TCommand, IDictionary<string, string>> handler, Predicate<Envelope> envelopeFilter) where TCommand : class
         {
-            _messageReceiver.ReceiveMessage(handler);
+            _messageReceiver.ReceiveMessage(handler, envelopeFilter);
         }
     }
 }

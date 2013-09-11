@@ -20,12 +20,12 @@ namespace amp.commanding
 
         public void ReceiveCommand<TCommand>(Action<TCommand, IDictionary<string, string>> handler) where TCommand : class
         {
-            base.ReceiveMessage(handler);
+            base.ReceiveMessage(handler, env => true);
         }
 
         public void ReceiveCommand(ICommandHandler handler)
         {
-            base.ReceiveMessage(new CommandMessageHandler(handler));
+            base.ReceiveMessage(new CommandMessageHandler(handler) , env => true);
         }
 
         private class CommandMessageHandler : IMessageHandler

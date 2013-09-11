@@ -24,6 +24,7 @@ public class MessageRegistration implements IRegistration {
 
     private IMessageProcessor _processor;
     private IMessageHandler _handler;
+    private IEnvelopeFilterPredicate _predicate;
     private Map<String, String> _regInfo;
 
 
@@ -31,15 +32,17 @@ public class MessageRegistration implements IRegistration {
     public Map<String, String> getRegistrationInfo() { return _regInfo; }
 
     @Override
-    public IEnvelopeFilterPredicate getFilterPredicate() { return null; }
+    public IEnvelopeFilterPredicate getFilterPredicate() { return _predicate; }
 
 
     public MessageRegistration(
             IMessageProcessor processor,
-            IMessageHandler handler) {
+            IMessageHandler handler,
+            IEnvelopeFilterPredicate predicate) {
 
         _processor = processor;
         _handler = handler;
+        _predicate = predicate;
 
         _regInfo = new HashMap<String, String>();
         _regInfo.put(EnvelopeHeaderConstants.MESSAGE_TOPIC, _handler.getMessageType().getCanonicalName());

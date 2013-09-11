@@ -12,6 +12,7 @@ import amp.messaging.IMessageProcessor;
 import amp.messaging.MessageException;
 import amp.messaging.MessageReceiver;
 import cmf.bus.Envelope;
+import cmf.bus.IEnvelopeFilterPredicate;
 import cmf.bus.IEnvelopeReceiver;
 
 
@@ -32,7 +33,11 @@ public class DefaultCommandReceiver extends MessageReceiver implements ICommandR
 
     @Override
     public <TCOMMAND> void onCommandReceived(ICommandHandler<TCOMMAND> handler) throws MessageException, IllegalArgumentException {
-    	onMessageReceived(new CommandMessageHandler<TCOMMAND>(handler));
+    	onMessageReceived(new CommandMessageHandler<TCOMMAND>(handler), new IEnvelopeFilterPredicate(){
+			@Override
+			public boolean filter(Envelope envelope) {
+				return true;
+			}});
     }
     
     private static class CommandMessageHandler<TCOMMAND> implements IMessageHandler<TCOMMAND>{

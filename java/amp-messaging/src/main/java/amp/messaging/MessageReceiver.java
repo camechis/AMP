@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import amp.messaging.MessageContext.Directions;
 
 import cmf.bus.Envelope;
+import cmf.bus.IEnvelopeFilterPredicate;
 import cmf.bus.IEnvelopeReceiver;
 
 
@@ -41,14 +42,15 @@ public class MessageReceiver implements IInboundProcessorCallback {
         _messageProcessor = messageProcessor;
     }
 
-    public <TMESSAGE> void onMessageReceived(IMessageHandler<TMESSAGE> handler) throws MessageException, IllegalArgumentException {
+    public <TMESSAGE> void onMessageReceived(IMessageHandler<TMESSAGE> handler, 
+    		IEnvelopeFilterPredicate predicate) throws MessageException, IllegalArgumentException {
 
         LOG.debug("Enter onMessageReceived");
         if (null == handler) { throw new IllegalArgumentException("Cannot register a null handler"); }
 
 
         // create a registration object
-        final MessageRegistration registration = new MessageRegistration(_messageProcessor, handler);
+        final MessageRegistration registration = new MessageRegistration(_messageProcessor, handler, predicate);
 
         // and register it with the envelope receiver
         try {

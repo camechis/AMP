@@ -5,16 +5,12 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cmf.bus.Envelope;
+import cmf.bus.IEnvelopeFilterPredicate;
 import cmf.bus.IEnvelopeBus;
 import cmf.eventing.IEventBus;
-import cmf.eventing.IEventFilterPredicate;
 import cmf.eventing.IEventHandler;
-import amp.messaging.IContinuationCallback;
 import amp.messaging.IMessageProcessor;
-import amp.messaging.MessageContext;
 import amp.messaging.MessageException;
-import amp.messaging.MessageContext.Directions;
 
 /**
  * Created with IntelliJ IDEA.
@@ -52,7 +48,7 @@ public class DefaultEventBus implements IEventBus {
 
 	@Override
 	public <TEVENT> void subscribe(IEventHandler<TEVENT> handler,
-			IEventFilterPredicate predicate) throws Exception {
+			IEnvelopeFilterPredicate predicate) throws Exception {
 		_eventConsumer.subscribe(handler, predicate);
 	}
 

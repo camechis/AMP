@@ -31,14 +31,14 @@ namespace amp.eventing
             _eventProducer.Publish(ev);
         }
 
-        public void Subscribe(IEventHandler handler)
+        public void Subscribe(IEventHandler handler, Predicate<Envelope> envelopeFilter)
         {
-            _eventConsumer.Subscribe(handler);
+            _eventConsumer.Subscribe(handler, envelopeFilter);
         }
 
-        public void Subscribe<TEvent>(Action<TEvent, IDictionary<string, string>> handler) where TEvent : class
+        public void Subscribe<TEvent>(Action<TEvent, IDictionary<string, string>> handler, Predicate<Envelope> envelopeFilter) where TEvent : class
         {
-            _eventConsumer.Subscribe(handler);
+            _eventConsumer.Subscribe(handler, envelopeFilter);
         }
     }
 }

@@ -19,14 +19,14 @@ namespace amp.eventing
         }
 
 
-        public void Subscribe<TEvent>(Action<TEvent, IDictionary<string, string>> handler) where TEvent : class
+        public void Subscribe<TEvent>(Action<TEvent, IDictionary<string, string>> handler, Predicate<Envelope> envelopeFilter) where TEvent : class
         {
-            base.ReceiveMessage(handler);
+            base.ReceiveMessage(handler, envelopeFilter);
         }
 
-        public void Subscribe(IEventHandler handler)
+        public void Subscribe(IEventHandler handler, Predicate<Envelope> envelopeFilter)
         {
-            base.ReceiveMessage(new EventMessageHandler(handler));
+            base.ReceiveMessage(new EventMessageHandler(handler), envelopeFilter);
         }
 
         private class EventMessageHandler : IMessageHandler
