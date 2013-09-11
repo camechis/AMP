@@ -59,7 +59,12 @@ public class MessageReceiver implements IMessageChainProcessor {
         LOG.debug("Leave onMessageReceived");
     }
 
-
+    public void processMessage(
+            final MessageContext context,
+            final IContinuationCallback onComplete) throws MessageException {
+    	processMessage(context,_processingChain, onComplete);
+    }
+ 
     @Override
     public void processMessage(
             final MessageContext context,

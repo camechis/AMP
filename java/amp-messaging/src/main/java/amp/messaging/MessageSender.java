@@ -67,6 +67,12 @@ public class MessageSender implements IMessageChainProcessor {
         LOG.debug("Leave send");
     }
 
+    public void processMessage(
+            final MessageContext context,
+            final IContinuationCallback onComplete) throws MessageException {
+    	processMessage(context, _processorChain, onComplete);
+    }
+
     @Override
     public void processMessage(
             final MessageContext context,
