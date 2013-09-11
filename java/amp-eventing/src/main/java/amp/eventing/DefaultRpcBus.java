@@ -185,22 +185,4 @@ public class DefaultRpcBus extends DefaultEventBus implements IRpcEventBus, IInb
         
         return env;
     }
-
-
-    @Override
-    public Object ProcessInbound(Envelope envelope) throws Exception {
-        final MessageContext context = new MessageContext(Directions.In, envelope);
-
-        this._eventConsumer.processMessage(
-                context,
-                new IContinuationCallback() {
-
-                    @Override
-                    public void continueProcessing() {
-                        LOG.info("Completed inbound processing - returning event");
-                    }
-                });
-
-        return context.getMessage();
-    }
 }

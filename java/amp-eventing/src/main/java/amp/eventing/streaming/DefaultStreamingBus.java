@@ -2,16 +2,21 @@ package amp.eventing.streaming;
 
 
 import amp.eventing.*;
+import amp.messaging.IContinuationCallback;
+import amp.messaging.IMessageProcessor;
+import amp.messaging.MessageContext;
+import amp.messaging.MessageException;
 import cmf.bus.IEnvelopeBus;
 import cmf.eventing.IEventFilterPredicate;
 import cmf.eventing.IEventHandler;
 import cmf.eventing.patterns.streaming.*;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
-public class DefaultStreamingBus extends DefaultEventBusX implements IStandardStreamingEventBus, IInboundProcessorCallback {
+public class DefaultStreamingBus extends DefaultEventBus implements IStandardStreamingEventBus, IInboundProcessorCallback {
     protected static final Logger log = LoggerFactory.getLogger(DefaultStreamingBus.class);
     private IEventStreamFactory eventStreamFactory;
     private Map<String, IEventStream> eventStreams;
@@ -20,30 +25,22 @@ public class DefaultStreamingBus extends DefaultEventBusX implements IStandardSt
      * Allows for tuning by setting this to a different value based on size of events.
      */
     protected int batchLimit = 10;
+    
+    private final IEnvelopeBus envelopeBus;
 
-    public DefaultStreamingBus(IEnvelopeBus envelopeBus) {
-        super(envelopeBus);
-        initializeDefaults();
-    }
-
-    public DefaultStreamingBus(IEnvelopeBus envelopeBus, List<IEventProcessor> inboundProcessors,
-                               List<IEventProcessor> outboundProcessors) {
-        super(envelopeBus, inboundProcessors, outboundProcessors);
-        initializeDefaults();
+    public DefaultStreamingBus(IEnvelopeBus envelopeBus, List<IMessageProcessor> inboundProcessors,
+                               List<IMessageProcessor> outboundProcessors) {
+        this(envelopeBus, inboundProcessors, outboundProcessors, new DefaultEventStreamFactory());
+        this.eventStreamFactory.setEventBus(this);
     }
 
 
-    public DefaultStreamingBus(IEnvelopeBus envelopeBus, List<IEventProcessor> inboundProcessors,
-                               List<IEventProcessor> outboundProcessors,
+    public DefaultStreamingBus(IEnvelopeBus envelopeBus, List<IMessageProcessor> inboundProcessors,
+                               List<IMessageProcessor> outboundProcessors,
                                IEventStreamFactory eventStreamFactory) {
         super(envelopeBus, inboundProcessors, outboundProcessors);
+        this.envelopeBus = envelopeBus;
         this.eventStreamFactory = eventStreamFactory;
-        this.eventStreams = new HashMap<String, IEventStream>();
-    }
-
-    private void initializeDefaults() {
-        this.eventStreamFactory = new DefaultEventStreamFactory();
-        this.eventStreamFactory.setEventBus(this);
         this.eventStreams = new HashMap<String, IEventStream>();
     }
 
@@ -128,18 +125,15 @@ public class DefaultStreamingBus extends DefaultEventBusX implements IStandardSt
     }
 
     @Override
-    public List<IEventProcessor> getInboundProcessors() {
-        return this.inboundProcessors;
-    }
-
-    @Override
-    public List<IEventProcessor> getOutboundProcessors() {
-        return this.outboundProcessors;
-    }
-
-    @Override
     public IEnvelopeBus getEnvelopeBus() {
         return this.envelopeBus;
     }
 
+
+	@Override
+	public void processMessage(MessageContext context,
+			IContinuationCallback next) throws MessageException {
+		_eventProducer.processMessage(context, next);
+		
+	}
 }

@@ -2,12 +2,19 @@ package amp.eventing;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import cmf.bus.Envelope;
 import cmf.bus.IEnvelopeBus;
 import cmf.eventing.IEventBus;
 import cmf.eventing.IEventFilterPredicate;
 import cmf.eventing.IEventHandler;
+import amp.messaging.IContinuationCallback;
 import amp.messaging.IMessageProcessor;
+import amp.messaging.MessageContext;
 import amp.messaging.MessageException;
+import amp.messaging.MessageContext.Directions;
 
 /**
  * Created with IntelliJ IDEA.
@@ -17,6 +24,8 @@ import amp.messaging.MessageException;
  * To change this template use File | Settings | File Templates.
  */
 public class DefaultEventBus implements IEventBus {
+
+	private static final Logger LOG = LoggerFactory.getLogger(DefaultEventBus.class);
 
     protected final DefaultEventProducer _eventProducer;
     protected final DefaultEventConsumer _eventConsumer;
@@ -48,6 +57,21 @@ public class DefaultEventBus implements IEventBus {
 		_eventConsumer.subscribe(handler, predicate);
 	}
 
+    public Object ProcessInbound(Envelope envelope) throws Exception {
+        final MessageContext context = new MessageContext(Directions.In, envelope);
+
+        this._eventConsumer.processMessage(
+                context,
+                new IContinuationCallback() {
+
+                    @Override
+                    public void continueProcessing() {
+                        LOG.info("Completed inbound processing - returning event");
+                    }
+                });
+
+        return context.getMessage();
+    }
 
 	@Override
 	public void dispose() {
