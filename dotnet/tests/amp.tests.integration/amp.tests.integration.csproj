@@ -31,8 +31,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="cmf.bus">
+      <HintPath>..\..\binaries\libraries\cmf.bus.dll</HintPath>
+    </Reference>
     <Reference Include="cmf.eventing">
       <HintPath>..\..\binaries\libraries\cmf.eventing.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging, Version=1.2.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\binaries\libraries\Common.Logging.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework, Version=2.5.10.11092, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -57,6 +64,7 @@
     <Compile Include="Constants.cs" />
     <Compile Include="Eventing\DefaultEventBusTests.cs" />
     <Compile Include="Eventing\DefaultRpcBusTests.cs" />
+    <Compile Include="Eventing\Streaming\DefaultStreamingBusTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -72,6 +80,10 @@
     <ProjectReference Include="..\..\source\amp.commanding\amp.commanding.csproj">
       <Project>{93150A91-3D0A-4753-94A4-B6280994A18A}</Project>
       <Name>amp.commanding</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\source\amp.eventing\amp.eventing.csproj">
+      <Project>{24D9184A-81B9-4D67-86E4-1B8B4EAB27BB}</Project>
+      <Name>amp.eventing</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

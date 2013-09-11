@@ -11,21 +11,28 @@ import cmf.bus.EnvelopeHeaderConstants;
 import cmf.bus.IEnvelopeBus;
 import cmf.eventing.patterns.rpc.IRpcEventBus;
 import org.joda.time.Duration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import amp.eventing.EnvelopeHelper;
-import amp.eventing.EventContext.Directions;
+import amp.messaging.EnvelopeHelper;
+import amp.messaging.IContinuationCallback;
+import amp.messaging.IInboundProcessorCallback;
+import amp.messaging.IMessageProcessor;
+import amp.messaging.MessageContext;
+import amp.messaging.MessageContext.Directions;
+import amp.messaging.MessageException;
 
 
-public class DefaultRpcBus extends DefaultEventBus implements IRpcEventBus, IInboundProcessorCallback {
+public class DefaultRpcBus extends DefaultEventBus implements IRpcEventBus {
 
+	private static final Logger LOG = LoggerFactory.getLogger(DefaultRpcBus.class);
+
+	IEnvelopeBus envelopeBus;
 	
-    public DefaultRpcBus(IEnvelopeBus envelopeBus) {
-        super(envelopeBus);
-    }
-
-    public DefaultRpcBus(IEnvelopeBus envelopeBus, List<IEventProcessor> inboundProcessors,
-                    List<IEventProcessor> outboundProcessors) {
+    public DefaultRpcBus(IEnvelopeBus envelopeBus, List<IMessageProcessor> inboundProcessors,
+                    List<IMessageProcessor> outboundProcessors) {
         super(envelopeBus, inboundProcessors, outboundProcessors);
+        this.envelopeBus = envelopeBus;
     }
 
     
@@ -50,7 +57,7 @@ public class DefaultRpcBus extends DefaultEventBus implements IRpcEventBus, IInb
 
     @Override
     public Object getResponseTo(Object request, final Duration timeout, final String expectedTopic) {
-        log.debug("Enter GetResponseTo");
+    	LOG.debug("Enter GetResponseTo");
 
         // guard clause
         if (null == request) {
@@ -59,7 +66,7 @@ public class DefaultRpcBus extends DefaultEventBus implements IRpcEventBus, IInb
 
         // the container for the response we're going to get since you
         // can't assign the value of this within the continuation callback
-        final EventContext responseContext = new EventContext(Directions.In);
+        final MessageContext responseContext = new MessageContext(Directions.In);
         
 
         try {
@@ -70,51 +77,55 @@ public class DefaultRpcBus extends DefaultEventBus implements IRpcEventBus, IInb
         	Envelope env = this.buildRequestEnvelope(requestId, timeout);
 
             // create an event context for processing
-            final EventContext context = new EventContext(Directions.Out, env, request);
+            final MessageContext context = new MessageContext(Directions.Out, env, request);
             
             // need a final-scoped handle to an IInboundProcessorCallback
-            final IInboundProcessorCallback envelopeOpener = this;
+            final IInboundProcessorCallback envelopeOpener = this._eventConsumer;
             
             // process the event
-            this.processEvent(
+            this._eventProducer.getMessageProcessor().processMessage(
         		context, 
-        		outboundProcessors, 
-            	new IContinuationCallback() {
+        		new IContinuationCallback() {
 
 					@Override
-					public void continueProcessing() throws Exception {
+					public void continueProcessing() throws MessageException {
 					
-						log.debug("successfully processed outgoing request");
+						try {
+							LOG.debug("successfully processed outgoing request");
 						
-						// create an RPC registration
-			            RpcRegistration rpcRegistration = new RpcRegistration(requestId, expectedTopic, envelopeOpener);
-
-			            // register with the envelope bus
-			            envelopeBus.register(rpcRegistration);
-
-			            // now that we're setup to receive the response, send the request
-			            envelopeBus.send(context.getEnvelope());
-
-			            // get the envelope from the registraton
-			            responseContext.setEvent(rpcRegistration.getResponse(timeout));
-
-			            // unregister from the bus
-			            envelopeBus.unregister(rpcRegistration);
+							// create an RPC registration
+				            RpcRegistration rpcRegistration = new RpcRegistration(requestId, expectedTopic, envelopeOpener);
+	
+				            // register with the envelope bus
+				            envelopeBus.register(rpcRegistration);
+	
+				            // now that we're setup to receive the response, send the request
+				            envelopeBus.send(context.getEnvelope());
+	
+				            // get the envelope from the registraton
+				            responseContext.setMessage(rpcRegistration.getResponse(timeout));
+	
+				            // unregister from the bus
+			            	envelopeBus.unregister(rpcRegistration);
+						} catch (Exception ex) {
+				        	LOG.error("Exception publishing an event", ex);
+				            throw new MessageException("Exception publishing an event", ex);
+						}
 					} // end of final continuation
 					
             }); // end of outbound processing
         } catch (Exception ex) {
-            log.error("Exception publishing an event", ex);
+        	LOG.error("Exception publishing an event", ex);
             throw new RuntimeException("Exception publishing an event", ex);
         }
 
-        log.debug("Leave GetResponseTo");
-        return responseContext.getEvent();
+        LOG.debug("Leave GetResponseTo");
+        return responseContext.getMessage();
     }
 
     @Override
     public void respondTo(Map<String, String> headers, Object response) {
-        log.debug("Enter RespondTo");
+    	LOG.debug("Enter RespondTo");
 
         if (null == response) {
             throw new IllegalArgumentException("Cannot respond with a null event");
@@ -135,23 +146,28 @@ public class DefaultRpcBus extends DefaultEventBus implements IRpcEventBus, IInb
             Envelope env = new Envelope();
             new EnvelopeHelper(env).setCorrelationId(originalHeadersHelper.getMessageId());
 
-            final EventContext context = new EventContext(Directions.Out, env, response);
+            final MessageContext context = new MessageContext(Directions.Out, env, response);
 
-            this.processEvent(context, this.outboundProcessors, new IContinuationCallback() {
+            this._eventProducer.getMessageProcessor().processMessage(context, new IContinuationCallback() {
             
             	@Override
-            	public void continueProcessing() throws Exception {
-            		envelopeBus.send(context.getEnvelope());
+            	public void continueProcessing() throws MessageException {
+            		try {
+						envelopeBus.send(context.getEnvelope());
+					} catch (Exception ex) {
+			        	LOG.error("Exception publishing a response", ex);
+			            throw new MessageException("Exception publishing a response", ex);
+					}
             	}
             });
 
             
         } catch (Exception ex) {
-            log.error("Exception responding to an event", ex);
+        	LOG.error("Exception responding to an event", ex);
             throw new RuntimeException("Exception responding to an event", ex);
         }
 
-        log.debug("Leave RespondTo");
+        LOG.debug("Leave RespondTo");
     }
 
 

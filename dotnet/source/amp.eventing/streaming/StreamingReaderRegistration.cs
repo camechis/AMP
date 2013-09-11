@@ -1,4 +1,5 @@
-﻿using cmf.bus;
+﻿using amp.messaging;
+using cmf.bus;
 using cmf.eventing.patterns.streaming;
 using Common.Logging;
 using System;

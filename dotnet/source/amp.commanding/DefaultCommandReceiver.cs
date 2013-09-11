@@ -1,120 +1,59 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using amp.messaging;
 using cmf.bus;
 using Common.Logging;
 
 namespace amp.commanding
 {
-    public class DefaultCommandReceiver : ICommandReceiver
+    public class DefaultCommandReceiver : MessageReceiver, ICommandReceiver
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(DefaultCommandReceiver));
-
-        private IEnvelopeReceiver _envelopeReceiver;
-        private IList<ICommandProcessor> _processingChain;
-
-
-        public DefaultCommandReceiver(IEnvelopeReceiver envelopeReceiver)
+        public DefaultCommandReceiver(IEnvelopeReceiver envelopeReceiver) 
+            : base(envelopeReceiver)
         {
-            _envelopeReceiver = envelopeReceiver;
         }
 
-        public DefaultCommandReceiver(IEnvelopeReceiver envelopeReceiver, IList<ICommandProcessor> processingChain)
-            : this(envelopeReceiver)
+        public DefaultCommandReceiver(IEnvelopeReceiver envelopeReceiver, List<IMessageProcessor> processingChain) 
+            : base(envelopeReceiver, processingChain)
         {
-            _processingChain = processingChain;
-        }
-
-
-        public void ReceiveCommand(ICommandHandler handler)
-        {
-            Log.Debug("Enter ReceiveCommand");
-            if (null == handler) { throw new ArgumentNullException("Cannot register a null handler"); }
-
-            // create a registration object
-            CommandRegistration registration = new CommandRegistration(this.OpenEnvelope, handler);
-
-            // and register it with the envelope receiver
-            try {
-                _envelopeReceiver.Register(registration);
-            }
-            catch (Exception ex) {
-                String message = "Failed to register for a command";
-                Log.Error(message, ex);
-                throw new CommandException(message, ex);
-            }
         }
 
         public void ReceiveCommand<TCommand>(Action<TCommand, IDictionary<string, string>> handler) where TCommand : class
         {
-            this.ReceiveCommand(new TypedCommandHandler<TCommand>(handler));
+            base.ReceiveMessage(handler, env => true);
         }
 
-        public CommandContext OpenEnvelope(Envelope envelope)
+        public void ReceiveCommand(ICommandHandler handler)
         {
-            // create a context for processing
-            CommandContext ctx = new CommandContext(CommandContext.Directions.In, envelope);
-
-            // a marker that indicates the processing result 
-            bool isOpen = false;
-
-            try
-            {
-                this.ProcessCommand(ctx, _processingChain, () => {
-                    isOpen = true;
-                });
-            }
-            catch(Exception ex)
-            {
-                string msg = "Failed to open a command envelope.";
-                Log.Error(msg, ex);
-                throw new CommandException(msg, ex);
-            }
-
-            // if we successfully opened the envelope, 
-            return isOpen ? ctx : null;
+            base.ReceiveMessage(new CommandMessageHandler(handler) , env => true);
         }
 
-        public void Dispose()
+        private class CommandMessageHandler : IMessageHandler
         {
-            if(_processingChain != null)
-                foreach (var processor in _processingChain)
-                {
-                    try { processor.Dispose(); }
-                    catch { }
-                }
-        }
+            private static readonly ILog Log = LogManager.GetLogger(typeof(CommandMessageHandler));
 
-        public void ProcessCommand(
-            CommandContext context,
-            IEnumerable<ICommandProcessor> processingChain,
-            Action onComplete)
-        {
-            Log.Debug("Enter processCommand");
-
-            // if the chain is null or empty, complete processing
-            if ((null == processingChain) || (!processingChain.Any()))
+            private readonly ICommandHandler _handler;
+      
+            public CommandMessageHandler(ICommandHandler handler)
             {
-                Log.Debug("Command processing complete");
-                onComplete();
-                return;
+                _handler = handler;
             }
 
-
-            // get the first processor
-            ICommandProcessor processor = processingChain.First();
-
-            // create a processing chain that no longer contains this processor
-            IEnumerable<ICommandProcessor> newChain = processingChain.Skip(1);
-
-            // let it process the command and pass its "next" processor: a method that
-            // recursively calls this function with the current processor removed
-            processor.ProcessCommand(context, () =>
+            public string Topic
             {
-                this.ProcessCommand(context, processingChain.Skip(1), onComplete);
-            });
+                get { return _handler.CommandType.FullName; }
+            }
 
-            Log.Debug("Leave processCommand");
+            public object Handle(object message, IDictionary<string, string> headers)
+            {
+                return _handler.Handle(message, headers);
+            }
+
+            public object HandleFailed(Envelope env, Exception ex)
+            {
+                Log.Warn("Failed to handle envelope.", ex);
+                return null;
+            }
         }
     }
 }

@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import amp.commanding.ICommandReceiver;
-import amp.commanding.CommandException;
+import amp.messaging.MessageException;
 import amp.rabbit.topology.RoutingInfo;
 
 
@@ -45,7 +45,7 @@ public class CommandableCache implements IRoutingInfoCache {
             // reference into the cache buster that handles incoming BurstRoutingCache commands
             this.commandReceiver.onCommandReceived(new RoutingCacheBuster(this.routingInfoCache, cacheLock));
         }
-        catch (CommandException cex) {
+        catch (MessageException cex) {
             LOG.warn("Failed to subscribe for Routing Cache Bust commands - the cache cannot be remotely commanded.", cex);
         }
     }

@@ -12,6 +12,4 @@ public class StreamingEnvelopeHelper {
         envelope.setHeader(POSITION, position + "");
         return envelope;
     }
-
-
 }

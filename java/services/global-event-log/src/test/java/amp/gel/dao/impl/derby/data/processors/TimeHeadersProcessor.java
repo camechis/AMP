@@ -6,10 +6,10 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 
-import amp.eventing.EnvelopeHelper;
-import amp.eventing.EventContext;
-import amp.eventing.EventContext.Directions;
-import amp.eventing.IContinuationCallback;
+import amp.messaging.EnvelopeHelper;
+import amp.messaging.MessageContext;
+import amp.messaging.MessageContext.Directions;
+import amp.messaging.IContinuationCallback;
 
 /**
  * Processes event sequences and sets creation and receipt times in the envelope
@@ -41,8 +41,8 @@ public class TimeHeadersProcessor implements EventSequenceProcessor {
 
 	private Random random = new Random();
 
-	public void processEvent(EventContext eventContext,
-			IContinuationCallback continuationCallback) throws Exception {
+	public void processMessage(MessageContext eventContext,
+			IContinuationCallback continuationCallback) {
 		if (Directions.Out == eventContext.getDirection()) {
 			EnvelopeHelper env = new EnvelopeHelper(eventContext.getEnvelope());
 

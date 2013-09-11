@@ -30,6 +30,11 @@
             <version>${parent.version}</version>
         </dependency>
         <dependency>
+            <groupId>amp</groupId>
+            <artifactId>amp.messaging</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>

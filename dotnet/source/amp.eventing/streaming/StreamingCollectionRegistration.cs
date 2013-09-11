@@ -1,4 +1,5 @@
-﻿using cmf.bus;
+﻿using amp.messaging;
+using cmf.bus;
 using cmf.eventing.patterns.streaming;
 using Common.Logging;
 using System;
@@ -144,7 +145,7 @@ namespace amp.eventing.streaming
         {
             try
             {
-                _log.Error("Unable to process envelop wth message topic: " + env.GetMessageTopic() + " from stream.");
+                _log.Error("Unable to process envelop wth message topic: " + env.GetMessageTopic() + " from stream.", ex);
                 return null;
             }
             catch (Exception failedToFail)

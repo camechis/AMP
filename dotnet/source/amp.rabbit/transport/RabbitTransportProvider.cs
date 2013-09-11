@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using amp.bus;
+using amp.messaging;
 using amp.rabbit.topology;
 using cmf.bus;
 using Common.Logging;

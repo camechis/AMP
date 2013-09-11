@@ -1,6 +1,6 @@
 package amp.eventing.streaming;
 
-import amp.eventing.EventContext;
+import amp.messaging.MessageContext;
 import cmf.bus.Envelope;
 
 /**
@@ -10,17 +10,17 @@ import cmf.bus.Envelope;
  */
 public class EventStreamQueueItem {
 
-    private final EventContext eventContext;
+    private final MessageContext context;
 
-    public EventStreamQueueItem(EventContext eventContext) {
-        this.eventContext = eventContext;
+    public EventStreamQueueItem(MessageContext context) {
+        this.context = context;
     }
 
     public Envelope getEnvelope() {
-        return this.eventContext.getEnvelope();
+        return this.context.getEnvelope();
     }
 
-    public EventContext getEventContext() {
-        return this.eventContext;
+    public MessageContext getMessageContext() {
+        return this.context;
     }
 }

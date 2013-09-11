@@ -1,5 +1,6 @@
 package amp.commanding;
 
+import amp.messaging.MessageException;
 import cmf.bus.IDisposable;
 
 /**
@@ -9,5 +10,5 @@ import cmf.bus.IDisposable;
  */
 public interface ICommandSender extends IDisposable {
 
-    void send(Object command) throws CommandException;
+    void send(Object command) throws MessageException;
 }

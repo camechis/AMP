@@ -1,4 +1,5 @@
-﻿using cmf.bus;
+﻿using amp.messaging;
+using cmf.bus;
 using cmf.eventing.patterns.streaming;
 using Common.Logging;
 using System;
@@ -8,35 +9,35 @@ namespace amp.eventing.streaming
 {
     public class DefaultStreamingBus : DefaultEventBus, IStandardStreamingEventBus
     {
-        protected ILog _log;
-        private IEventStreamFactory _eventStreamFactory;
-        private Dictionary<string, IEventStream> _eventStreams;
+        protected ILog Log;
+        
+        private readonly IEnvelopeBus _envelopeBus;
+        private readonly IEventStreamFactory _eventStreamFactory;
+        private readonly Dictionary<string, IEventStream> _eventStreams;
         
         protected int _batchLimit = 10;
 
-        public DefaultStreamingBus(IEnvelopeBus envelopeBus) : base(envelopeBus)
+        public DefaultStreamingBus(IEnvelopeBus envelopeBus
+            , List<IMessageProcessor> inboundChain
+            , List<IMessageProcessor> outboundChain)
+            : this (envelopeBus,  new DefaultEventStreamFactory(), inboundChain, outboundChain)
         {
-            _log = LogManager.GetLogger(this.GetType());
-            InboundChain = new Dictionary<int, IEventProcessor>();
-            OutboundChain = new Dictionary<int, IEventProcessor>();
-
-            InitializeDefaults();
+            _eventStreamFactory.EventBus = this;
         }
 
-        public DefaultStreamingBus(IEnvelopeBus envelopeBus, 
-                                    IEventStreamFactory eventStreamFactory) : base(envelopeBus)
+        public DefaultStreamingBus(IEnvelopeBus envelopeBus
+            , IEventStreamFactory eventStreamFactory
+            , List<IMessageProcessor> inboundChain
+            , List<IMessageProcessor> outboundChain)
+            : base(envelopeBus, inboundChain, outboundChain)
         {
-            _log = LogManager.GetLogger(this.GetType());
+            Log = LogManager.GetLogger(this.GetType());
+
+            _envelopeBus = envelopeBus;
+            
             _eventStreamFactory = eventStreamFactory;
             _eventStreams = new Dictionary<string, IEventStream>();
            
-        }
-
-        private void InitializeDefaults()
-        {
-            _eventStreamFactory = new DefaultEventStreamFactory();
-            _eventStreamFactory.EventBus = this;
-            _eventStreams = new Dictionary<string,IEventStream>();
         }
 
         public IEventStream CreateStream(string topic)
@@ -64,7 +65,7 @@ namespace amp.eventing.streaming
 
         public void PublishChunkedSequence<TEvent>(ICollection<TEvent> dataSet)
         {
-            _log.Debug("enter publish to chunked sequence");
+            Log.Debug("enter publish to chunked sequence");
             IEventStream eventStream = null;
             string topic = null;
 
@@ -95,7 +96,7 @@ namespace amp.eventing.streaming
                     RemoveStream(topic);
                 }
             }
-            _log.Debug("leave publish to chunked sequence");
+            Log.Debug("leave publish to chunked sequence");
         }
 
         private void ValidateEventCollection<TEvent>(ICollection<TEvent> eventEnumerator)
@@ -108,60 +109,47 @@ namespace amp.eventing.streaming
 
         public void SubscribeToCollection<TEvent>(IStreamingCollectionHandler<TEvent> handler)
         {
-            _log.Debug("enter SubscribeToCollection");
+            Log.Debug("enter SubscribeToCollection");
             StreamingCollectionRegistration<TEvent> registration = new StreamingCollectionRegistration<TEvent>(handler, this.ProcessInboundCallback);
-            _envBus.Register(registration);
-            _log.Debug("leave SubscribetoCollection");
+            _envelopeBus.Register(registration);
+            Log.Debug("leave SubscribetoCollection");
         }
 
         public void SubscribeToReader<TEvent>(IStreamingReaderHandler<TEvent> handler)
         {
-            _log.Debug("enter SubscribeToReader");
+            Log.Debug("enter SubscribeToReader");
             StreamingReaderRegistration<TEvent> registration = new StreamingReaderRegistration<TEvent>(handler, this.ProcessInboundCallback);
-            _envBus.Register(registration);
-            _log.Debug("leave SubscribeToReader");
-        }
-
-        
-        public IList<IEventProcessor> InboundProcessors
-        {
-            get
-            {
-                return new List<IEventProcessor>(InboundChain.Sort());
-            }
-        }
-
-        public IList<IEventProcessor> OutboundProcessors
-        {
-            get
-            {
-                return new List<IEventProcessor>(OutboundChain.Sort());
-            }
+            _envelopeBus.Register(registration);
+            Log.Debug("leave SubscribeToReader");
         }
 
         public IEnvelopeBus EnvelopeBus
         {
             get
             {
-                return _envBus;
+                return _envelopeBus;
             }
         }
 
         public object ProcessInboundCallback(Envelope env)
         {
-            _log.Debug("Enter InterceptEvent");
+            Log.Debug("Enter InterceptEvent");
 
-            var context = new EventContext(EventContext.Directions.In, env);
+            var context = new MessageContext(MessageContext.Directions.In, env);
 
-            this.ProcessEvent(context, this.InboundChain.Sort(), () =>
+            this.ProcessMessage(context, () =>
             {
-                _log.Info("Completed inbound processing - invoking IEventHandler");
+                Log.Info("Completed inbound processing - invoking IEventHandler");
 
             });
 
-            _log.Debug("Leave InterceptEvent");
-            return context.Event;
+            Log.Debug("Leave InterceptEvent");
+            return context.Message;
         }
-        
+
+        public void ProcessMessage(MessageContext context, Action continueProcessing)
+        {
+            _eventProducer.ProcessMessage(context, continueProcessing);
+        }
     }
 }
