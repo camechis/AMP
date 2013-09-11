@@ -1,5 +1,6 @@
 package amp.anubis.services;
 
+import amp.anubis.core.AnubisException;
 import amp.anubis.core.ITokenManager;
 import amp.anubis.core.NamedToken;
 import com.google.common.cache.Cache;
@@ -11,7 +12,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.security.SecureRandom;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 public class DefaultTokenManager implements ITokenManager {
@@ -25,14 +30,12 @@ public class DefaultTokenManager implements ITokenManager {
     private static final TimeUnit DEFAULT_CACHE_ABSOLUTE_EXPIRATION_UNITS = TimeUnit.HOURS;
 
     private Cache<String, String> _tokenCache;
-    private int _passwordSize;
     private int _cacheAccessTimeoutDuration;
     private TimeUnit _cacheAccessTimeoutUnits;
     private int _cacheAbsoluteExpirationDuration;
     private TimeUnit _cacheAbsoluteExpirationUnits;
 
 
-    public void setPasswordSize(int value) { _passwordSize = value; }
     public void setCacheAccessTimeoutDuration(int value) { _cacheAccessTimeoutDuration = value; }
     public void setCacheAccessTimeoutUnits(TimeUnit value) { _cacheAccessTimeoutUnits = value; }
     public void setCacheAbsoluteExpirationDuration(int value) { _cacheAbsoluteExpirationDuration = value; }
@@ -41,7 +44,6 @@ public class DefaultTokenManager implements ITokenManager {
 
     public DefaultTokenManager() {
 
-        _passwordSize = DEFAULT_PASSWORD_SIZE;
         _cacheAccessTimeoutDuration = DEFAULT_CACHE_ACCESS_TIMEOUT_DURATION;
         _cacheAccessTimeoutUnits = DEFAULT_CACHE_ACCESS_TIMEOUT_UNITS;
         _cacheAbsoluteExpirationDuration = DEFAULT_CACHE_ABSOLUTE_EXPIRATION_DURATION;
@@ -62,40 +64,27 @@ public class DefaultTokenManager implements ITokenManager {
 
 
     @Override
-    public NamedToken generateToken(UserDetails requestor) throws IllegalArgumentException {
+    public NamedToken generateToken(UserDetails requestor) throws AnubisException {
 
         // make sure we have a requestor identity
         if ( (null == requestor) || (null == requestor.getUsername()) || (requestor.getUsername().length() == 0) )
-            throw new IllegalArgumentException("Username must be provided in order to generate a token.");
+            throw new AnubisException("Username must be provided in order to generate a token.");
 
 
         // the actor for whom we're generating a token
         String identity = requestor.getUsername();
-        Log.debug("Now generating a {} byte token for {}", _passwordSize, identity);
+        Log.debug("Now generating a token for {}", identity);
 
-        NamedToken token;
-        boolean badToken = true;
+        // generate a 128-bit (16 byte) UUID
+        UUID password = UUID.randomUUID();
 
-        // it's possible for us to "randomly" generate a password that's already in use,
-        // so let's generate passwords in a loop until we generate one that's unused.
-        do {
-            // the 128 byte password we're going to generate
-            byte[] password = new byte[_passwordSize];
+        // get the bytes from that UUID
+        byte[] passwordBytes = this.getPasswordBytes(password);
 
-            // generate a secure, random 128-bit (16 byte) password
-            SecureRandom passwordGenerator = new SecureRandom();
-            passwordGenerator.setSeed(passwordGenerator.generateSeed(16));
-            passwordGenerator.nextBytes(password);
-
-            Log.debug("Token successfully generated.  Encoding into Base64.");
-            // use the identity and password to create a named token
-            token = new NamedToken(identity, Base64.encodeBase64String(password));
-            Log.debug("Token successfully Base64 encoded");
-
-            // if this token is already in use, it's bad
-            badToken = this.verifyToken(token);
-        }
-        while (badToken);
+        Log.debug("Token successfully generated.  Encoding into Base64.");
+        // use the identity and password to create a named token
+        NamedToken token = new NamedToken(identity, Base64.encodeBase64String(passwordBytes));
+        Log.debug("Token successfully Base64 encoded");
 
         // add the token to the user's list of tokens
         this.cacheToken(token);
@@ -105,7 +94,7 @@ public class DefaultTokenManager implements ITokenManager {
     }
 
     @Override
-    public boolean verifyToken(NamedToken token) throws IllegalArgumentException {
+    public boolean verifyToken(NamedToken token) throws AnubisException {
 
         // if there's no token, we can't verify anything
         if (this.isNullOrEmpty(token))
@@ -165,5 +154,24 @@ public class DefaultTokenManager implements ITokenManager {
             snippedToken = token.substring(token.length() - charsToShow);
 
         return snippedToken;
+    }
+
+
+    public byte[] getPasswordBytes(UUID password) throws AnubisException {
+
+        // see: http://stackoverflow.com/questions/6881659/how-to-convert-two-longs-to-a-byte-array-how-to-convert-uuid-to-byte-array
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        DataOutputStream dos = new DataOutputStream(baos);
+
+        try {
+            dos.writeLong(password.getMostSignificantBits());
+            dos.writeLong(password.getLeastSignificantBits());
+            dos.flush(); // May not be necessary
+        }
+        catch (IOException ioex) {
+            throw new AnubisException("Failed to turn the generated password into a byte array.", ioex);
+        }
+
+        return baos.toByteArray();
     }
 }

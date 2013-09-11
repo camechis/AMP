@@ -1,6 +1,7 @@
 package amp.anubis.tests;
 
 
+import amp.anubis.core.AnubisException;
 import amp.anubis.core.NamedToken;
 import amp.anubis.services.DefaultTokenManager;
 import org.apache.commons.codec.binary.Base64;
@@ -16,7 +17,7 @@ import static org.mockito.Mockito.*;
 public class DefaultTokenManagerTests {
 
     @Test
-    public void should_successfully_verify_newly_generated_token() {
+    public void should_successfully_verify_newly_generated_token() throws AnubisException {
 
         // create
         DefaultTokenManager tokenManager = new DefaultTokenManager();
@@ -35,16 +36,16 @@ public class DefaultTokenManagerTests {
 
     public static class GenerateTokenTests {
 
-        @Test(expected = IllegalArgumentException.class)
-        public void should_throw_IllegalArgumentException_if_requestor_is_null() {
+        @Test(expected = AnubisException.class)
+        public void should_throw_AnubisException_if_requestor_is_null() throws AnubisException {
             DefaultTokenManager tokenManager = new DefaultTokenManager();
             tokenManager.generateToken(null);
 
-            fail("Should have thrown an IllegalArgumentException but didn't.");
+            fail("Should have thrown an AnubisException but didn't.");
         }
 
-        @Test(expected = IllegalArgumentException.class)
-        public void should_throw_IllegalArgumentException_if_username_is_null() {
+        @Test(expected = AnubisException.class)
+        public void should_throw_AnubisException_if_username_is_null() throws AnubisException {
 
             // create
             UserDetails mockUser = mock(UserDetails.class);
@@ -57,11 +58,11 @@ public class DefaultTokenManagerTests {
             tokenManager.generateToken(mockUser);
 
             // assert
-            fail("Should have thrown an IllegalArgumentException but didn't.");
+            fail("Should have thrown an AnubisException but didn't.");
         }
 
-        @Test(expected = IllegalArgumentException.class)
-        public void should_throw_IllegalArgumentException_if_username_is_empty() {
+        @Test(expected = AnubisException.class)
+        public void should_throw_AnubisException_if_username_is_empty() throws AnubisException {
 
             // create
             UserDetails mockUser = mock(UserDetails.class);
@@ -74,32 +75,7 @@ public class DefaultTokenManagerTests {
             tokenManager.generateToken(mockUser);
 
             // assert
-            fail("Should have thrown an IllegalArgumentException but didn't.");
-        }
-
-        @Test
-        public void generates_passwords_of_the_configured_length() {
-
-            // create
-            UserDetails mockUser = mock(UserDetails.class);
-            DefaultTokenManager tokenManager18Length = new DefaultTokenManager();
-            DefaultTokenManager tokenManager128Length = new DefaultTokenManager();
-
-            // setup
-            when(mockUser.getUsername()).thenReturn("testUser");
-            tokenManager18Length.setPasswordSize(18);
-            tokenManager128Length.setPasswordSize(128);
-
-            // test
-            NamedToken token18 = tokenManager18Length.generateToken(mockUser);
-            NamedToken token128 = tokenManager128Length.generateToken(mockUser);
-
-            byte[] decoded18 = Base64.decodeBase64(token18.getToken());
-            byte[] decoded128 = Base64.decodeBase64(token128.getToken());
-
-            // assert
-            assertEquals(18, decoded18.length);
-            assertEquals(128, decoded128.length);
+            fail("Should have thrown an AnubisException but didn't.");
         }
     }
 
@@ -108,7 +84,7 @@ public class DefaultTokenManagerTests {
     public static class VerifyTokenTests {
 
         @Test
-        public void should_return_false_if_token_is_null() {
+        public void should_return_false_if_token_is_null() throws AnubisException {
 
             DefaultTokenManager tokenManager = new DefaultTokenManager();
             boolean shouldBeFalse = tokenManager.verifyToken(null);
@@ -117,7 +93,7 @@ public class DefaultTokenManagerTests {
         }
 
         @Test
-        public void should_return_false_if_token_has_null_identity() {
+        public void should_return_false_if_token_has_null_identity() throws AnubisException {
 
             // create
             NamedToken fakeToken = new NamedToken(null, null);
@@ -131,7 +107,7 @@ public class DefaultTokenManagerTests {
         }
 
         @Test
-        public void should_return_false_if_token_has_empty_identity() {
+        public void should_return_false_if_token_has_empty_identity() throws AnubisException {
 
             // create
             NamedToken fakeToken = new NamedToken("", null);
@@ -145,7 +121,7 @@ public class DefaultTokenManagerTests {
         }
 
         @Test
-        public void should_return_false_if_token_has_null_token() {
+        public void should_return_false_if_token_has_null_token() throws AnubisException {
 
             // create
             NamedToken fakeToken = new NamedToken("testUser", null);
@@ -159,7 +135,7 @@ public class DefaultTokenManagerTests {
         }
 
         @Test
-        public void should_return_false_if_token_has_empty_token() {
+        public void should_return_false_if_token_has_empty_token() throws AnubisException {
 
             // create
             NamedToken fakeToken = new NamedToken("testUser", "");
@@ -173,7 +149,7 @@ public class DefaultTokenManagerTests {
         }
 
         @Test
-        public void random_password_should_not_verify() {
+        public void random_password_should_not_verify() throws AnubisException {
 
             // create
             DefaultTokenManager tokenManager = new DefaultTokenManager();
@@ -187,7 +163,7 @@ public class DefaultTokenManagerTests {
         }
 
         @Test
-        public void correct_password_wrong_username_should_not_verify() {
+        public void correct_password_wrong_username_should_not_verify() throws AnubisException {
 
             // create
             DefaultTokenManager tokenManager = new DefaultTokenManager();

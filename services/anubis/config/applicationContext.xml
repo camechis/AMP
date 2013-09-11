@@ -22,7 +22,6 @@
     <bean id="tokenManager" class="amp.anubis.services.DefaultTokenManager">
         <!-- Default values are shown below -->
         <!--
-        <property name="passwordSize" value="16" />
         <property name="cacheAccessTimeoutDuration" value="10" />
         <property name="cacheAccessTimeoutUnits">
             <util:constant static-field="java.util.concurrent.TimeUnit.MINUTES" />
