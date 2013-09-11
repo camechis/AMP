@@ -6,14 +6,14 @@ import amp.bus.security.IUserInfoRepository;
 import amp.bus.security.InMemoryUserInfoRepository;
 
 public class OutboundHeadersProcessor extends
-		amp.eventing.OutboundHeadersProcessor implements EventSequenceProcessor {
+		amp.messaging.OutboundHeadersProcessor implements EventSequenceProcessor {
 
 	public OutboundHeadersProcessor() {
 		this(new InMemoryUserInfoRepository(new HashMap<String, String>()));
 	}
 
 	public OutboundHeadersProcessor(IUserInfoRepository userInfoRepository) {
-		super(userInfoRepository);
+		//super(userInfoRepository);
 	}
 
 	public void restartEventSequence() {

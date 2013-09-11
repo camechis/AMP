@@ -2,10 +2,10 @@ package amp.gel.dao.impl.derby.data.processors;
 
 import java.util.Random;
 
-import amp.eventing.EnvelopeHelper;
-import amp.eventing.EventContext;
-import amp.eventing.EventContext.Directions;
-import amp.eventing.IContinuationCallback;
+import amp.messaging.EnvelopeHelper;
+import amp.messaging.MessageContext;
+import amp.messaging.MessageContext.Directions;
+import amp.messaging.IContinuationCallback;
 
 /**
  * Processes event sequences and sets the sender identity in the envelope header
@@ -28,8 +28,8 @@ public class SenderIdentityHeaderProcessor implements EventSequenceProcessor {
 		randomHumanUser();
 	}
 
-	public void processEvent(EventContext eventContext,
-			IContinuationCallback continuationCallback) throws Exception {
+	public void processMessage(MessageContext eventContext,
+			IContinuationCallback continuationCallback)  {
 		if (Directions.Out == eventContext.getDirection()) {
 			EnvelopeHelper env = new EnvelopeHelper(eventContext.getEnvelope());
 
