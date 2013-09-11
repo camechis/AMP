@@ -38,7 +38,7 @@ public class MessageSender implements IMessageChainProcessor {
         LOG.debug("Enter send");
 
         final Envelope envelope = new Envelope();
-        final MessageContext context = new MessageContext(MessageContext.Directions.Out, message, envelope);
+        final MessageContext context = new MessageContext(MessageContext.Directions.Out, envelope, message);
 
         try {
 

@@ -76,7 +76,7 @@ public class DefaultRpcBus extends DefaultEventBus implements IRpcEventBus, IInb
         	Envelope env = this.buildRequestEnvelope(requestId, timeout);
 
             // create an event context for processing
-            final MessageContext context = new MessageContext(Directions.Out, request, env);
+            final MessageContext context = new MessageContext(Directions.Out, env, request);
             
             // need a final-scoped handle to an IInboundProcessorCallback
             final IInboundProcessorCallback envelopeOpener = this;
@@ -145,7 +145,7 @@ public class DefaultRpcBus extends DefaultEventBus implements IRpcEventBus, IInb
             Envelope env = new Envelope();
             new EnvelopeHelper(env).setCorrelationId(originalHeadersHelper.getMessageId());
 
-            final MessageContext context = new MessageContext(Directions.Out, response, env);
+            final MessageContext context = new MessageContext(Directions.Out, env, response);
 
             this._eventProducer.processMessage(context, new IContinuationCallback() {
             

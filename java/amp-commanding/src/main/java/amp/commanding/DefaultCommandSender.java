@@ -44,7 +44,7 @@ public class DefaultCommandSender implements ICommandSender, IMessageChainProces
         LOG.debug("Enter send");
 
         final Envelope envelope = new Envelope();
-        final MessageContext context = new MessageContext(MessageContext.Directions.Out, command, envelope);
+        final MessageContext context = new MessageContext(MessageContext.Directions.Out, envelope, command);
 
         try {
 

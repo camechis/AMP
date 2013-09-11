@@ -43,7 +43,7 @@ public class DefaultEventStream implements IEventStream {
         EnvelopeHelper envHelper = new EnvelopeHelper(env);
         envHelper.setMessageTopic(getTopic());
 
-        MessageContext context = new MessageContext(MessageContext.Directions.Out, event, env);
+        MessageContext context = new MessageContext(MessageContext.Directions.Out, env, event);
         EventStreamQueueItem eventItem = new EventStreamQueueItem(context);
 
         log.debug("buffering event with sequenceId: " + sequence + ", position: " + position);

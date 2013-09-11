@@ -40,7 +40,7 @@ public class MessageContext {
         this.context = new HashMap<String, Object>();
     }
 
-    public MessageContext(Directions direction, Object message, Envelope envelope) {
+    public MessageContext(Directions direction, Envelope envelope, Object message) {
 
         this.direction = direction;
         this.message = message;

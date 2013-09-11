@@ -93,8 +93,8 @@ public class EnvelopeGenerator implements Iterable<Envelope>,
 		}
 
 		for (Event event : eventSequence) {
-			MessageContext context = new MessageContext(Directions.Out, event,
-					new Envelope());
+			MessageContext context = new MessageContext(Directions.Out, new Envelope(),
+					event);
 
 			for (IMessageProcessor processor : outboundProcessors) {
 				try {
