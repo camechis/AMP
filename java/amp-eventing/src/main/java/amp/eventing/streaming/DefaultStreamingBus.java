@@ -30,14 +30,14 @@ public class DefaultStreamingBus extends DefaultEventBus implements IStandardStr
 
     public DefaultStreamingBus(IEnvelopeBus envelopeBus, List<IMessageProcessor> inboundProcessors,
                                List<IMessageProcessor> outboundProcessors) {
-        this(envelopeBus, inboundProcessors, outboundProcessors, new DefaultEventStreamFactory());
+        this(envelopeBus, new DefaultEventStreamFactory(), inboundProcessors, outboundProcessors);
         this.eventStreamFactory.setEventBus(this);
     }
 
 
-    public DefaultStreamingBus(IEnvelopeBus envelopeBus, List<IMessageProcessor> inboundProcessors,
-                               List<IMessageProcessor> outboundProcessors,
-                               IEventStreamFactory eventStreamFactory) {
+    public DefaultStreamingBus(IEnvelopeBus envelopeBus, IEventStreamFactory eventStreamFactory,
+                               List<IMessageProcessor> inboundProcessors,
+                               List<IMessageProcessor> outboundProcessors) {
         super(envelopeBus, inboundProcessors, outboundProcessors);
         this.envelopeBus = envelopeBus;
         this.eventStreamFactory = eventStreamFactory;
