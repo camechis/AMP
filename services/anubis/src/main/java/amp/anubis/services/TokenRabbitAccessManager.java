@@ -33,10 +33,10 @@ public class TokenRabbitAccessManager implements IRabbitAccessManager {
             boolean verified = _tokenManager.verifyToken(token.getNamedToken());
 
             if (verified) {
-                if (token.hasAtLeastOneAttribute("ROLE_DOMAIN ADMINS", "ROLE_RABBITMQ ADMINS")) {
+                if (token.hasAtLeastOneAttribute("Domain Admins", "RabbitMQ Admins")) {
                     accessLevel = AccessLevel.ADMIN;
                 }
-                else if (token.hasAttribute("ROLE_RABBITMQ_MANAGERS")) {
+                else if (token.hasAttribute("RabbitMQ Managers")) {
                     accessLevel = AccessLevel.MANAGER;
                 }
                 else {
