@@ -3,7 +3,7 @@ using System.Collections;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-
+using amp.messaging;
 using Common.Logging;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;

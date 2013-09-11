@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-using cmf.bus;
-
+using amp.messaging;
 using amp.rabbit.topology;
 
 

@@ -59,6 +59,8 @@
     <Compile Include="..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="EnvelopeExtensions.cs" />
+    <Compile Include="EnvelopeHeaderConstants.cs" />
     <Compile Include="MessageAttribute.cs" />
     <Compile Include="MessageException.cs" />
     <Compile Include="MessageProcessorChain.cs" />
