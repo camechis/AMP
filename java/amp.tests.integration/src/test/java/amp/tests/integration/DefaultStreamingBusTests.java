@@ -2,6 +2,7 @@ package amp.tests.integration;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -54,9 +55,9 @@ public class DefaultStreamingBusTests extends DefaultEventBusTests {
         signal.await(10, TimeUnit.SECONDS);
 
         assertNotNull("The collection of events was not receieved before the timeout expired.", handler.ReceivedEvents);
-        assertEquals(3,handler.ReceivedEvents.length);
+        assertEquals(3,handler.ReceivedEvents.size());
         for(int i = 1; i <=3; i++){
-        	assertEquals(i, handler.ReceivedEvents[i=1].getEvent().Sequence);
+        	assertEquals(i, handler.ReceivedEvents.get(i -1).getEvent().Sequence);
         }
     }
 
@@ -88,15 +89,15 @@ public class DefaultStreamingBusTests extends DefaultEventBusTests {
         signal.await(10, TimeUnit.SECONDS);
 
         assertNotNull("The collection of events was not receieved before the timeout expired.", handler.ReceivedEvents);
-        assertEquals(3,handler.ReceivedEvents.length);
+        assertEquals(3,handler.ReceivedEvents.size());
         for(int i = 1; i <=3; i++){
-        	assertEquals(i, handler.ReceivedEvents[i=1].getEvent().Sequence);
+        	assertEquals(i, handler.ReceivedEvents.get(i-1).getEvent().Sequence);
         }
     }
 
     public class CollectionHandler implements IStreamingCollectionHandler<TestStreamEvent> {
         private final CountDownLatch _signal;
-        public StreamingEventItem<TestStreamEvent>[] ReceivedEvents;
+        public List<StreamingEventItem<TestStreamEvent>> ReceivedEvents;
 
         public CollectionHandler(CountDownLatch signal) {
             _signal = signal;
@@ -109,14 +110,14 @@ public class DefaultStreamingBusTests extends DefaultEventBusTests {
 
 		@Override
 		public void handleCollection( Collection<StreamingEventItem<TestStreamEvent>> events) {
-            ReceivedEvents = events.toArray(ReceivedEvents);
+            ReceivedEvents = new ArrayList(events);
             _signal.countDown();
 
             LOG.debug(String.format("Received a collection from AMPere of size: %d", events.size()));
 
             for(StreamingEventItem<TestStreamEvent> eventItem : events) {
-            	LOG.debug(String.format("Event Item: SequenceId => %d, Position => %d, Content => %s",
-                    eventItem.getSequenceId(), eventItem.getPosition(), eventItem.getEvent().toString()));
+            	LOG.debug(String.format("Event Item: SequenceId => %s, Position => %d, Content => %s",
+                    eventItem.getSequenceId().toString(), eventItem.getPosition(), eventItem.getEvent().toString()));
             }
 
             LOG.debug("Processing complete.");
@@ -132,7 +133,7 @@ public class DefaultStreamingBusTests extends DefaultEventBusTests {
         private final CountDownLatch _signal;
         private final ArrayList<StreamingEventItem<TestStreamEvent>> _receivedEvents = new ArrayList<StreamingEventItem<TestStreamEvent>>();
 
-        public StreamingEventItem<TestStreamEvent>[] ReceivedEvents;
+        public List<StreamingEventItem<TestStreamEvent>>  ReceivedEvents;
 
 
         public ReaderHandler(CountDownLatch signal) {
@@ -142,6 +143,7 @@ public class DefaultStreamingBusTests extends DefaultEventBusTests {
 		@Override
 		public void dispose() {
 			 LOG.debug("Notified that last event has been processed for the stream.");
+			 ReceivedEvents = _receivedEvents;
 	         _signal.countDown();
 		}
 
@@ -153,8 +155,8 @@ public class DefaultStreamingBusTests extends DefaultEventBusTests {
 		@Override
 		public void onEventRead(StreamingEventItem<TestStreamEvent> eventItem) {
             _receivedEvents.add(eventItem);
-            LOG.debug(String.format("Message received: (sequenceId: %d), (position: %d), Event Value: %s",
-            		eventItem.getSequenceId(), eventItem.getPosition(), eventItem.getEvent().toString()));
+            LOG.debug(String.format("Message received: (sequenceId: %s), (position: %d), Event Value: %s",
+            		eventItem.getSequenceId().toString(), eventItem.getPosition(), eventItem.getEvent().toString()));
             
 		}
     }

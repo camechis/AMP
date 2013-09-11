@@ -27,15 +27,14 @@ public class DefaultEventBus implements IEventBus {
 
 	private static final Logger LOG = LoggerFactory.getLogger(DefaultEventBus.class);
 
-    protected final DefaultEventProducer _eventProducer;
     protected final DefaultEventConsumer _eventConsumer;
-
+    protected final DefaultEventProducer _eventProducer;
 
     public DefaultEventBus(IEnvelopeBus envelopeBus, 
     		List<IMessageProcessor> inboundProcessors,
     		List<IMessageProcessor> outboundProcessors)  {
-        _eventProducer = new DefaultEventProducer(envelopeBus, inboundProcessors);
-        _eventConsumer = new DefaultEventConsumer(envelopeBus, outboundProcessors);
+        _eventConsumer = new DefaultEventConsumer(envelopeBus, inboundProcessors);
+        _eventProducer = new DefaultEventProducer(envelopeBus, outboundProcessors);
     }
 
 
