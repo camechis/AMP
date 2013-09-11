@@ -3,6 +3,8 @@ package amp.messaging;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 
+import amp.bus.security.IUserInfoRepository;
+
 import java.util.UUID;
 
 /**
@@ -12,7 +14,14 @@ import java.util.UUID;
  */
 public class OutboundHeadersProcessor implements IMessageProcessor {
 
-    @Override
+	protected IUserInfoRepository userInfoRepo;
+	
+	
+	public OutboundHeadersProcessor(IUserInfoRepository userInfoRepository) {
+		this.userInfoRepo = userInfoRepository;
+	}
+
+	@Override
     public void processMessage(MessageContext context, IContinuationCallback next) throws MessageException {
 
         if (MessageContext.Directions.Out == context.getDirection()) {
@@ -40,7 +49,11 @@ public class OutboundHeadersProcessor implements IMessageProcessor {
             env.setCreationTime(DateTime.now());
 
             String senderIdentity = env.getSenderIdentity();
-            senderIdentity = StringUtils.isBlank(senderIdentity) ? System.getProperty("user.name") : senderIdentity;
+            try {
+				senderIdentity = StringUtils.isBlank(senderIdentity) ? userInfoRepo.getDistinguishedName(System.getProperty("user.name")).replaceAll(",", ", ") : senderIdentity;
+			} catch (Exception ex) {
+				throw new MessageException("Failed to get user identity from " + userInfoRepo.getClass().getCanonicalName(), ex);
+			}
             env.setSenderIdentity(senderIdentity);
         }
 

@@ -1,11 +1,13 @@
 package amp.extensions.commons.builder;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 
 import cmf.bus.IEnvelopeBus;
 import cmf.eventing.IEventBus;
 import cmf.eventing.patterns.rpc.IRpcEventBus;
 
+import amp.bus.security.InMemoryUserInfoRepository;
 import amp.eventing.DefaultEventBus;
 import amp.eventing.DefaultRpcBus;
 import amp.messaging.IMessageProcessor;
@@ -50,9 +52,12 @@ public class EventBusBuilder extends FluentExtension {
 		// Got to marshall objects (Default is JSON)
 		JsonSerializationProcessor jsonEventSerializer = 
 				new JsonSerializationProcessor();
-				
+
+		InMemoryUserInfoRepository userInfoRepository = 
+				new InMemoryUserInfoRepository(new HashMap<String, String>());
+
 		// Manipulates the headers for use by the Event Bus.
-		OutboundHeadersProcessor headersProcessor = new OutboundHeadersProcessor();
+		OutboundHeadersProcessor headersProcessor = new OutboundHeadersProcessor(userInfoRepository);
 		
 		// These are order dependent.
 		this.inbound.add(rpcFilter);

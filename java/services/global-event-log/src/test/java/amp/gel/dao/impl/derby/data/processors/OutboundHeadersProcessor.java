@@ -13,7 +13,7 @@ public class OutboundHeadersProcessor extends
 	}
 
 	public OutboundHeadersProcessor(IUserInfoRepository userInfoRepository) {
-		//super(userInfoRepository);
+		super(userInfoRepository);
 	}
 
 	public void restartEventSequence() {

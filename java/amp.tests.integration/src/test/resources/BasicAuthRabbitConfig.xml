@@ -146,6 +146,12 @@
 
     <bean id="Msg-JsonSerializationProcessor" class="amp.messaging.JsonSerializationProcessor" />
     
-    <bean id="Msg-OutboundHeadersProcessor" class="amp.messaging.OutboundHeadersProcessor" />
+    <bean id="Msg-OutboundHeadersProcessor" class="amp.messaging.OutboundHeadersProcessor" 
+          c:userInfoRepository-ref="userInfoRepository"  />
+
+    <bean id="userInfoRepository" class="amp.bus.security.InMemoryUserInfoRepository"
+          c:mapping-ref="userMapping" />
+
+    <util:map id="userMapping" key-type="java.lang.String" value-type="java.lang.String" />
 
 </beans>
