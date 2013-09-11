@@ -16,13 +16,14 @@ import org.slf4j.LoggerFactory;
 
 import amp.messaging.EnvelopeHelper;
 import amp.messaging.IContinuationCallback;
+import amp.messaging.IInboundProcessorCallback;
 import amp.messaging.IMessageProcessor;
 import amp.messaging.MessageContext;
 import amp.messaging.MessageContext.Directions;
 import amp.messaging.MessageException;
 
 
-public class DefaultRpcBus extends DefaultEventBus implements IRpcEventBus, IInboundProcessorCallback {
+public class DefaultRpcBus extends DefaultEventBus implements IRpcEventBus {
 
 	private static final Logger LOG = LoggerFactory.getLogger(DefaultRpcBus.class);
 
@@ -79,7 +80,7 @@ public class DefaultRpcBus extends DefaultEventBus implements IRpcEventBus, IInb
             final MessageContext context = new MessageContext(Directions.Out, env, request);
             
             // need a final-scoped handle to an IInboundProcessorCallback
-            final IInboundProcessorCallback envelopeOpener = this;
+            final IInboundProcessorCallback envelopeOpener = this._eventConsumer;
             
             // process the event
             this._eventProducer.getMessageProcessor().processMessage(

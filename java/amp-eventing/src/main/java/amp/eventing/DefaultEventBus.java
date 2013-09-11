@@ -56,22 +56,6 @@ public class DefaultEventBus implements IEventBus {
 		_eventConsumer.subscribe(handler, predicate);
 	}
 
-    public Object ProcessInbound(Envelope envelope) throws Exception {
-        final MessageContext context = new MessageContext(Directions.In, envelope);
-
-        this._eventConsumer.getMessageProcessor().processMessage(
-                context,
-                new IContinuationCallback() {
-
-                    @Override
-                    public void continueProcessing() {
-                        LOG.info("Completed inbound processing - returning event");
-                    }
-                });
-
-        return context.getMessage();
-    }
-
 	@Override
 	public void dispose() {
 		_eventProducer.dispose();

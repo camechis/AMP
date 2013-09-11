@@ -3,6 +3,7 @@ package amp.eventing.streaming;
 
 import amp.eventing.*;
 import amp.messaging.IContinuationCallback;
+import amp.messaging.IInboundProcessorCallback;
 import amp.messaging.IMessageProcessor;
 import amp.messaging.MessageContext;
 import amp.messaging.MessageException;
@@ -16,7 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
-public class DefaultStreamingBus extends DefaultEventBus implements IStandardStreamingEventBus, IInboundProcessorCallback {
+public class DefaultStreamingBus extends DefaultEventBus implements IStandardStreamingEventBus {
     protected static final Logger log = LoggerFactory.getLogger(DefaultStreamingBus.class);
     private IEventStreamFactory eventStreamFactory;
     private Map<String, IEventStream> eventStreams;
@@ -104,7 +105,7 @@ public class DefaultStreamingBus extends DefaultEventBus implements IStandardStr
     @Override
     public <TEVENT> void subscribeToCollection(IStreamingCollectionHandler<TEVENT> handler) throws Exception {
         log.debug("enter subscribeToCollection");
-        StreamingCollectionRegistration<TEVENT> registration = new StreamingCollectionRegistration<TEVENT>(handler, this);
+        StreamingCollectionRegistration<TEVENT> registration = new StreamingCollectionRegistration<TEVENT>(handler, this._eventConsumer);
         envelopeBus.register(registration);
         log.debug("leave subscribeToCollection");
     }
@@ -112,7 +113,7 @@ public class DefaultStreamingBus extends DefaultEventBus implements IStandardStr
     @Override
     public <TEVENT> void subscribeToReader(IStreamingReaderHandler<TEVENT> handler) throws Exception {
         log.debug("enter subscribeToReader");
-        StreamingReaderRegistration<TEVENT> registration = new StreamingReaderRegistration<TEVENT>(handler, this);
+        StreamingReaderRegistration<TEVENT> registration = new StreamingReaderRegistration<TEVENT>(handler, this._eventConsumer);
         envelopeBus.register(registration);
         log.debug("leave subscribeToReader");
     }

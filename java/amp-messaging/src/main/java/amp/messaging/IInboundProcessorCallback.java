@@ -1,4 +1,4 @@
-package amp.eventing;
+package amp.messaging;
 
 
 import cmf.bus.Envelope;

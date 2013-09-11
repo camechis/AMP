@@ -1,7 +1,7 @@
 package amp.eventing.streaming;
 
 import amp.messaging.EnvelopeHelper;
-import amp.eventing.IInboundProcessorCallback;
+import amp.messaging.IInboundProcessorCallback;
 import cmf.bus.Envelope;
 import cmf.bus.EnvelopeHeaderConstants;
 import cmf.bus.IEnvelopeFilterPredicate;

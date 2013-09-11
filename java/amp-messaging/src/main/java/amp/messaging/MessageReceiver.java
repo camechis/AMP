@@ -6,6 +6,9 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import amp.messaging.MessageContext.Directions;
+
+import cmf.bus.Envelope;
 import cmf.bus.IEnvelopeReceiver;
 
 
@@ -14,7 +17,7 @@ import cmf.bus.IEnvelopeReceiver;
  * User: jar349
  * Date: 5/1/13
  */
-public class MessageReceiver {
+public class MessageReceiver implements IInboundProcessorCallback {
 
     private static final Logger LOG = LoggerFactory.getLogger(MessageReceiver.class);
 
@@ -59,6 +62,24 @@ public class MessageReceiver {
 
 
         LOG.debug("Leave onMessageReceived");
+    }
+
+    @Override
+    //TODO: This code is duplicative of code in MessageRegistration
+    public Object ProcessInbound(Envelope envelope) throws Exception {
+        final MessageContext context = new MessageContext(Directions.In, envelope);
+
+        this._messageProcessor.processMessage(
+                context,
+                new IContinuationCallback() {
+
+                    @Override
+                    public void continueProcessing() {
+                        LOG.info("Completed inbound processing - returning event");
+                    }
+                });
+
+        return context.getMessage();
     }
 
     public void dispose() {
