@@ -12,14 +12,14 @@
   </object>
 
   <object id="IRabbitConnectionFactory" type="amp.rabbit.BasicConnectionFactory, amp.rabbit">
-    <constructor-arg name="username" value="devexample" />
-    <constructor-arg name="password" value="devexample" />
+    <constructor-arg name="username" value="openampere" />
+    <constructor-arg name="password" value="openampere" />
   </object>
 
   <object id="ITopologyService" type="amp.rabbit.topology.SimpleTopologyService, amp.rabbit">
         <constructor-arg name="clientProfile" value="" />
         <constructor-arg name="name" value="" />
-        <constructor-arg name="hostname" value="devexample.com" />
+        <constructor-arg name="hostname" value="rabbit.openampere.com" />
         <constructor-arg name="vhost" value="" />
         <constructor-arg name="port" value="5672" />
       </object>
