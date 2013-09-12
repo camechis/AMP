@@ -16,58 +16,16 @@
     <constructor-arg name="password" value="devexample" />
   </object>
 
-  <object id="ITopologyService" type="amp.topology.client.GlobalTopologyService, amp.topology.client">
-    <constructor-arg name="routingRetreiver" ref="IRoutingInfoRetreiver" />
-    <constructor-arg name="fallbackProvider" ref="IFallbackRoutingInfoProvider" />
-  </object>
-
-  <object id="IRoutingInfoRetreiver" type="amp.topology.client.HttpRoutingInfoRetreiver">
-    <constructor-arg name="webRequestFactory" ref="IWebRequestFactory" />
-    <constructor-arg name="urlExpression" value="http://devexample.com/:15677/service/topology/get-routing-info/{0}" />
-    <constructor-arg name="serializer" ref="IDeserializer-RoutingInfo" />
-  </object>
-
-  <object id="IWebRequestFactory" type="amp.utility.http.BasicAuthWebRequestFactory, amp.utility">
-    <constructor-arg name="username" value="devexample" />
-    <constructor-arg name="password" value="devexample" />
-  </object>
-
-  <object id="IDeserializer-RoutingInfo" type="amp.utility.serialization.Utf8JsonDeserializer&lt;amp.rabbit.topology.RoutingInfo&gt;, amp.utility" />
-
-  <object id="IFallbackRoutingInfoProvider" type="amp.topology.client.DefaultApplicationExchangeProvider">
-    <property name="hostName" value="devexample.com" />
-    <property name="isDurable" value="true" />
-  </object>
-
-  <!--
-        uncomment to use the SimpleTopologyService
-      <object id="ITopologyService" type="amp.bus.rabbit.topology.SimpleTopologyService, amp.bus.rabbit">
+  <object id="ITopologyService" type="amp.rabbit.topology.SimpleTopologyService, amp.rabbit">
         <constructor-arg name="clientProfile" value="" />
         <constructor-arg name="name" value="" />
         <constructor-arg name="hostname" value="devexample.com" />
         <constructor-arg name="vhost" value="" />
         <constructor-arg name="port" value="5672" />
       </object>
-      -->
-  <object id="IRoutingInfoCache" type="amp.rabbit.transport.CommandableCache, amp.rabbit">
-    <constructor-arg name="commandReceiver" ref="ICommandReceiver" />
+
+  <object id="IRoutingInfoCache" type="amp.rabbit.transport.SimpleRoutingInfoCache, amp.rabbit">
     <constructor-arg name="cacheExpiryInSeconds" value="600" />
   </object>
-
-  <object id="ICommandReceiver" type="amp.commanding.DefaultCommandReceiver, amp.commanding">
-    <constructor-arg name="envelopeReceiver" ref="IEnvelopeReceiver" />
-    <constructor-arg name="processingChain">
-      <list element-type="amp.messaging.IMessageProcessor, amp.messaging">
-        <ref object="Cmd-JsonSerializationProcessor" />
-      </list>
-    </constructor-arg>
-  </object>
-
-  <object id="IEnvelopeReceiver" type="amp.rabbit.transport.RabbitEnvelopeReceiver, amp.rabbit">
-    <constructor-arg name="topologyService" ref="ITopologyService" />
-    <constructor-arg name="connFactory" ref="IRabbitConnectionFactory" />
-  </object>
-
-  <object id="Cmd-JsonSerializationProcessor" type="amp.messaging.JsonSerializationProcessor, amp.messaging" />
 
 </objects>
