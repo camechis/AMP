@@ -26,7 +26,7 @@ public class DefaultRpcBusTests extends DefaultEventBusTests{
 		
 		DefaultEventBusTests.bus = rpcBus = (IRpcEventBus) context.getBean("rpcEventBus");
 
-		backendContext = new FileSystemXmlApplicationContext("src/test/resources/BasicAuthRabbitConfig.xml");
+		backendContext = new FileSystemXmlApplicationContext(getConfigFiles());
 		backendBus = (IRpcEventBus) backendContext.getBean("rpcEventBus");
 
         try {

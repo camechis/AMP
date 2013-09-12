@@ -21,7 +21,7 @@ namespace amp.tests.integration.Eventing
             base.TestFixtureSetUp();
             _bus = _rpcBus = _context.GetObject("IRpcEventBus") as IRpcEventBus;
 
-            _backendContext = new XmlApplicationContext(Constants.BASIC_AUTH_CONFIG);
+            _backendContext = new XmlApplicationContext(ConfigFiles);
             _backendBus = _backendContext.GetObject("IRpcEventBus") as IRpcEventBus;
 
             _backendBus.Subscribe<TestRequest>(

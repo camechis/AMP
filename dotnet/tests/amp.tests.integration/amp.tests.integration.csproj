@@ -75,7 +75,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Contexts\AllBussesConfig.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\source\amp.commanding\amp.commanding.csproj">
       <Project>{93150A91-3D0A-4753-94A4-B6280994A18A}</Project>

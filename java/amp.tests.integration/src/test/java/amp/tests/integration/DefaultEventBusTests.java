@@ -19,9 +19,15 @@ public class DefaultEventBusTests {
 	protected static FileSystemXmlApplicationContext context;
 	protected static IEventBus bus;
 	
+	public static String[] getConfigFiles(){
+		return new String[]{
+				"src/test/resources/AllBussesConfig.xml", 
+				"src/test/resources/BasicAuthRabbitConfig.xml"};
+	}
+	
 	@BeforeClass
 	public static void BeforeAllTests(){
-		context = new FileSystemXmlApplicationContext("src/test/resources/BasicAuthRabbitConfig.xml");
+		context = new FileSystemXmlApplicationContext(getConfigFiles());
 		bus = (IEventBus) context.getBean("eventBus");
 	}
 	

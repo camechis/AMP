@@ -13,10 +13,18 @@ namespace amp.tests.integration.Eventing
         protected IApplicationContext _context;
         protected IEventBus _bus;
 
+        protected virtual string[] ConfigFiles
+        {
+            get
+            {
+                return new string[] {Constants.ALL_BUSSES_CONFIG, Constants.BASIC_AUTH_CONFIG};
+            }
+        }
+
         [TestFixtureSetUp]
         public virtual void TestFixtureSetUp()
         {
-            _context = new XmlApplicationContext(Constants.BASIC_AUTH_CONFIG);
+            _context = new XmlApplicationContext(ConfigFiles);
             _bus = _context.GetObject("IEventBus") as IEventBus;
         }
 

@@ -21,7 +21,7 @@ public class DefaultCommandBusTests {
 	
 	@BeforeClass
 	public static void BeforeAllTests(){
-		context = new FileSystemXmlApplicationContext("src/test/resources/BasicAuthRabbitConfig.xml");
+		context = new FileSystemXmlApplicationContext(DefaultEventBusTests.getConfigFiles());
 		bus = (ICommandBus) context.getBean("commandBus");
 	}
 	
