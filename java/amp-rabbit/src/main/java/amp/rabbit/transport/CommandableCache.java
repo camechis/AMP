@@ -2,17 +2,14 @@ package amp.rabbit.transport;
 
 
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import amp.commanding.ICommandReceiver;
 import amp.messaging.MessageException;
-import amp.rabbit.topology.RoutingInfo;
 
 
 /**
@@ -20,25 +17,15 @@ import amp.rabbit.topology.RoutingInfo;
  * User: John
  * Date: 5/11/13
  */
-public class CommandableCache implements IRoutingInfoCache {
+public class CommandableCache extends SimpleRoutingInfoCache {
 
     private static final Logger LOG = LoggerFactory.getLogger(CommandableCache.class);
 
-    private volatile Cache<String, RoutingInfo> routingInfoCache;
-    private Lock cacheLock;
     private ICommandReceiver commandReceiver;
 
-
     public CommandableCache(ICommandReceiver commandReceiver, long cacheExpiryInSeconds) {
-
+		super(cacheExpiryInSeconds);
         this.commandReceiver = commandReceiver;
-
-        this.routingInfoCache = CacheBuilder
-                .newBuilder()
-                .expireAfterWrite(cacheExpiryInSeconds, TimeUnit.SECONDS)
-                .build();
-
-        this.cacheLock = new ReentrantLock();
 
         try {
             // subscribe for the command to burst the routing cache.  Pass a cache
@@ -49,32 +36,9 @@ public class CommandableCache implements IRoutingInfoCache {
             LOG.warn("Failed to subscribe for Routing Cache Bust commands - the cache cannot be remotely commanded.", cex);
         }
     }
-
-
-    @Override
-    public RoutingInfo getIfPresent(String topic) {
-
-        // I don't think we should lock this call, otherwise we'll lock everytime we try to read the cache, which
-        // is going to kill performance.  Instead, I've made the cache volatile so that - at the very least -
-        // this read will see the latest value.
-        return routingInfoCache.getIfPresent(topic);
-    }
-
-    @Override
-    public void put(String topic, RoutingInfo routingInfo) {
-
-        this.cacheLock.lock();
-
-        try {
-            this.routingInfoCache.put(topic, routingInfo);
-        }
-        finally {
-            this.cacheLock.unlock();
-        }
-    }
-
-    @Override
-    public void dispose() {
-        this.commandReceiver.dispose();
-    }
+    
+	@Override
+	public void dispose() {
+	    this.commandReceiver.dispose();
+	}
 }
