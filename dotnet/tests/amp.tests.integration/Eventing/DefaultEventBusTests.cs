@@ -17,7 +17,7 @@ namespace amp.tests.integration.Eventing
         {
             get
             {
-                return new string[] {Constants.ALL_BUSSES_CONFIG, Constants.BASIC_AUTH_CONFIG};
+                return new string[] {Config.Bus.All, Config.Authorization.Basic, Config.Topology.Simple};
             }
         }
 

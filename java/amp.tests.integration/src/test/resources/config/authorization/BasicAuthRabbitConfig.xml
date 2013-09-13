@@ -16,17 +16,7 @@
           c:channelFactory-ref="channelFactory"
           c:routingInfoCache-ref="routingInfoCache" />
 
-    <bean id="topologyService" class="amp.rabbit.topology.SimpleTopologyService"
-          c:clientProfile=""
-          c:name="simpleTopology"
-          c:hostname="rabbit.openampere.com"
-          c:vhost="/"
-          c:port="5672" />
-
     <bean id="channelFactory" class="amp.rabbit.BasicChannelFactory"
           c:username="openampere" c:password="openampere" />
-
-    <bean id="routingInfoCache" class="amp.rabbit.transport.SimpleRoutingInfoCache"
-          c:cacheExpiryInSeconds="600" />
  
 </beans>

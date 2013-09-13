@@ -15,7 +15,8 @@ import cmf.eventing.IEventBus;
 import cmf.eventing.IEventHandler;
 
 /**
- * Tests ability to connect and do basic using basic auth in the clear, but with credentials from Anubis.
+ * Tests ability to connect and do basic using simple topo, basic auth in the clear, 
+ * but with credentials from Anubis.
  * @author kbaltrinic
  *
  */
@@ -26,8 +27,9 @@ public class AnubisOnlyTests {
 	
 	public static String[] getConfigFiles(){
 		return new String[]{
-				"src/test/resources/AllBussesConfig.xml", 
-				"src/test/resources/AnubisAuthRabbitConfig.xml"};
+				Config.Bus.All, 
+				Config.Authorization.AnubisBasic, 
+				Config.Topology.Simple};
 	}
 	
 	@BeforeClass

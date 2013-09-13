@@ -64,7 +64,7 @@
     </Compile>
     <Compile Include="Commanding\DefaultCommandBusTests.cs" />
     <Compile Include="ConfigScenarios\AnubisOnlyTests.cs" />
-    <Compile Include="Constants.cs" />
+    <Compile Include="Config.cs" />
     <Compile Include="Eventing\DefaultEventBusTests.cs" />
     <Compile Include="Eventing\DefaultRpcBusTests.cs" />
     <Compile Include="Eventing\Streaming\DefaultStreamingBusTests.cs" />
@@ -72,7 +72,7 @@
     <Compile Include="Rabbit\TokenConnectionFactoryTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Contexts\BasicAuthRabbitConfig.xml">
+    <EmbeddedResource Include="Config\Authorization\BasicAuthRabbitConfig.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
@@ -80,7 +80,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Contexts\AllBussesConfig.xml">
+    <EmbeddedResource Include="Config\AllBussesConfig.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
@@ -99,7 +99,12 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Contexts\AnubisAuthRabbitConfig.xml">
+    <EmbeddedResource Include="Config\Authorization\AnubisAuthRabbitConfig.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Config\Topology\SimpleTopologyConfig.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>

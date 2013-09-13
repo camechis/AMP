@@ -23,16 +23,4 @@
 
   <object id="token-ISerializer" type="amp.utility.serialization.Utf8JsonDeserializer&lt;amp.rabbit.TokenConnectionFactory+NamedToken&gt;, amp.utility" />
 
-  <object id="ITopologyService" type="amp.rabbit.topology.SimpleTopologyService, amp.rabbit">
-        <constructor-arg name="clientProfile" value="" />
-        <constructor-arg name="name" value="" />
-        <constructor-arg name="hostname" value="rabbit.openampere.com" />
-        <constructor-arg name="vhost" value="" />
-        <constructor-arg name="port" value="5672" />
-  </object>
-
-  <object id="IRoutingInfoCache" type="amp.rabbit.transport.SimpleRoutingInfoCache, amp.rabbit">
-    <constructor-arg name="cacheExpiryInSeconds" value="600" />
-  </object>
-
 </objects>

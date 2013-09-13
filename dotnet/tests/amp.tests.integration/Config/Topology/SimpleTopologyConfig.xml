@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<objects xmlns="http://www.springframework.net">
+
+  <object id="ITopologyService" type="amp.rabbit.topology.SimpleTopologyService, amp.rabbit">
+        <constructor-arg name="clientProfile" value="" />
+        <constructor-arg name="name" value="" />
+        <constructor-arg name="hostname" value="rabbit.openampere.com" />
+        <constructor-arg name="vhost" value="" />
+        <constructor-arg name="port" value="5672" />
+      </object>
+
+  <object id="IRoutingInfoCache" type="amp.rabbit.transport.SimpleRoutingInfoCache, amp.rabbit">
+    <constructor-arg name="cacheExpiryInSeconds" value="600" />
+  </object>
+
+</objects>

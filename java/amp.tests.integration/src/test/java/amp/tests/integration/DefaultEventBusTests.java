@@ -21,8 +21,9 @@ public class DefaultEventBusTests {
 	
 	public static String[] getConfigFiles(){
 		return new String[]{
-				"src/test/resources/AllBussesConfig.xml", 
-				"src/test/resources/BasicAuthRabbitConfig.xml"};
+				Config.Bus.All, 
+				Config.Authorization.Basic, 
+				Config.Topology.Simple};
 	}
 	
 	@BeforeClass

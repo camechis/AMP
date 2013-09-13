@@ -21,7 +21,7 @@ namespace amp.tests.integration.Rabbit
         [TestFixtureSetUp]
         public virtual void TestFixtureSetUp()
         {
-            _context = new XmlApplicationContext(Constants.ANUBIS_AUTH_CONFIG);
+            _context = new XmlApplicationContext(Config.Authorization.AnubisBasic, Config.Topology.Simple);
             _factory = _context.GetObject("IRabbitConnectionFactory") as TokenConnectionFactory;
         }
 

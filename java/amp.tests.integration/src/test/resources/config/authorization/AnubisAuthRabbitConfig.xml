@@ -16,13 +16,6 @@
           c:channelFactory-ref="channelFactory"
           c:routingInfoCache-ref="routingInfoCache" />
 
-    <bean id="topologyService" class="amp.rabbit.topology.SimpleTopologyService"
-          c:clientProfile=""
-          c:name="simpleTopology"
-          c:hostname="rabbit.openampere.com"
-          c:vhost="/"
-          c:port="5672" />
-
     <bean id="channelFactory" class="amp.rabbit.TokenChannelFactory"
           c:httpClientFactory-ref="tokenHttpClientProvider" 
           c:anubisUri="https://anubis.openampere.com:15678/anubis/identity/authenticate" 
@@ -36,8 +29,5 @@
           c:port="15678"/>
 
     <bean id="tokenSerializer" class="amp.utility.serialization.GsonSerializer" />
-
-    <bean id="routingInfoCache" class="amp.rabbit.transport.SimpleRoutingInfoCache"
-          c:cacheExpiryInSeconds="600" />
  
 </beans>

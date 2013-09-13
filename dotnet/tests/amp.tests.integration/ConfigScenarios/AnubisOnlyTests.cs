@@ -22,7 +22,7 @@ namespace amp.tests.integration.ConfigScenarios
         {
             get
             {
-                return new string[] {Constants.ALL_BUSSES_CONFIG, Constants.ANUBIS_AUTH_CONFIG};
+                return new string[] { Config.Bus.All, Config.Authorization.AnubisBasic, Config.Topology.Simple};
             }
         }
 

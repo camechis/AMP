@@ -20,7 +20,7 @@ public class TokenChannelFactoryTests {
 	
 	@BeforeClass
 	public static void BeforeAllTests(){
-		context = new FileSystemXmlApplicationContext("src/test/resources/AnubisAuthRabbitConfig.xml");
+		context = new FileSystemXmlApplicationContext(Config.Authorization.AnubisBasic, Config.Topology.Simple);
 		factory = (TokenChannelFactory) context.getBean("channelFactory");
 	}
 	
