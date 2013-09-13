@@ -20,7 +20,6 @@
           c:keystore="src/test/resources/test-certs/amp-test-at-openampere.com.jks" 
           c:keystorePassword="1qaz@WSX3edc$RFV" 
           c:truststore="src/test/resources/test-certs/trust.openampere.com.jks"
-          c:trustStorePassword="1qaz@WSX3edc$RFV"
           c:port="15677" />
 
     <bean id="routingSerializer" class="amp.topology.client.JsonRoutingInfoSerializer" />
