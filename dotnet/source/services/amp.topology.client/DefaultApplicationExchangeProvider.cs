@@ -35,14 +35,14 @@ namespace amp.topology.client
         public DefaultApplicationExchangeProvider()
         {
             this.ClientName = Guid.NewGuid().ToString();
-            this.ExchangeName = "amq.direct";
+            this.ExchangeName = "amq.fallback";
             this.Hostname = "rabbit";
             this.VHost = "/";
             this.Port = 5672;
             this.ExchangeType = "direct";
             this.QueueName = null;
             this.IsDurable = false;
-            this.IsAutoDelete = false;
+            this.IsAutoDelete = true;
         }
 
 
