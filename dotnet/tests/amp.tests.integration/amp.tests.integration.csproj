@@ -63,6 +63,7 @@
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Commanding\DefaultCommandBusTests.cs" />
+    <Compile Include="ConfigScenarios\AnubisOnlyTests.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Eventing\DefaultEventBusTests.cs" />
     <Compile Include="Eventing\DefaultRpcBusTests.cs" />
