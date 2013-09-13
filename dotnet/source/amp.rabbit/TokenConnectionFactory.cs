@@ -10,26 +10,26 @@ namespace amp.rabbit
 {
     public class TokenConnectionFactory : BaseConnectionFactory
     {
-        private readonly string _anubisUrl;
+        private readonly string _anubisUri;
         private readonly IWebRequestFactory _webRequestFactory;
         private readonly IDeserializer<NamedToken> _serializer;
         private readonly BaseConnectionFactory _secureConnectionFactory;
 
         public TokenConnectionFactory(
-            string anubisUrl,
+            string anubisUri,
             IWebRequestFactory webRequestFactory,
             IDeserializer<NamedToken> serializer)
-            : this(anubisUrl, webRequestFactory, serializer, null)
+            : this(anubisUri, webRequestFactory, serializer, null)
         {
         }
 
         public TokenConnectionFactory(
-            string anubisUrl,
+            string anubisUri,
             IWebRequestFactory webRequestFactory,
             IDeserializer<NamedToken> serializer,
             BaseConnectionFactory secureConnectionFactory)
         {
-            _anubisUrl = anubisUrl;
+            _anubisUri = anubisUri;
             _webRequestFactory = webRequestFactory;
             _serializer = serializer;
             _secureConnectionFactory = secureConnectionFactory;
@@ -53,7 +53,7 @@ namespace amp.rabbit
             try
             {
                 // use the web request factory to create a web request
-                WebRequest request = _webRequestFactory.CreateRequest(_anubisUrl);
+                WebRequest request = _webRequestFactory.CreateRequest(_anubisUri);
 
                 // get some response to the request
                 using (Stream responseStream = request.GetResponse().GetResponseStream())
@@ -63,7 +63,7 @@ namespace amp.rabbit
             }
             catch (Exception ex)
             {
-                _log.Error(string.Format("Failed to get token from {0}.", _anubisUrl), ex);
+                _log.Error(string.Format("Failed to get token from {0}.", _anubisUri), ex);
                 // ReSharper disable once PossibleIntendedRethrow
                 throw ex;
             }
