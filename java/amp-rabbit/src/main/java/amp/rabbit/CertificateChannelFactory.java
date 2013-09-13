@@ -20,16 +20,16 @@ import com.rabbitmq.client.DefaultSaslConfig;
 public class CertificateChannelFactory extends BaseChannelFactory {
 
     protected Logger log;
-	protected String password;
-    protected String pathToClientCert;
-    protected String pathToRemoteCertStore;
+	protected String keystorePassword;
+    protected String keystore;
+    protected String trustStore;
 
-    public CertificateChannelFactory(String pathToClientCertificate, String password, String pathToRemoteCertStore) {
+    public CertificateChannelFactory(String keystore, String keystorePassword, String trustStore) {
 
         log = LoggerFactory.getLogger(this.getClass());
-        pathToClientCert = pathToClientCertificate;
-        this.password = password;
-        this.pathToRemoteCertStore = pathToRemoteCertStore;
+        this.keystore = keystore;
+        this.keystorePassword = keystorePassword;
+        this.trustStore = trustStore;
     }
 	
 	@Override
@@ -37,16 +37,16 @@ public class CertificateChannelFactory extends BaseChannelFactory {
 
         log.debug("Getting connection for exchange: {}", exchange.toString());
 
-		char[] keyPassphrase = password.toCharArray();
+		char[] keyPassphrase = keystorePassword.toCharArray();
 
-        KeyStore clientCertStore = KeyStore.getInstance("PKCS12");
-        clientCertStore.load(new FileInputStream(pathToClientCert), keyPassphrase);
+        KeyStore clientCertStore = KeyStore.getInstance("JKS");
+        clientCertStore.load(new FileInputStream(keystore), keyPassphrase);
 
         KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
         kmf.init(clientCertStore, keyPassphrase);
 
         KeyStore remoteCertStore = KeyStore.getInstance("JKS");
-        remoteCertStore.load(new FileInputStream(pathToRemoteCertStore), null);
+        remoteCertStore.load(new FileInputStream(trustStore), null);
 
         TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");
         tmf.init(remoteCertStore);
