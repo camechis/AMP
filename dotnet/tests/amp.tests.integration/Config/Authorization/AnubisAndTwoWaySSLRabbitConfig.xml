@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<objects xmlns="http://www.springframework.net">
+
+  <object id="IEnvelopeBus" type="amp.bus.DefaultEnvelopeBus, amp.bus">
+    <constructor-arg name="transportProvider" ref="ITransportProvider" />
+  </object>
+
+  <object id="ITransportProvider" type="amp.rabbit.transport.RabbitTransportProvider, amp.rabbit">
+    <constructor-arg name="topologyService" ref="ITopologyService" />
+    <constructor-arg name="connFactory" ref="IRabbitConnectionFactory" />
+    <constructor-arg name="routingInfoCache" ref="IRoutingInfoCache" />
+  </object>
+
+  <object id="IRabbitConnectionFactory" type="amp.rabbit.TokenConnectionFactory, amp.rabbit">
+    <constructor-arg name="anubisUri" value="https://anubis.openampere.com:15678/anubis/identity/authenticate" />
+    <constructor-arg name="webRequestFactory" ref="token-IWebRequestFactory" />
+    <constructor-arg name="serializer" ref="token-ISerializer" />
+    <constructor-arg name="secureConnectionFactory" ref="secuire-IRabbitConnectionFactory" />
+  </object>
+
+  <object id="token-IWebRequestFactory" type="amp.utility.http.SslWebRequestFactory, amp.utility" >
+    <!-- TBD -->
+  </object>
+
+  <object id="token-ISerializer" type="amp.utility.serialization.Utf8JsonDeserializer&lt;amp.rabbit.TokenConnectionFactory+NamedToken&gt;, amp.utility" />
+
+  <object id="secuire-IRabbitConnectionFactory" type="amp.rabbit.CertificateConnectionFactory, amp.rabbit">
+    <constructor-arg name="certificateProvider" ref="amp.bus.security.ICertificateProvider"/>
+  </object>
+
+  <object id="amp.bus.security.ICertificateProvider" type="amp.bus.security.WindowsCertificateStoreCertProvider, amp.bus.security"/>
+
+</objects>

@@ -8,7 +8,8 @@ public class Config {
 
 	public class Authorization{
 		public final static String Basic ="src/test/resources/config/authorization/BasicAuthRabbitConfig.xml";
-		public final static String AnubisBasic ="src/test/resources/config/authorization/AnubisAuthRabbitConfig.xml";
+		public final static String AnubisBasic ="src/test/resources/config/authorization/AnubisAndBasicAuthRabbitConfig.xml";
+		public final static String AnubisTwoWaySsl ="src/test/resources/config/authorization/AnubisAndBasicAuthRabbitConfig.xml";
 	}
 
 	public class Topology{

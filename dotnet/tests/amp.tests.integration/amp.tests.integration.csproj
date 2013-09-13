@@ -65,6 +65,7 @@
     <Compile Include="Commanding\DefaultCommandBusTests.cs" />
     <Compile Include="ConfigScenarios\AnubisOnlyTests.cs" />
     <Compile Include="Config.cs" />
+    <Compile Include="ConfigScenarios\GtsAnubisAndTwoWaySSLforRabbit.cs" />
     <Compile Include="ConfigScenarios\GtsBasicAuth.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -75,6 +76,9 @@
     <Compile Include="Rabbit\TokenConnectionFactoryTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Config\Authorization\AnubisAndTwoWaySSLRabbitConfig.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Config\Authorization\BasicAuthRabbitConfig.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -105,7 +109,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Config\Authorization\AnubisAuthRabbitConfig.xml">
+    <EmbeddedResource Include="Config\Authorization\AnubisAndBasicAuthRabbitConfig.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
