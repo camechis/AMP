@@ -3,17 +3,18 @@ package amp.rabbit;
 
 import java.io.FileInputStream;
 import java.security.KeyStore;
+
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManagerFactory;
 
-import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.ConnectionFactory;
-import com.rabbitmq.client.DefaultSaslConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import amp.rabbit.topology.Exchange;
+
+import com.rabbitmq.client.ConnectionFactory;
+import com.rabbitmq.client.DefaultSaslConfig;
 
 
 public class CertificateChannelFactory extends BaseChannelFactory {
@@ -32,7 +33,7 @@ public class CertificateChannelFactory extends BaseChannelFactory {
     }
 	
 	@Override
-	public Connection getConnection(Exchange exchange) throws Exception {
+	public void configureConnectionFactory(ConnectionFactory factory, Exchange exchange) throws Exception {
 
         log.debug("Getting connection for exchange: {}", exchange.toString());
 
@@ -53,15 +54,9 @@ public class CertificateChannelFactory extends BaseChannelFactory {
         SSLContext c = SSLContext.getInstance("SSLv3");
         c.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);
 
-        ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost(exchange.getHostName());
-        factory.setPort(exchange.getPort());
-        factory.setVirtualHost(exchange.getVirtualHost());
+    	super.configureConnectionFactory(factory, exchange);
         factory.setSaslConfig(DefaultSaslConfig.EXTERNAL);
         factory.useSslProtocol(c);
-        //factory.setRequestedHeartbeat(HEARTBEAT_INTERVAL);
-        
-        return factory.newConnection();
 	}
 
 }

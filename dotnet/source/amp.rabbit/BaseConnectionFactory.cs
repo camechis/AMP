@@ -73,7 +73,7 @@ namespace amp.rabbit
             }
         }
 
-        protected virtual void ConfigureConnectionFactory(ConnectionFactory factory, Exchange exchange)
+        public virtual void ConfigureConnectionFactory(ConnectionFactory factory, Exchange exchange)
         {
             factory.HostName = exchange.HostName;
             factory.VirtualHost = exchange.VirtualHost;

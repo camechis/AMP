@@ -1,63 +1,65 @@
 package amp.rabbit;
 
 
-import com.rabbitmq.client.Connection;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.util.EntityUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import amp.anubis.core.NamedToken;
 import amp.rabbit.topology.Exchange;
 import amp.utility.http.HttpClientProvider;
 import amp.utility.serialization.ISerializer;
 
+import com.rabbitmq.client.ConnectionFactory;
+
 
 public class TokenChannelFactory extends BaseChannelFactory {
 
-    private static final Logger LOG = LoggerFactory.getLogger(TokenChannelFactory.class);
+    private final HttpClientProvider _httpClientFactory;
+    private final String _anubisUri;
+    private final ISerializer _serializer;
+    private final BaseChannelFactory _secureConnectionFactory;
 
-    private HttpClientProvider _httpClientFactory;
-    private String _anubisUri;
-    private ISerializer _serializer;
-    private SSLChannelFactory _sslChannelFactory;
-
+    public TokenChannelFactory(
+            HttpClientProvider httpClientFactory,
+            String anubisUri,
+            ISerializer serializer) {
+    	this(httpClientFactory, anubisUri, serializer, null);
+    }
 
     public TokenChannelFactory(
             HttpClientProvider httpClientFactory,
             String anubisUri,
             ISerializer serializer,
-            SSLChannelFactory sslChannelFactory) {
-        _httpClientFactory = httpClientFactory;
-        _anubisUri = anubisUri;
-        _serializer = serializer;
-        _sslChannelFactory = sslChannelFactory;
+            BaseChannelFactory secureConnectionFactory) {
+       _httpClientFactory = httpClientFactory;
+       _anubisUri = anubisUri;
+       _serializer = serializer;
+       _secureConnectionFactory = secureConnectionFactory;
     }
 
 
     @Override
-    public Connection getConnection(Exchange exchange) throws Exception {
-
-        HttpClient client = _httpClientFactory.getClient();
-        HttpGet getMethod = new HttpGet(_anubisUri);
-
+	public void configureConnectionFactory(ConnectionFactory factory, Exchange exchange) throws Exception {
         try {
 
             NamedToken token = this.getNamedToken();
 
-            // set the username and password from the token
-            _sslChannelFactory.setUsername(token.getIdentity());
-            _sslChannelFactory.setPassword(token.getToken());
+        	super.configureConnectionFactory(factory, exchange);
 
-            return _sslChannelFactory.getConnection(exchange);
+        	if(_secureConnectionFactory != null){
+        		_secureConnectionFactory.configureConnectionFactory(factory, exchange);
+            }
+            
+            // set the username and password from the token
+            factory.setUsername(token.getIdentity());
+            factory.setPassword(token.getToken());
+
         }
         catch(Exception ex) {
 
         }
-
-        return null;
     }
 
     public NamedToken getNamedToken() throws Exception {
@@ -71,7 +73,7 @@ public class TokenChannelFactory extends BaseChannelFactory {
 
         // extract the string content from the response
         String content = EntityUtils.toString(response.getEntity());
-        LOG.debug("Received the following content from Anubis: {}", content);
+        log.debug("Received the following content from Anubis: {}", content);
 
         // deserialize the named token and return it
         return _serializer.stringDeserialize(content, NamedToken.class);

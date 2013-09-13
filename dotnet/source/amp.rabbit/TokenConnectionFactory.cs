@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Net;
-using amp.bus.security;
 using amp.rabbit.topology;
 using amp.utility.http;
 using amp.utility.serialization;
@@ -9,29 +8,42 @@ using RabbitMQ.Client;
 
 namespace amp.rabbit
 {
-    public class TokenConnectionFactory : CertificateConnectionFactory
+    public class TokenConnectionFactory : BaseConnectionFactory
     {
         private readonly string _anubisUrl;
         private readonly IWebRequestFactory _webRequestFactory;
         private readonly IDeserializer<NamedToken> _serializer;
+        private readonly BaseConnectionFactory _secureConnectionFactory;
 
         public TokenConnectionFactory(
-            ICertificateProvider certificateProvider,
             string anubisUrl,
             IWebRequestFactory webRequestFactory,
             IDeserializer<NamedToken> serializer)
-            : base(certificateProvider)
+            : this(anubisUrl, webRequestFactory, serializer, null)
+        {
+        }
+
+        public TokenConnectionFactory(
+            string anubisUrl,
+            IWebRequestFactory webRequestFactory,
+            IDeserializer<NamedToken> serializer,
+            BaseConnectionFactory secureConnectionFactory)
         {
             _anubisUrl = anubisUrl;
             _webRequestFactory = webRequestFactory;
             _serializer = serializer;
+            _secureConnectionFactory = secureConnectionFactory;
         }
 
-        protected override void ConfigureConnectionFactory(ConnectionFactory factory, Exchange exchange)
+        public override void ConfigureConnectionFactory(ConnectionFactory factory, Exchange exchange)
         {
             NamedToken token = GetNamedToken();
 
-            base.ConfigureConnectionFactory(factory, exchange);
+            if (_secureConnectionFactory != null)
+            {
+                _secureConnectionFactory.ConfigureConnectionFactory(factory, exchange);
+            }
+            
             factory.UserName = token.Identity;
             factory.Password = token.Token;
         }

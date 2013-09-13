@@ -1,21 +1,17 @@
 package amp.rabbit;
 
-import amp.rabbit.topology.Exchange;
-import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.ConnectionFactory;
-import com.rabbitmq.client.DefaultSaslConfig;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManagerFactory;
 import java.io.FileInputStream;
 import java.security.KeyStore;
 
-public class SSLChannelFactory extends BaseChannelFactory {
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManagerFactory;
 
-    private static final Logger LOG = LoggerFactory.getLogger(SSLChannelFactory.class);
+import amp.rabbit.topology.Exchange;
+
+import com.rabbitmq.client.ConnectionFactory;
+import com.rabbitmq.client.DefaultSaslConfig;
+
+public class SSLChannelFactory extends BaseChannelFactory {
 
     private String _pathToRabbitTrustStore;
     private String _keystorePassword;
@@ -46,10 +42,9 @@ public class SSLChannelFactory extends BaseChannelFactory {
 
 
     @Override
-    public Connection getConnection(Exchange exchange) throws Exception {
-
-        LOG.debug("Getting connection for exchange: {}", exchange.toString());
-
+	public void configureConnectionFactory(ConnectionFactory factory, Exchange exchange) throws Exception {
+    	super.configureConnectionFactory(factory, exchange);
+    	
         // apparently, a string isn't good enough
         char[] keyPassphrase = _keystorePassword.toCharArray();
 
@@ -65,15 +60,9 @@ public class SSLChannelFactory extends BaseChannelFactory {
         SSLContext c = SSLContext.getInstance("SSLv3");
         c.init(null, tmf.getTrustManagers(), null);
 
-        ConnectionFactory factory = new ConnectionFactory();
         factory.setUsername(_username);
         factory.setPassword(_password);
-        factory.setHost(exchange.getHostName());
-        factory.setPort(exchange.getPort());
-        factory.setVirtualHost(exchange.getVirtualHost());
         factory.setSaslConfig(DefaultSaslConfig.EXTERNAL);
         factory.useSslProtocol(c);
-
-        return factory.newConnection();
     }
 }
