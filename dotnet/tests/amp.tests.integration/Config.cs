@@ -16,6 +16,7 @@
         internal class Topology
         {
             public const string Simple = "assembly://amp.tests.integration/amp.tests.integration.Config.Topology/SimpleTopologyConfig.xml";
+            public const string Gts = "assembly://amp.tests.integration/amp.tests.integration.Config.Topology/GtsConfig.xml";
         }
     }
 }

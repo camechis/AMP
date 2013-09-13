@@ -65,6 +65,9 @@
     <Compile Include="Commanding\DefaultCommandBusTests.cs" />
     <Compile Include="ConfigScenarios\AnubisOnlyTests.cs" />
     <Compile Include="Config.cs" />
+    <Compile Include="ConfigScenarios\GtsBasicAuth.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Eventing\DefaultEventBusTests.cs" />
     <Compile Include="Eventing\DefaultRpcBusTests.cs" />
     <Compile Include="Eventing\Streaming\DefaultStreamingBusTests.cs" />
@@ -73,6 +76,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Config\Authorization\BasicAuthRabbitConfig.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Config\Topology\GtsConfig.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>

@@ -13,5 +13,6 @@ public class Config {
 
 	public class Topology{
 		public final static String Simple ="src/test/resources/config/topology/SimpleTopologyConfig.xml";
+		public final static String Gts ="src/test/resources/config/topology/GtsConfig.xml";
 	}
 }
