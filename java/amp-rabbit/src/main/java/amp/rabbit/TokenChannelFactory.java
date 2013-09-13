@@ -19,7 +19,7 @@ public class TokenChannelFactory extends BaseChannelFactory {
     private final HttpClientProvider _httpClientFactory;
     private final String _anubisUri;
     private final ISerializer _serializer;
-    private final BaseChannelFactory _secureConnectionFactory;
+    private final BaseChannelFactory _secureChannelFactory;
 
     public TokenChannelFactory(
             HttpClientProvider httpClientFactory,
@@ -32,11 +32,11 @@ public class TokenChannelFactory extends BaseChannelFactory {
             HttpClientProvider httpClientFactory,
             String anubisUri,
             ISerializer serializer,
-            BaseChannelFactory secureConnectionFactory) {
+            BaseChannelFactory secureChannelFactory) {
        _httpClientFactory = httpClientFactory;
        _anubisUri = anubisUri;
        _serializer = serializer;
-       _secureConnectionFactory = secureConnectionFactory;
+       _secureChannelFactory = secureChannelFactory;
     }
 
 
@@ -48,8 +48,8 @@ public class TokenChannelFactory extends BaseChannelFactory {
 
         	super.configureConnectionFactory(factory, exchange);
 
-        	if(_secureConnectionFactory != null){
-        		_secureConnectionFactory.configureConnectionFactory(factory, exchange);
+        	if(_secureChannelFactory != null){
+        		_secureChannelFactory.configureConnectionFactory(factory, exchange);
             }
             
             // set the username and password from the token
