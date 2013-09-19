@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Threading;
 using cmf.eventing;
 using NUnit.Framework;
@@ -12,7 +13,6 @@ namespace amp.tests.integration.ConfigScenarios
     /// but with credentials from Anubis.
     /// </summary>
     [TestFixture]
-    [Ignore("FIXME:  Need to implement amp.utility.http.SslWebRequestFactory!")] 
     public class AnubisOnlyTests
     {
         protected IApplicationContext _context;
@@ -31,11 +31,17 @@ namespace amp.tests.integration.ConfigScenarios
         {
             _context = new XmlApplicationContext(ConfigFiles);
             _bus = _context.GetObject("IEventBus") as IEventBus;
+
+            //Hack so that we don't have to validate the Anubis server certificate.
+            ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
         }
 
         [TestFixtureTearDown]
         public virtual void TestFixtureTearDown()
         {
+            //Reverse the Hack
+            ServicePointManager.ServerCertificateValidationCallback = null;
+
             _context.Dispose();
         }
 

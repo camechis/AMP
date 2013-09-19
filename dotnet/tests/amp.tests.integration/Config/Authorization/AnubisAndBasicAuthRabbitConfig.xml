@@ -17,8 +17,15 @@
     <constructor-arg name="serializer" ref="token-ISerializer" />
   </object>
 
-  <object id="token-IWebRequestFactory" type="amp.utility.http.SslWebRequestFactory, amp.utility" >
-    <!-- TBD -->
+  <object id="token-IWebRequestFactory" type="amp.utility.http.CertifacateWebRequestFactory, amp.utility" >
+    <constructor-arg name="certificateProvider" ref="token-ICertificateProvider" />
+  </object>
+
+  <!--NOTE: In a production environment, the amp.bus.security.WindowsCertificateStoreCertProvider
+      certificate provider is a more secure choice.  But it is hard to test with.-->
+  <object id="token-ICertificateProvider" type="amp.bus.security.FileBasedCertProvider, amp.bus.security" >
+    <constructor-arg name="clientCertFilename" value="..\..\Test-Certs\amp-test-at-openampere.com.pfx" />
+    <constructor-arg name="clientCertPassword" value="1qaz@WSX3edc$RFV" />
   </object>
 
   <object id="token-ISerializer" type="amp.utility.serialization.Utf8JsonDeserializer&lt;amp.rabbit.TokenConnectionFactory+NamedToken&gt;, amp.utility" />

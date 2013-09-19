@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Threading;
+using System.Net;
 using amp.rabbit;
 using amp.rabbit.topology;
-using cmf.eventing;
-using Moq;
 using NUnit.Framework;
 using RabbitMQ.Client;
 using Spring.Context;
@@ -12,7 +10,6 @@ using Spring.Context.Support;
 namespace amp.tests.integration.Rabbit
 {
     [TestFixture]
-    [Ignore("FIXME:  Need to implement amp.utility.http.SslWebRequestFactory!")]
     public class TokenConnectionFactoryTests
     {
         protected IApplicationContext _context;
@@ -23,22 +20,29 @@ namespace amp.tests.integration.Rabbit
         {
             _context = new XmlApplicationContext(Config.Authorization.AnubisBasic, Config.Topology.Simple);
             _factory = _context.GetObject("IRabbitConnectionFactory") as TokenConnectionFactory;
+
+            //Hack so that we don't have to validate the Anubis server certificate.
+            ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
         }
 
         [TestFixtureTearDown]
         public virtual void TestFixtureTearDown()
         {
+            //Reverse the Hack
+            ServicePointManager.ServerCertificateValidationCallback = null;
+
             _context.Dispose();
         }
 
         [Test]
         public void Should_be_able_to_get_token_from_Anubis()
         {
-            var rabbitFactory = new Mock<ConnectionFactory>();
-            _factory.ConfigureConnectionFactory(rabbitFactory.Object, new Exchange());
+            //var rabbitFactory = new Mock<ConnectionFactory>();
+            var rabbitFactory = new ConnectionFactory();
+            _factory.ConfigureConnectionFactory(rabbitFactory, new Exchange());
 
-            rabbitFactory.VerifySet(f => f.UserName != null);
-            rabbitFactory.VerifySet(f => f.Password != null);
+            Assert.That(rabbitFactory.UserName, Is.Not.Null);
+            Assert.That(rabbitFactory.Password, Is.Not.Null);
         }
 
         public class TestEvent
