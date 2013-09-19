@@ -17,7 +17,7 @@ namespace amp.rabbit
         }
 
 
-        protected override void ConfigureConnectionFactory(ConnectionFactory factory, Exchange exchange)
+        public override void ConfigureConnectionFactory(ConnectionFactory factory, Exchange exchange)
         {
             base.ConfigureConnectionFactory(factory, exchange);
 

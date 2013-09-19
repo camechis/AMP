@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<objects xmlns="http://www.springframework.net">
+
+  <object id="ITopologyService" type="amp.topology.client.GlobalTopologyService, amp.topology.client">
+    <constructor-arg name="routingRetreiver" ref="IRoutingInfoRetreiver" />
+    <constructor-arg name="fallbackProvider" ref="IFallbackRoutingInfoProvider" />
+  </object>
+
+  <object id="IRoutingInfoRetreiver" type="amp.topology.client.HttpRoutingInfoRetreiver">
+    <constructor-arg name="webRequestFactory" ref="Topo-IWebRequestFactory" />
+    <constructor-arg name="urlExpression" value="https://gts.openampere.com/:15677/service/topology/get-routing-info/{0}" />
+    <constructor-arg name="serializer" ref="Topo-IDeserializer" />
+  </object>
+
+  <object id="Topo-IWebRequestFactory" type="amp.utility.http.SslWebRequestFactory, amp.utility">
+    <!-- TBD -->
+  </object>
+
+  <object id="Topo-IDeserializer" type="amp.utility.serialization.Utf8JsonDeserializer&lt;amp.rabbit.topology.RoutingInfo&gt;, amp.utility" />
+
+  <object id="IFallbackRoutingInfoProvider" type="amp.topology.client.DefaultApplicationExchangeProvider">
+    <property name="hostName" value="rabbit.openampere.com" />
+    <property name="port" value="5672" />
+  </object>
+
+  <object id="IRoutingInfoCache" type="amp.rabbit.transport.CommandableCache, amp.rabbit">
+    <constructor-arg name="commandReceiver" ref="ICommandReceiver" />
+    <constructor-arg name="cacheExpiryInSeconds" value="600" />
+  </object>
+
+  <object id="ICommandReceiver" type="amp.commanding.DefaultCommandReceiver, amp.commanding">
+    <constructor-arg name="envelopeReceiver" ref="IEnvelopeReceiver" />
+    <constructor-arg name="processingChain">
+      <list element-type="amp.messaging.IMessageProcessor, amp.messaging">
+        <ref object="Cmd-JsonSerializationProcessor" />
+      </list>
+    </constructor-arg>
+  </object>
+
+  <object id="IEnvelopeReceiver" type="amp.rabbit.transport.RabbitEnvelopeReceiver, amp.rabbit">
+    <constructor-arg name="topologyService" ref="ITopologyService" />
+    <constructor-arg name="connFactory" ref="IRabbitConnectionFactory" />
+  </object>
+
+  <object id="Cmd-JsonSerializationProcessor" type="amp.messaging.JsonSerializationProcessor, amp.messaging" />
+
+</objects>

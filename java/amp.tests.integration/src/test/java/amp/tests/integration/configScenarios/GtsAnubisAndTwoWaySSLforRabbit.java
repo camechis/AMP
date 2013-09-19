@@ -1,4 +1,4 @@
-package amp.tests.integration;
+package amp.tests.integration.configScenarios;
 
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -10,11 +10,23 @@ import static org.hamcrest.Matchers.*;
 
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
+import amp.tests.integration.Config;
+import amp.tests.integration.TestEvent;
+import amp.tests.integration.Config.Authorization;
+import amp.tests.integration.Config.Bus;
+import amp.tests.integration.Config.Topology;
+
 import cmf.bus.Envelope;
 import cmf.eventing.IEventBus;
 import cmf.eventing.IEventHandler;
 
-public class DefaultEventBusTests {
+/**
+ * Tests ability to connect and do basic using simple topo, basic auth in the clear, 
+ * but with credentials from Anubis.
+ * @author kbaltrinic
+ *
+ */
+public class GtsAnubisAndTwoWaySSLforRabbit {
     
 	protected static FileSystemXmlApplicationContext context;
 	protected static IEventBus bus;
@@ -22,8 +34,8 @@ public class DefaultEventBusTests {
 	public static String[] getConfigFiles(){
 		return new String[]{
 				Config.Bus.All, 
-				Config.Authorization.Basic, 
-				Config.Topology.Simple};
+				Config.Authorization.AnubisTwoWaySsl, 
+				Config.Topology.Gts};
 	}
 	
 	@BeforeClass

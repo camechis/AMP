@@ -82,6 +82,7 @@
     <Compile Include="topology\TopologyExtensions.cs" />
     <Compile Include="transport\RabbitTransportProvider.cs" />
     <Compile Include="transport\RoutingCacheBuster.cs" />
+    <Compile Include="transport\SimpleRoutingInfoCache.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\amp.bus.security\amp.bus.security.csproj">

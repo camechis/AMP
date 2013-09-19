@@ -5,10 +5,15 @@ using NUnit.Framework;
 using Spring.Context;
 using Spring.Context.Support;
 
-namespace amp.tests.integration.Eventing
+namespace amp.tests.integration.ConfigScenarios
 {
+    /// <summary>
+    /// Tests ability to connect and do basic using simple topo, basic auth in the clear,
+    /// but with credentials from Anubis.
+    /// </summary>
     [TestFixture]
-    public class DefaultEventBusTests
+    [Ignore("FIXME:  Need to implement amp.utility.http.SslWebRequestFactory!")] 
+    public class AnubisOnlyTests
     {
         protected IApplicationContext _context;
         protected IEventBus _bus;
@@ -17,7 +22,7 @@ namespace amp.tests.integration.Eventing
         {
             get
             {
-                return new string[] {Config.Bus.All, Config.Authorization.Basic, Config.Topology.Simple};
+                return new string[] { Config.Bus.All, Config.Authorization.AnubisBasic, Config.Topology.Simple};
             }
         }
 

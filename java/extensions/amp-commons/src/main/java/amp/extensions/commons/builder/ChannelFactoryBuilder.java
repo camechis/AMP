@@ -40,7 +40,7 @@ public class ChannelFactoryBuilder extends FluentExtension {
 	
 	/**
 	 * Connect to brokers using SSL (certificate authentication).
-	 * @param pathToClientCert Path to Client Certificate.
+	 * @param keystore Path to Client Certificate.
 	 * @param certPassword Password for Certificate.
 	 * @param pathToTrustStore Path to Trust Store.
 	 * @return Parent fluent.

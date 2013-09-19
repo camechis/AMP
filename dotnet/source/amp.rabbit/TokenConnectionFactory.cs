@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Net;
-using amp.bus.security;
 using amp.rabbit.topology;
 using amp.utility.http;
 using amp.utility.serialization;
@@ -9,29 +8,42 @@ using RabbitMQ.Client;
 
 namespace amp.rabbit
 {
-    public class TokenConnectionFactory : CertificateConnectionFactory
+    public class TokenConnectionFactory : BaseConnectionFactory
     {
-        private readonly string _anubisUrl;
+        private readonly string _anubisUri;
         private readonly IWebRequestFactory _webRequestFactory;
         private readonly IDeserializer<NamedToken> _serializer;
+        private readonly BaseConnectionFactory _secureConnectionFactory;
 
         public TokenConnectionFactory(
-            ICertificateProvider certificateProvider,
-            string anubisUrl,
+            string anubisUri,
             IWebRequestFactory webRequestFactory,
             IDeserializer<NamedToken> serializer)
-            : base(certificateProvider)
+            : this(anubisUri, webRequestFactory, serializer, null)
         {
-            _anubisUrl = anubisUrl;
-            _webRequestFactory = webRequestFactory;
-            _serializer = serializer;
         }
 
-        protected override void ConfigureConnectionFactory(ConnectionFactory factory, Exchange exchange)
+        public TokenConnectionFactory(
+            string anubisUri,
+            IWebRequestFactory webRequestFactory,
+            IDeserializer<NamedToken> serializer,
+            BaseConnectionFactory secureConnectionFactory)
+        {
+            _anubisUri = anubisUri;
+            _webRequestFactory = webRequestFactory;
+            _serializer = serializer;
+            _secureConnectionFactory = secureConnectionFactory;
+        }
+
+        public override void ConfigureConnectionFactory(ConnectionFactory factory, Exchange exchange)
         {
             NamedToken token = GetNamedToken();
 
-            base.ConfigureConnectionFactory(factory, exchange);
+            if (_secureConnectionFactory != null)
+            {
+                _secureConnectionFactory.ConfigureConnectionFactory(factory, exchange);
+            }
+            
             factory.UserName = token.Identity;
             factory.Password = token.Token;
         }
@@ -41,7 +53,7 @@ namespace amp.rabbit
             try
             {
                 // use the web request factory to create a web request
-                WebRequest request = _webRequestFactory.CreateRequest(_anubisUrl);
+                WebRequest request = _webRequestFactory.CreateRequest(_anubisUri);
 
                 // get some response to the request
                 using (Stream responseStream = request.GetResponse().GetResponseStream())
@@ -51,7 +63,7 @@ namespace amp.rabbit
             }
             catch (Exception ex)
             {
-                _log.Error(string.Format("Failed to get token from {0}.", _anubisUrl), ex);
+                _log.Error(string.Format("Failed to get token from {0}.", _anubisUri), ex);
                 // ReSharper disable once PossibleIntendedRethrow
                 throw ex;
             }

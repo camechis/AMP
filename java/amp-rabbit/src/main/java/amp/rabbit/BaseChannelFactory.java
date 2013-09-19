@@ -6,6 +6,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import cmf.bus.IDisposable;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
+import com.rabbitmq.client.ConnectionFactory;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,7 +24,7 @@ import amp.rabbit.topology.Exchange;
  */
 public abstract class BaseChannelFactory implements IRabbitChannelFactory, IDisposable {
 
-	private static final Logger logger = LoggerFactory.getLogger(BaseChannelFactory.class);
+    protected Logger log;
 
 	public static int HEARTBEAT_INTERVAL = 2;
 
@@ -31,7 +33,9 @@ public abstract class BaseChannelFactory implements IRabbitChannelFactory, IDisp
 	/**
 	 * Create a new instance of the ChannelFactory using the "SameBrokerStrategy"
 	 */
-	public BaseChannelFactory() {}
+	public BaseChannelFactory() {
+        log = LoggerFactory.getLogger(this.getClass());
+	}
 	
 	/**
 	 * Convenience method to allow setting of the heartbeat interval via DI container.
@@ -41,13 +45,27 @@ public abstract class BaseChannelFactory implements IRabbitChannelFactory, IDisp
 		HEARTBEAT_INTERVAL = interval;
 	}
 	
+	private Connection getConnection(Exchange exchange) throws Exception {
+
+        log.debug("Getting connection for exchange: {}", exchange.toString());
+
+		ConnectionFactory factory = new ConnectionFactory();
+
+		configureConnectionFactory(factory, exchange);
+		
+        return factory.newConnection();
+	}
+	
 	/**
-	 * Derived classes have the sole responsibility of providing connections
-	 * to this class (however that is done: username/password, certificates, etc.).
-	 * 
-	 * @return
+	 * Derived classes have the sole responsibility of configuring the RabbitConnectionFactory.
+	 * (however that is done: username/password, certificates, etc.).
 	 */
-	public abstract Connection getConnection(Exchange exchange) throws Exception;
+	public void configureConnectionFactory(ConnectionFactory factory, Exchange exchange)  throws Exception {
+
+        factory.setHost(exchange.getHostName());
+        factory.setPort(exchange.getPort());
+        factory.setVirtualHost(exchange.getVirtualHost());
+	}
 	
 	/**
 	 * Get the corresponding channel for the supplied Exchange.
@@ -59,7 +77,7 @@ public abstract class BaseChannelFactory implements IRabbitChannelFactory, IDisp
 	@Override
 	public synchronized Channel getChannelFor(Exchange exchange) throws Exception {
 		
-		logger.trace("Getting channel for exchange: {}", exchange);
+		log.trace("Getting channel for exchange: {}", exchange);
 		
 		Connection connection = null;
 		
@@ -107,7 +125,7 @@ public abstract class BaseChannelFactory implements IRabbitChannelFactory, IDisp
 				
 			} catch (IOException e) {
 				
-				logger.error("Problem closing connection: {}", e);
+				log.error("Problem closing connection: {}", e);
 			}
 		}
 	}

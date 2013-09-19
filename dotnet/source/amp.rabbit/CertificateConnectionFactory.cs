@@ -15,7 +15,7 @@ namespace amp.rabbit
             _certProvider = certificateProvider;
         }
 
-        protected override void ConfigureConnectionFactory(ConnectionFactory factory, Exchange exchange)
+        public override void ConfigureConnectionFactory(ConnectionFactory factory, Exchange exchange)
         {
             // try to get a certificate
             X509Certificate2 cert = _certProvider.GetCertificate();
