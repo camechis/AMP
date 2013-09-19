@@ -39,6 +39,8 @@ namespace amp.rabbit
         {
             NamedToken token = GetNamedToken();
 
+            base.ConfigureConnectionFactory(factory, exchange);
+
             if (_secureConnectionFactory != null)
             {
                 _secureConnectionFactory.ConfigureConnectionFactory(factory, exchange);
