@@ -35,7 +35,7 @@ namespace amp.topology.client
         public DefaultApplicationExchangeProvider()
         {
             this.ClientName = Guid.NewGuid().ToString();
-            this.ExchangeName = "amq.fallback";
+            this.ExchangeName = "amp.fallback";
             this.Hostname = "rabbit";
             this.VHost = "/";
             this.Port = 5672;

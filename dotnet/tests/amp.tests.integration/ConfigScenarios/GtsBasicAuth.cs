@@ -12,7 +12,6 @@ namespace amp.tests.integration.ConfigScenarios
     /// but with credentials from Anubis.
     /// </summary>
     [TestFixture]
-    [Ignore("FIXME:  Need to implement amp.utility.http.SslWebRequestFactory!")] 
     public class GtsBasicAuth
     {
         protected IApplicationContext _context;
