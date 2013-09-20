@@ -35,7 +35,7 @@ public class GtsAnubisAndTwoWaySSLforRabbit {
 		return new String[]{
 				Config.Bus.All, 
 				Config.Authorization.AnubisTwoWaySsl, 
-				Config.Topology.Gts};
+				Config.Topology.GtsSSL};
 	}
 	
 	@BeforeClass
