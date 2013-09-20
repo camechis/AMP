@@ -24,7 +24,7 @@
   <!--NOTE: In a production environment, the amp.bus.security.WindowsCertificateStoreCertProvider
       certificate provider is a more secure choice.  But it is hard to test with.-->
   <object id="token-ICertificateProvider" type="amp.bus.security.FileBasedCertProvider, amp.bus.security" >
-    <constructor-arg name="clientCertFilename" value="..\..\Test-Certs\amp-test-at-openampere.com.pfx" />
+    <constructor-arg name="clientCertFilename" value="..\..\..\..\shared\test-certs\amp-test-at-openampere.com.pfx" />
     <constructor-arg name="clientCertPassword" value="1qaz@WSX3edc$RFV" />
   </object>
 

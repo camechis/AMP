@@ -45,14 +45,14 @@
     <Reference Include="amp.bus">
       <HintPath>..\..\binaries\amp.bus.dll</HintPath>
     </Reference>
-    <Reference Include="amp.bus.rabbit">
-      <HintPath>..\..\binaries\amp.bus.rabbit.dll</HintPath>
-    </Reference>
     <Reference Include="amp.bus.security">
       <HintPath>..\..\binaries\amp.bus.security.dll</HintPath>
     </Reference>
     <Reference Include="amp.eventing">
       <HintPath>..\..\binaries\amp.eventing.dll</HintPath>
+    </Reference>
+    <Reference Include="amp.messaging">
+      <HintPath>..\..\binaries\amp.messaging.dll</HintPath>
     </Reference>
     <Reference Include="amp.topology.client">
       <HintPath>..\..\binaries\amp.topology.client.dll</HintPath>

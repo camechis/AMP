@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using Common.Logging;
 
@@ -25,6 +26,7 @@ namespace amp.bus.security
 
             try
             {
+                _log.Debug("File Exists: " + File.Exists(clientCertFilename));
                 X509Certificate2 cert = new X509Certificate2(clientCertFilename, clientCertPassword);
                 _log.Debug("Leave LoadCertificate()");
                 return cert;

@@ -88,7 +88,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="Test-Certs\amp-test-at-openampere.com.pfx" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Config\AllBussesConfig.xml">
@@ -119,7 +118,11 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Config\Topology\GtsConfigSSL.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy "$(SolutionDir)binaries\*.dll" "$(TargetDir)"

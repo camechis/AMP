@@ -27,7 +27,7 @@
 
   <object id="IFallbackRoutingInfoProvider" type="amp.topology.client.DefaultApplicationExchangeProvider">
     <property name="hostName" value="rabbit.openampere.com" />
-    <property name="port" value="5672" />
+    <property name="port" value="5671" />
   </object>
 
   <object id="IRoutingInfoCache" type="amp.rabbit.transport.CommandableCache, amp.rabbit">
