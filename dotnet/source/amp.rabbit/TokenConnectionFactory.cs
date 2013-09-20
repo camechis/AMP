@@ -45,7 +45,8 @@ namespace amp.rabbit
             {
                 _secureConnectionFactory.ConfigureConnectionFactory(factory, exchange);
             }
-            
+
+            factory.AuthMechanisms = new AuthMechanismFactory[] { new PlainMechanismFactory() };
             factory.UserName = token.Identity;
             factory.Password = token.Token;
         }

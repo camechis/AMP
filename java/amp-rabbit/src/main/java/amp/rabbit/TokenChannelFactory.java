@@ -12,6 +12,7 @@ import amp.utility.http.HttpClientProvider;
 import amp.utility.serialization.ISerializer;
 
 import com.rabbitmq.client.ConnectionFactory;
+import com.rabbitmq.client.DefaultSaslConfig;
 
 
 public class TokenChannelFactory extends BaseChannelFactory {
@@ -53,6 +54,7 @@ public class TokenChannelFactory extends BaseChannelFactory {
             }
             
             // set the username and password from the token
+        	factory.setSaslConfig(DefaultSaslConfig.PLAIN);
             factory.setUsername(token.getIdentity());
             factory.setPassword(token.getToken());
 
