@@ -8,7 +8,7 @@
 
   <object id="IRoutingInfoRetreiver" type="amp.topology.client.HttpRoutingInfoRetreiver">
     <constructor-arg name="webRequestFactory" ref="Topo-IWebRequestFactory" />
-    <constructor-arg name="urlExpression" value="https://gts.openampere.com/:15677/service/topology/get-routing-info/{0}" />
+    <constructor-arg name="urlExpression" value="https://gts.openampere.com:15677/service/topology/get-routing-info/{0}" />
     <constructor-arg name="serializer" ref="Topo-IDeserializer" />
   </object>
 
