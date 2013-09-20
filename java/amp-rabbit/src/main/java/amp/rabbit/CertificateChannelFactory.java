@@ -22,14 +22,14 @@ public class CertificateChannelFactory extends BaseChannelFactory {
     protected Logger log;
 	protected String keystorePassword;
     protected String keystore;
-    protected String trustStore;
+    protected String truststore;
 
-    public CertificateChannelFactory(String keystore, String keystorePassword, String trustStore) {
+    public CertificateChannelFactory(String keystore, String keystorePassword, String truststore) {
 
         log = LoggerFactory.getLogger(this.getClass());
         this.keystore = keystore;
         this.keystorePassword = keystorePassword;
-        this.trustStore = trustStore;
+        this.truststore = truststore;
     }
 	
 	@Override
@@ -46,7 +46,7 @@ public class CertificateChannelFactory extends BaseChannelFactory {
         kmf.init(clientCertStore, keyPassphrase);
 
         KeyStore remoteCertStore = KeyStore.getInstance("JKS");
-        remoteCertStore.load(new FileInputStream(trustStore), null);
+        remoteCertStore.load(new FileInputStream(truststore), null);
 
         TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");
         tmf.init(remoteCertStore);

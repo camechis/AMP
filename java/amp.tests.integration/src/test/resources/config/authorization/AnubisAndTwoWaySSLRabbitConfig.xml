@@ -30,7 +30,7 @@
 
     <bean id="tokenSerializer" class="amp.utility.serialization.GsonSerializer" />
  
-    <bean id="channelFactory" class="amp.rabbit.CertificateChannelFactory"
+    <bean id="secureChannelFactory" class="amp.rabbit.CertificateChannelFactory"
           c:keystore="src/test/resources/test-certs/amp-test-at-openampere.com.jks" 
           c:keystorePassword="1qaz@WSX3edc$RFV" 
           c:truststore="src/test/resources/test-certs/trust.openampere.com.jks"/>
