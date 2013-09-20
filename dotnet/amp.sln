@@ -31,6 +31,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "amp.tests.integration", "te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "amp.messaging", "source\amp.messaging\amp.messaging.csproj", "{80F80EE5-5C74-48FF-9F25-225CFD77D0EC}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "shared", "shared", "{6339DB88-8696-42DA-95AB-C5EEA8625980}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test-certs", "test-certs", "{97B1F5BA-43A8-43E9-AEFA-F20AA82D1B99}"
+	ProjectSection(SolutionItems) = preProject
+		shared\test-certs\amp-test-at-openampere.com.pfx = shared\test-certs\amp-test-at-openampere.com.pfx
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -93,6 +100,7 @@ Global
 		{57759359-756D-4309-BC23-C3BBA2700974} = {69DE7173-19BC-44FB-B803-A36FD9D064AB}
 		{1553D312-9ABE-42FA-9A25-09BE1AE5EB67} = {576AB125-5A4B-40F5-A363-E7DB2DF848F5}
 		{88F59A07-5F3C-453D-B029-D209CC07C467} = {576AB125-5A4B-40F5-A363-E7DB2DF848F5}
+		{97B1F5BA-43A8-43E9-AEFA-F20AA82D1B99} = {6339DB88-8696-42DA-95AB-C5EEA8625980}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = source\amp.bus\amp.bus.csproj
