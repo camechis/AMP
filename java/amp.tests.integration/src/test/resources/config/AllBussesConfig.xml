@@ -73,11 +73,7 @@
 		    </util:list>
           </constructor-arg>
     </bean>
-   
-    <bean id="envelopeReceiver" class="amp.rabbit.transport.RabbitEnvelopeReceiver"
-          c:topologyService-ref="topologyService"
-          c:channelFactory-ref="channelFactory" />
-
+  
     <bean id="Msg-JsonSerializationProcessor" class="amp.messaging.JsonSerializationProcessor" />
     
     <bean id="Msg-OutboundHeadersProcessor" class="amp.messaging.OutboundHeadersProcessor" 
