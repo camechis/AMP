@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Text;
 using System.Windows.Forms;
 
 using Common.Logging;
+using cmf.eventing;
 using cmf.eventing.patterns.rpc;
 using amp.examples.gui.messages;
 
@@ -19,6 +21,9 @@ namespace amp.examples.gui.duplex
 
         public DuplexEventForm()
         {
+            //Hack so that we don't have to validate the Anubis server certificate.
+            ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
+
             InitializeComponent();
 
             _log = LogManager.GetLogger(this.GetType());
