@@ -24,11 +24,7 @@
         <ref bean="rpcFilter"/>
     </util:list>
 
-    <bean id="serializationProcessor" class="amp.eventing.serializers.JsonEventSerializer">
-        <constructor-arg name="serializer" ref="serializer" />
-    </bean>
-
-    <bean id="serializer" class="amp.utility.serialization.GsonSerializer" />
+    <bean id="serializationProcessor" class="amp.messaging.JsonSerializationProcessor" />
 
     <bean id="outboundHeadersProcessor" class="amp.eventing.OutboundHeadersProcessor">
         <constructor-arg name="userInfoRepository" ref="userInfoRepository"  />
@@ -69,7 +65,7 @@
     <bean id="routingInfoRetriever" class="amp.topology.client.HttpRoutingInfoRetriever">
         <constructor-arg name="httpClientProvider" ref="httpClientProvider" />
         <constructor-arg name="serializer" ref="routingSerializer" />
-        <constructor-arg name="urlExpression" value="http://devexample.com:15677/service/topology/get-routing-info/%s" />
+        <constructor-arg name="urlExpression" value="http://gts.openampere.com:15677/service/topology/get-routing-info/%s" />
     </bean>
 
     <bean id="topologyService" class="amp.topology.client.GlobalTopologyService">
