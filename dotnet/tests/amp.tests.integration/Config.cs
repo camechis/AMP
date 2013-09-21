@@ -11,7 +11,7 @@
         {
             public const string Basic = "assembly://amp.tests.integration/amp.tests.integration.Config.Authorization/BasicAuthRabbitConfig.xml";
             public const string AnubisBasic = "assembly://amp.tests.integration/amp.tests.integration.Config.Authorization/AnubisAndBasicAuthRabbitConfig.xml";
-            public const string AnubisTwoWaySsl = "assembly://amp.tests.integration/amp.tests.integration.Config.Authorization/AnubisAndBasicAuthRabbitConfig.xml";
+            public const string AnubisTwoWaySsl = "assembly://amp.tests.integration/amp.tests.integration.Config.Authorization/AnubisAndTwoWaySSLRabbitConfig.xml";
         }
 
         internal class Topology
