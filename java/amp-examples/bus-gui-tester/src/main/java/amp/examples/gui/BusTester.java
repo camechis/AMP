@@ -24,7 +24,7 @@ import java.awt.event.ActionEvent;
 import java.util.Map;
 
 import cmf.bus.Envelope;
-import cmf.eventing.IEventBus;
+import cmf.eventing.patterns.rpc.IRpcEventBus;
 import cmf.eventing.IEventHandler;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
@@ -46,7 +46,7 @@ public class BusTester {
 	private JFrame EventConsumerFrame;
 	private JTextField reqmsgTextField;
 	private final JTextArea logTextArea = new JTextArea();
-	private IEventBus eventBus;
+	private IRpcEventBus eventBus;
 	
 
 	/**
@@ -70,7 +70,7 @@ public class BusTester {
 	/**
 	 * Create the application.
 	 */
-	public BusTester(IEventBus eventBus) {
+	public BusTester(IRpcEventBus eventBus) {
 		this.eventBus = eventBus;
 		initialize();
 	}

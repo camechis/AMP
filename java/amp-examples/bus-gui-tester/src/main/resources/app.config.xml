@@ -8,21 +8,23 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
     <bean id="busTester" class="amp.examples.gui.BusTester"
-          c:eventBus-ref="eventBus" />
+          c:eventBus-ref="rpcEventBus" />
 
     <!-- The following components are for our Event Bus, which uses our Envelope Bus -->
-    <bean id="eventBus" class="amp.eventing.DefaultEventBus"
+   <bean id="rpcEventBus" class="amp.eventing.DefaultRpcBus"
           destroy-method="dispose">
           <constructor-arg ref="envelopeBus" />
           <constructor-arg >
-		    <util:list value-type="amp.messaging.IMessageProcessor">
+		    <util:list value-type="amp.eventing.IEventProcessor">
+		        <ref bean="rpcFilter" />
 		        <ref bean="JsonSerializationProcessor" />
 		    </util:list>
           </constructor-arg>
           <constructor-arg >
-		    <util:list value-type="amp.messaging.IMessageProcessor">
+		    <util:list value-type="amp.eventing.IEventProcessor">
 		        <ref bean="JsonSerializationProcessor" />
 		        <ref bean="OutboundHeadersProcessor" />
+		        <ref bean="rpcFilter"/>
 		    </util:list>
           </constructor-arg>
     </bean>
@@ -36,6 +38,8 @@
           c:mapping-ref="userMapping" />
 
     <util:map id="userMapping" key-type="java.lang.String" value-type="java.lang.String" />
+
+    <bean id="rpcFilter" class="amp.eventing.RpcFilter" />
 
     <bean id="envelopeBus" class="amp.bus.DefaultEnvelopeBus" destroy-method="dispose"
           c:transportProvider-ref="transportProvider" />
