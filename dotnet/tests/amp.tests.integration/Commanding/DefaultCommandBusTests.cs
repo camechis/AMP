@@ -16,7 +16,7 @@ namespace amp.tests.integration.Commanding
         [TestFixtureSetUp]
         public virtual void TestFixtureSetUp()
         {
-            _context = new XmlApplicationContext(Config.Bus.All, Config.Authorization.Basic);
+            _context = new XmlApplicationContext(Config.Bus.All, Config.Authorization.Basic, Config.Topology.Simple);
             _bus = _context.GetObject("ICommandBus") as ICommandBus;
         }
 
