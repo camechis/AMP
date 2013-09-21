@@ -70,8 +70,10 @@
 
     <bean id="routingInfoRetriever" class="amp.topology.client.HttpRoutingInfoRetriever"
           c:httpClientProvider-ref="httpClientProvider" 
-          c:serializer-ref="serializer"
+          c:serializer-ref="routingSerializer"
           c:urlExpression="https://gts.openampere.com:15677/service/topology/get-routing-info/%s" />
+
+    <bean id="routingSerializer" class="amp.topology.client.JsonRoutingInfoSerializer" />
 
     <bean id="fallbackProvider" class="amp.topology.client.DefaultApplicationExchangeProvider"
           p:hostname="rabbit.openampere.com" 
