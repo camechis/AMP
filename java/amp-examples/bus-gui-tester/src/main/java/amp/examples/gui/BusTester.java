@@ -68,16 +68,18 @@ public class BusTester {
 
 	/**
 	 * Create the application.
+	 * @throws Exception 
 	 */
-	public BusTester(IRpcEventBus eventBus) {
+	public BusTester(IRpcEventBus eventBus) throws Exception {
 		this.eventBus = eventBus;
 		initialize();
 	}
 
 	/**
 	 * Initialize the contents of the frame.
+	 * @throws Exception 
 	 */
-	private void initialize() {
+	private void initialize() throws Exception {
 		EventConsumerFrame = new JFrame();
 		EventConsumerFrame.setTitle("Java Event Consumer & Producer");
 		EventConsumerFrame.setBounds(100, 100, 1134, 513);
@@ -256,6 +258,29 @@ public class BusTester {
 			}
 		});
 		panel_1.add(clearLogButton);
+		
+		eventBus.subscribe(new IEventHandler<ExampleRequest>(){
+
+			@Override
+			public Class<ExampleRequest> getEventType() {
+				return ExampleRequest.class;
+			}
+
+			@Override
+			public Object handle(ExampleRequest event, Map<String, String> headers) {
+				log("Received ExampleRequest: " + event.getMessage() + " Responding...");
+				ExampleResponse response = new ExampleResponse();
+				response.setOriginalMessage(event.getMessage());
+				response.setResponseMessage("Rodger that!");
+				eventBus.respondTo(headers, response);
+				return null;
+			}
+
+			@Override
+			public Object handleFailed(Envelope envelope, Exception e) {
+				log("Failed to handle ExampleRequest event: " + e.toString());
+				return null;
+			}});
 	}
 	
 	private void handleCheckBox( ActionEvent e )  {
