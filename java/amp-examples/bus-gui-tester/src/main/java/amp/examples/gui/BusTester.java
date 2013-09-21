@@ -4,12 +4,8 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
-import java.awt.GridBagLayout;
-import javax.swing.JSeparator;
 import java.awt.GridLayout;
 import javax.swing.border.TitledBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.JTextArea;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -18,7 +14,6 @@ import javax.swing.JComboBox;
 import javax.swing.JTextPane;
 import javax.swing.JCheckBox;
 import javax.swing.JButton;
-import javax.swing.SwingConstants;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.util.Map;
@@ -31,11 +26,15 @@ import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
 import com.jgoodies.forms.factories.DefaultComponentFactory;
 import com.jgoodies.forms.factories.FormFactory;
+
+import org.joda.time.Duration;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import amp.examples.gui.messages.EventTypeA;
 import amp.examples.gui.messages.EventTypeB;
+import amp.examples.gui.messages.ExampleRequest;
+import amp.examples.gui.messages.ExampleResponse;
 
 
 public class BusTester {
@@ -217,6 +216,19 @@ public class BusTester {
 		reqmsgTextField.setColumns(10);
 		
 		JButton requestButton = new JButton("Request");
+		requestButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ExampleRequest request = new ExampleRequest();
+				request.setMessage(reqmsgTextField.getText());
+				
+				try{
+					ExampleResponse response = eventBus.getResponseTo(request, Duration.standardSeconds(5), ExampleResponse.class);
+					log("Received response to request: " + response.getResponseMessage());
+				} catch (Exception ex) {
+					log("Error attempting to get response to request: " + ex.toString());
+				}
+			}
+		});
 		reqrespForm.add(requestButton, "2, 3");
 		
 		JPanel south = new JPanel();
