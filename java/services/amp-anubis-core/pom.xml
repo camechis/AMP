@@ -13,7 +13,6 @@
     </parent>
 
 
-    <groupId>amp</groupId>
     <artifactId>amp.anubis.core</artifactId>
     <packaging>jar</packaging>
     <name>AMP Actor Management API</name>

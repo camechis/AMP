@@ -12,7 +12,6 @@
     </parent>
 
 
-    <groupId>amp</groupId>
     <artifactId>amp.utility</artifactId>    
     <name>AMP Utility Library</name>
     <packaging>jar</packaging>

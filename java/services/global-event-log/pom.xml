@@ -13,10 +13,9 @@
 	</parent>
 
 
-	<groupId>${project.parent.groupId}</groupId>
+	<name>AMP Global Event Log</name>
 	<artifactId>amp.gel</artifactId>
 	<packaging>jar</packaging>
-	<name>AMP Global Event Log</name>
     <url>http://ampere.berico.us/services/global-event-log</url>
 
 
@@ -75,11 +74,6 @@
         <dependency>
             <groupId>amp</groupId>
             <artifactId>amp.rabbit</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>amp</groupId>
-            <artifactId>amp.bus.rabbit</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
 		<dependency>

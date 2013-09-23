@@ -28,44 +28,39 @@
 
         <!-- Dependencies specific to this project -->
 		<dependency>
-			<groupId>${parent.groupId}</groupId>
+			<groupId>amp</groupId>
 			<artifactId>amp.bus</artifactId>
-			<version>${parent.version}</version>
+			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>${parent.groupId}</groupId>
+			<groupId>amp</groupId>
 			<artifactId>amp.messaging</artifactId>
-			<version>${parent.version}</version>
+			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>${parent.groupId}</groupId>
+			<groupId>amp</groupId>
 			<artifactId>amp.eventing</artifactId>
-			<version>${parent.version}</version>
+			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>${parent.groupId}</groupId>
+			<groupId>amp</groupId>
 			<artifactId>amp.bus.security</artifactId>
-			<version>${parent.version}</version>
+			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>${parent.groupId}</groupId>
+			<groupId>amp</groupId>
 			<artifactId>amp.topology.client</artifactId>
-			<version>${parent.version}</version>
+			<version>${project.parent.version}</version>
 		</dependency>
         <dependency>
-            <groupId>${parent.groupId}</groupId>
+            <groupId>amp</groupId>
             <artifactId>amp.rabbit</artifactId>
-            <version>${parent.version}</version>
+            <version>${project.parent.version}</version>
         </dependency>
         <dependency>
-            <groupId>${parent.groupId}</groupId>
-            <artifactId>amp.bus.rabbit</artifactId>
-            <version>${parent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${parent.groupId}</groupId>
+            <groupId>amp</groupId>
             <artifactId>amp.commanding</artifactId>
-            <version>${parent.version}</version>
+            <version>${project.parent.version}</version>
         </dependency>
 
         <!-- Shared Dependencies -->

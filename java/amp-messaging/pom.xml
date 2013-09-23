@@ -26,10 +26,10 @@
         <dependency>
             <groupId>amp</groupId>
             <artifactId>amp.bus</artifactId>
-            <version>${parent.version}</version>
+            <version>${project.parent.version}</version>
         </dependency>
         <dependency>
-            <groupId>${project.parent.groupId}</groupId>
+            <groupId>amp</groupId>
             <artifactId>amp.bus.security</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
