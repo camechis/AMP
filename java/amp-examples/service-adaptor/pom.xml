@@ -63,22 +63,22 @@
         <dependency>
             <groupId>amp</groupId>
             <artifactId>amp.bus</artifactId>
-            <version>${parent.version}</version>
+            <version>${project.parent.version}</version>
         </dependency>
         <dependency>
             <groupId>amp</groupId>
             <artifactId>amp.eventing</artifactId>
-            <version>${parent.version}</version>
+            <version>${project.parent.version}</version>
         </dependency>
         <dependency>
             <groupId>amp</groupId>
             <artifactId>amp.bus.security</artifactId>
-            <version>${parent.version}</version>
+            <version>${project.parent.version}</version>
         </dependency>
         <dependency>
             <groupId>amp</groupId>
             <artifactId>amp.topology.client</artifactId>
-            <version>${parent.version}</version>
+            <version>${project.parent.version}</version>
         </dependency>
         <dependency>
             <groupId>com.berico</groupId>
