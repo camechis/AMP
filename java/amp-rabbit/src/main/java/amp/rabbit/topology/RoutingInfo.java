@@ -6,21 +6,21 @@ import java.util.ArrayList;
 
 public class RoutingInfo {
 
-    protected Iterable<RouteInfo> routes;
+    protected ArrayList<RouteInfo> routes;
 
     public RoutingInfo() {
         this.routes = new ArrayList<RouteInfo>();
     }
 
-    public RoutingInfo(Iterable<RouteInfo> routes) {
+    public RoutingInfo(ArrayList<RouteInfo> routes) {
         this.routes = routes;
     }
 
-    public Iterable<RouteInfo> getRoutes() {
+    public ArrayList<RouteInfo> getRoutes() {
         return routes;
     }
 
-    public void setRoutes(Iterable<RouteInfo> routes) {
+    public void setRoutes(ArrayList<RouteInfo> routes) {
         this.routes = routes;
     }
 

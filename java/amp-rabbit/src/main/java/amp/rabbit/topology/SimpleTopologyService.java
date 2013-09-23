@@ -2,7 +2,6 @@ package amp.rabbit.topology;
 
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -72,7 +71,7 @@ public class SimpleTopologyService implements ITopologyService {
 
         RouteInfo theOneRoute = new RouteInfo(theOneExchange, theOneExchange);
 
-        List<RouteInfo> routingInfo = new ArrayList<RouteInfo>();
+        ArrayList<RouteInfo> routingInfo = new ArrayList<RouteInfo>();
         routingInfo.add(theOneRoute);
 
         return new RoutingInfo(routingInfo);

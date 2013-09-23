@@ -1,7 +1,6 @@
 package amp.topology.client;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.UUID;
 
@@ -64,7 +63,8 @@ public class DefaultApplicationExchangeProvider implements FallbackRoutingInfoPr
 		
 		RouteInfo theOnlyRoute = new RouteInfo(defaultExchange, defaultExchange);
 	
-		List<RouteInfo> routes = Arrays.asList(theOnlyRoute);
+		ArrayList<RouteInfo> routes = new ArrayList<RouteInfo>();
+		routes.add(theOnlyRoute);
 		
 		return new RoutingInfo(routes);
 	}
