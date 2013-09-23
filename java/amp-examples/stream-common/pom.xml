@@ -55,22 +55,22 @@
         <dependency>
             <groupId>amp</groupId>
             <artifactId>amp.bus</artifactId>
-            <version>${cmf.version}</version>
+            <version>${project.parent.version}</version>
         </dependency>
         <dependency>
             <groupId>amp</groupId>
             <artifactId>amp.eventing</artifactId>
-            <version>${cmf.version}</version>
+            <version>${project.parent.version}</version>
         </dependency>
         <dependency>
             <groupId>amp</groupId>
             <artifactId>amp.bus.security</artifactId>
-            <version>${cmf.version}</version>
+            <version>${project.parent.version}</version>
         </dependency>
         <dependency>
             <groupId>amp</groupId>
             <artifactId>amp.topology.client</artifactId>
-            <version>${cmf.version}</version>
+            <version>${project.parent.version}</version>
         </dependency>
 
         <dependency>
