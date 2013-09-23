@@ -12,7 +12,6 @@
     </parent>
 
 
-    <groupId>amp</groupId>
     <artifactId>amp.commanding</artifactId>
     <name>AMP Command Channel API</name>
     <packaging>jar</packaging>
