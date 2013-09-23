@@ -9,6 +9,7 @@ import org.junit.Test;
 import amp.rabbit.topology.Exchange;
 import amp.rabbit.topology.RouteInfo;
 import amp.rabbit.topology.RoutingInfo;
+import amp.utility.serialization.GsonSerializer;
 
 public class JsonRoutingInfoSerializerTest {
 	
@@ -32,7 +33,7 @@ public class JsonRoutingInfoSerializerTest {
 		
 		String serializedString = "{\"routes\":[{\"consumerExchange\":{\"arguments\":null,\"exchangeType\":\"topic\",\"hostName\":\"devexample.com\",\"isAutoDelete\":false,\"isDurable\":false,\"name\":\"cmf.security\",\"port\":5672,\"queueName\":\"\",\"routingKey\":\"cmf.security\",\"virtualHost\":\"/\"},\"producerExchange\":{\"arguments\":null,\"exchangeType\":\"topic\",\"hostName\":\"devexample.com\",\"isAutoDelete\":false,\"isDurable\":false,\"name\":\"cmf.security\",\"port\":5672,\"queueName\":\"\",\"routingKey\":\"cmf.security\",\"virtualHost\":\"/\"}}]}";
 		
-		JsonRoutingInfoSerializer serializer = new JsonRoutingInfoSerializer();
+		GsonSerializer serializer = new GsonSerializer();
 		
 		RoutingInfo routingInfo = serializer.stringDeserialize(serializedString, RoutingInfo.class);
 		
