@@ -77,11 +77,6 @@
             <artifactId>amp.rabbit</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
-        <dependency>
-            <groupId>amp</groupId>
-            <artifactId>amp.bus.rabbit</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
 		<dependency>
 			<groupId>amp</groupId>
 			<artifactId>amp.topology.client</artifactId>

@@ -59,11 +59,6 @@
         </dependency>
         <dependency>
             <groupId>${parent.groupId}</groupId>
-            <artifactId>amp.bus.rabbit</artifactId>
-            <version>${parent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${parent.groupId}</groupId>
             <artifactId>amp.commanding</artifactId>
             <version>${parent.version}</version>
         </dependency>

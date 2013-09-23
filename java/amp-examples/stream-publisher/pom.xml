@@ -67,11 +67,6 @@
         </dependency>
         <dependency>
             <groupId>amp</groupId>
-            <artifactId>amp.bus.rabbit</artifactId>
-            <version>${cmf.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>amp</groupId>
             <artifactId>amp.bus.security</artifactId>
             <version>${cmf.version}</version>
         </dependency>
