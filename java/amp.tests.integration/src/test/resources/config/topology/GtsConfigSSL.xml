@@ -22,7 +22,7 @@
           c:truststore="src/test/resources/test-certs/trust.openampere.com.jks"
           c:port="15677" />
 
-    <bean id="routingSerializer" class="amp.topology.client.JsonRoutingInfoSerializer" />
+    <bean id="routingSerializer" class="amp.utility.serialization.GsonSerializer" />
 
     <bean id="fallbackProvider" class="amp.topology.client.DefaultApplicationExchangeProvider"
           p:hostname="rabbit.openampere.com" 
