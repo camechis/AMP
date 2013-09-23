@@ -28,37 +28,37 @@
 
         <!-- Dependencies specific to this project -->
 		<dependency>
-			<groupId>${project.parent.groupId}</groupId>
+			<groupId>amp</groupId>
 			<artifactId>amp.bus</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>${project.parent.groupId}</groupId>
+			<groupId>amp</groupId>
 			<artifactId>amp.messaging</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>${project.parent.groupId}</groupId>
+			<groupId>amp</groupId>
 			<artifactId>amp.eventing</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>${project.parent.groupId}</groupId>
+			<groupId>amp</groupId>
 			<artifactId>amp.bus.security</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>${project.parent.groupId}</groupId>
+			<groupId>amp</groupId>
 			<artifactId>amp.topology.client</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
         <dependency>
-            <groupId>${project.parent.groupId}</groupId>
+            <groupId>amp</groupId>
             <artifactId>amp.rabbit</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>
-            <groupId>${project.parent.groupId}</groupId>
+            <groupId>amp</groupId>
             <artifactId>amp.commanding</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
