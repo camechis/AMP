@@ -11,7 +11,7 @@ import amp.rabbit.topology.RouteInfo;
 import amp.rabbit.topology.RoutingInfo;
 import amp.utility.serialization.GsonSerializer;
 
-public class JsonRoutingInfoSerializerTest {
+public class RoutingInfoWithGsonSerializerTest {
 	
 	public void assertExchangeHasValues(
 		Exchange actual, String name, String type, 
