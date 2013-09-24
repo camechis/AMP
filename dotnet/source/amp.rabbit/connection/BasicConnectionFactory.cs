@@ -1,8 +1,7 @@
-﻿using RabbitMQ.Client;
+﻿using amp.rabbit.topology;
+using RabbitMQ.Client;
 
-using amp.rabbit.topology;
-
-namespace amp.rabbit
+namespace amp.rabbit.connection
 {
     public class BasicConnectionFactory : BaseConnectionFactory
     {

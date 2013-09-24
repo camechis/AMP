@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Net;
-using amp.rabbit;
+using amp.rabbit.connection;
 using amp.rabbit.topology;
 using NUnit.Framework;
 using RabbitMQ.Client;

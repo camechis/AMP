@@ -4,7 +4,7 @@ using amp.rabbit.topology;
 using Common.Logging;
 using RabbitMQ.Client;
 
-namespace amp.rabbit
+namespace amp.rabbit.connection
 {
     public abstract class BaseConnectionFactory : IRabbitConnectionFactory
     {

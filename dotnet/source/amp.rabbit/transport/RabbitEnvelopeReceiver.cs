@@ -1,6 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
+using amp.rabbit.connection;
+using amp.rabbit.dispatch;
 using amp.rabbit.topology;
 using cmf.bus;
 using Common.Logging;

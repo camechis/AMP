@@ -5,6 +5,8 @@ using System.Linq;
 using System.Threading;
 using amp.bus;
 using amp.messaging;
+using amp.rabbit.connection;
+using amp.rabbit.dispatch;
 using amp.rabbit.topology;
 using cmf.bus;
 using Common.Logging;

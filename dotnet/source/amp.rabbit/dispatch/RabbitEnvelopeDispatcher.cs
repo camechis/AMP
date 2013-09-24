@@ -1,11 +1,10 @@
 ﻿using System;
 using amp.bus;
+using cmf.bus;
 using Common.Logging;
 using RabbitMQ.Client;
 
-using cmf.bus;
-
-namespace amp.rabbit
+namespace amp.rabbit.dispatch
 {
     public class RabbitEnvelopeDispatcher : IEnvelopeDispatcher
     {

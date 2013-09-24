@@ -4,18 +4,17 @@ using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using amp.bus;
 using amp.messaging;
+using amp.rabbit.topology;
+using cmf.bus;
 using Common.Logging;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using RabbitMQ.Client.Exceptions;
 using RabbitMQ.Util;
 
-using cmf.bus;
-using amp.bus;
-using amp.rabbit.topology;
-
-namespace amp.rabbit
+namespace amp.rabbit.dispatch
 {
     public class RabbitListener
     {
