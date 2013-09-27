@@ -55,9 +55,9 @@ namespace amp.rabbit.transport
             foreach (Exchange ex in exchanges)
             {
                 Log.Debug("Sending to exchange: " + ex.ToString());
-                IConnection conn = _connFactory.ConnectTo(ex);
+                ConnectionManager connMgr = _connFactory.ConnectTo(ex);
                 
-                using (IModel channel = conn.CreateModel())
+                using (IModel channel = connMgr.CreateModel())
                 {
                     IBasicProperties props = channel.CreateBasicProperties();
                     props.Headers = env.Headers as IDictionary;
@@ -126,7 +126,7 @@ namespace amp.rabbit.transport
 
             foreach (Exchange ex in exchanges)
             {
-                IConnection conn = _connFactory.ConnectTo(ex);
+                ConnectionManager conn = _connFactory.ConnectTo(ex);
 
                 // create a listener
                 RabbitListener listener = new RabbitListener(registration, ex, conn);

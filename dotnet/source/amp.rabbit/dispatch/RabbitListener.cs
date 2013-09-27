@@ -13,6 +13,7 @@ using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using RabbitMQ.Client.Exceptions;
 using RabbitMQ.Util;
+using amp.rabbit.connection;
 
 namespace amp.rabbit.dispatch
 {
@@ -26,14 +27,14 @@ namespace amp.rabbit.dispatch
         protected bool _shouldContinue;
         protected ILog _log;
         protected Exchange _exchange;
-        protected IConnection _connection;
+        protected ConnectionManager _connectionManager;
 
 
-        public RabbitListener(IRegistration registration, Exchange exchange, IConnection connection)
+        public RabbitListener(IRegistration registration, Exchange exchange, ConnectionManager connectionManager)
         {
             _registration = registration;
             _exchange = exchange;
-            _connection = connection;
+            _connectionManager = connectionManager;
 
             _log = LogManager.GetLogger(this.GetType());
         }
@@ -46,7 +47,7 @@ namespace amp.rabbit.dispatch
             _log.Debug("Enter Start");
             _shouldContinue = true;
 
-            using (IModel channel = _connection.CreateModel())
+            using (IModel channel = _connectionManager.CreateModel())
             {
                 // first, declare the exchange and queue
                 channel.ExchangeDeclare(_exchange.Name, _exchange.ExchangeType, _exchange.IsDurable, _exchange.IsAutoDelete, _exchange.Arguments);
