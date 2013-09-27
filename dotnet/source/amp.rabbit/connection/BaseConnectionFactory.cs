@@ -48,7 +48,7 @@ namespace amp.rabbit.connection
             }
         }
 
-        private ConnectionManager CreateConnectionManager(Exchange exchange)
+        protected virtual ConnectionManager CreateConnectionManager(Exchange exchange)
         {
             _log.Debug("Enter CreateConnectionManager");
 
