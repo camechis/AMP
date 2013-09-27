@@ -10,7 +10,7 @@ using cmf.eventing;
 
 using amp.eventing;
 
-namespace amp.tests
+namespace amp.tests.eventing
 {
     [TestFixture]
     public class DefaultEventBusTests

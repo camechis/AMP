@@ -8,7 +8,7 @@ using NUnit.Framework;
 using cmf.bus;
 using cmf.bus.support;
 
-namespace amp.tests
+namespace amp.tests.eventing
 {
     [TestFixture]
     public class InMemoryEnvBusTests
