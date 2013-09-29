@@ -65,10 +65,7 @@ namespace amp.tests.rabbit.connection
         [Test]
         public void Send_should_create_a_connection_and_a_channel()
         {
-            var env = new Envelope();
-            env.Headers.Add(EnvelopeHeaderConstants.MESSAGE_TOPIC, "testing");
-
-            _transport.Send(env);
+            SendAMessage();
 
             _rmqFactory.Verify(r => r.CreateConnection(), "Connection to RabbitMQ was not created.");
             _connections[0].Verify(c => c.CreateModel(), "Channel for sent was not created.");
@@ -125,6 +122,28 @@ namespace amp.tests.rabbit.connection
             SimulateConnectionClosure(ShutdownInitiator.Application);
 
             _rmqFactory.Verify(r => r.CreateConnection(), Times.Once(), "Connection to RabbitMQ incorrectly recreated.");
+        }
+
+        [Test]
+        public void ClosingTheTransportShouldCloseAllConnections()
+        {
+            SendAMessage();
+            RegisterNullHandler();
+
+            _transport.Dispose();
+
+            foreach (Mock<IConnection> connection in _connections)
+            {
+                connection.Verify(c => c.Close(), "Connection was not closed.");
+            }
+        }
+
+        private void SendAMessage()
+        {
+            var env = new Envelope();
+            env.Headers.Add(EnvelopeHeaderConstants.MESSAGE_TOPIC, "testing");
+
+            _transport.Send(env);
         }
 
         private void RegisterNullHandler()

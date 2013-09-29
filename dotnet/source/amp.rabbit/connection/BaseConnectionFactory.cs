@@ -41,9 +41,9 @@ namespace amp.rabbit.connection
 
         public void Dispose()
         {
-            foreach (IConnection conn in _connectionManagers.Values)
+            foreach (ConnectionManager conn in _connectionManagers.Values)
             {
-                try { conn.Close(); }
+                try { conn.Dispose(); }
                 catch { }
             }
         }

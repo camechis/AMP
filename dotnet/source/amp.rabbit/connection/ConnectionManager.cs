@@ -103,7 +103,7 @@ namespace amp.rabbit.connection
         public void Dispose()
         {
             if (_connection != null)
-                _connection.Dispose();
+                _connection.Close();
         }
     }
 }
