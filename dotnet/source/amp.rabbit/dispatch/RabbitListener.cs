@@ -30,6 +30,7 @@ namespace amp.rabbit.dispatch
         protected ConnectionManager _connectionManager;
         protected ManualResetEvent startEvent;
         protected ManualResetEvent _stoppedListeningEvent = new ManualResetEvent(true);
+        protected bool _connectionClosed;
 
 
 
@@ -38,6 +39,8 @@ namespace amp.rabbit.dispatch
             _registration = registration;
             _exchange = exchange;
             _connectionManager = connectionManager;
+            _connectionManager.ConnectionClosed += Handle_OnConnectionClosed;
+            _connectionManager.ConnectionReconnected += Handle_OnConnectionReconnected;
 
             _log = LogManager.GetLogger(this.GetType());
         }
@@ -177,11 +180,38 @@ namespace amp.rabbit.dispatch
             
             _shouldContinue = false;
             
+            //If we the shutdown wasn't deliberate on our part, attempt to restart
             if (reason.Initiator != ShutdownInitiator.Application)
             {
-                Start();
+                _log.Debug("Attempting restart on new channel.");
+                //Move to a background thread so that rabbit can raise the connection closed event if that is the cause.
+                new Thread(() =>
+                {
+                    Thread.Sleep(100); //Give rabbit a chance to raise the connection closed event.
+                    if(_connectionClosed)
+                        _log.Debug("Connection is clossed; aborting restart attempt.");
+                    else
+                        //Now restart only if the connection is not closed.  Otherwise we will restart in the OnConnectionReconnected event.
+                        Start();
+                }).Start();
             }
             _log.Debug("Leave Handle_OnModelShutdown");
+        }
+
+        private void Handle_OnConnectionClosed(bool willAttemtToReopen)
+        {
+            _log.Debug(string.Format("Enter Handle_OnConnectionClosed, WillAttemptReopen: {0}", willAttemtToReopen));
+            _connectionClosed = true;
+            _shouldContinue = false;
+            _log.Debug("Leave Handle_OnConnectionClosed");
+        }
+
+        private void Handle_OnConnectionReconnected()
+        {
+            _log.Debug("Enter Handle_OnConnectionReconnected");
+            _connectionClosed = false;
+            Start();
+            _log.Debug("Leave Handle_OnConnectionReconnected");
         }
 
         public void Stop()

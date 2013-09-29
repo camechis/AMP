@@ -95,7 +95,7 @@ namespace amp.tests.rabbit.connection
         }
 
         [Test]
-        public void Register_should_not_restart_on_new_channel_is_closed_by_application()
+        public void Register_should_not_restart_if_channel_is_closed_by_application()
         {
             RegisterNullHandler();
 
@@ -103,6 +103,28 @@ namespace amp.tests.rabbit.connection
 
             _rmqFactory.Verify(r => r.CreateConnection(), Times.Once(), "Connection to RabbitMQ incorrectly recreated.");
             _connections[0].Verify(c => c.CreateModel(), Times.Once(), "Channel for listening was recreated.");
+        }
+
+        [Test]
+        public void Register_should_restart_on_new_connection_if_connection_fails()
+        {
+            RegisterNullHandler();
+
+            SimulateConnectionClosure(ShutdownInitiator.Peer);
+
+            _rmqFactory.Verify(r => r.CreateConnection(), Times.Exactly(2), "Connection to RabbitMQ was not recreated.");
+            _connections[1].Verify(c => c.CreateModel(), Times.Once(), "Channel for listening was not recreated.");
+            _connections[0].Verify(c => c.CreateModel(), Times.Once(), "Inappropriate attempts were made to recreate channel on closed connection.");
+        }
+
+        [Test]
+        public void Register_should_not_restart_if_connection_is_closed_by_application()
+        {
+            RegisterNullHandler();
+
+            SimulateConnectionClosure(ShutdownInitiator.Application);
+
+            _rmqFactory.Verify(r => r.CreateConnection(), Times.Once(), "Connection to RabbitMQ incorrectly recreated.");
         }
 
         private void RegisterNullHandler()
@@ -120,6 +142,15 @@ namespace amp.tests.rabbit.connection
             _modelCreateSignal.Reset();
 
             _models[0].Raise(m => m.ModelShutdown += null, new ShutdownEventArgs(initiator, 0, "Testing..."));
+
+            _modelCreateSignal.WaitOne(250); //Registration happens on a background thread.
+        }
+
+        private void SimulateConnectionClosure(ShutdownInitiator initiator)
+        {
+            _modelCreateSignal.Reset();
+
+            _connections[0].Raise(c => c.ConnectionShutdown += null, new ShutdownEventArgs(initiator, 0, "Testing..."));
 
             _modelCreateSignal.WaitOne(250); //Registration happens on a background thread.
         }
