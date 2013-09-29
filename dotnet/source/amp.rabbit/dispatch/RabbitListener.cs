@@ -28,7 +28,7 @@ namespace amp.rabbit.dispatch
         protected ILog _log;
         protected Exchange _exchange;
         protected ConnectionManager _connectionManager;
-
+        protected ManualResetEvent startEvent;
 
         public RabbitListener(IRegistration registration, Exchange exchange, ConnectionManager connectionManager)
         {
@@ -42,13 +42,29 @@ namespace amp.rabbit.dispatch
 
         public void Start(object manualResetEvent)
         {
-            ManualResetEvent startEvent = manualResetEvent as ManualResetEvent;
+            startEvent = manualResetEvent as ManualResetEvent;
+            Start();
+        }
 
+        private void Start()
+        {
             _log.Debug("Enter Start");
+            //Do actuall listening on a bacground thread.
+            Thread listenerThread = new Thread(Listen);
+            listenerThread.Name = string.Format("{0} on {1}:{2}{3}", _exchange.QueueName, _exchange.HostName, _exchange.Port, _exchange.VirtualHost);
+            listenerThread.Start();
+        }
+
+        private void Listen()
+        {
+            _log.Debug("Enter Listen");
+
             _shouldContinue = true;
 
             using (IModel channel = _connectionManager.CreateModel())
             {
+                channel.ModelShutdown += Handle_OnModelShutdown;
+
                 // first, declare the exchange and queue
                 channel.ExchangeDeclare(_exchange.Name, _exchange.ExchangeType, _exchange.IsDurable, _exchange.IsAutoDelete, _exchange.Arguments);
                 channel.QueueDeclare(_exchange.QueueName, _exchange.IsDurable, false, _exchange.IsAutoDelete, _exchange.Arguments);
@@ -114,7 +130,18 @@ namespace amp.rabbit.dispatch
                 catch (OperationInterruptedException) { }
             }
 
-            _log.Debug("Leave Start");
+            _log.Debug("Leave Listen");
+        }
+        
+
+        private void Handle_OnModelShutdown(IModel model, ShutdownEventArgs reason)
+        {
+            _shouldContinue = false;
+            
+            if (reason.Initiator != ShutdownInitiator.Application)
+            {
+                Start();
+            }
         }
 
         public void Stop()

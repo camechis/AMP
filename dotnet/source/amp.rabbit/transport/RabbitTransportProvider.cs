@@ -133,12 +133,10 @@ namespace amp.rabbit.transport
                 listener.OnEnvelopeReceived += this.listener_OnEnvelopeReceived;
                 listener.OnClose += _listeners.Remove;
 
-                // put it on another thread so as not to block this one but
                 // don't continue on this thread until we've started listening
                 ManualResetEvent startEvent = new ManualResetEvent(false);
-                Thread listenerThread = new Thread(listener.Start);
-                listenerThread.Name = string.Format("{0} on {1}:{2}{3}", ex.QueueName, ex.HostName, ex.Port, ex.VirtualHost);
-                listenerThread.Start(startEvent);
+
+                listener.Start(startEvent);
 
                 // wait for the RabbitListener to start
                 startEvent.WaitOne(new TimeSpan(0, 0, 30));
