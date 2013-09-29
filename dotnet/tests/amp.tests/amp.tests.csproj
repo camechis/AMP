@@ -66,6 +66,7 @@
     <Compile Include="eventing\InMemoryEnvBusTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="rabbit\connection\ConnectionManagementTests.cs" />
+    <Compile Include="messaging\NullHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\source\amp.bus\amp.bus.csproj">

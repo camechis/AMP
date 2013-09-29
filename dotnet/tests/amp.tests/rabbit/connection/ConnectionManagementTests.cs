@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
-
+using System.Threading;
+using amp.tests.messaging;
 using Moq;
 using NUnit.Framework;
 using RabbitMQ.Client;
@@ -21,11 +22,14 @@ namespace amp.tests.rabbit.connection
         
         private RabbitTransportProvider _transport;
 
+        private ManualResetEvent _modelCreateSignal;
+
         [SetUp]
         public void Setup()
         {
             _connections = new List<Mock<IConnection>>();
             _models = new List<Mock<IModel>>();
+            _modelCreateSignal = new ManualResetEvent(false);
 
             _rmqFactory = new Mock<ConnectionFactory>();
             
@@ -43,6 +47,8 @@ namespace amp.tests.rabbit.connection
                     {
                         return new Mock<IBasicProperties>().Object;
                     });
+
+                    _modelCreateSignal.Set();
                     
                     return model.Object;
                 });
@@ -66,6 +72,20 @@ namespace amp.tests.rabbit.connection
 
             _rmqFactory.Verify(r => r.CreateConnection(), "Connection to RabbitMQ was not created.");
             _connections[0].Verify(c => c.CreateModel(), "Channel for sent was not created.");
+        }
+
+        [Test]
+        public void Register_should_create_a_connection_and_a_channel()
+        {
+            var env = new Envelope();
+            env.Headers.Add(EnvelopeHeaderConstants.MESSAGE_TOPIC, "testing");
+
+            _transport.Register(new MessageRegistration( e => null , new NullHandler()));
+
+            _modelCreateSignal.WaitOne(250); //Registration happens on a background thread.
+
+            _rmqFactory.Verify(r => r.CreateConnection(), "Connection to RabbitMQ was not created.");
+            _connections[0].Verify(c => c.CreateModel(), "Channel for listening was not created.");
         }
 
         private class TestConnectionFactory : BaseConnectionFactory
