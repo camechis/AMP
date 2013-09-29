@@ -159,6 +159,10 @@ namespace amp.rabbit.dispatch
                     catch (OperationInterruptedException) { }
                 }
             }
+            catch (Exception ex)
+            {
+                _log.Error("Error while attempting on start listening.", ex);
+            }
             finally
             {
                 _stoppedListeningEvent.Set();
@@ -169,12 +173,15 @@ namespace amp.rabbit.dispatch
 
         private void Handle_OnModelShutdown(IModel model, ShutdownEventArgs reason)
         {
+            _log.Debug(string.Format("Enter Handle_OnModelShutdown, Initiator: {0}", reason.Initiator));
+            
             _shouldContinue = false;
             
             if (reason.Initiator != ShutdownInitiator.Application)
             {
                 Start();
             }
+            _log.Debug("Leave Handle_OnModelShutdown");
         }
 
         public void Stop()
