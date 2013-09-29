@@ -88,6 +88,46 @@ namespace amp.tests.rabbit.connection
             _connections[0].Verify(c => c.CreateModel(), "Channel for listening was not created.");
         }
 
+        [Test]
+        public void Register_should_restart_on_new_channel_if_channel_fails()
+        {
+            var env = new Envelope();
+            env.Headers.Add(EnvelopeHeaderConstants.MESSAGE_TOPIC, "testing");
+
+            _transport.Register(new MessageRegistration(e => null, new NullHandler()));
+
+            _modelCreateSignal.WaitOne(250); //Registration happens on a background thread.
+
+            _modelCreateSignal.Reset();
+
+            _models[0].Raise(m => m.ModelShutdown += null, new ShutdownEventArgs(ShutdownInitiator.Peer, 0, "Testing..."));
+
+            _modelCreateSignal.WaitOne(250); //Registration happens on a background thread.
+
+            _rmqFactory.Verify(r => r.CreateConnection(), Times.Once(), "Connection to RabbitMQ incorrectly recreated.");
+            _connections[0].Verify(c => c.CreateModel(), Times.Exactly(2), "Channel for listening was not recreated.");
+        }
+
+        [Test]
+        public void Register_should_not_restart_on_new_channel_is_closed_by_application()
+        {
+            var env = new Envelope();
+            env.Headers.Add(EnvelopeHeaderConstants.MESSAGE_TOPIC, "testing");
+
+            _transport.Register(new MessageRegistration(e => null, new NullHandler()));
+
+            _modelCreateSignal.WaitOne(250); //Registration happens on a background thread.
+
+            _modelCreateSignal.Reset();
+
+            _models[0].Raise(m => m.ModelShutdown += null, new ShutdownEventArgs(ShutdownInitiator.Application, 0, "Testing..."));
+
+            _modelCreateSignal.WaitOne(250); //Registration happens on a background thread.
+
+            _rmqFactory.Verify(r => r.CreateConnection(), Times.Once(), "Connection to RabbitMQ incorrectly recreated.");
+            _connections[0].Verify(c => c.CreateModel(), Times.Once(), "Channel for listening was recreated.");
+        }
+
         private class TestConnectionFactory : BaseConnectionFactory
         {
             readonly ConnectionFactory _factory;

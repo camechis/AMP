@@ -29,6 +29,9 @@ namespace amp.rabbit.dispatch
         protected Exchange _exchange;
         protected ConnectionManager _connectionManager;
         protected ManualResetEvent startEvent;
+        protected ManualResetEvent _stoppedListeningEvent = new ManualResetEvent(true);
+
+
 
         public RabbitListener(IRegistration registration, Exchange exchange, ConnectionManager connectionManager)
         {
@@ -59,22 +62,30 @@ namespace amp.rabbit.dispatch
         {
             _log.Debug("Enter Listen");
 
+            //Don't start listining until last invocation has stopped.  
+            _stoppedListeningEvent.WaitOne();
+            _log.Debug("Proceeding...");
+
             _shouldContinue = true;
-
-            using (IModel channel = _connectionManager.CreateModel())
+            _stoppedListeningEvent.Reset();
+            try
             {
-                channel.ModelShutdown += Handle_OnModelShutdown;
+                using (IModel channel = _connectionManager.CreateModel())
+                {
+                    channel.ModelShutdown += Handle_OnModelShutdown;
 
-                // first, declare the exchange and queue
-                channel.ExchangeDeclare(_exchange.Name, _exchange.ExchangeType, _exchange.IsDurable, _exchange.IsAutoDelete, _exchange.Arguments);
-                channel.QueueDeclare(_exchange.QueueName, _exchange.IsDurable, false, _exchange.IsAutoDelete, _exchange.Arguments);
-                channel.QueueBind(_exchange.QueueName, _exchange.Name, _exchange.RoutingKey, _exchange.Arguments);
+                    // first, declare the exchange and queue
+                    channel.ExchangeDeclare(_exchange.Name, _exchange.ExchangeType, _exchange.IsDurable,
+                        _exchange.IsAutoDelete, _exchange.Arguments);
+                    channel.QueueDeclare(_exchange.QueueName, _exchange.IsDurable, false, _exchange.IsAutoDelete,
+                        _exchange.Arguments);
+                    channel.QueueBind(_exchange.QueueName, _exchange.Name, _exchange.RoutingKey, _exchange.Arguments);
 
-                // next, create a basic consumer
-                QueueingBasicConsumer consumer = new QueueingBasicConsumer(channel);
+                    // next, create a basic consumer
+                    QueueingBasicConsumer consumer = new QueueingBasicConsumer(channel);
 
-                // and tell it to start consuming messages, storing the consumer tag
-                string consumerTag = channel.BasicConsume(_exchange.QueueName, false, consumer);
+                    // and tell it to start consuming messages, storing the consumer tag
+                    string consumerTag = channel.BasicConsume(_exchange.QueueName, false, consumer);
 
                 // signal the wait event that we've begun listening
                 startEvent.Set();
@@ -86,53 +97,75 @@ namespace amp.rabbit.dispatch
                     {
                         object result = null;
 
-                        if (false == consumer.Queue.Dequeue(100, out result)) { continue; }
-                        BasicDeliverEventArgs e = result as BasicDeliverEventArgs;
-                        if (null == e) { continue; }
-                        else { this.LogMessage(e); }
-
-                        IBasicProperties props = e.BasicProperties;
-
-                        Envelope env = new Envelope();
-                        env.SetReceiptTime(DateTime.Now);
-                        env.Payload = e.Body;
-                        foreach (DictionaryEntry entry in props.Headers)
-                        {
-                            try
+                            if (false == consumer.Queue.Dequeue(100, out result))
                             {
-                                string key = entry.Key as string;
-                                string value = Encoding.UTF8.GetString((byte[])entry.Value);
-                                _log.Debug("Adding header to envelope: {" + key + ":" + value + "}");
-
-                                env.Headers.Add(key, value);
+                                continue;
                             }
-                            catch { }
-                        }
+                            BasicDeliverEventArgs e = result as BasicDeliverEventArgs;
+                            if (null == e)
+                            {
+                                continue;
+                            }
+                            else
+                            {
+                                this.LogMessage(e);
+                            }
 
-                        if (this.ShouldRaiseEvent(_registration.Filter, env))
+                            IBasicProperties props = e.BasicProperties;
+
+                            Envelope env = new Envelope();
+                            env.SetReceiptTime(DateTime.Now);
+                            env.Payload = e.Body;
+                            foreach (DictionaryEntry entry in props.Headers)
+                            {
+                                try
+                                {
+                                    string key = entry.Key as string;
+                                    string value = Encoding.UTF8.GetString((byte[]) entry.Value);
+                                    _log.Debug("Adding header to envelope: {" + key + ":" + value + "}");
+
+                                    env.Headers.Add(key, value);
+                                }
+                                catch { }
+                            }
+
+                            if (this.ShouldRaiseEvent(_registration.Filter, env))
+                            {
+                                RabbitEnvelopeDispatcher dispatcher = new RabbitEnvelopeDispatcher(_registration, env,
+                                    channel, e.DeliveryTag);
+                                this.Raise_OnEnvelopeReceivedEvent(dispatcher);
+                            }
+                        }
+                        catch (AlreadyClosedException)
                         {
-                            RabbitEnvelopeDispatcher dispatcher = new RabbitEnvelopeDispatcher(_registration, env, channel, e.DeliveryTag);
-                            this.Raise_OnEnvelopeReceivedEvent(dispatcher);
+                            // The consumer was closed.
+                            _shouldContinue = false;
+                        }
+                        catch (OperationInterruptedException)
+                        {
+                            // The consumer was removed, either through
+                            // channel or connection closure, or through the
+                            // action of IModel.BasicCancel().
+                            _shouldContinue = false;
+                        }
+                        catch(Exception ex)
+                        {
+                            _log.Error("Error trying to poll the queue.", ex);
                         }
                     }
-                    catch (OperationInterruptedException)
-                    {
-                        // The consumer was removed, either through
-                        // channel or connection closure, or through the
-                        // action of IModel.BasicCancel().
-                        _shouldContinue = false;
-                    }
-                    catch { }
+                    _log.Debug("No longer listening for events");
+
+                    try { channel.BasicCancel(consumerTag); }
+                    catch (OperationInterruptedException) { }
                 }
-                _log.Debug("No longer listening for events");
-
-                try { channel.BasicCancel(consumerTag); }
-                catch (OperationInterruptedException) { }
             }
+            finally
+            {
+                _stoppedListeningEvent.Set();
 
-            _log.Debug("Leave Listen");
+                _log.Debug("Leave Listen");
+            }
         }
-        
 
         private void Handle_OnModelShutdown(IModel model, ShutdownEventArgs reason)
         {
