@@ -7,16 +7,16 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import amp.bus.IEnvelopeDispatcher;
 import amp.bus.IEnvelopeReceivedCallback;
-import amp.rabbit.IListenerCloseCallback;
-import amp.rabbit.IRabbitChannelFactory;
-import amp.rabbit.ReconnectOnConnectionErrorCallback;
 import cmf.bus.IEnvelopeReceiver;
 import cmf.bus.IRegistration;
 import com.rabbitmq.client.Channel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import amp.rabbit.RabbitListener;
+import amp.rabbit.connection.IRabbitChannelFactory;
+import amp.rabbit.connection.ReconnectOnConnectionErrorCallback;
+import amp.rabbit.dispatch.IListenerCloseCallback;
+import amp.rabbit.dispatch.RabbitListener;
 import amp.rabbit.topology.Exchange;
 import amp.rabbit.topology.ITopologyService;
 import amp.rabbit.topology.RouteInfo;

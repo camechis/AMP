@@ -1,4 +1,4 @@
-package amp.rabbit;
+package amp.rabbit.dispatch;
 
 
 public enum DeliveryOutcomes {

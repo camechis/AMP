@@ -1,6 +1,6 @@
 package amp.rabbit.transport;
 
-import amp.rabbit.IRabbitChannelFactory;
+import amp.rabbit.connection.IRabbitChannelFactory;
 import amp.rabbit.topology.Exchange;
 import amp.rabbit.topology.ITopologyService;
 import amp.rabbit.topology.RouteInfo;

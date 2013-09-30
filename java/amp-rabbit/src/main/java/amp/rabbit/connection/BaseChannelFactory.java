@@ -1,4 +1,4 @@
-package amp.rabbit;
+package amp.rabbit.connection;
 
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;

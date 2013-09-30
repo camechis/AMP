@@ -1,5 +1,7 @@
-package amp.rabbit;
+package amp.rabbit.connection;
 
+
+import amp.rabbit.dispatch.RabbitListener;
 
 import com.rabbitmq.client.Channel;
 import org.slf4j.Logger;
