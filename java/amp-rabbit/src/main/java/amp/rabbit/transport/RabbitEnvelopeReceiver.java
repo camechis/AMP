@@ -103,7 +103,7 @@ public class RabbitEnvelopeReceiver implements IEnvelopeReceiver {
     protected RabbitListener createListener(IRegistration registration, Exchange exchange) throws Exception {
 
         // create a channel
-        Channel channel = _channelFactory.getChannelFor(exchange);
+        Channel channel = _channelFactory.getConnectionFor(exchange).createChannel();
 
         // create a listener
         RabbitListener listener = this.getListener(registration, exchange);

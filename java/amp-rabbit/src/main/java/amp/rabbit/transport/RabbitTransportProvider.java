@@ -121,7 +121,7 @@ public class RabbitTransportProvider implements ITransportProvider {
             Channel channel = null;
 
             try {
-                channel = channelFactory.getChannelFor(ex);
+                channel = channelFactory.getConnectionFor(ex).createChannel();
 
                 BasicProperties props = new BasicProperties.Builder().build();
 
@@ -233,7 +233,7 @@ public class RabbitTransportProvider implements ITransportProvider {
 			IRegistration registration, Exchange exchange) throws Exception {
     	
         // create a channel
-        Channel channel = channelFactory.getChannelFor(exchange);
+        Channel channel = channelFactory.getConnectionFor(exchange).createChannel();
 
         // create a listener
         RabbitListener listener = this.getListener(registration, exchange);

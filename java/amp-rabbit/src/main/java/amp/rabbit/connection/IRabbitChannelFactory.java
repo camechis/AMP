@@ -2,12 +2,11 @@ package amp.rabbit.connection;
 
 
 import cmf.bus.IDisposable;
-import com.rabbitmq.client.Channel;
 
 import amp.rabbit.topology.Exchange;
 
 
 public interface IRabbitChannelFactory extends IDisposable {
 
-	Channel getChannelFor(Exchange exchange) throws Exception;
+	ConnectionManager getConnectionFor(Exchange exchange) throws Exception;
 }

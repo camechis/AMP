@@ -61,7 +61,7 @@ public class RabbitEnvelopeSender implements IEnvelopeSender {
             Channel channel = null;
 
             try {
-                channel = _channelFactory.getChannelFor(ex);
+                channel = _channelFactory.getConnectionFor(ex).createChannel();
 
                 AMQP.BasicProperties props = new AMQP.BasicProperties.Builder().build();
 

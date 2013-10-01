@@ -1,11 +1,8 @@
 package amp.rabbit.connection;
 
-import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 
 import cmf.bus.IDisposable;
-import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 
 import org.slf4j.Logger;
@@ -28,7 +25,7 @@ public abstract class BaseChannelFactory implements IRabbitChannelFactory, IDisp
 
 	public static int HEARTBEAT_INTERVAL = 2;
 
-	protected ConcurrentHashMap<Exchange, Connection> pooledConnections = new ConcurrentHashMap<Exchange, Connection>();
+	protected ConcurrentHashMap<Exchange, ConnectionManager> pooledManagers = new ConcurrentHashMap<Exchange, ConnectionManager>();
 	
 	/**
 	 * Create a new instance of the ChannelFactory using the "SameBrokerStrategy"
@@ -45,15 +42,15 @@ public abstract class BaseChannelFactory implements IRabbitChannelFactory, IDisp
 		HEARTBEAT_INTERVAL = interval;
 	}
 	
-	private Connection getConnection(Exchange exchange) throws Exception {
+	private ConnectionManager createConnectionManager(Exchange exchange) throws Exception {
 
-        log.debug("Getting connection for exchange: {}", exchange.toString());
+        log.debug("Creating connection manager for exchange: {}", exchange.toString());
 
 		ConnectionFactory factory = new ConnectionFactory();
 
 		configureConnectionFactory(factory, exchange);
 		
-        return factory.newConnection();
+        return new ConnectionManager(factory);
 	}
 	
 	/**
@@ -75,28 +72,27 @@ public abstract class BaseChannelFactory implements IRabbitChannelFactory, IDisp
 	 * @return an AMQP Channel
 	 */
 	@Override
-	public synchronized Channel getChannelFor(Exchange exchange) throws Exception {
+	public synchronized ConnectionManager getConnectionFor(Exchange exchange) throws Exception {
 		
-		log.trace("Getting channel for exchange: {}", exchange);
+		log.trace("Getting connection manager for exchange: {}", exchange);
 		
-		Connection connection = null;
+		ConnectionManager manager = null;
 		
-		if (pooledConnections.containsKey(exchange)){
+		if (pooledManagers.containsKey(exchange)){
 			
-			connection = pooledConnections.get(exchange);
+			manager = pooledManagers.get(exchange);
 		}
 		else {
 			
-			connection = this.getConnection(exchange);
+			manager = this.createConnectionManager(exchange);
 			
-			pooledConnections.put(exchange, connection);
+			pooledManagers.put(exchange, manager);
 		}
 			
-		connection.addShutdownListener(new RabbitConnectionShutdownListener(this, exchange));
+		//TODO: Fixing soon...
+		//connection.addShutdownListener(new RabbitConnectionShutdownListener(this, exchange));
 			
-		Channel channel = connection.createChannel();
-		
-		return channel;
+		return manager;
 	}
 	
 	/**
@@ -106,7 +102,7 @@ public abstract class BaseChannelFactory implements IRabbitChannelFactory, IDisp
 	 */
 	public boolean removeConnection(Exchange exchange){
 		
-		Connection connection = pooledConnections.remove(exchange);
+		ConnectionManager connection = pooledManagers.remove(exchange);
 		
 		return connection != null;
 	}
@@ -117,16 +113,10 @@ public abstract class BaseChannelFactory implements IRabbitChannelFactory, IDisp
 	@Override
 	public void dispose() {
 		
-		for (Connection connection : this.pooledConnections.values()){
-			
-			try {
+		for (ConnectionManager connection : this.pooledManagers.values()){
 				
-				connection.close();
+			connection.dispose();
 				
-			} catch (IOException e) {
-				
-				log.error("Problem closing connection: {}", e);
-			}
 		}
 	}
 }
