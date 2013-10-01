@@ -20,7 +20,6 @@ import amp.bus.IEnvelopeDispatcher;
 import amp.bus.IEnvelopeReceivedCallback;
 import amp.bus.ITransportProvider;
 import amp.rabbit.connection.IRabbitConnectionFactory;
-import amp.rabbit.connection.ReconnectOnConnectionErrorCallback;
 import amp.rabbit.dispatch.IListenerCloseCallback;
 import amp.rabbit.dispatch.RabbitListener;
 import amp.rabbit.topology.Exchange;
@@ -232,9 +231,6 @@ public class RabbitTransportProvider implements ITransportProvider {
     protected RabbitListener createListener(
 			IRegistration registration, Exchange exchange) throws Exception {
     	
-        // create a channel
-        Channel channel = channelFactory.getConnectionFor(exchange).createChannel();
-
         // create a listener
         RabbitListener listener = this.getListener(registration, exchange);
 
@@ -256,10 +252,8 @@ public class RabbitTransportProvider implements ITransportProvider {
                 listeners.remove(registration);
             }
         });
-        
-        listener.onConnectionError(new ReconnectOnConnectionErrorCallback(channelFactory));
 
-        listener.start(channel);
+        listener.start();
     		
         return listener;
     }
@@ -273,10 +267,11 @@ public class RabbitTransportProvider implements ITransportProvider {
      * @param exchange Routing Information
      * @return Listener that will pull messages from the broker and call the handlers
      * on the registration.
+     * @throws Exception 
      */
-    protected RabbitListener getListener(IRegistration registration, Exchange exchange) {
+    protected RabbitListener getListener(IRegistration registration, Exchange exchange) throws Exception {
     		
-        return new RabbitListener(registration, exchange);
+        return new RabbitListener(registration, exchange, channelFactory.getConnectionFor(exchange));
     }
 
     /**
