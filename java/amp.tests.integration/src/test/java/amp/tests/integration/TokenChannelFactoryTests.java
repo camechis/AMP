@@ -7,7 +7,7 @@ import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 import com.rabbitmq.client.ConnectionFactory;
 
-import amp.rabbit.connection.TokenChannelFactory;
+import amp.rabbit.connection.TokenConnectionFactory;
 import amp.rabbit.topology.Exchange;
 
 import static org.mockito.Mockito.*;
@@ -16,12 +16,12 @@ import static org.hamcrest.Matchers.*;
 public class TokenChannelFactoryTests {
     
 	protected static FileSystemXmlApplicationContext context;
-	protected static TokenChannelFactory factory;
+	protected static TokenConnectionFactory factory;
 	
 	@BeforeClass
 	public static void BeforeAllTests(){
-		context = new FileSystemXmlApplicationContext(Config.Authorization.AnubisTwoWaySsl, Config.Topology.GtsSSL);
-		factory = (TokenChannelFactory) context.getBean("channelFactory");
+		context = new FileSystemXmlApplicationContext(Config.Authorization.AnubisBasic, Config.Topology.Simple);
+		factory = (TokenConnectionFactory) context.getBean("channelFactory");
 	}
 	
 	@AfterClass

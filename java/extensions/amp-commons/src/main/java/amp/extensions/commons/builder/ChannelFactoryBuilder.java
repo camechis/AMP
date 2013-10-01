@@ -1,7 +1,7 @@
 package amp.extensions.commons.builder;
 
-import amp.rabbit.connection.BasicChannelFactory;
-import amp.rabbit.connection.CertificateChannelFactory;
+import amp.rabbit.connection.BasicConnectionFactory;
+import amp.rabbit.connection.CertificateConnectionFactory;
 
 /**
  * Build up a Channel Factory.
@@ -31,7 +31,7 @@ public class ChannelFactoryBuilder extends FluentExtension {
 	 */
 	public TransportBuilder basicAuth(String username, String password){
 		
-		BasicChannelFactory channelFactory = new BasicChannelFactory(username, password);
+		BasicConnectionFactory channelFactory = new BasicConnectionFactory(username, password);
 		
 		this.transportBuilder.setChannelFactory(channelFactory);
 		
@@ -48,8 +48,8 @@ public class ChannelFactoryBuilder extends FluentExtension {
 	public TransportBuilder sslAuth(
 		String pathToClientCert, String certPassword, String pathToTrustStore){
 		
-		CertificateChannelFactory channelFactory =
-			new CertificateChannelFactory(pathToClientCert, certPassword, pathToTrustStore);
+		CertificateConnectionFactory channelFactory =
+			new CertificateConnectionFactory(pathToClientCert, certPassword, pathToTrustStore);
 		
 		this.transportBuilder.setChannelFactory(channelFactory);
 		

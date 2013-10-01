@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
 import amp.bus.IEnvelopeDispatcher;
 import amp.bus.IEnvelopeReceivedCallback;
 import amp.bus.ITransportProvider;
-import amp.rabbit.connection.IRabbitChannelFactory;
+import amp.rabbit.connection.IRabbitConnectionFactory;
 import amp.rabbit.connection.ReconnectOnConnectionErrorCallback;
 import amp.rabbit.dispatch.IListenerCloseCallback;
 import amp.rabbit.dispatch.RabbitListener;
@@ -38,7 +38,7 @@ public class RabbitTransportProvider implements ITransportProvider {
 
     private static final Logger LOG = LoggerFactory.getLogger(RabbitTransportProvider.class);
 
-    protected IRabbitChannelFactory channelFactory;
+    protected IRabbitConnectionFactory channelFactory;
     protected List<IEnvelopeReceivedCallback> envCallbacks = new ArrayList<IEnvelopeReceivedCallback>();
     protected ConcurrentHashMap<IRegistration, RabbitListener> listeners = new ConcurrentHashMap<IRegistration, RabbitListener>();
     protected ITopologyService topologyService;
@@ -53,7 +53,7 @@ public class RabbitTransportProvider implements ITransportProvider {
      */
     public RabbitTransportProvider(
             ITopologyService topologyService,
-            IRabbitChannelFactory channelFactory,
+            IRabbitConnectionFactory channelFactory,
             IRoutingInfoCache routingInfoCache) {
 	
 		this.topologyService = topologyService;

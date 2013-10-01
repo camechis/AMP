@@ -5,11 +5,11 @@ import amp.rabbit.dispatch.RabbitListener;
 
 public class ReconnectOnConnectionErrorCallback implements IOnConnectionErrorCallback {
 
-	protected IRabbitChannelFactory channelFactory = null;
+	protected IRabbitConnectionFactory channelFactory = null;
 
 	
 	public ReconnectOnConnectionErrorCallback(
-			IRabbitChannelFactory channelFactory) {
+			IRabbitConnectionFactory channelFactory) {
 		
 		this.channelFactory = channelFactory;
 	}

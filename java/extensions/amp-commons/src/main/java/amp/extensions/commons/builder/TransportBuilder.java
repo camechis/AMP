@@ -3,7 +3,7 @@ package amp.extensions.commons.builder;
 import amp.bus.ITransportProvider;
 import amp.commanding.DefaultCommandReceiver;
 import amp.commanding.ICommandReceiver;
-import amp.rabbit.connection.IRabbitChannelFactory;
+import amp.rabbit.connection.IRabbitConnectionFactory;
 import amp.rabbit.topology.ITopologyService;
 import amp.rabbit.transport.CommandableCache;
 import amp.rabbit.transport.IRoutingInfoCache;
@@ -20,7 +20,7 @@ public class TransportBuilder extends FluentExtension {
 
     //-- Fields --//
 	ITopologyService topologyService = null;
-	IRabbitChannelFactory channelFactory = null;
+	IRabbitConnectionFactory channelFactory = null;
 	ITransportProvider transportProvider = null;
     IRoutingInfoCache routingInfoCache = null;
 
@@ -40,7 +40,7 @@ public class TransportBuilder extends FluentExtension {
      * Set the Channel Factory.
      * @param channelFactory Channel Factory to use.
      */
-    public void setChannelFactory(IRabbitChannelFactory channelFactory){
+    public void setChannelFactory(IRabbitConnectionFactory channelFactory){
 
         this.channelFactory = channelFactory;
     }

@@ -1,6 +1,6 @@
 package amp.rabbit.transport;
 
-import amp.rabbit.connection.IRabbitChannelFactory;
+import amp.rabbit.connection.IRabbitConnectionFactory;
 import amp.rabbit.topology.Exchange;
 import amp.rabbit.topology.ITopologyService;
 import amp.rabbit.topology.RouteInfo;
@@ -27,10 +27,10 @@ public class RabbitEnvelopeSender implements IEnvelopeSender {
     private static final Logger LOG = LoggerFactory.getLogger(RabbitEnvelopeSender.class);
 
     private ITopologyService _topologyService;
-    private IRabbitChannelFactory _channelFactory;
+    private IRabbitConnectionFactory _channelFactory;
 
 
-    public RabbitEnvelopeSender(ITopologyService topologyService, IRabbitChannelFactory channelFactory) {
+    public RabbitEnvelopeSender(ITopologyService topologyService, IRabbitConnectionFactory channelFactory) {
 
         _topologyService = topologyService;
         _channelFactory = channelFactory;

@@ -27,7 +27,7 @@ import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.DefaultSaslConfig;
 
 
-public class CertificateChannelFactory extends BaseChannelFactory {
+public class CertificateConnectionFactory extends BaseConnectionFactory {
 
 
     protected Logger log;
@@ -35,8 +35,7 @@ public class CertificateChannelFactory extends BaseChannelFactory {
     protected String keystore;
     protected String truststore;
 
-
-    public CertificateChannelFactory(String keystore, String keystorePassword, String truststore) {
+    public CertificateConnectionFactory(String keystore, String keystorePassword, String truststore) {
 
         log = LoggerFactory.getLogger(this.getClass());
         this.keystore = keystore;
@@ -107,7 +106,7 @@ public class CertificateChannelFactory extends BaseChannelFactory {
 
         if (!keystoreFile.exists()) {
             // try to find it on the classpath
-            URL url = CertificateChannelFactory.class.getResource(path);
+            URL url = CertificateConnectionFactory.class.getResource(path);
             keystoreFile = (null != url) ? new File(url.toURI()) : new File(path);
         }
 

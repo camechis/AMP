@@ -6,12 +6,12 @@ import amp.rabbit.topology.Exchange;
 import com.rabbitmq.client.ConnectionFactory;
 
 
-public class BasicChannelFactory extends BaseChannelFactory {
+public class BasicConnectionFactory extends BaseConnectionFactory {
 
 	protected String username;
 	protected String password;
 	
-	public BasicChannelFactory(String username, String password) {
+	public BasicConnectionFactory(String username, String password) {
 		
 		super();
 

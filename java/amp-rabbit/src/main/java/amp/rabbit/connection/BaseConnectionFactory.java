@@ -19,7 +19,7 @@ import amp.rabbit.topology.Exchange;
  * @author Richard Clayton (Berico Technologies)
  *
  */
-public abstract class BaseChannelFactory implements IRabbitChannelFactory, IDisposable {
+public abstract class BaseConnectionFactory implements IRabbitConnectionFactory, IDisposable {
 
     protected Logger log;
 
@@ -30,7 +30,7 @@ public abstract class BaseChannelFactory implements IRabbitChannelFactory, IDisp
 	/**
 	 * Create a new instance of the ChannelFactory using the "SameBrokerStrategy"
 	 */
-	public BaseChannelFactory() {
+	public BaseConnectionFactory() {
         log = LoggerFactory.getLogger(this.getClass());
 	}
 	

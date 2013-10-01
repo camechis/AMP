@@ -14,13 +14,13 @@ public class ConnectionRemediator extends Thread {
 	private static final Logger logger = LoggerFactory.getLogger(ConnectionRemediator.class);
 	
 	private RabbitListener listener;
-	private IRabbitChannelFactory channelFactory;
+	private IRabbitConnectionFactory channelFactory;
     private boolean keepTrying = true;
 
 	
 	public ConnectionRemediator(
 			RabbitListener listener,
-			IRabbitChannelFactory channelFactory) {
+			IRabbitConnectionFactory channelFactory) {
 		
 		this.listener = listener;
 		this.channelFactory = channelFactory;
@@ -28,7 +28,7 @@ public class ConnectionRemediator extends Thread {
 	
 	public ConnectionRemediator(
 			RabbitListener listener,
-			IRabbitChannelFactory channelFactory,
+			IRabbitConnectionFactory channelFactory,
 			long retryInterval) {
 		
 		this.listener = listener;

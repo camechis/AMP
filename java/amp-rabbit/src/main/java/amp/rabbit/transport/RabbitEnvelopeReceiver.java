@@ -13,7 +13,7 @@ import com.rabbitmq.client.Channel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import amp.rabbit.connection.IRabbitChannelFactory;
+import amp.rabbit.connection.IRabbitConnectionFactory;
 import amp.rabbit.connection.ReconnectOnConnectionErrorCallback;
 import amp.rabbit.dispatch.IListenerCloseCallback;
 import amp.rabbit.dispatch.RabbitListener;
@@ -33,12 +33,12 @@ public class RabbitEnvelopeReceiver implements IEnvelopeReceiver {
     private static final Logger LOG = LoggerFactory.getLogger(RabbitEnvelopeReceiver.class);
 
     private ITopologyService _topologyService;
-    private IRabbitChannelFactory _channelFactory;
+    private IRabbitConnectionFactory _channelFactory;
     private ConcurrentHashMap<IRegistration, RabbitListener> _listeners;
 
 
 
-    public RabbitEnvelopeReceiver(ITopologyService topologyService, IRabbitChannelFactory channelFactory) {
+    public RabbitEnvelopeReceiver(ITopologyService topologyService, IRabbitConnectionFactory channelFactory) {
 
         _topologyService = topologyService;
         _channelFactory = channelFactory;
