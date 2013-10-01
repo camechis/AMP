@@ -44,12 +44,10 @@
         <dependency>
             <groupId>cmf</groupId>
             <artifactId>cmf.bus</artifactId>
-            <version>${cmf.version}</version>
         </dependency>
         <dependency>
             <groupId>cmf</groupId>
             <artifactId>cmf.eventing</artifactId>
-            <version>${cmf.version}</version>
         </dependency>
         <dependency>
             <groupId>amp</groupId>
@@ -80,13 +78,11 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.10</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
-            <version>1.9.5</version>
             <scope>test</scope>
         </dependency>
         <dependency>
