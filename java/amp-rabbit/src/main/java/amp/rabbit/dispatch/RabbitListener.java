@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.Semaphore;
 
 import cmf.bus.Envelope;
 import cmf.bus.IDisposable;
@@ -16,6 +17,7 @@ import com.rabbitmq.client.AlreadyClosedException;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.LongString;
 import com.rabbitmq.client.QueueingConsumer;
+import com.rabbitmq.client.ShutdownListener;
 import com.rabbitmq.client.QueueingConsumer.Delivery;
 import com.rabbitmq.client.ShutdownSignalException;
 import org.joda.time.DateTime;
@@ -56,7 +58,7 @@ public class RabbitListener implements IDisposable, Runnable {
     protected boolean shouldContinue;
     protected Thread threadImRunningOn = null;
     protected CountDownLatch threadStartSignal = new CountDownLatch(1);
-
+    protected Semaphore isListeningSemaphore = new Semaphore(1);
 
     /**
      * Get the Exchange this listener is listening to.
@@ -249,11 +251,21 @@ public class RabbitListener implements IDisposable, Runnable {
     	
 		log.debug("Enter startListening");
         
-		// Our flag to determine whether we are still looping
+        //Don't start listining until last invocation has stopped.  
+        try {
+			isListeningSemaphore.acquire();
+		} catch (InterruptedException e) {
+			log.warn("Interupted before aquire. Exiting startListening.");
+			return;
+		}
+        log.debug("Proceeding...");
+
+        // Our flag to determine whether we are still looping
         shouldContinue = true;
 
         try {
         	Channel channel = connectionManager.createChannel();
+        	channel.addShutdownListener(new ChannelShutdownHandler());
         	
 	    	try{
         		// first, declare the exchange and queue
@@ -337,6 +349,8 @@ public class RabbitListener implements IDisposable, Runnable {
         catch (Exception ex) {
         	
             log.error("Caught an exception that will cause the listener to not listen for messages", ex);
+        } finally {
+        	isListeningSemaphore.release();
         }
         
         // Let everyone know we've stopped listening
@@ -449,5 +463,23 @@ public class RabbitListener implements IDisposable, Runnable {
     protected void finalize() {
     		
         dispose();
+    }
+    
+    private class ChannelShutdownHandler implements ShutdownListener {
+
+		@Override
+		public void shutdownCompleted(ShutdownSignalException cause) {
+            log.debug("Enter shutdownCompleted handler, isInitiatedByApplication: " + cause.isInitiatedByApplication());
+            
+            shouldContinue = false;
+            
+            //If we the shutdown wasn't deliberate on our part, attempt to restart
+            if (!cause.isInitiatedByApplication())
+            {
+            	start();
+            }
+            
+            log.debug("Leave shutdownCompleted handler.");		
+        }
     }
 }
