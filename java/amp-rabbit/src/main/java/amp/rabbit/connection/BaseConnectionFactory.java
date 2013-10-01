@@ -42,7 +42,7 @@ public abstract class BaseConnectionFactory implements IRabbitConnectionFactory,
 		HEARTBEAT_INTERVAL = interval;
 	}
 	
-	private ConnectionManager createConnectionManager(Exchange exchange) throws Exception {
+	protected ConnectionManager createConnectionManager(Exchange exchange) throws Exception {
 
         log.debug("Creating connection manager for exchange: {}", exchange.toString());
 
