@@ -40,6 +40,7 @@ public class ConnectionManagementTests {
 	
     private List<Connection> _connections;
     private List<Channel> _channels;
+    private Map<Connection, List<ShutdownListener>> _connectionsListeners;
     private Map<Channel, List<ShutdownListener>> _channelListeners;
     private ConnectionFactory _rmqFactory;
     
@@ -49,6 +50,7 @@ public class ConnectionManagementTests {
 	public void setUp() throws Exception {
 
         _connections = new ArrayList<Connection>();
+        _connectionsListeners = new HashMap<Connection, List<ShutdownListener>>();
         _channels = new ArrayList<Channel>();
         _channelListeners = new HashMap<Channel, List<ShutdownListener>>();
         _rmqFactory = mock(ConnectionFactory.class);
@@ -57,32 +59,43 @@ public class ConnectionManagementTests {
 			@Override
 			public Object answer(InvocationOnMock invocation) throws Throwable {
 				
-		           Connection connection = mock(Connection.class);
-		            _connections.add(connection);
+	           Connection connection = mock(Connection.class);
+	            _connections.add(connection);
+	            _connectionsListeners.put(connection, new ArrayList<ShutdownListener>());
 
-		            when(connection.createChannel()).thenAnswer(new Answer() {
-						@Override
-						public Object answer(InvocationOnMock invocation) throws Throwable {
-							
-			                Channel channel = mock(Channel.class);
-			                _channels.add(channel);
-			                _channelListeners.put(channel, new ArrayList<ShutdownListener>());
-			                
-			                doAnswer( new Answer(){
+                doAnswer( new Answer(){
 
-								@Override
-								public Object answer(InvocationOnMock invocation)
-										throws Throwable {
-									_channelListeners.get((Channel)invocation.getMock())
-										.add((ShutdownListener)invocation.getArguments()[0]);
-									return null;
-								}}).when(channel).addShutdownListener(org.mockito.Mockito.any(ShutdownListener.class));
-			                
-			                return channel;
-			             }
-		            });
+					@Override
+					public Object answer(InvocationOnMock invocation)
+							throws Throwable {
+						_connectionsListeners.get((Connection)invocation.getMock())
+							.add((ShutdownListener)invocation.getArguments()[0]);
+						return null;
+					}}).when(connection).addShutdownListener(org.mockito.Mockito.any(ShutdownListener.class));
 
-			        return connection;
+                when(connection.createChannel()).thenAnswer(new Answer() {
+					@Override
+					public Object answer(InvocationOnMock invocation) throws Throwable {
+						
+		                Channel channel = mock(Channel.class);
+		                _channels.add(channel);
+		                _channelListeners.put(channel, new ArrayList<ShutdownListener>());
+		                
+		                doAnswer( new Answer(){
+
+							@Override
+							public Object answer(InvocationOnMock invocation)
+									throws Throwable {
+								_channelListeners.get((Channel)invocation.getMock())
+									.add((ShutdownListener)invocation.getArguments()[0]);
+								return null;
+							}}).when(channel).addShutdownListener(org.mockito.Mockito.any(ShutdownListener.class));
+		                
+		                return channel;
+		             }
+	            });
+
+		        return connection;
 	               
             }
         });
@@ -100,10 +113,7 @@ public class ConnectionManagementTests {
 	@Test
     public void Send_should_create_a_connection_and_a_channel() throws Exception {
 		
-        Envelope env = new Envelope();
-        env.setHeader(EnvelopeHeaderConstants.MESSAGE_TOPIC, "testing");
-
-        _transport.send(env);
+        sendMessage();
 
         verify(_rmqFactory).newConnection();
         verify(_connections.get(0)).createChannel();
@@ -141,7 +151,49 @@ public class ConnectionManagementTests {
         verify(_connections.get(0), times(1)).createChannel();
     }
 
-	private void registerNullHandler() throws Exception {
+	@Test
+    public void Register_should_restart_on_new_connection_if_connection_fails() throws Exception {
+		registerNullHandler();
+
+		simulateConnectionClosure(false);
+
+        verify(_rmqFactory, timeout(250).times(2)).newConnection();
+        verify(_connections.get(0), times(1)).createChannel();
+        verify(_connections.get(1), timeout(100).times(1)).createChannel();
+    }
+
+	@Test
+    public void Register_should_not_restart_if_connection_is_closed_by_application() throws Exception {
+		registerNullHandler();
+
+        simulateConnectionClosure(true);
+
+        Thread.sleep(250); //wait long enough that if it was going to restart it would have.
+
+        verify(_rmqFactory, times(1)).newConnection();
+    }
+
+	@Test
+    public void Closing_the_transport_should_close_all_connections() throws Exception {
+        
+		sendMessage();
+        registerNullHandler();
+
+        _transport.dispose();
+
+        for(Connection connection : _connections) {
+            verify(connection).close();
+        }
+    }
+
+	private void sendMessage() throws Exception {
+		Envelope env = new Envelope();
+        env.setHeader(EnvelopeHeaderConstants.MESSAGE_TOPIC, "testing");
+
+        _transport.send(env);
+	}
+    
+    private void registerNullHandler() throws Exception {
 		Envelope env = new Envelope();
         env.setHeader(EnvelopeHeaderConstants.MESSAGE_TOPIC, "testing");
 
@@ -165,6 +217,17 @@ public class ConnectionManagementTests {
     	}
     }
 
+    private void simulateConnectionClosure(boolean initiatedByApplication) {
+    	
+    	waitAtMost(250, TimeUnit.MILLISECONDS).untilCall(to(_channels).size(), is(1));
+
+        ShutdownSignalException ex = new ShutdownSignalException(false, initiatedByApplication, null, null);
+
+    	for(ShutdownListener listener : _connectionsListeners.get(_connections.get(0))){
+    		listener.shutdownCompleted(ex);
+    	}
+    }
+    
     private static class TestConnectionFactory extends BaseConnectionFactory {
     	
         private final ConnectionFactory _factory;

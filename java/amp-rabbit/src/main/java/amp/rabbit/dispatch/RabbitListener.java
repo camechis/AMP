@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import amp.bus.EnvelopeHelper;
 import amp.bus.IEnvelopeReceivedCallback;
 import amp.rabbit.connection.ConnectionManager;
+import amp.rabbit.connection.IConnectionEventHandler;
 import amp.rabbit.topology.Exchange;
 
 
@@ -59,6 +60,7 @@ public class RabbitListener implements IDisposable, Runnable {
     protected Thread threadImRunningOn = null;
     protected CountDownLatch threadStartSignal = new CountDownLatch(1);
     protected Semaphore isListeningSemaphore = new Semaphore(1);
+    protected boolean connectionClosed;
 
     /**
      * Get the Exchange this listener is listening to.
@@ -88,6 +90,7 @@ public class RabbitListener implements IDisposable, Runnable {
         this.registration = registration;
         this.exchange = exchange;
         this.connectionManager = connectionManager;
+        connectionManager.addConnectionEventHandler(new ConnectionClosedHandler());
 
         log = LoggerFactory.getLogger(this.getClass());
     }
@@ -476,10 +479,48 @@ public class RabbitListener implements IDisposable, Runnable {
             //If we the shutdown wasn't deliberate on our part, attempt to restart
             if (!cause.isInitiatedByApplication())
             {
-            	start();
+            	log.debug("Attempting restart on new channel.");
+                //Move to a background thread so that rabbit can raise the connection closed event if that is the cause.
+                new Thread( new Runnable() {
+					
+					@Override
+					public void run() {
+	                   try {
+						Thread.sleep(100); //Give rabbit a chance to raise the connection closed event.
+					} catch (InterruptedException e) {
+						log.warn("Thread interupted while awaiting connection shutdown signal.  Aborting channel restart.");
+						return;
+					} 
+	                    
+                    if(connectionClosed)
+                        log.debug("Connection is clossed; aborting restart attempt.");
+                    else
+                        //Now restart only if the connection is not closed.  Otherwise we will restart in the OnConnectionReconnected event.
+                        start();
+ 					}
+				}).start();
             }
             
             log.debug("Leave shutdownCompleted handler.");		
         }
+    }
+    
+    private class ConnectionClosedHandler implements IConnectionEventHandler {
+
+		@Override
+		public void onConnectionClosed(boolean willAttemptToReconnect) {
+		   log.debug("Enter Handle_OnConnectionClosed, WillAttemptReopen: " + willAttemptToReconnect);
+		   connectionClosed = true;
+		   shouldContinue = false;
+		   log.debug("Leave Handle_OnConnectionClosed");
+		}
+
+		@Override
+		public void onConnectionReconnected() {
+            log.debug("Enter Handle_OnConnectionReconnected");
+            connectionClosed = false;
+            start();
+            log.debug("Leave Handle_OnConnectionReconnected");
+		}
     }
 }
