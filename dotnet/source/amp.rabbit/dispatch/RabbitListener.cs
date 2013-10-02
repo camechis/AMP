@@ -24,12 +24,13 @@ namespace amp.rabbit.dispatch
 
 
         protected IRegistration _registration;
-        protected bool _shouldContinue;
+        protected volatile bool _shouldContinue;
+        protected volatile bool _isRunning;
         protected ILog _log;
         protected Exchange _exchange;
         protected ConnectionManager _connectionManager;
         protected ManualResetEvent startEvent;
-        protected ManualResetEvent _stoppedListeningEvent = new ManualResetEvent(true);
+        protected ManualResetEvent _stoppedListeningEvent;
         protected bool _connectionClosed;
 
 
@@ -41,6 +42,7 @@ namespace amp.rabbit.dispatch
             _connectionManager = connectionManager;
             _connectionManager.ConnectionClosed += Handle_OnConnectionClosed;
             _connectionManager.ConnectionReconnected += Handle_OnConnectionReconnected;
+            _stoppedListeningEvent = new ManualResetEvent(true);
 
             _log = LogManager.GetLogger(this.GetType());
         }
@@ -55,10 +57,18 @@ namespace amp.rabbit.dispatch
         private void Start()
         {
             _log.Debug("Enter Start");
+            _isRunning = true;
             //Do actuall listening on a bacground thread.
             Thread listenerThread = new Thread(Listen);
             listenerThread.Name = string.Format("{0} on {1}:{2}{3}", _exchange.QueueName, _exchange.HostName, _exchange.Port, _exchange.VirtualHost);
             listenerThread.Start();
+        }
+
+        private void Restart()
+        {
+            //Only restart if stop has not been called in the mean time (or conceivably, we never started to begin with).
+            if (_isRunning)
+                Start();
         }
 
         private void Listen()
@@ -192,7 +202,7 @@ namespace amp.rabbit.dispatch
                         _log.Debug("Connection is clossed; aborting restart attempt.");
                     else
                         //Now restart only if the connection is not closed.  Otherwise we will restart in the OnConnectionReconnected event.
-                        Start();
+                        Restart();
                 }).Start();
             }
             _log.Debug("Leave Handle_OnModelShutdown");
@@ -210,7 +220,7 @@ namespace amp.rabbit.dispatch
         {
             _log.Debug("Enter Handle_OnConnectionReconnected");
             _connectionClosed = false;
-            Start();
+            Restart();
             _log.Debug("Leave Handle_OnConnectionReconnected");
         }
 
@@ -218,6 +228,7 @@ namespace amp.rabbit.dispatch
         {
             _log.Debug("Enter Stop");
             _shouldContinue = false;
+            _isRunning = false; 
             _log.Debug("Leave Stop");
         }
 

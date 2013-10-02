@@ -56,10 +56,11 @@ public class RabbitListener implements IDisposable, Runnable {
     protected Exchange exchange;
     protected Logger log;
     protected IRegistration registration;
-    protected boolean shouldContinue;
+    protected volatile boolean shouldContinue;
+    protected volatile boolean isRunning;
     protected Thread threadImRunningOn = null;
     protected CountDownLatch threadStartSignal = new CountDownLatch(1);
-    protected Semaphore isListeningSemaphore = new Semaphore(1);
+    protected Semaphore isListeningSemaphore;
     protected boolean connectionClosed;
 
     /**
@@ -91,6 +92,7 @@ public class RabbitListener implements IDisposable, Runnable {
         this.exchange = exchange;
         this.connectionManager = connectionManager;
         connectionManager.addConnectionEventHandler(new ConnectionClosedHandler());
+        this.isListeningSemaphore = new Semaphore(1);
 
         log = LoggerFactory.getLogger(this.getClass());
     }
@@ -127,12 +129,24 @@ public class RabbitListener implements IDisposable, Runnable {
      * have set the Channel on the listener.
      */
     public void start() throws Exception {
-    	
-		threadImRunningOn = new Thread(this);
-		
-		threadImRunningOn.start();
+    	startOnNewThread();
 
-                threadStartSignal.await(30, TimeUnit.SECONDS);
+        threadStartSignal.await(30, TimeUnit.SECONDS);
+    }
+
+private void startOnNewThread() {
+	isRunning = true;
+	
+	threadImRunningOn = new Thread(this);
+	
+	threadImRunningOn.start();
+}
+    
+    private void restart() {
+    	if(isRunning){
+            //Only restart if stop has not been called in the mean time (or conceivably, we never started to begin with).
+    		startOnNewThread();
+    	}
     }
     
     public void bind(Channel channel, IRegistration registration, Exchange exchange) {
@@ -303,15 +317,16 @@ public class RabbitListener implements IDisposable, Runnable {
 	                // If the thread is interrupted (perhaps by Thread.stop())
 	                catch (InterruptedException interruptedException) {
 	                	
-	            		log.error("Listener interrupted...", interruptedException);
+	            		log.error("Listener interrupted.  Will stop listening.", interruptedException);
 	                    
 	            		// Thread was some how interrupted.  Stop loop.
-	                    this.stopListening();
+	                    shouldContinue = false;
 	                } 
 	                // If RabbitMQ sends the shutdown signal
 	                catch (ShutdownSignalException shutdownException) {
 	            			
-	                	this.stopListening();
+	            		log.warn("Listener ShutdownSignalException. Will stop listening.", shutdownException);
+	                	shouldContinue = false;
 	                } 
 	                // Otherwise, some other error occurred, probably in the dispatcher,
 	                // so we will make note of the error and continue looping.
@@ -437,6 +452,7 @@ public class RabbitListener implements IDisposable, Runnable {
         log.debug("Enter stopListening");
         
         shouldContinue = false;
+        isRunning = false;
         
         log.debug("Leave stopListening");
     }
@@ -496,7 +512,7 @@ public class RabbitListener implements IDisposable, Runnable {
                         log.debug("Connection is clossed; aborting restart attempt.");
                     else
                         //Now restart only if the connection is not closed.  Otherwise we will restart in the OnConnectionReconnected event.
-                        start();
+                        restart();
  					}
 				}).start();
             }
@@ -519,7 +535,7 @@ public class RabbitListener implements IDisposable, Runnable {
 		public void onConnectionReconnected() {
             log.debug("Enter Handle_OnConnectionReconnected");
             connectionClosed = false;
-            start();
+            restart();
             log.debug("Leave Handle_OnConnectionReconnected");
 		}
     }
