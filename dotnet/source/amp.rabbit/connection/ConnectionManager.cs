@@ -15,6 +15,7 @@ namespace amp.rabbit.connection
         private readonly ManualResetEvent _connectionEvent = new ManualResetEvent(true);
         private readonly ConnectionFactory _factory;
         private IConnection _connection;
+        private volatile bool _isDisposed;
         
         public delegate void ConnectionClosedEventHandler(bool willAttemtToReopen);
         public event ConnectionClosedEventHandler ConnectionClosed;
@@ -67,7 +68,7 @@ namespace amp.rabbit.connection
         {
             //TODO: Make timeout and attempt frequency configurable.
             DateTime endTime = DateTime.Now + TimeSpan.FromMinutes(5);
-            while (endTime > DateTime.Now)
+            while (!_isDisposed && endTime > DateTime.Now)
             {
                 try
                 {
@@ -98,7 +99,8 @@ namespace amp.rabbit.connection
                 }
             }
 
-            _log.Info("Failed to reconnect in the time allowed.  Will no longer attempt.");
+            if(!_isDisposed)
+                _log.Info("Failed to reconnect in the time allowed.  Will no longer attempt.");
             
             //release access to the connection. Better to let attempts fail that to have them hang.
             _connectionEvent.Set();
@@ -113,6 +115,8 @@ namespace amp.rabbit.connection
 
         public void Dispose()
         {
+            _isDisposed = true;
+
             if (_connection != null)
                 _connection.Close();
         }

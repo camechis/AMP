@@ -25,6 +25,7 @@ public class ConnectionManager implements IDisposable {
     private Connection _connection;
     private Semaphore _connectionAccessSemaphor;
     private List<IConnectionEventHandler> _eventHandlers = new ArrayList<IConnectionEventHandler>();
+    private volatile boolean _isDisposed;
     
     public ConnectionManager(ConnectionFactory factory) throws IOException {
         _factory = factory;
@@ -55,6 +56,8 @@ public class ConnectionManager implements IDisposable {
 
     @Override
 	public void dispose() {
+    	_isDisposed = true;
+    	
 		if(_connection != null){
 			try {
 				_connection.close();
@@ -111,7 +114,7 @@ public class ConnectionManager implements IDisposable {
 		public void run() {
             //TODO: Make timeout and attempt frequency configurable.
             DateTime endTime = DateTime.now().plusMinutes(5);
-            while (endTime.isAfterNow())
+            while (!_isDisposed && endTime.isAfterNow())
             {
                 try
                 {
@@ -143,7 +146,11 @@ public class ConnectionManager implements IDisposable {
 					}
                 }
             }
-            LOG.info("Failed to reconnect in the time allowed.  Will no longer attempt.");			
+            
+            if(!_isDisposed){
+                LOG.info("Failed to reconnect in the time allowed.  Will no longer attempt.");			
+            }
+            
             //release access to the connection. Better to let attempts fail that to have them hang.
             _connectionAccessSemaphor.release();
 		}
