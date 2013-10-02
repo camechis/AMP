@@ -25,7 +25,7 @@ public abstract class BaseConnectionFactory implements IRabbitConnectionFactory,
 
 	public static int HEARTBEAT_INTERVAL = 2;
 
-	protected ConcurrentHashMap<Exchange, ConnectionManager> pooledManagers = new ConcurrentHashMap<Exchange, ConnectionManager>();
+	protected ConcurrentHashMap<Exchange, IConnectionManager> pooledManagers = new ConcurrentHashMap<Exchange, IConnectionManager>();
 	
 	/**
 	 * Create a new instance of the ChannelFactory using the "SameBrokerStrategy"
@@ -42,7 +42,7 @@ public abstract class BaseConnectionFactory implements IRabbitConnectionFactory,
 		HEARTBEAT_INTERVAL = interval;
 	}
 	
-	protected ConnectionManager createConnectionManager(Exchange exchange) throws Exception {
+	protected IConnectionManager createConnectionManager(Exchange exchange) throws Exception {
 
         log.debug("Creating connection manager for exchange: {}", exchange.toString());
 
@@ -72,11 +72,11 @@ public abstract class BaseConnectionFactory implements IRabbitConnectionFactory,
 	 * @return an AMQP Channel
 	 */
 	@Override
-	public synchronized ConnectionManager getConnectionFor(Exchange exchange) throws Exception {
+	public synchronized IConnectionManager getConnectionFor(Exchange exchange) throws Exception {
 		
 		log.trace("Getting connection manager for exchange: {}", exchange);
 		
-		ConnectionManager manager = null;
+		IConnectionManager manager = null;
 		
 		if (pooledManagers.containsKey(exchange)){
 			
@@ -102,7 +102,7 @@ public abstract class BaseConnectionFactory implements IRabbitConnectionFactory,
 	 */
 	public boolean removeConnection(Exchange exchange){
 		
-		ConnectionManager connection = pooledManagers.remove(exchange);
+		IConnectionManager connection = pooledManagers.remove(exchange);
 		
 		return connection != null;
 	}
@@ -113,7 +113,7 @@ public abstract class BaseConnectionFactory implements IRabbitConnectionFactory,
 	@Override
 	public void dispose() {
 		
-		for (ConnectionManager connection : this.pooledManagers.values()){
+		for (IConnectionManager connection : this.pooledManagers.values()){
 				
 			connection.dispose();
 				

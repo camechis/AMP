@@ -27,8 +27,8 @@ import org.slf4j.LoggerFactory;
 
 import amp.bus.EnvelopeHelper;
 import amp.bus.IEnvelopeReceivedCallback;
-import amp.rabbit.connection.ConnectionManager;
 import amp.rabbit.connection.IConnectionEventHandler;
+import amp.rabbit.connection.IConnectionManager;
 import amp.rabbit.topology.Exchange;
 
 
@@ -52,7 +52,7 @@ public class RabbitListener implements IDisposable, Runnable {
     /**
      * Connection Error Listeners
      */
-    protected ConnectionManager connectionManager;
+    protected IConnectionManager connectionManager;
     protected Exchange exchange;
     protected Logger log;
     protected IRegistration registration;
@@ -86,7 +86,7 @@ public class RabbitListener implements IDisposable, Runnable {
      * @param exchange
      * @param connectionManager
      */
-    public RabbitListener(IRegistration registration, Exchange exchange, ConnectionManager connectionManager) {
+    public RabbitListener(IRegistration registration, Exchange exchange, IConnectionManager connectionManager) {
 
         this.registration = registration;
         this.exchange = exchange;

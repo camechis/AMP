@@ -237,7 +237,7 @@ public class ConnectionManagementTests {
         }
 
         @Override
-        protected ConnectionManager createConnectionManager(Exchange exchange) throws IOException {
+        protected IConnectionManager createConnectionManager(Exchange exchange) throws IOException {
             return new ConnectionManager(_factory);    
         }
     }

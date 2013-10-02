@@ -183,7 +183,7 @@ namespace amp.tests.rabbit.connection
                 _factory = factory;
             }
 
-            protected override ConnectionManager CreateConnectionManager(Exchange exchange)
+            protected override IConnectionManager CreateConnectionManager(Exchange exchange)
             {
                 return new ConnectionManager(_factory);    
             }

@@ -55,7 +55,7 @@ namespace amp.rabbit.transport
             foreach (Exchange ex in exchanges)
             {
                 Log.Debug("Sending to exchange: " + ex.ToString());
-                ConnectionManager connMgr = _connFactory.ConnectTo(ex);
+                IConnectionManager connMgr = _connFactory.ConnectTo(ex);
                 
                 using (IModel channel = connMgr.CreateModel())
                 {
@@ -126,7 +126,7 @@ namespace amp.rabbit.transport
 
             foreach (Exchange ex in exchanges)
             {
-                ConnectionManager conn = _connFactory.ConnectTo(ex);
+                IConnectionManager conn = _connFactory.ConnectTo(ex);
 
                 // create a listener
                 RabbitListener listener = new RabbitListener(registration, ex, conn);

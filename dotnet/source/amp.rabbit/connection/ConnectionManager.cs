@@ -8,7 +8,7 @@ namespace amp.rabbit.connection
     /// <summary>
     /// Wrapps and manages a single connection, reconnecting if it fails.
     /// </summary>
-    public class ConnectionManager : IDisposable
+    public class ConnectionManager : IConnectionManager
     {
         protected ILog _log;
 
@@ -17,10 +17,8 @@ namespace amp.rabbit.connection
         private IConnection _connection;
         private volatile bool _isDisposed;
         
-        public delegate void ConnectionClosedEventHandler(bool willAttemtToReopen);
         public event ConnectionClosedEventHandler ConnectionClosed;
 
-        public delegate void ConnectionReconnectedEventHandler();
         public event ConnectionReconnectedEventHandler ConnectionReconnected;
 
         public ConnectionManager(ConnectionFactory factory)

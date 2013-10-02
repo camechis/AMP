@@ -43,7 +43,7 @@ namespace amp.rabbit.transport
                 Log.Info("Sending to exchange: " + ex.ToString());
 
                 try {
-                    ConnectionManager connMgr = _connFactory.ConnectTo(ex);
+                    IConnectionManager connMgr = _connFactory.ConnectTo(ex);
 
                     using (IModel channel = connMgr.CreateModel())
                     {

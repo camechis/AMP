@@ -28,14 +28,13 @@ namespace amp.rabbit.dispatch
         protected volatile bool _isRunning;
         protected ILog _log;
         protected Exchange _exchange;
-        protected ConnectionManager _connectionManager;
+        protected IConnectionManager _connectionManager;
         protected ManualResetEvent startEvent;
         protected ManualResetEvent _stoppedListeningEvent;
         protected bool _connectionClosed;
 
 
-
-        public RabbitListener(IRegistration registration, Exchange exchange, ConnectionManager connectionManager)
+        public RabbitListener(IRegistration registration, Exchange exchange, IConnectionManager connectionManager)
         {
             _registration = registration;
             _exchange = exchange;

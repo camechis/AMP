@@ -73,8 +73,7 @@ namespace amp.rabbit.transport
 
         protected RabbitListener createListener(IRegistration registration, Exchange exchange) 
         {
-            // create a channel
-            var connection = _connFactory.ConnectTo(exchange);
+            IConnectionManager connection = _connFactory.ConnectTo(exchange);
 
             // create a listener
             RabbitListener listener = new RabbitListener(registration, exchange, connection);

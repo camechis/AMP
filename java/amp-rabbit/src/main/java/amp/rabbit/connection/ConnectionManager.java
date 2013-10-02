@@ -15,9 +15,7 @@ import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.ShutdownListener;
 import com.rabbitmq.client.ShutdownSignalException;
 
-import cmf.bus.IDisposable;
-
-public class ConnectionManager implements IDisposable {
+public class ConnectionManager implements IConnectionManager {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ConnectionManager.class);
 	
@@ -34,7 +32,8 @@ public class ConnectionManager implements IDisposable {
         _connectionAccessSemaphor = new Semaphore(1);
         }
 
-    public Channel createChannel() throws IOException, InterruptedException{
+    @Override
+	public Channel createChannel() throws IOException, InterruptedException{
 
     	//Ensure we are not in the midst of a reconnect attempt. If so wait till we reconnect.
         _connectionAccessSemaphor.acquire();
@@ -46,11 +45,13 @@ public class ConnectionManager implements IDisposable {
     	}
     }
     
-    public void addConnectionEventHandler(IConnectionEventHandler handler){
+    @Override
+	public void addConnectionEventHandler(IConnectionEventHandler handler){
     	_eventHandlers.add(handler);
     }
     
-    public void removeConnectionEventHandler(IConnectionEventHandler handler){
+    @Override
+	public void removeConnectionEventHandler(IConnectionEventHandler handler){
     	_eventHandlers.remove(handler);
     }
 

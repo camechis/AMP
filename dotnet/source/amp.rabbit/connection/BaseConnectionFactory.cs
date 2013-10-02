@@ -9,18 +9,18 @@ namespace amp.rabbit.connection
     public abstract class BaseConnectionFactory : IRabbitConnectionFactory
     {
         protected ILog _log;
-        protected IDictionary<Exchange, ConnectionManager> _connectionManagers;
+        protected IDictionary<Exchange, IConnectionManager> _connectionManagers;
 
         protected BaseConnectionFactory()
         {
-            _connectionManagers = new Dictionary<Exchange, ConnectionManager>();
+            _connectionManagers = new Dictionary<Exchange, IConnectionManager>();
             _log = LogManager.GetLogger(this.GetType());
         }
 
-        public ConnectionManager ConnectTo(Exchange exchange)
+        public IConnectionManager ConnectTo(Exchange exchange)
         {
             _log.Debug("Getting connection for exchange: " + exchange.ToString());
-            ConnectionManager manager = null;
+            IConnectionManager manager = null;
 
             // first, see if we have a cached connection
             if (_connectionManagers.ContainsKey(exchange))
@@ -41,14 +41,14 @@ namespace amp.rabbit.connection
 
         public void Dispose()
         {
-            foreach (ConnectionManager conn in _connectionManagers.Values)
+            foreach (IConnectionManager conn in _connectionManagers.Values)
             {
                 try { conn.Dispose(); }
                 catch { }
             }
         }
 
-        protected virtual ConnectionManager CreateConnectionManager(Exchange exchange)
+        protected virtual IConnectionManager CreateConnectionManager(Exchange exchange)
         {
             _log.Debug("Enter CreateConnectionManager");
 
@@ -56,7 +56,7 @@ namespace amp.rabbit.connection
             ConfigureConnectionFactory(cf, exchange);
             try
             {
-                ConnectionManager connection = new ConnectionManager(cf);
+                IConnectionManager connection = new ConnectionManager(cf);
                 _log.Debug("Leave CreateConnectionManager");
                 return connection;
             }

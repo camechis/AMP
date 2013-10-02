@@ -63,6 +63,7 @@
     <Compile Include="connection\BasicConnectionFactory.cs" />
     <Compile Include="connection\CertificateConnectionFactory.cs" />
     <Compile Include="connection\ConnectionManager.cs" />
+    <Compile Include="connection\IConnectionManager.cs" />
     <Compile Include="transport\CommandableCache.cs" />
     <Compile Include="transport\IRoutingInfoCache.cs" />
     <Compile Include="transport\RabbitEnvelopeReceiver.cs" />
