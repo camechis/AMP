@@ -32,7 +32,8 @@ namespace amp.rabbit.connection
 
         private void Handle_OnConnectionShutdown(IConnection connection, ShutdownEventArgs reason)
         {
-            _connection = null;
+            //Keep people from tyring to use the connection while we are reconnecting.
+            _connectionEvent.Reset();
 
             bool shouldAttemtToReopen = reason.Initiator != ShutdownInitiator.Application;
                 
@@ -50,11 +51,15 @@ namespace amp.rabbit.connection
 
             if (shouldAttemtToReopen)
             {
-                _connectionEvent.Reset();
                 //Do actual reconnect attempts on background thread
                 Thread reconnectThread = new Thread(AttemptToReconnect);
                 reconnectThread.Name = string.Format("Connection Reconnect Thread {0}", this.GetHashCode());
                 reconnectThread.Start();
+            }
+            else
+            {
+                //Not going to re-open so let people try and blow up.  Better than hanging!
+                _connectionEvent.Set();
             }
         }
 
@@ -68,6 +73,7 @@ namespace amp.rabbit.connection
                 {
                     _connection = _factory.CreateConnection();
                     _connection.ConnectionShutdown += Handle_OnConnectionShutdown;
+                    //Permit access to the connection once again.
                     _connectionEvent.Set();
                     _log.Info("Successfully reconnected.");
 
@@ -91,11 +97,16 @@ namespace amp.rabbit.connection
                     Thread.Sleep(TimeSpan.FromSeconds(1));
                 }
             }
+
             _log.Info("Failed to reconnect in the time allowed.  Will no longer attempt.");
+            
+            //release access to the connection. Better to let attempts fail that to have them hang.
+            _connectionEvent.Set();
         }
 
         public IModel CreateModel()
         {
+            //Ensure we are not in the midst of a reconnect attempt. If so wait till we reconnect.
             _connectionEvent.WaitOne();
             return _connection.CreateModel();
         }

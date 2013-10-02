@@ -69,10 +69,16 @@ public class ConnectionManager implements IDisposable {
 		@Override
 		public void shutdownCompleted(ShutdownSignalException cause) {
 			
-			LOG.debug("Enter shutdownCompleted handler, isInitiatedByApplication: " + cause.isInitiatedByApplication());
-            LOG.error("Connection Closed.", cause);
+            try {
+            	//Keep people from trying to use connection while we are reconnecting.
+				_connectionAccessSemaphor.acquire();
+			} catch (InterruptedException e) {
+				LOG.error("Thread interupted attempting to aquire connectionSemapphore prior to attempting reconnect. Aborting...", e);
+				return;
+			}
 
-            _connection = null;
+            LOG.debug("Enter shutdownCompleted handler, isInitiatedByApplication: " + cause.isInitiatedByApplication());
+            LOG.error("Connection Closed.", cause);
 
             boolean shouldAttemtToReopen = !cause.isInitiatedByApplication();
                 
@@ -86,16 +92,13 @@ public class ConnectionManager implements IDisposable {
             }
 
             if (shouldAttemtToReopen) {
-                try {
-                	//Keep people from trying to use connection while we are reconnecting.
-					_connectionAccessSemaphor.acquire();
-				} catch (InterruptedException e) {
-					LOG.error("Thread interupted attempting to aquire connectionSemapphore prior to attempting reconnect.", e);
-				}
                 //Do actual reconnect attempts on background thread
                 Thread reconnectThread = new Thread(new ReconnectionAttempter());
                 reconnectThread.setName("Connection Reconnect Thread " + this.hashCode());
                 reconnectThread.start();
+            } else {
+            	//Not going to re-open so let people try and blow up.  Better than hanging!
+				_connectionAccessSemaphor.release();
             }
             
             LOG.debug("Leave shutdownCompleted handler.");		
@@ -141,6 +144,8 @@ public class ConnectionManager implements IDisposable {
                 }
             }
             LOG.info("Failed to reconnect in the time allowed.  Will no longer attempt.");			
+            //release access to the connection. Better to let attempts fail that to have them hang.
+            _connectionAccessSemaphor.release();
 		}
     	
     }
