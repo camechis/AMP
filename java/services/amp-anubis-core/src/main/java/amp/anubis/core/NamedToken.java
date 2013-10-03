@@ -32,7 +32,7 @@ public class NamedToken {
      */
     public NamedToken(String identity, String token) {
 
-        identity = identity;
-        token = token;
+        this.identity = identity;
+        this.token = token;
     }
 }
