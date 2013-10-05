@@ -12,6 +12,13 @@ logging:
         "org.eclipse.jetty.servlet.ServletHandler": INFO
         "org.springframework.beans.factory.support.DefaultListableBeanFactory": INFO
         "org.springframework.beans.factory.xml": INFO
+        "org.eclipse.jetty.io.nio.ssl": INFO
+        "org.eclipse.jetty.io": INFO
+        "org.eclipse.jetty.http": INFO
+        "org.eclipse.jetty.server.AsyncHttpConnection": INFO
+        "org.eclipse.jetty.server.handler": INFO
+        "org.eclipse.jetty.server.session": INFO
+        "org.springframework.security.web.context": INFO
     console:
         enabled: true
         threshold: DEBUG
@@ -27,12 +34,12 @@ logging:
 http:
     connectorType: nonblocking+ssl
     ssl:
-        keyStore: ./keys/anubis.johnruiz.com.jks
+        keyStore: ./keys/oamp-anubis.jks
         keyStorePassword: "1qaz@WSX3edc$RFV"
-        trustStore: ./keys/trust.johnruiz.com.jks
+        trustStore: ./keys/truststore.jks
         trustStorePassword: "1qaz@WSX3edc$RFV"
         wantClientAuth: true
-        needClientAuth: true
+        needClientAuth: false
     port: 15678
     adminPort: 8082
     adminUsername: admin

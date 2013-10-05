@@ -1,4 +1,4 @@
-applicationContext: ['configuration/applicationContext.xml', 'configuration/inmemContext.xml', 'configuration/x509SecurityContext.xml', 'configuration/snapshotContext.xml', 'configuration/ldapUserDetailsContext.xml]
+applicationContext: ['configuration/applicationContext.xml', 'configuration/inmemContext.xml', 'configuration/x509SecurityContext.xml', 'configuration/snapshotContext.xml', 'configuration/ldapUserDetailsContext.xml']
 
 useSpringSecurity: true
 
@@ -15,10 +15,10 @@ http:
     rootPath: /service/*
     connectorType: nonblocking+ssl
     ssl:
-        keyStore: ./ssl/gts.jks
-        keyStorePassword: password
-        trustStore: ./ssl/gts.jks
-        trustStorePassword: password
+        keyStore: ./keys/oamp-gts.jks
+        keyStorePassword: 1qaz@WSX3edc$RFV
+        trustStore: ./keys/truststore.jks
+        trustStorePassword: 1qaz@WSX3edc$RFV
         # When using Basic Auth, you will want these set to 'false',
         # and most certainly 'true' for x509 authentication.
         needClientAuth: true
