@@ -21,6 +21,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	    <maven.compiler.target>1.6</maven.compiler.target>
         <maven.compiler.source>1.6</maven.compiler.source>
+        <guava.version>14.0.1</guava.version>
  </properties>
 
 	<dependencies>
@@ -63,6 +64,11 @@
             <groupId>amp</groupId>
             <artifactId>amp.anubis.core</artifactId>
             <version>${amp.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
         </dependency>
         <dependency>
             <groupId>com.yammer.dropwizard</groupId>
