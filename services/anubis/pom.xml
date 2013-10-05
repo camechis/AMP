@@ -60,12 +60,12 @@
 			<artifactId>amp.topology.client</artifactId>
 			<version>${amp.version}</version>
 		</dependency>
+		<dependency>
+            		<groupId>amp</groupId>
+			<artifactId>amp.anubis.core</artifactId>
+			<version>${amp.version}</version>
+		</dependency>
         <dependency>
-            <groupId>amp</groupId>
-            <artifactId>amp.anubis.core</artifactId>
-            <version>${amp.version}</version>
-        </dependency>
-	<dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>${guava.version}</version>
