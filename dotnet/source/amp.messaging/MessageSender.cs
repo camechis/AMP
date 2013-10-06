@@ -25,34 +25,43 @@ namespace amp.messaging
         }
 
         public MessageSender(IEnvelopeSender envelopeSender, List<IMessageProcessor> processingChain)
-            : this (envelopeSender, new MessageProcessorChain(processingChain))
+            : this(envelopeSender, new MessageProcessorChain(processingChain))
         {
         }
 
         public void Send(object message)
         {
-            // create an envelope for the message
-            Envelope newEnvelope = new Envelope();
-
-            // create a message context for message processing
-            MessageContext ctx = new MessageContext(
-                MessageContext.Directions.Out, newEnvelope, message);
-            
-            // process the message
-            this.ProcessMessage(ctx, () =>
-            {
-                try
-                {
-                    _envelopeSender.Send(ctx.Envelope);
-                }
-                catch (Exception ex)
-                {
-                    string msg = "Failed to send an envelope.";
-                    Log.Error(msg, ex);
-                    throw new MessageException(msg, ex);
-                }
-            });
+			this.Send(message, null);
         }
+
+		public void Send(object message, IDictionary<string, string> headers)
+		{
+			// create an envelope for the message
+			Envelope newEnvelope = new Envelope();
+			
+			// create a message context for message processing
+			MessageContext ctx = new MessageContext(
+				MessageContext.Directions.Out, newEnvelope, message);
+
+			// headers may be null or empty
+			if (null != headers) { newEnvelope.Headers = headers; }
+
+			// process the message
+			this.ProcessMessage(ctx, () =>
+			                    {
+				try
+				{
+					_envelopeSender.Send(ctx.Envelope);
+				}
+				catch (Exception ex)
+				{
+					string msg = "Failed to send an envelope.";
+					Log.Error(msg, ex);
+					throw new MessageException(msg, ex);
+				}
+			});
+		}
+
 
         public void ProcessMessage(
             MessageContext context,

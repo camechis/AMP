@@ -3,6 +3,8 @@ package amp.utility.http;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -100,7 +102,7 @@ public class SslHttpClientProvider implements HttpClientProvider {
 		
 			KeyStore loadedKeystore = getAndLoad(this.keystore, this.keystorePassword);
 			
-			if (this.truststore != null){
+			if (this.truststore != null) {
 				
 				KeyStore loadedTruststore = getAndLoad(this.truststore, this.truststorePassword);
 				
@@ -135,14 +137,22 @@ public class SslHttpClientProvider implements HttpClientProvider {
 	 * @throws CertificateException
 	 * @throws IOException
 	 */
-	static KeyStore getAndLoad(String path, String password) 
-			throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException {
+	static KeyStore getAndLoad(String path, String password)
+			throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException, URISyntaxException {
 		
 		char[] charPassword = (password == null)? null : password.toCharArray();
 		
 		KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType());
-		
-		FileInputStream fis = new FileInputStream(new File(path));
+
+        File keystoreFile = new File(path);
+
+        if (!keystoreFile.exists()) {
+            // try to find it on the classpath
+            URL url = SslHttpClientProvider.class.getResource(path);
+            keystoreFile = (null != url) ? new File(url.toURI()) : new File(path);
+        }
+
+		FileInputStream fis = new FileInputStream(keystoreFile);
 		
 		keystore.load(fis, charPassword);
 		

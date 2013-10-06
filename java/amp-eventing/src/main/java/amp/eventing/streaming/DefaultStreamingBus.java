@@ -119,7 +119,7 @@ public class DefaultStreamingBus extends DefaultEventBus implements IStandardStr
 
     @Override
     public <TEVENT> void subscribe(final IEventHandler<TEVENT> eventHandler, final IEnvelopeFilterPredicate filterPredicate)
-            throws Exception {
+            throws MessageException {
         log.debug("enter default streaming bus subscribe.");
 
     }

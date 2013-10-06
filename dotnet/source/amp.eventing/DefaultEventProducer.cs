@@ -21,5 +21,10 @@ namespace amp.eventing
         {
             this.Send(ev);
         }
+
+		public void Publish(object ev, IDictionary<string, string> headers)
+		{
+			this.Send(ev, headers);
+		}
     }
 }
