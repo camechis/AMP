@@ -10,7 +10,7 @@
     <version>3.2.1</version>
     <name>Advanced Modular Platform</name>
     <packaging>pom</packaging>
-    <url>http://ampere.berico.us</url>
+    <url>http://www.openampere.com</url>
 
 
     <!-- Shared properties -->
@@ -179,20 +179,20 @@
     <!-- Points of Contact, also list of people to blame :) -->
     <developers>
         <developer>
-            <name>Richard Clayton</name>
+            <name>John Ruiz</name>
             <organization>Berico Technologies</organization>
-            <email>rclayton@bericotechnologies.com</email>
+            <email>jruiz@bericotechnologies.com</email>
             <roles>
                 <role>Lead Developer</role>
             </roles>
             <timezone>-5</timezone>
         </developer>
         <developer>
-            <name>John Ruiz</name>
+            <name>Richard Clayton</name>
             <organization>Berico Technologies</organization>
-            <email>jruiz@bericotechnologies.com</email>
+            <email>rclayton@bericotechnologies.com</email>
             <roles>
-                <role>Lead Developer</role>
+                <role>Developer</role>
             </roles>
             <timezone>-5</timezone>
         </developer>
@@ -215,11 +215,11 @@
             <timezone>-5</timezone>
         </developer>
         <developer>
-            <name>Bruce Israel</name>
+            <name>Ken Baltrinic</name>
             <organization>Berico Technologies</organization>
-            <email>bisrael@bericotechnologies.com</email>
+            <email>kbaltrinic@bericotechnologies.com</email>
             <roles>
-                <role>Complex Event Processing Developer</role>
+                <role>Major Contributor and Code Reviewer</role>
             </roles>
             <timezone>-5</timezone>
         </developer>
@@ -230,6 +230,7 @@
             <roles>
                 <role>JavaScript Client Developer</role>
             </roles>
+            <timezone>-5</timezone>
         </developer>
     </developers>
 
@@ -274,6 +275,19 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.15</version>
+                <configuration>
+                    <includes>
+                        <include>**/*Tests.java</include>
+                        <include>**/*Test*.java</include>
+                        <include>**/*Test.java</include>
+                        <include>**/*TestCase.java</include>
+                    </includes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
                 <version>2.4</version>
                 <executions>
@@ -298,7 +312,7 @@
             <plugin>
                 <groupId>com.googlecode.maven-overview-plugin</groupId>
                 <artifactId>maven-overview-plugin</artifactId>
-                <version>RELEASE</version>
+                <version>1.6</version>
                 <configuration>
                     <includes>cmf, amp</includes>
                 </configuration>
@@ -311,8 +325,8 @@
     <scm>
         <connection>scm:git:git@github.com:Berico-Technologies/AMP.git</connection>
         <developerConnection>scm:git:git@github.com:Berico-Technologies/AMP.git</developerConnection>
-        <url>https://github.com/Berico-Technologies/AMP/tree/develop</url>
-      <tag>amp-3.1.0</tag>
+        <url>https://github.com/Berico-Technologies/AMP</url>
+        <tag>amp-3.2.1</tag>
   </scm>
 
 

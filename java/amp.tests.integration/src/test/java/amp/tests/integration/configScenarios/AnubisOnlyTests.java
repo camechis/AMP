@@ -34,8 +34,8 @@ public class AnubisOnlyTests {
 	public static String[] getConfigFiles(){
 		return new String[]{
 				Config.Bus.All, 
-				Config.Authorization.AnubisBasic, 
-				Config.Topology.Simple};
+				Authorization.AnubisTwoWaySsl,
+				Topology.GtsSSL};
 	}
 	
 	@BeforeClass
@@ -55,7 +55,7 @@ public class AnubisOnlyTests {
     {
     	TestHandler handler = new TestHandler();
         bus.subscribe(handler);
-
+        Thread.sleep(5000);
         TestEvent sentEvent = new TestEvent();
 
         bus.publish(sentEvent);

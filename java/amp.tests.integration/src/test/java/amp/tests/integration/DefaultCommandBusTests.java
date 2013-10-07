@@ -36,7 +36,7 @@ public class DefaultCommandBusTests {
     {
     	TestHandler handler = new TestHandler();
         bus.onCommandReceived(handler);
-
+        Thread.sleep(5000);
         TestEvent sentCommand = new TestEvent();
 
         bus.send(sentCommand);

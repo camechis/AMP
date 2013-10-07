@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import cmf.bus.Envelope;
 import cmf.bus.IDisposable;
@@ -55,7 +57,7 @@ public class RabbitListener implements IDisposable, Runnable {
     protected IRegistration registration;
     protected boolean shouldContinue;
     protected Thread threadImRunningOn = null;
-
+    protected CountDownLatch threadStartSignal = new CountDownLatch(1);
 
 
     /**
@@ -110,7 +112,7 @@ public class RabbitListener implements IDisposable, Runnable {
      * Start listening on the supplied channel for messages.
      * @param channel AMQP Channel
      */
-    public void start(Channel channel) {
+    public void start(Channel channel) throws Exception {
     	
 		if (shouldContinue) {
 			
@@ -135,7 +137,7 @@ public class RabbitListener implements IDisposable, Runnable {
      * Start listening on a new thread.  This won't work unless you
      * have set the Channel on the listener.
      */
-    public void start() {
+    public void start() throws Exception {
     		
 		if (this.channel == null) {
 			
@@ -148,6 +150,8 @@ public class RabbitListener implements IDisposable, Runnable {
 			threadImRunningOn = new Thread(this);
 			
 			threadImRunningOn.start();
+
+            threadStartSignal.await(30, TimeUnit.SECONDS);
 		}
     }
     
@@ -303,6 +307,9 @@ public class RabbitListener implements IDisposable, Runnable {
 
             // and tell it to start consuming messages, storing the consumer tag
             String consumerTag = channel.basicConsume(exchange.getQueueName(), false, consumer);
+
+            // signal that we have begun listening on this thread
+            threadStartSignal.countDown();
 
             log.debug("Will now continuously listen for events using routing key: {}",
             		exchange.getRoutingKey());
