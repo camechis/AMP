@@ -20,7 +20,7 @@ public class TokenChannelFactoryTests {
 	
 	@BeforeClass
 	public static void BeforeAllTests(){
-		context = new FileSystemXmlApplicationContext(Config.Authorization.AnubisBasic, Config.Topology.Simple);
+		context = new FileSystemXmlApplicationContext(Config.Authorization.AnubisTwoWaySsl, Config.Topology.GtsSSL);
 		factory = (TokenChannelFactory) context.getBean("channelFactory");
 	}
 	

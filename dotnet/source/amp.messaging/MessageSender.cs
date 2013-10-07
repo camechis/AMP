@@ -25,7 +25,7 @@ namespace amp.messaging
         }
 
         public MessageSender(IEnvelopeSender envelopeSender, List<IMessageProcessor> processingChain)
-            : this (envelopeSender, new MessageProcessorChain(processingChain))
+            : this(envelopeSender, new MessageProcessorChain(processingChain))
         {
         }
 
@@ -59,7 +59,6 @@ namespace amp.messaging
                 }
             });
         }
-
 
         public void ProcessMessage(
             MessageContext context,

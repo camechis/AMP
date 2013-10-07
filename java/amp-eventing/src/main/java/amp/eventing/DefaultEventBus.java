@@ -1,6 +1,7 @@
 package amp.eventing;
 
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +27,7 @@ public class DefaultEventBus implements IEventBus {
     protected final DefaultEventConsumer _eventConsumer;
     protected final DefaultEventProducer _eventProducer;
 
+
     public DefaultEventBus(IEnvelopeBus envelopeBus, 
     		List<IMessageProcessor> inboundProcessors,
     		List<IMessageProcessor> outboundProcessors)  {
@@ -39,18 +41,23 @@ public class DefaultEventBus implements IEventBus {
 		_eventProducer.publish(event);
 	}
 
+    @Override
+    public void publish(Object event, Map<String, String> headers) throws MessageException {
+        _eventProducer.publish(event, headers);
+    }
+
 
 	@Override
 	public <TEVENT> void subscribe(IEventHandler<TEVENT> handler) throws MessageException {
 		_eventConsumer.subscribe(handler);
 	}
 
+    @Override
+    public <TEVENT> void subscribe(IEventHandler<TEVENT> handler, IEnvelopeFilterPredicate eventFilterPredicate)
+            throws MessageException {
+        _eventConsumer.subscribe(handler, eventFilterPredicate);
+    }
 
-	@Override
-	public <TEVENT> void subscribe(IEventHandler<TEVENT> handler,
-			IEnvelopeFilterPredicate predicate) throws Exception {
-		_eventConsumer.subscribe(handler, predicate);
-	}
 
 	@Override
 	public void dispose() {
