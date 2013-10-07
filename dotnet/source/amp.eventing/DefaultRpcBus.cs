@@ -122,5 +122,11 @@ namespace amp.eventing
 
             Log.Debug("Leave RespondTo");
         }
+
+        public override void Dispose()
+        {
+            _envelopeBus.Dispose();
+            base.Dispose();
+        }
     }
 }

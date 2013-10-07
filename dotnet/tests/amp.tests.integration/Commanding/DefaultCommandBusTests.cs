@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Security;
 using System.Threading;
 using amp.commanding;
 using NUnit.Framework;
@@ -16,7 +17,7 @@ namespace amp.tests.integration.Commanding
         [TestFixtureSetUp]
         public virtual void TestFixtureSetUp()
         {
-            _context = new XmlApplicationContext(Config.Bus.All, Config.Authorization.Basic, Config.Topology.Simple);
+            _context = new XmlApplicationContext(Config.Bus.All, Config.Authorization.AnubisTwoWaySsl, Config.Topology.GtsSSL);
             _bus = _context.GetObject("ICommandBus") as ICommandBus;
         }
 
@@ -29,6 +30,7 @@ namespace amp.tests.integration.Commanding
         [Test]
         public void Should_be_able_to_publish_and_subscribe()
         {
+            
             TestCommand receivedCommand = null;
             _bus.ReceiveCommand<TestCommand>((@command, headers) =>
             {

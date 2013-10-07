@@ -17,7 +17,7 @@ namespace amp.tests.integration.Eventing
         {
             get
             {
-                return new string[] {Config.Bus.All, Config.Authorization.Basic, Config.Topology.Simple};
+                return new string[] {Config.Bus.All, Config.Authorization.AnubisTwoWaySsl, Config.Topology.GtsSSL};
             }
         }
 

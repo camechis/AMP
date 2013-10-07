@@ -5,7 +5,7 @@ using Common.Logging;
 
 namespace amp.messaging
 {
-    public class MessageReceiver 
+    public class MessageReceiver : IDisposable
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(MessageReceiver));
 
@@ -82,6 +82,7 @@ namespace amp.messaging
         public void Dispose()
         {
             _messageProcessor.Dispose();
+            _envelopeReceiver.Dispose();
         }
     }
 }

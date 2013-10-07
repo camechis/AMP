@@ -44,9 +44,6 @@ namespace amp.rabbit.transport
             foreach (var exchange in exchanges)
             {
                 RabbitListener listener = createListener(registration, exchange);
-
-                // store the listener
-                _listeners.Add(registration, listener);
             }
 
             Log.Debug("Leave Register");        
@@ -58,7 +55,7 @@ namespace amp.rabbit.transport
 
             if (_listeners.TryGetValue(registration, out listener))
             {
-                listener.Stop();
+                try { listener.Stop(); } catch { }
             }
         }
 
@@ -91,10 +88,15 @@ namespace amp.rabbit.transport
             //TODO: Resolve that RabbitListener does not implement OnConnectionError
             //listener.OnConnectionError(new ReconnectOnConnectionErrorCallback(_channelFactory));
 
+            // store the listener
+            _listeners.Add(registration, listener);
+
             // put it on another thread so as not to block this one
+            // don't continue on this thread until we've started listening
+            ManualResetEvent startEvent = new ManualResetEvent(false);
             Thread listenerThread = new Thread(listener.Start);
             listenerThread.Name = string.Format("{0} on {1}:{2}{3}", exchange.QueueName, exchange.HostName, exchange.Port, exchange.VirtualHost);
-            listenerThread.Start();
+            listenerThread.Start(startEvent);
 
             return listener;
         }
