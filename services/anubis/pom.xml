@@ -45,11 +45,7 @@
 			<artifactId>amp.eventing</artifactId>
 			<version>${amp.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>amp</groupId>
-			<artifactId>amp.bus.rabbit</artifactId>
-			<version>${amp.version}</version>
-		</dependency>
+
 		<dependency>
 			<groupId>amp</groupId>
 			<artifactId>amp.bus.security</artifactId>
