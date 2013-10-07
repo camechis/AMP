@@ -1,0 +1,20 @@
+#!/bin/sh
+
+# This assumes that you execute the script from the
+# base of your project directory.
+#
+# This is a much better way to execute this, but
+# it causes the archetype generation to fail because
+# of the use of similar expressions.
+# Please look at the following StackOverflow post:
+# http://stackoverflow.com/questions/59895/can-a-bash-script-tell-what-directory-its-stored-in
+JAR="target/amp.app1-1.0-SNAPSHOT.jar"
+
+# if the executable jar doesn't exist, build it
+if [ ! -f $JAR ];
+then
+    mvn clean package -U
+fi
+
+# finally, execute the jar
+java -jar $JAR

@@ -1,0 +1,12 @@
+# don't treat binaries as text
+*.dll -text
+*.exe -text
+*.pdb -text
+*.snk -text
+*.pfx -text
+*.cer -text
+*.crt -text
+*.p12 -text
+*.p7b -text
+*.jar -text
+*.jks -text

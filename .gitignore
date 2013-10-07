@@ -2,6 +2,9 @@
 [Tt]humbs.db
 *.DS_Store
 
+## allow the archetype bin directory
+!java/archetypes/amp-quickstart/src/main/resources/archetype-resources/bin/
+
 # Ignore eclipse project files
 .project
 .settings
@@ -106,3 +109,17 @@ java/examples/cmf.examples.iml
 managed
 /javascript/coverage
 /javascript/test-results.xml
+
+# don't treat binaries as text
+*.dll -text
+*.exe -text
+*.pdb -text
+*.snk -text
+*.pfx -text
+*.cer -text
+*.crt -text
+*.p12 -text
+*.p7b -text
+*.jar -text
+*.jks -text
+
