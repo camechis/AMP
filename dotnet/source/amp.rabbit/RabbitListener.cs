@@ -2,6 +2,7 @@
 using System.Collections;
 using System.IO;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using amp.messaging;
 using Common.Logging;
@@ -39,8 +40,10 @@ namespace amp.rabbit
         }
 
 
-        public void Start()
+        public void Start(object manualResetEvent)
         {
+            ManualResetEvent startEvent = manualResetEvent as ManualResetEvent;
+
             _log.Debug("Enter Start");
             _shouldContinue = true;
 
@@ -56,6 +59,9 @@ namespace amp.rabbit
 
                 // and tell it to start consuming messages, storing the consumer tag
                 string consumerTag = channel.BasicConsume(_exchange.QueueName, false, consumer);
+
+                // signal the wait event that we've begun listening
+                startEvent.Set();
 
                 _log.Debug("Will now continuously listen for events using routing key: " + _exchange.RoutingKey);
                 while (_shouldContinue)

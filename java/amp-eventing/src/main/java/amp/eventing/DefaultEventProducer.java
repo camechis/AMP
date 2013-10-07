@@ -2,6 +2,7 @@ package amp.eventing;
 
 
 import java.util.List;
+import java.util.Map;
 
 import amp.messaging.IMessageProcessor;
 import amp.messaging.MessageException;
@@ -28,6 +29,11 @@ public class DefaultEventProducer extends MessageSender implements IEventProduce
 
     @Override
     public void publish(Object event) throws MessageException {
-    	send(event);
+    	super.send(event);
+    }
+
+    @Override
+    public void publish(Object event, Map<String, String> headers) throws MessageException {
+        super.send(event, headers);
     }
 }

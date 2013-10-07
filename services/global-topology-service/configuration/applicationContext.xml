@@ -60,7 +60,7 @@
 	     There is an equivalent provider for SSL.
 	 -->
 	<bean id="authProvider" class="rabbitmq.httpclient.BasicAuthHttpClientProvider"
-	    c:username="guest" c:password="guest" />
+	    c:username="gts" c:password="gts-password" />
 	
 	<bean id="rmqManagementService" class="rabbitmq.mgmt.RabbitMgmtService" 
 	   init-method="initialize" 

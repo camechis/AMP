@@ -12,8 +12,8 @@
 	<url>http://ampere.berico.us</url>
 
 	<properties>
-		<cmf.version>3.1.0</cmf.version>
-		<amp.version>3.2.0-SNAPSHOT</amp.version>
+		<cmf.version>3.2.1</cmf.version>
+		<amp.version>3.2.1</amp.version>
 		<springframework.version>3.2.2.RELEASE</springframework.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
@@ -41,7 +41,7 @@
 		</dependency>
 		<dependency>
 			<groupId>amp</groupId>
-			<artifactId>amp.bus.rabbit</artifactId>
+			<artifactId>amp.rabbit</artifactId>
 			<version>${amp.version}</version>
 		</dependency>
 		<dependency>

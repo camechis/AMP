@@ -21,6 +21,7 @@ namespace amp.tests.integration.Eventing.Streaming
         }
 
         [Test]
+        [Ignore]
         public void Should_receive_all_segments_published_as_a_chunked_sequence()
         {
             ManualResetEvent signal = new ManualResetEvent(false);

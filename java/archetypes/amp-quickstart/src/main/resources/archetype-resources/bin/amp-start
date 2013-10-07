@@ -1,0 +1,28 @@
+#!/bin/sh
+
+# This assumes that you execute the script from the
+# base of your project directory.
+#
+# There is a much better way to execute this, but
+# it causes the archetype generation to fail because
+# of the use of similar expressions.
+# Please look at the following StackOverflow post:
+# http://stackoverflow.com/questions/59895/can-a-bash-script-tell-what-directory-its-stored-in
+
+# the JAR file
+JAR="target/${artifactId}-${version}.jar"
+
+# if the executable jar doesn't exist, build it
+if [ ! -f $JAR ];
+then
+    mvn clean package -U
+
+    # get the "clean" java keystores - the ones delivered in the
+    # archetype are corrupted somehow
+    wget https://github.com/Berico-Technologies/AMP/blob/master/java/archetypes/amp-quickstart/src/main/resources/archetype-resources/config/keys/truststore.jks?raw=true -O ./config/keys/truststore.jks
+    wget https://github.com/Berico-Technologies/AMP/blob/master/java/archetypes/amp-quickstart/src/main/resources/archetype-resources/config/keys/amp-test-at-openampere.com.jks?raw=true -O ./config/keys/amp-test-at-openampere.com.jks
+
+fi
+
+# finally, execute the jar
+java -jar $JAR

@@ -60,7 +60,7 @@ public class TokenChannelFactory extends BaseChannelFactory {
 
         }
         catch(Exception ex) {
-        	log.error("Failed to get token from Anubis.", ex);
+        	log.error("Failed to configure connection factory with token from Anubis.", ex);
         }
     }
 

@@ -22,8 +22,8 @@ public class DefaultEventBusTests {
 	public static String[] getConfigFiles(){
 		return new String[]{
 				Config.Bus.All, 
-				Config.Authorization.Basic, 
-				Config.Topology.Simple};
+				Config.Authorization.AnubisTwoWaySsl,
+				Config.Topology.GtsSSL};
 	}
 	
 	@BeforeClass
@@ -43,7 +43,7 @@ public class DefaultEventBusTests {
     {
     	TestHandler handler = new TestHandler();
         bus.subscribe(handler);
-
+        Thread.sleep(5000);
         TestEvent sentEvent = new TestEvent();
 
         bus.publish(sentEvent);

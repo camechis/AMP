@@ -57,7 +57,7 @@ public class SSLChannelFactory extends BaseChannelFactory {
         tmf.init(remoteCertStore);
 
         // initialize a context for SSL-protected (not mutual auth) connection
-        SSLContext c = SSLContext.getInstance("SSLv3");
+        SSLContext c = SSLContext.getInstance("TLSv1");
         c.init(null, tmf.getTrustManagers(), null);
 
         factory.setUsername(_username);

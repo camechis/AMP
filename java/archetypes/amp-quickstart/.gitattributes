@@ -1,0 +1,12 @@
+# don't treat binaries as text
+*.dll -diff -merge -text
+*.exe -diff -merge -text
+*.pdb -diff -merge -text
+*.snk -diff -merge -text
+*.pfx -diff -merge -text
+*.cer -diff -merge -text
+*.crt -diff -merge -text
+*.p12 -diff -merge -text
+*.p7b -diff -merge -text
+*.jar -diff -merge -text
+*.jks -diff -merge -text

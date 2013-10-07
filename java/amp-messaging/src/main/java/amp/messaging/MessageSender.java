@@ -2,6 +2,7 @@ package amp.messaging;
 
 
 import java.util.List;
+import java.util.Map;
 
 import cmf.bus.Envelope;
 import cmf.bus.IEnvelopeSender;
@@ -41,15 +42,23 @@ public class MessageSender {
 
     public void send(Object message) throws MessageException {
 
+        this.send(message, null);
+    }
+
+    public void send(Object message, Map<String, String> headers) throws MessageException {
+
         if (null == message) { throw new IllegalArgumentException("Cannot send a null message."); }
         LOG.debug("Enter send");
 
         final Envelope envelope = new Envelope();
         final MessageContext context = new MessageContext(MessageContext.Directions.Out, envelope, message);
 
+        // headers may be null or empty
+        if (null != headers) { envelope.setHeaders(headers); }
+
         try {
 
-        	_messageProcessor.processMessage(context, new IContinuationCallback() {
+            _messageProcessor.processMessage(context, new IContinuationCallback() {
 
                 @Override
                 public void continueProcessing() throws MessageException {

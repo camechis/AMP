@@ -25,19 +25,25 @@ namespace amp.messaging
         }
 
         public MessageSender(IEnvelopeSender envelopeSender, List<IMessageProcessor> processingChain)
-            : this (envelopeSender, new MessageProcessorChain(processingChain))
+            : this(envelopeSender, new MessageProcessorChain(processingChain))
         {
         }
 
         public void Send(object message)
         {
+            this.Send(message, null);
+        }
+
+        public void Send(object message, IDictionary<string, string> headers)
+        {
             // create an envelope for the message
             Envelope newEnvelope = new Envelope();
+            newEnvelope.Headers = headers ?? new Dictionary<string, string>();
 
             // create a message context for message processing
             MessageContext ctx = new MessageContext(
                 MessageContext.Directions.Out, newEnvelope, message);
-            
+
             // process the message
             this.ProcessMessage(ctx, () =>
             {
