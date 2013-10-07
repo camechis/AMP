@@ -3,17 +3,17 @@ package ${package};
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cmf.eventing.IEventBus;
+import cmf.eventing.IRpcEventBus;
 
 public class AmpService {
 
     private static Logger logger = LoggerFactory.getLogger(AmpService.class);
 
-    private IEventBus eventBus;
+    private IRpcEventBus eventBus;
 
-    public AmpService(IEventBus eventBus) {
+    public AmpService(IRpcEventBus rpcEventBus) {
 
-        this.eventBus = eventBus;
+        this.eventBus = rpcEventBus;
     }
 
     public void start() {
