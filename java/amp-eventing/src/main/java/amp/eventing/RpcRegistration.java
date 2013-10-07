@@ -14,7 +14,8 @@ import org.joda.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import amp.eventing.EnvelopeHelper;
+import amp.messaging.EnvelopeHelper;
+import amp.messaging.IInboundProcessorCallback;
 
 
 public class RpcRegistration implements IRegistration {

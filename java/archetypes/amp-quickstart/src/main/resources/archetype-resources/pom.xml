@@ -1,0 +1,168 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>${groupId}</groupId>
+	<artifactId>${artifactId}</artifactId>
+	<version>${version}</version>
+	<packaging>jar</packaging>
+
+	<name>AMP Quick Start</name>
+	<url>http://ampere.berico.us</url>
+
+	<properties>
+		<cmf.version>3.1.0</cmf.version>
+		<amp.version>3.2.0-SNAPSHOT</amp.version>
+		<springframework.version>3.2.2.RELEASE</springframework.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>cmf</groupId>
+			<artifactId>cmf.bus</artifactId>
+			<version>${cmf.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>cmf</groupId>
+			<artifactId>cmf.eventing</artifactId>
+			<version>${cmf.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>amp</groupId>
+			<artifactId>amp.bus</artifactId>
+			<version>${amp.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>amp</groupId>
+			<artifactId>amp.eventing</artifactId>
+			<version>${amp.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>amp</groupId>
+			<artifactId>amp.bus.rabbit</artifactId>
+			<version>${amp.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>amp</groupId>
+			<artifactId>amp.bus.security</artifactId>
+			<version>${amp.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>amp</groupId>
+			<artifactId>amp.topology.client</artifactId>
+			<version>${amp.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>${springframework.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-beans</artifactId>
+			<version>${springframework.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+			<version>${springframework.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.3</version>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-core</artifactId>
+			<version>1.0.10</version>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.0.10</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<version>1.9.5</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<!-- Extra maven repositories needed -->
+	<repositories>
+		<repository>
+			<id>nexus.bericotechnologies.com</id>
+			<name>Berico Technologies Nexus</name>
+			<url>http://nexus.bericotechnologies.com/content/groups/public</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+	
+	<build>
+		<plugins>
+			<!-- this plugin transforms the manifest to put the config folder on the 
+				class path. It does this during 'mvn package' -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<archive>
+						<manifestEntries>
+							<!-- we specify ../config/ instead of config/ because the start script 
+								is in bin/ and runs the jar in target/ -->
+							<Class-Path>../config/</Class-Path>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
+			<!-- this plugin takes my code, and all dependencies in this pom, and 
+				rolls them into one big executable fat jar. It does this during 'mvn package' -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>2.0</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<createDependencyReducedPom>false</createDependencyReducedPom>
+							<transformers>
+								<transformer
+									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+									<mainClass>${package}.App</mainClass>
+								</transformer>
+								<transformer
+									implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+									<resource>META-INF/spring.handlers</resource>
+								</transformer>
+								<transformer
+									implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+									<resource>META-INF/spring.schemas</resource>
+								</transformer>
+							</transformers>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>

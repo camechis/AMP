@@ -8,16 +8,15 @@
         <groupId>amp</groupId>
         <artifactId>amp</artifactId>
         <relativePath>../pom.xml</relativePath>
-        <version>3.1.0</version>
+        <version>3.2.1</version>
     </parent>
 
 
-    <groupId>amp</groupId>
     <artifactId>amp.bus.security</artifactId>
-    <version>3.1.0</version>
     <name>AMP Security Implementations</name>
     <packaging>jar</packaging>
-
+    <url>http://ampere.berico.us/clients/java</url>
+    
 
     <dependencies>
         <dependency>

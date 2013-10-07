@@ -1,0 +1,17 @@
+applicationContext: ['conf/applicationContext.xml', 'conf/basicAuthSecurityContext.xml']
+
+useSpringSecurity: true
+
+logging:
+    level: INFO
+    loggers:
+        "amp.bus.rabbit": WARN
+    console:
+        enabled: true
+        threshold: DEBUG
+        
+http:
+    port: 8080
+    adminUsername: admin
+    adminPassword: admin
+    rootPath: /service/*

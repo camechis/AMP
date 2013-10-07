@@ -10,12 +10,13 @@ import org.slf4j.LoggerFactory;
 import com.berico.test.RequireProperties;
 import com.berico.test.TestProperties;
 
-import amp.bus.rabbit.topology.RoutingInfo;
-import amp.topology.client.HttpClientProvider;
+import amp.rabbit.topology.RoutingInfo;
 import amp.topology.client.HttpRoutingInfoRetriever;
 import amp.topology.client.IRoutingInfoRetriever;
 import amp.topology.client.JsonRoutingInfoSerializer;
-import amp.topology.client.SslHttpClientProvider;
+import amp.utility.http.HttpClientProvider;
+import amp.utility.http.SslHttpClientProvider;
+
 
 public class SslAuthIntegrationTest {
 	

@@ -1,0 +1,47 @@
+applicationContext: ['config/ldapUserDetailsContext.xml', 'config/applicationContext.xml', 'config/x509AuthSecurityContext.xml']
+
+useSpringSecurity: true
+
+logging:
+    level: DEBUG
+    loggers:
+        "org.springframework.core.env.StandardEnvironment": INFO
+        "org.eclipse.jetty.util.component.AbstractLifeCycle": INFO
+        "org.eclipse.jetty.util.component.Container": INFO
+        "org.eclipse.jetty.server.handler.AbstractHandler": INFO
+        "org.eclipse.jetty.servlet.ServletHandler": INFO
+        "org.springframework.beans.factory.support.DefaultListableBeanFactory": INFO
+        "org.springframework.beans.factory.xml": INFO
+        "org.eclipse.jetty.io.nio.ssl": INFO
+        "org.eclipse.jetty.io": INFO
+        "org.eclipse.jetty.http": INFO
+        "org.eclipse.jetty.server.AsyncHttpConnection": INFO
+        "org.eclipse.jetty.server.handler": INFO
+        "org.eclipse.jetty.server.session": INFO
+        "org.springframework.security.web.context": INFO
+    console:
+        enabled: true
+        threshold: DEBUG
+    file:
+        enabled: true
+        threshold: ALL
+        currentLogFilename: ./logs/anubis.log
+        archivedLogFilenamePattern: ./logs/anubis-%d.log.gz
+        archivedFileCount: 5
+        timeZone: UTC
+
+
+http:
+    connectorType: nonblocking+ssl
+    ssl:
+        keyStore: ./keys/oamp-anubis.jks
+        keyStorePassword: "1qaz@WSX3edc$RFV"
+        trustStore: ./keys/truststore.jks
+        trustStorePassword: "1qaz@WSX3edc$RFV"
+        wantClientAuth: true
+        needClientAuth: false
+    port: 15678
+    adminPort: 8082
+    adminUsername: admin
+    adminPassword: admin
+    rootPath: /anubis/*

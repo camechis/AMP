@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.2.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd">
+
+	<bean id="derbyNetworkServer" class="amp.gel.dao.impl.derby.DerbyNetworkServer"
+		init-method="start" destroy-method="stop">
+		<property name="port" value="1527" />
+	</bean>
+
+	<context:component-scan base-package="amp.gel.dao.impl.derby" />
+
+	<!-- Hibernate Configuration -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="org.apache.derby.jdbc.EmbeddedDriver" />
+		<property name="url" value="jdbc:derby:test_data_gel;create=true" />
+		<property name="username" value="root" />
+		<property name="password" value="root" />
+	</bean>
+
+	<bean id="entityManagerFactory"
+		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="packagesToScan" value="amp.gel.dao.impl.derby" />
+		<property name="jpaVendorAdapter">
+			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
+		</property>
+		<property name="persistenceProviderClass" value="org.hibernate.ejb.HibernatePersistence" />
+		<property name="jpaProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.DerbyDialect
+				</prop>
+				<prop key="hibernate.show_sql">false</prop>
+				<prop key="hibernate.format_sql">false</prop>
+				<prop key="hibernate.hbm2ddl.auto">create</prop>
+			</props>
+		</property>
+	</bean>
+
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory" />
+	</bean>
+
+	<tx:annotation-driven transaction-manager="transactionManager" />
+
+	<bean id="datastoreWriter" class="amp.gel.dao.impl.derby.DerbyWriter" />
+
+	<!-- Event Processors -->
+
+	<bean id="envelopeGenerator" class="amp.gel.dao.impl.derby.data.EnvelopeGenerator">
+		<constructor-arg name="outboundProcessors" ref="outboundEventProcessors" />
+		<constructor-arg name="eventSequenceGenerators" ref="eventSequenceGenerators" />
+	</bean>
+
+	<util:list id="outboundEventProcessors"
+		value-type="amp.gel.dao.impl.derby.data.processors.EventSequenceProcessor">
+		<bean id="serializationProcessor"
+			class="amp.gel.dao.impl.derby.data.processors.JsonEventSerializer" />
+		<bean id="outboundHeadersProcessor"
+			class="amp.gel.dao.impl.derby.data.processors.OutboundHeadersProcessor" />
+		<bean id="senderIdentityHeaderProcessor"
+			class="amp.gel.dao.impl.derby.data.processors.SenderIdentityHeaderProcessor" />
+		<bean id="timeHeadersProcessor"
+			class="amp.gel.dao.impl.derby.data.processors.TimeHeadersProcessor">
+			<property name="startDate" value="2012-01-01" />
+			<property name="stopDate" value="2013-05-07" />
+		</bean>
+	</util:list>
+
+	<util:list id="eventSequenceGenerators"
+		value-type="amp.gel.dao.impl.derby.data.generators.EventSequenceGenerator">
+		<bean
+			class="amp.gel.dao.impl.derby.data.generators.ExportEventSequenceGenerator" />
+		<bean
+			class="amp.gel.dao.impl.derby.data.generators.CubeEventSequenceGenerator" />
+		<bean
+			class="amp.gel.dao.impl.derby.data.generators.SearchEventSequenceGenerator" />
+	</util:list>
+
+</beans>

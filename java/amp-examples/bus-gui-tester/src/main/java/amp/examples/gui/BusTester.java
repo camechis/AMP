@@ -4,12 +4,8 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
-import java.awt.GridBagLayout;
-import javax.swing.JSeparator;
 import java.awt.GridLayout;
 import javax.swing.border.TitledBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.JTextArea;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -18,24 +14,27 @@ import javax.swing.JComboBox;
 import javax.swing.JTextPane;
 import javax.swing.JCheckBox;
 import javax.swing.JButton;
-import javax.swing.SwingConstants;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.util.Map;
 
 import cmf.bus.Envelope;
-import cmf.eventing.IEventBus;
+import cmf.eventing.patterns.rpc.IRpcEventBus;
 import cmf.eventing.IEventHandler;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
 import com.jgoodies.forms.factories.DefaultComponentFactory;
 import com.jgoodies.forms.factories.FormFactory;
+
+import org.joda.time.Duration;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import amp.examples.gui.messages.EventTypeA;
 import amp.examples.gui.messages.EventTypeB;
+import amp.examples.gui.messages.ExampleRequest;
+import amp.examples.gui.messages.ExampleResponse;
 
 
 public class BusTester {
@@ -46,7 +45,7 @@ public class BusTester {
 	private JFrame EventConsumerFrame;
 	private JTextField reqmsgTextField;
 	private final JTextArea logTextArea = new JTextArea();
-	private IEventBus eventBus;
+	private IRpcEventBus eventBus;
 	
 
 	/**
@@ -69,16 +68,18 @@ public class BusTester {
 
 	/**
 	 * Create the application.
+	 * @throws Exception 
 	 */
-	public BusTester(IEventBus eventBus) {
+	public BusTester(IRpcEventBus eventBus) throws Exception {
 		this.eventBus = eventBus;
 		initialize();
 	}
 
 	/**
 	 * Initialize the contents of the frame.
+	 * @throws Exception 
 	 */
-	private void initialize() {
+	private void initialize() throws Exception {
 		EventConsumerFrame = new JFrame();
 		EventConsumerFrame.setTitle("Java Event Consumer & Producer");
 		EventConsumerFrame.setBounds(100, 100, 1134, 513);
@@ -217,6 +218,19 @@ public class BusTester {
 		reqmsgTextField.setColumns(10);
 		
 		JButton requestButton = new JButton("Request");
+		requestButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ExampleRequest request = new ExampleRequest();
+				request.setMessage(reqmsgTextField.getText());
+				
+				try{
+					ExampleResponse response = eventBus.getResponseTo(request, Duration.standardSeconds(5), ExampleResponse.class);
+					log("Received response to request: " + response.getResponseMessage());
+				} catch (Exception ex) {
+					log("Error attempting to get response to request: " + ex.toString());
+				}
+			}
+		});
 		reqrespForm.add(requestButton, "2, 3");
 		
 		JPanel south = new JPanel();
@@ -244,6 +258,29 @@ public class BusTester {
 			}
 		});
 		panel_1.add(clearLogButton);
+		
+		eventBus.subscribe(new IEventHandler<ExampleRequest>(){
+
+			@Override
+			public Class<ExampleRequest> getEventType() {
+				return ExampleRequest.class;
+			}
+
+			@Override
+			public Object handle(ExampleRequest event, Map<String, String> headers) {
+				log("Received ExampleRequest: " + event.getMessage() + " Responding...");
+				ExampleResponse response = new ExampleResponse();
+				response.setOriginalMessage(event.getMessage());
+				response.setResponseMessage("Rodger that!");
+				eventBus.respondTo(headers, response);
+				return null;
+			}
+
+			@Override
+			public Object handleFailed(Envelope envelope, Exception e) {
+				log("Failed to handle ExampleRequest event: " + e.toString());
+				return null;
+			}});
 	}
 	
 	private void handleCheckBox( ActionEvent e )  {

@@ -1,6 +1,4 @@
 ﻿using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 
 // Global Descriptive Stuff
 [assembly: AssemblyProduct("Advanced Modular Platform")]
@@ -10,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCulture("")]
 
 // Global Versioning
-[assembly: AssemblyVersion("3.1.0.*")]
+[assembly: AssemblyVersion("3.2.1.0")]
 /* let MSBuild automatically update this:
  * [assembly: AssemblyFileVersion("3.0.0.0")]
  * see: 

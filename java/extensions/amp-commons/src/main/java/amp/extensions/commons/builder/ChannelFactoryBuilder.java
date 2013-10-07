@@ -1,7 +1,7 @@
 package amp.extensions.commons.builder;
 
-import amp.bus.rabbit.BasicChannelFactory;
-import amp.bus.rabbit.CertificateChannelFactory;
+import amp.rabbit.BasicChannelFactory;
+import amp.rabbit.CertificateChannelFactory;
 
 /**
  * Build up a Channel Factory.
@@ -40,7 +40,7 @@ public class ChannelFactoryBuilder extends FluentExtension {
 	
 	/**
 	 * Connect to brokers using SSL (certificate authentication).
-	 * @param pathToClientCert Path to Client Certificate.
+	 * @param keystore Path to Client Certificate.
 	 * @param certPassword Password for Certificate.
 	 * @param pathToTrustStore Path to Trust Store.
 	 * @return Parent fluent.
@@ -48,7 +48,7 @@ public class ChannelFactoryBuilder extends FluentExtension {
 	public TransportBuilder sslAuth(
 		String pathToClientCert, String certPassword, String pathToTrustStore){
 		
-		CertificateChannelFactory channelFactory = 
+		CertificateChannelFactory channelFactory =
 			new CertificateChannelFactory(pathToClientCert, certPassword, pathToTrustStore);
 		
 		this.transportBuilder.setChannelFactory(channelFactory);

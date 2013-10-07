@@ -53,8 +53,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\source\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="DefaultEnvelopeBusTests.cs" />
-    <Compile Include="DefaultEventBusTests.cs" />
+    <Compile Include="DefaultEventBusTests.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="InMemoryEnvBusTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -63,19 +68,19 @@
       <Project>{D96A6D2B-E427-406A-BD73-9961447B3557}</Project>
       <Name>amp.bus</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\source\amp.bus.rabbit\amp.bus.rabbit.csproj">
-      <Project>{8CB67E8B-14B4-4C67-A23E-5C61EE17C8C2}</Project>
-      <Name>amp.bus.rabbit</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\source\amp.eventing\amp.eventing.csproj">
       <Project>{24D9184A-81B9-4D67-86E4-1B8B4EAB27BB}</Project>
       <Name>amp.eventing</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\source\amp.messaging\amp.messaging.csproj">
+      <Project>{80F80EE5-5C74-48FF-9F25-225CFD77D0EC}</Project>
+      <Name>amp.messaging</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>IF NOT EXIST $(SolutionDir)binaries MKDIR $(SolutionDir)binaries
-copy $(TargetDir)$(TargetName)* $(SolutionDir)binaries</PostBuildEvent>
+    <PostBuildEvent>IF NOT EXIST "$(SolutionDir)binaries" MKDIR "$(SolutionDir)binaries"
+copy "$(TargetDir)$(TargetName)*" "$(SolutionDir)binaries"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

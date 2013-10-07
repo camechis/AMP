@@ -1,15 +1,16 @@
 package amp.extensions.commons.builder;
 
-import amp.bus.rabbit.topology.Exchange;
-import amp.eventing.ISerializer;
-import amp.topology.client.BasicAuthHttpClientProvider;
+import amp.commanding.ICommandReceiver;
+import amp.rabbit.topology.Exchange;
+import amp.utility.serialization.ISerializer;
 import amp.topology.client.DefaultApplicationExchangeProvider;
 import amp.topology.client.FallbackRoutingInfoProvider;
 import amp.topology.client.GlobalTopologyService;
-import amp.topology.client.HttpClientProvider;
 import amp.topology.client.HttpRoutingInfoRetriever;
 import amp.topology.client.JsonRoutingInfoSerializer;
-import amp.topology.client.SslHttpClientProvider;
+import amp.utility.http.HttpClientProvider;
+import amp.utility.http.BasicAuthHttpClientProvider;
+import amp.utility.http.SslHttpClientProvider;
 
 /**
  * Build up the Global Topology Client.
@@ -22,24 +23,27 @@ public class GlobalTopologyBuilder extends FluentExtension {
 	ISerializer serializer = new JsonRoutingInfoSerializer();
 	DefaultApplicationExchangeProvider primaryFallbackProvider;
 	FallbackRoutingInfoProvider fallbackProvider;
+    ICommandReceiver commandReceiver;
 	String host;
 	int port;
 	boolean useSSL = false;
 	String urlExpression;
 	// Ten minute eviction policy.
 	long cacheEntryExpiration = 1000 * 60 * 10;
-	
+
+    BusBuilder busBuilder;
 	TransportBuilder transportBuilder;
 	
 	/**
 	 * Initialize the builder with a reference to the parent fluent interface.
-	 * @param parent Parent builder.
+	 * @param busBuilder Parent builder.
 	 * @param transportBuilder Builder in which we will set the topology service.
 	 */
-	public GlobalTopologyBuilder(BusBuilder parent, TransportBuilder transportBuilder) {
-		
-		super(parent);
-		
+	public GlobalTopologyBuilder(BusBuilder busBuilder, TransportBuilder transportBuilder) {
+
+        super(busBuilder);
+
+        this.busBuilder = busBuilder;
 		this.transportBuilder = transportBuilder;
 		this.primaryFallbackProvider = new DefaultApplicationExchangeProvider();
 		this.primaryFallbackProvider.setDurable(true);
@@ -221,7 +225,7 @@ public class GlobalTopologyBuilder extends FluentExtension {
 	 */
 	@Override
 	public BusBuilder and() {
-		
+
 		buildTopologyService();
 		
 		// Super!
@@ -231,7 +235,7 @@ public class GlobalTopologyBuilder extends FluentExtension {
 	/**
 	 * Build the topology service and set it on the transport fluent.
 	 */
-	void buildTopologyService(){
+	void buildTopologyService() {
 		
 		// Fallback Provider.
 		FallbackRoutingInfoProvider fallback = 
@@ -265,7 +269,7 @@ public class GlobalTopologyBuilder extends FluentExtension {
 		
 		// Initialize GTS.
 		GlobalTopologyService gts = 
-			new GlobalTopologyService(riRetriever, this.cacheEntryExpiration, fallback);
+			new GlobalTopologyService(riRetriever, fallback);
 		
 		// Set it on the parent.
 		this.transportBuilder.setTopologyService(gts);

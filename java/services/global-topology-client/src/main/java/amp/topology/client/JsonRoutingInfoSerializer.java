@@ -11,9 +11,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import amp.bus.rabbit.topology.RouteInfo;
-import amp.bus.rabbit.topology.RoutingInfo;
-import amp.eventing.ISerializer;
+import amp.rabbit.topology.RouteInfo;
+import amp.rabbit.topology.RoutingInfo;
+import amp.utility.serialization.ISerializer;
 
 /**
  * This is a fix until the Iterable is removed from RoutingInfo.

@@ -6,9 +6,9 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import amp.bus.rabbit.topology.Exchange;
-import amp.bus.rabbit.topology.RouteInfo;
-import amp.bus.rabbit.topology.RoutingInfo;
+import amp.rabbit.topology.Exchange;
+import amp.rabbit.topology.RouteInfo;
+import amp.rabbit.topology.RoutingInfo;
 
 import cmf.bus.EnvelopeHeaderConstants;
 

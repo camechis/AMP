@@ -10,11 +10,10 @@ import cmf.eventing.patterns.rpc.IRpcEventBus;
 import amp.bus.security.InMemoryUserInfoRepository;
 import amp.eventing.DefaultEventBus;
 import amp.eventing.DefaultRpcBus;
-import amp.eventing.GsonSerializer;
-import amp.eventing.IEventProcessor;
-import amp.eventing.OutboundHeadersProcessor;
+import amp.messaging.IMessageProcessor;
+import amp.messaging.OutboundHeadersProcessor;
 import amp.eventing.RpcFilter;
-import amp.eventing.serializers.JsonEventSerializer;
+import amp.messaging.JsonSerializationProcessor;;
 
 /**
  * Fluent for constructing an EventBus.
@@ -27,8 +26,8 @@ import amp.eventing.serializers.JsonEventSerializer;
  */
 public class EventBusBuilder extends FluentExtension {
 
-	LinkedList<IEventProcessor> inbound = new LinkedList<IEventProcessor>();
-	LinkedList<IEventProcessor> outbound = new LinkedList<IEventProcessor>();
+	LinkedList<IMessageProcessor> inbound = new LinkedList<IMessageProcessor>();
+	LinkedList<IMessageProcessor> outbound = new LinkedList<IMessageProcessor>();
 	boolean usingDefaults = true;
 	
 	/**
@@ -51,13 +50,12 @@ public class EventBusBuilder extends FluentExtension {
 		RpcFilter rpcFilter = new RpcFilter();
 		
 		// Got to marshall objects (Default is JSON)
-		JsonEventSerializer jsonEventSerializer = 
-				new JsonEventSerializer(new GsonSerializer());
-		
-		// I still don't know what this is.
+		JsonSerializationProcessor jsonEventSerializer = 
+				new JsonSerializationProcessor();
+
 		InMemoryUserInfoRepository userInfoRepository = 
 				new InMemoryUserInfoRepository(new HashMap<String, String>());
-		
+
 		// Manipulates the headers for use by the Event Bus.
 		OutboundHeadersProcessor headersProcessor = new OutboundHeadersProcessor(userInfoRepository);
 		
@@ -77,7 +75,7 @@ public class EventBusBuilder extends FluentExtension {
 	 * @param processor Processor to add.
 	 * @return This.
 	 */
-	public EventBusBuilder addInbound(IEventProcessor processor){
+	public EventBusBuilder addInbound(IMessageProcessor processor){
 		
 		voidWarranty();
 		
@@ -92,7 +90,7 @@ public class EventBusBuilder extends FluentExtension {
 	 * @param processor Processor to add.
 	 * @return This.
 	 */
-	public EventBusBuilder addOutbound(IEventProcessor processor){
+	public EventBusBuilder addOutbound(IMessageProcessor processor){
 		
 		voidWarranty();
 		

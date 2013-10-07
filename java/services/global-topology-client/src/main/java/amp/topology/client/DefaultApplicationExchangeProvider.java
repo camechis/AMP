@@ -1,22 +1,20 @@
 package amp.topology.client;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.UUID;
 
-import amp.bus.rabbit.topology.Exchange;
-import amp.bus.rabbit.topology.RouteInfo;
-import amp.bus.rabbit.topology.RoutingInfo;
+import amp.rabbit.topology.Exchange;
+import amp.rabbit.topology.RouteInfo;
+import amp.rabbit.topology.RoutingInfo;
 
 /**
- * Provides a route on the "amq.direct" exchange (which may only be a RabbitMQ
- * construct).  The implementation will not provide a queue name, assuming the
- * transport will create a unique queue instead (we don't want round-robin on
- * a single queue).  The exchange provide is "direct" by default, meaning delivery
- * of messages will require an exact match (that is, routing key = topic). You will
- * not be able to consume multiple event types on the same queue unless you change
- * the default AMP implementation. 
+ * Provides a route on the "amp.fallback" exchange.  The implementation will not
+ * provide a queue name, assuming the transport will create a unique queue instead
+ * (we don't want round-robin on a single queue).  The exchange provided is "direct"
+ * by default, meaning delivery of messages will require an exact match (that is,
+ * routing key = topic). You will not be able to consume multiple event types on the
+ * same queue unless you change the default AMP implementation.
  * 
  * @author Richard Clayton (Berico Technologies)
  */
@@ -24,14 +22,14 @@ public class DefaultApplicationExchangeProvider implements FallbackRoutingInfoPr
 
 	protected static long UNIQUE_PROCESS_ID = 0;
 	protected String clientName = UUID.randomUUID().toString();
-	protected String exchangeName = "amq.direct";
-	protected String hostname = "rabbit";
+	protected String exchangeName = "amp.fallback";
+	protected String hostname = "localhost";
 	protected String vhost = "/";
 	protected int port = 5672;
 	protected String exchangeType = "direct";
 	protected String queueName = null;
-	protected boolean isDurable = true;
-	protected boolean isAutoDelete = false;
+	protected boolean isDurable = false;
+	protected boolean isAutoDelete = true;
 	
 	@SuppressWarnings("rawtypes")
 	protected Map arguments = null;
@@ -65,7 +63,8 @@ public class DefaultApplicationExchangeProvider implements FallbackRoutingInfoPr
 		
 		RouteInfo theOnlyRoute = new RouteInfo(defaultExchange, defaultExchange);
 	
-		List<RouteInfo> routes = Arrays.asList(theOnlyRoute);
+		ArrayList<RouteInfo> routes = new ArrayList<RouteInfo>();
+		routes.add(theOnlyRoute);
 		
 		return new RoutingInfo(routes);
 	}

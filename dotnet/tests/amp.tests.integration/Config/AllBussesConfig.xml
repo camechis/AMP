@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<objects xmlns="http://www.springframework.net">
+
+  <object id="IEventBus" type="amp.eventing.DefaultEventBus, amp.eventing">
+    <constructor-arg name="envelopeBus" ref="IEnvelopeBus" />
+    <constructor-arg name="inboundChain">
+      <list element-type="amp.messaging.IMessageProcessor, amp.messaging">
+        <ref object="Msg-JsonSerializationProcessor" />
+      </list>
+    </constructor-arg>
+    <constructor-arg name="outboundChain">
+      <list element-type="amp.messaging.IMessageProcessor, amp.messaging">
+        <ref object="Msg-JsonSerializationProcessor" />
+        <ref object="Msg-OutboundHeadersProcessor" />
+      </list>
+    </constructor-arg>
+  </object>
+
+  <object id="IRpcEventBus" type="amp.eventing.DefaultRpcBus, amp.eventing">
+    <constructor-arg name="envelopeBus" ref="IEnvelopeBus" />
+    <constructor-arg name="inboundChain">
+      <list element-type="amp.messaging.IMessageProcessor, amp.messaging">
+        <ref object="RpcFilter" />
+        <ref object="Msg-JsonSerializationProcessor" />
+      </list>
+    </constructor-arg>
+    <constructor-arg name="outboundChain">
+      <list element-type="amp.messaging.IMessageProcessor, amp.messaging">
+        <ref object="Msg-JsonSerializationProcessor" />
+        <ref object="Msg-OutboundHeadersProcessor" />
+        <ref object="RpcFilter" />
+      </list>
+    </constructor-arg>
+  </object>
+
+  <object id="IStreamingEventBus" type="amp.eventing.streaming.DefaultStreamingBus, amp.eventing">
+    <constructor-arg name="envelopeBus" ref="IEnvelopeBus" />
+    <constructor-arg name="inboundChain">
+      <list element-type="amp.messaging.IMessageProcessor, amp.messaging">
+        <ref object="Msg-JsonSerializationProcessor" />
+      </list>
+    </constructor-arg>
+    <constructor-arg name="outboundChain">
+      <list element-type="amp.messaging.IMessageProcessor, amp.messaging">
+        <ref object="Msg-JsonSerializationProcessor" />
+        <ref object="Msg-OutboundHeadersProcessor" />
+        <ref object="StreamingHeadersProcessor" />
+      </list>
+    </constructor-arg>
+  </object>
+
+  <object id="ICommandBus" type="amp.commanding.DefaultCommandBus, amp.commanding">
+    <constructor-arg name="envelopeBus" ref="IEnvelopeBus" />
+    <constructor-arg name="inboundChain">
+      <list element-type="amp.messaging.IMessageProcessor, amp.messaging">
+        <ref object="Msg-JsonSerializationProcessor" />
+      </list>
+    </constructor-arg>
+    <constructor-arg name="outboundChain">
+      <list element-type="amp.messaging.IMessageProcessor, amp.messaging">
+        <ref object="Msg-JsonSerializationProcessor" />
+        <ref object="Msg-OutboundHeadersProcessor" />
+      </list>
+    </constructor-arg>
+  </object>
+
+  <object id="Msg-JsonSerializationProcessor" type="amp.messaging.JsonSerializationProcessor, amp.messaging" />
+
+  <object id="Msg-OutboundHeadersProcessor" type="amp.messaging.OutboundHeadersProcessor, amp.messaging">
+    <constructor-arg name="alternateSenderIdentity" value="integration-test" />
+  </object>
+
+  <object id="RpcFilter" type="amp.eventing.RpcFilter, amp.eventing" />
+
+  <object id="StreamingHeadersProcessor" type="amp.eventing.streaming.StreamingHeadersProcessor, amp.eventing" />
+
+</objects>

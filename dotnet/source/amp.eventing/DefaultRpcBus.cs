@@ -1,29 +1,31 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Common.Logging;
-
+using amp.messaging;
 using cmf.bus;
-using amp.bus;
-using cmf.eventing;
 using cmf.eventing.patterns.rpc;
+using Common.Logging;
 
 namespace amp.eventing
 {
     public class DefaultRpcBus : DefaultEventBus, IRpcEventBus
     {
-        public DefaultRpcBus(DefaultEnvelopeBus envBus)
-            : base(envBus)
+        private static readonly ILog Log = LogManager.GetLogger(typeof(DefaultRpcBus));
+
+        private readonly IEnvelopeBus _envelopeBus;
+        
+        public DefaultRpcBus(IEnvelopeBus envelopeBus
+            , List<IMessageProcessor> inboundChain
+            , List<IMessageProcessor> outboundChain)
+            : base(envelopeBus, inboundChain, outboundChain)
         {
+            _envelopeBus = envelopeBus;
         }
 
 
         public object GetResponseTo(object request, TimeSpan timeout, string expectedTopic)
         {
-            _log.Debug("Enter GetResponseTo");
+            Log.Debug("Enter GetResponseTo");
 
             if (null == request) { throw new ArgumentNullException("Cannot get response to a null request"); }
 
@@ -42,34 +44,34 @@ namespace amp.eventing
                 env.SetRpcTimeout(timeout);
 
                 // create an event context
-                EventContext context = new EventContext(EventContext.Directions.Out, env, request);
+                MessageContext context = new MessageContext(MessageContext.Directions.Out, env, request);
 
                 // let the outbound processor do its thing
-                this.ProcessEvent(context, this.OutboundChain.Sort(), () =>
+                _eventProducer.ProcessMessage(context, () =>
                 {
                     // create an RPC registration
-                    RpcRegistration rpcRegistration = new RpcRegistration(requestId, expectedTopic, this.ProcessInbound);
+                    RpcRegistration rpcRegistration = new RpcRegistration(requestId, expectedTopic, _eventConsumer.OpenEnvelope);
 
                     // register with the envelope bus
-                    _envBus.Register(rpcRegistration);
+                    _envelopeBus.Register(rpcRegistration);
 
                     // now that we're setup to receive the response, send the request
-                    _envBus.Send(context.Envelope);
+                    _envelopeBus.Send(context.Envelope);
 
                     // get the envelope from the registraton
                     response = rpcRegistration.GetResponse(timeout);
 
                     // unregister from the bus
-                    _envBus.Unregister(rpcRegistration);
+                    _envelopeBus.Unregister(rpcRegistration);
                 });
             }
             catch (Exception ex)
             {
-                _log.Error("Exception publishing an event", ex);
+                Log.Error("Exception publishing an event", ex);
                 throw;
             }
 
-            _log.Debug("Leave GetResponseTo");
+            Log.Debug("Leave GetResponseTo");
             return response;
         }
 
@@ -94,46 +96,37 @@ namespace amp.eventing
 
         public void RespondTo(IDictionary<string, string> headers, object response)
         {
-            _log.Debug("Enter RespondTo");
+            Log.Debug("Enter RespondTo");
 
             if (null == response) { throw new ArgumentNullException("Cannot respond with a null event"); }
             if (null == headers) { throw new ArgumentNullException("Must provide non-null request headers"); }
             if (Guid.Empty == headers.GetMessageId()) { throw new ArgumentNullException("Cannot respond to a request because the provided request headers do not contain a message ID"); }
-            
+
             try
             {
                 Envelope env = new Envelope();
                 env.SetCorrelationId(headers.GetMessageId());
 
-                EventContext context = new EventContext(EventContext.Directions.Out, env, response);
+                MessageContext context = new MessageContext(MessageContext.Directions.Out, env, response);
 
-                this.ProcessEvent(context, this.OutboundChain.Sort(), () =>
+                _eventProducer.ProcessMessage(context, () =>
                 {
-                    _envBus.Send(env);
+                    _envelopeBus.Send(env);
                 });
             }
             catch (Exception ex)
             {
-                _log.Error("Exception responding to an event", ex);
+                Log.Error("Exception responding to an event", ex);
                 throw;
             }
 
-            _log.Debug("Leave RespondTo");
+            Log.Debug("Leave RespondTo");
         }
 
-
-        protected virtual object ProcessInbound(Envelope env)
+        public override void Dispose()
         {
-            object ev = null;
-            EventContext context = new EventContext(EventContext.Directions.In, env);
-
-            this.ProcessEvent(context, this.InboundChain.Sort(), () =>
-            {
-                _log.Info("Completed inbound processing - returning event");
-                ev = context.Event;
-            });
-
-            return ev;
+            _envelopeBus.Dispose();
+            base.Dispose();
         }
     }
 }

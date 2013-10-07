@@ -2,7 +2,7 @@ package amp.extensions.commons.builder;
 
 import java.util.UUID;
 
-import amp.bus.rabbit.topology.SimpleTopologyService;
+import amp.rabbit.topology.SimpleTopologyService;
 
 /**
  * Build up a Simple Topology Service.
@@ -16,6 +16,7 @@ public class SimpleTopologyBuilder extends FluentExtension {
 	int port = 5672;
 	String defaultExchange = "cmf.simple";
 	String clientName = UUID.randomUUID().toString();
+    BusBuilder busBuilder;
 	TransportBuilder transportBuilder;
 	
 	/**
@@ -26,7 +27,8 @@ public class SimpleTopologyBuilder extends FluentExtension {
 	public SimpleTopologyBuilder(BusBuilder parent, TransportBuilder transportBuilder) {
 		
 		super(parent);
-		
+
+		this.busBuilder = parent;
 		this.transportBuilder = transportBuilder;
 	}
 	

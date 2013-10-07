@@ -1,20 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-
+using amp.messaging;
 using Common.Logging;
 
 using cmf.bus;
-using amp.bus;
 
 namespace amp.eventing
 {
     public class RpcRegistration : IRegistration
     {
         protected Predicate<Envelope> _responseFilter;
-        protected Func<Envelope, object> _openEnvelope;
+        protected Func<Envelope, MessageContext> _openEnvelope;
         protected AutoResetEvent _responseEvent;
         protected ILog _log;
         protected Envelope _responseEnvelope;
@@ -26,9 +23,9 @@ namespace amp.eventing
         }
 
         public IDictionary<string, string> Info { get; protected set; }
-        
-        
-        public RpcRegistration(Guid requestId, string expectedTopic, Func<Envelope, object> openEnvelope)
+
+
+        public RpcRegistration(Guid requestId, string expectedTopic, Func<Envelope, MessageContext> openEnvelope)
         {
             _openEnvelope = openEnvelope;
 
@@ -63,7 +60,8 @@ namespace amp.eventing
 
             if (_responseEvent.WaitOne(timeout))
             {
-                response = _openEnvelope(_responseEnvelope);
+                MessageContext context = _openEnvelope(_responseEnvelope);
+                response = context == null ? null : context.Message;
             }
 
             return response;

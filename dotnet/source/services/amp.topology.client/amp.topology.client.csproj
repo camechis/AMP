@@ -28,6 +28,12 @@
     <WarningLevel>4</WarningLevel>
     <Externalconsole>True</Externalconsole>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>amp.topology.client.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="cmf.bus">
       <HintPath>..\..\..\binaries\libraries\cmf.bus.dll</HintPath>
@@ -35,18 +41,12 @@
     <Reference Include="log4net">
       <HintPath>..\..\..\binaries\libraries\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\..\binaries\libraries\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Runtime.Caching" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BasicAuthWebRequestFactory.cs" />
     <Compile Include="DefaultApplicationExchangeProvider.cs" />
     <Compile Include="HttpRoutingInfoRetreiver.cs" />
-    <Compile Include="IRoutingDeserializer.cs" />
-    <Compile Include="IWebRequestFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="..\..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
@@ -55,22 +55,31 @@
     <Compile Include="IRoutingInfoRetreiver.cs" />
     <Compile Include="IFallbackRoutingInfoProvider.cs" />
     <Compile Include="RoutingInfoNotFoundException.cs" />
-    <Compile Include="Utf8JsonRoutingDeserializer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <ItemGroup />
   <ItemGroup>
-    <ProjectReference Include="..\..\amp.bus.rabbit\amp.bus.rabbit.csproj">
-      <Project>{8CB67E8B-14B4-4C67-A23E-5C61EE17C8C2}</Project>
-      <Name>amp.bus.rabbit</Name>
+    <ProjectReference Include="..\..\amp.messaging\amp.messaging.csproj">
+      <Project>{80F80EE5-5C74-48FF-9F25-225CFD77D0EC}</Project>
+      <Name>amp.messaging</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\amp.rabbit\amp.rabbit.csproj">
+      <Project>{1d9a3ed8-779b-4f1b-93f5-837320af4656}</Project>
+      <Name>amp.rabbit</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\amp.utility\amp.utility.csproj">
+      <Project>{964930B6-0B9A-48E2-BC0C-F5ADFA60C005}</Project>
+      <Name>amp.utility</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="amp.topology.client.snk" />
   </ItemGroup>
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>IF NOT EXIST $(SolutionDir)binaries MKDIR $(SolutionDir)binaries
-copy $(TargetDir)$(TargetName)* $(SolutionDir)binaries</PostBuildEvent>
+    <PostBuildEvent>IF NOT EXIST "$(SolutionDir)binaries" MKDIR "$(SolutionDir)binaries"
+copy "$(TargetDir)$(TargetName)*" "$(SolutionDir)binaries"</PostBuildEvent>
   </PropertyGroup>
 </Project>

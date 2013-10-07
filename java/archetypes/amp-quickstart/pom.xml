@@ -1,0 +1,57 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+    
+    
+    <parent>
+        <groupId>amp</groupId>
+        <artifactId>amp</artifactId>
+        <version>3.2.1</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>
+    
+    <artifactId>archetype.quickstart</artifactId>
+	<name>AMP Archetypes - Quickstart</name>
+    <packaging>jar</packaging>
+	<url>http://ampere.berico.us/archetypes/</url>
+    
+    
+    <dependencies>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+		</dependency>
+	</dependencies>
+
+
+    <!-- Extra maven repositories needed -->
+    <repositories>
+        <repository>
+            <id>nexus.bericotechnologies.com</id>
+            <name>Berico Technologies Nexus</name>
+            <url>http://nexus.bericotechnologies.com/content/groups/public</url>
+            <releases><enabled>true</enabled></releases>
+            <snapshots><enabled>true</enabled></snapshots>
+        </repository>
+        <repository>
+            <id>springsource-repo</id>
+            <name>SpringSource Repository</name>
+            <url>http://repo.springsource.org/release</url>
+        </repository>
+        <repository>
+            <id>spring-snapshot</id>
+            <name>Spring Maven SNAPSHOT Repository</name>
+            <url>http://repo.springsource.org/libs-snapshot</url>
+        </repository>
+    </repositories>
+
+</project>

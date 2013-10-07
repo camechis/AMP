@@ -8,34 +8,28 @@
         <groupId>amp</groupId>
         <artifactId>amp</artifactId>
         <relativePath>../pom.xml</relativePath>
-        <version>3.1.0</version>
+        <version>3.2.1</version>
     </parent>
 
 
-    <groupId>amp</groupId>
     <artifactId>amp.eventing</artifactId>
-    <version>3.1.0</version>
     <name>AMP implementation of the CMF Event Bus</name>
     <packaging>jar</packaging>
-
-
-    <properties>
-        <gson.version>2.2.2</gson.version>
-    </properties>
+    <url>http://ampere.berico.us/clients/java</url>
 
 
     <dependencies>
         <dependency>
-            <groupId>${project.parent.groupId}</groupId>
-            <artifactId>amp.bus.security</artifactId>
+            <groupId>amp</groupId>
+            <artifactId>amp.messaging</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>${gson.version}</version>
+            <groupId>amp</groupId>
+            <artifactId>amp.utility</artifactId>
+            <version>${project.parent.version}</version>
         </dependency>
-
+        
         <dependency>
             <groupId>cmf</groupId>
             <artifactId>cmf.bus</artifactId>

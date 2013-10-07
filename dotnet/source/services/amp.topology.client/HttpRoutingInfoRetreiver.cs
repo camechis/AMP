@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text;
 
+using amp.utility.http;
+using amp.utility.serialization;
 using log4net;
 
-using amp.bus.rabbit.topology;
+using amp.rabbit.topology;
 
 
 namespace amp.topology.client
@@ -19,12 +18,12 @@ namespace amp.topology.client
     public class HttpRoutingInfoRetreiver : IRoutingInfoRetreiver
     {
         protected static readonly ILog Log = LogManager.GetLogger(typeof(HttpRoutingInfoRetreiver));
-        private readonly IRoutingDeserializer _serializer;
+        private readonly IDeserializer<RoutingInfo> _serializer;
         private readonly string _urlExpression;
         private readonly IWebRequestFactory _webRequestFactory;
 
 
-        public HttpRoutingInfoRetreiver(IWebRequestFactory webRequestFactory, string urlExpression, IRoutingDeserializer serializer)
+        public HttpRoutingInfoRetreiver(IWebRequestFactory webRequestFactory, string urlExpression, IDeserializer<RoutingInfo> serializer)
         {
             _webRequestFactory = webRequestFactory;
             _urlExpression = urlExpression;
@@ -59,7 +58,7 @@ namespace amp.topology.client
                 // get some response to the request
                 using (Stream responseStream = request.GetResponse().GetResponseStream())
                 {
-                    routing = _serializer.DeserializeRouting(responseStream);
+                    routing = _serializer.Deserialize(responseStream);
                 }
             }
             catch (Exception ex)

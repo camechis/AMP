@@ -1,19 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
-using System.Text;
-
+using amp.messaging;
 using Common.Logging;
 
 using cmf.bus;
-using amp.bus;
 using amp.bus.security;
 
 namespace amp.eventing
 {
-    public class DigitalSignatureProcessor : IEventProcessor
+    public class DigitalSignatureProcessor : IMessageProcessor
     {
         protected ICertificateProvider _certProvider;
         protected X509Certificate2 _cert;
@@ -35,19 +31,19 @@ namespace amp.eventing
         }
 
 
-        public void ProcessEvent(EventContext context, Action continueProcessing)
+        public void ProcessMessage(MessageContext context, Action continueProcessing)
         {
-            if (EventContext.Directions.In == context.Direction)
+            if (MessageContext.Directions.In == context.Direction)
             {
                 this.ProcessInbound(context, continueProcessing);
             }
-            if (EventContext.Directions.Out == context.Direction)
+            if (MessageContext.Directions.Out == context.Direction)
             {
                 this.ProcessOutbound(context, continueProcessing);
             }
         }
 
-        public void ProcessInbound(EventContext context, Action continueProcessing)
+        public void ProcessInbound(MessageContext context, Action continueProcessing)
         {
             bool signatureVerified = false;
             Envelope env = context.Envelope;
@@ -87,7 +83,7 @@ namespace amp.eventing
             if (signatureVerified) { continueProcessing(); }
         }
 
-        public void ProcessOutbound(EventContext context, Action continueProcessing)
+        public void ProcessOutbound(MessageContext context, Action continueProcessing)
         {
             if (null == _cert) { return; }
 
@@ -106,6 +102,11 @@ namespace amp.eventing
                 _log.Error("Failed to digitally sign the event", ex);
                 throw;
             }
+        }
+
+        public void Dispose()
+        {
+            //Nothing to do.
         }
     }
 }

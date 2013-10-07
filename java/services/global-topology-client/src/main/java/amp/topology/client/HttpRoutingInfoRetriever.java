@@ -1,5 +1,6 @@
 package amp.topology.client;
 
+
 import org.apache.http.util.EntityUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -8,8 +9,10 @@ import org.apache.http.client.methods.HttpGet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import amp.bus.rabbit.topology.RoutingInfo;
-import amp.eventing.ISerializer;
+import amp.utility.serialization.ISerializer;
+import amp.rabbit.topology.RoutingInfo;
+import amp.utility.http.HttpClientProvider;
+
 
 /**
  * Provides routing info from an HTTP-based endpoint.
@@ -18,14 +21,13 @@ import amp.eventing.ISerializer;
  */
 public class HttpRoutingInfoRetriever implements IRoutingInfoRetriever {
 
-	Logger logger = LoggerFactory.getLogger(HttpRoutingInfoRetriever.class);
-	
+	private static final Logger LOG = LoggerFactory.getLogger(HttpRoutingInfoRetriever.class);
+
 	HttpClient httpClient;
-	
 	String urlExpression;
-	
 	ISerializer serializer;
-	
+
+
 	public HttpRoutingInfoRetriever(HttpClientProvider httpClientProvider, String urlExpression, ISerializer serializer){
 		
 		this(httpClientProvider.getClient(), urlExpression, serializer);
@@ -34,12 +36,11 @@ public class HttpRoutingInfoRetriever implements IRoutingInfoRetriever {
 	public HttpRoutingInfoRetriever(HttpClient httpClient, String urlExpression, ISerializer serializer){
 		
 		this.httpClient = httpClient;
-		
 		this.urlExpression = urlExpression;
-		
 		this.serializer = serializer;
 	}
-	
+
+
 	/**
 	 * Retrieve routing info for the supplied topic.
 	 * @param topic Topic to find routing info for.
@@ -48,34 +49,27 @@ public class HttpRoutingInfoRetriever implements IRoutingInfoRetriever {
 	@Override
 	public RoutingInfo retrieveRoutingInfo(String topic) {
 		
-		logger.debug("Getting routing info for topic: {}", topic);
-		
+		LOG.debug("Getting routing info for topic: {}", topic);
+
 		RoutingInfo routingInfo = null;
-		
 		String url = String.format(this.urlExpression, topic);
-		
-		logger.debug("Calling GTS with url: {}", url);
-		
-		HttpGet httpGet = new HttpGet(url);
-		
+        HttpGet httpGet = new HttpGet(url);
+
 		try {
-			
+
+            LOG.debug("Calling GTS with url: {}", url);
 			HttpResponse response = httpClient.execute(httpGet);
-			
 			HttpEntity entity = response.getEntity();
-			
 			String content = EntityUtils.toString(entity);
-			
-			logger.debug("Received the following content from GTS: {}", content);
+			LOG.debug("Received the following content from GTS: {}", content);
 			
 			routingInfo = this.serializer.stringDeserialize(content, RoutingInfo.class);
 			
-		} catch (Exception e){
+		} catch (Exception e) {
 			
-			logger.error("Failed to retrieve routing info: {}", e);
+			LOG.error("Failed to retrieve routing info: {}", e);
 		}
 		
 		return routingInfo;
 	}
-
 }

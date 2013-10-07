@@ -10,11 +10,15 @@ import amp.bus.security.IUserInfoRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import amp.eventing.EnvelopeHelper;
-import amp.eventing.EventContext.Directions;
+import amp.messaging.EnvelopeHelper;
+import amp.messaging.IContinuationCallback;
+import amp.messaging.IMessageProcessor;
+import amp.messaging.MessageContext;
+import amp.messaging.MessageContext.Directions;
+import amp.messaging.MessageException;
 
 
-public class DigitalSignatureProcessor implements IEventProcessor {
+public class DigitalSignatureProcessor implements IMessageProcessor {
 
 	protected ICertificateProvider certProvider;
 	protected IUserInfoRepository userInfoRepo;
@@ -40,7 +44,7 @@ public class DigitalSignatureProcessor implements IEventProcessor {
 	
 	
 	@Override
-	public void processEvent(EventContext context, IContinuationCallback continuation) throws Exception {
+	public void processMessage(MessageContext context, IContinuationCallback continuation) throws MessageException {
 		
 		if (Directions.In == context.getDirection()) {
 			this.processInbound(context, continuation);
@@ -50,7 +54,7 @@ public class DigitalSignatureProcessor implements IEventProcessor {
 		}
 	}
 	
-	public void processOutbound(EventContext context, IContinuationCallback continuation) throws Exception {
+	public void processOutbound(MessageContext context, IContinuationCallback continuation) throws MessageException {
 		
 		try {
 			EnvelopeHelper env = new EnvelopeHelper(context.getEnvelope());
@@ -70,11 +74,11 @@ public class DigitalSignatureProcessor implements IEventProcessor {
 		}
 		catch(Exception ex) {
 			log.error("Exception while signing outbound event", ex);
-			throw ex;
+			throw new MessageException("Exception while signing outbound event", ex);
 		}
 	}
 
-	public void processInbound(EventContext context, IContinuationCallback continuation) throws Exception {
+	public void processInbound(MessageContext context, IContinuationCallback continuation) throws MessageException  {
 
 		boolean verified = false;
 		
@@ -99,7 +103,7 @@ public class DigitalSignatureProcessor implements IEventProcessor {
 		}
 		catch(Exception ex) {
 			log.error("Failed to verify sender's digital signature", ex);
-			throw ex;
+			throw new MessageException("Failed to verify sender's digital signature", ex);
 		}
 		
 		if (verified) { continuation.continueProcessing(); }

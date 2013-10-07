@@ -33,7 +33,7 @@
     <SignAssembly>True</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>amp.bus.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\amp.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Common.Logging">
@@ -62,12 +62,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="amp.bus.snk" />
+    <None Include="..\amp.snk">
+      <Link>amp.snk</Link>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>IF NOT EXIST $(SolutionDir)binaries MKDIR $(SolutionDir)binaries
-copy $(TargetDir)$(TargetName)* $(SolutionDir)binaries</PostBuildEvent>
+    <PostBuildEvent>IF NOT EXIST "$(SolutionDir)binaries" MKDIR "$(SolutionDir)binaries"
+copy "$(TargetDir)$(TargetName)*" "$(SolutionDir)binaries"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

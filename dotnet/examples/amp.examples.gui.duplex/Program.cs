@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Net;
 using System.Windows.Forms;
 
 using Spring.Context;
@@ -19,9 +18,12 @@ namespace amp.examples.gui.duplex
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
+            //Hack so that we don't have to validate the Anubis server certificate.
+            ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
+
             IApplicationContext springContainer = ContextRegistry.GetContext();
             DuplexEventForm form = springContainer.GetObject(typeof(DuplexEventForm).FullName) as DuplexEventForm;
-            
+
             Application.Run(form);
         }
     }

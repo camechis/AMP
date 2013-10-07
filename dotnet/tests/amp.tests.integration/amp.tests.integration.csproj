@@ -1,0 +1,143 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{88F59A07-5F3C-453D-B029-D209CC07C467}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>amp.tests.integration</RootNamespace>
+    <AssemblyName>amp.tests.integration</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="cmf.bus">
+      <HintPath>..\..\binaries\libraries\cmf.bus.dll</HintPath>
+    </Reference>
+    <Reference Include="cmf.eventing">
+      <HintPath>..\..\binaries\libraries\cmf.eventing.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging, Version=1.2.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\binaries\libraries\Common.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Moq">
+      <HintPath>..\..\binaries\libraries\Moq.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework, Version=2.5.10.11092, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\binaries\libraries\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="RabbitMQ.Client, Version=3.1.3.0, Culture=neutral, PublicKeyToken=89e7d7c5feba84ce, processorArchitecture=MSIL">
+      <HintPath>..\..\binaries\libraries\RabbitMQ.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Spring.Core">
+      <HintPath>..\..\binaries\libraries\Spring.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\source\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="Commanding\DefaultCommandBusTests.cs" />
+    <Compile Include="ConfigScenarios\AnubisOnlyTests.cs" />
+    <Compile Include="Config.cs" />
+    <Compile Include="ConfigScenarios\GtsAnubisAndTwoWaySSLforRabbit.cs" />
+    <Compile Include="ConfigScenarios\GtsBasicAuth.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Eventing\DefaultEventBusTests.cs" />
+    <Compile Include="Eventing\DefaultRpcBusTests.cs" />
+    <Compile Include="Eventing\Streaming\DefaultStreamingBusTests.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Rabbit\TokenConnectionFactoryTests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Config\Authorization\AnubisAndTwoWaySSLRabbitConfig.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Config\Authorization\BasicAuthRabbitConfig.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Config\Topology\GtsConfig.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Config\AllBussesConfig.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\source\amp.commanding\amp.commanding.csproj">
+      <Project>{93150A91-3D0A-4753-94A4-B6280994A18A}</Project>
+      <Name>amp.commanding</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\source\amp.eventing\amp.eventing.csproj">
+      <Project>{24D9184A-81B9-4D67-86E4-1B8B4EAB27BB}</Project>
+      <Name>amp.eventing</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\source\amp.rabbit\amp.rabbit.csproj">
+      <Project>{1D9A3ED8-779B-4F1B-93F5-837320AF4656}</Project>
+      <Name>amp.rabbit</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Config\Authorization\AnubisAndBasicAuthRabbitConfig.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Config\Topology\SimpleTopologyConfig.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Config\Topology\GtsConfigSSL.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy "$(SolutionDir)binaries\*.dll" "$(TargetDir)"
+copy "$(SolutionDir)binaries\*.pdb" "$(TargetDir)"
+copy "$(SolutionDir)binaries\libraries\*.dll" "$(TargetDir)"</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

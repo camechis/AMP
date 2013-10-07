@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-
+using amp.messaging;
 using Common.Logging;
 
 using cmf.bus;
-using amp.bus;
 
 namespace amp.eventing
 {
@@ -16,7 +13,7 @@ namespace amp.eventing
     /// desirable to not receive your own requests.  This processor filters out
     /// requests that you have sent so that you do not receive them yourself.
     /// </summary>
-    public class RpcFilter : IEventProcessor
+    public class RpcFilter : IMessageProcessor
     {
         protected IList<Guid> _sentRequests;
         protected object _listLock = new object();
@@ -31,19 +28,19 @@ namespace amp.eventing
         }
 
 
-        public void ProcessEvent(EventContext context, Action continueProcessing)
+        public void ProcessMessage(MessageContext context, Action continueProcessing)
         {
-            if (EventContext.Directions.In == context.Direction)
+            if (MessageContext.Directions.In == context.Direction)
             {
                 this.ProcessInbound(context, continueProcessing);
             }
-            if (EventContext.Directions.Out == context.Direction)
+            if (MessageContext.Directions.Out == context.Direction)
             {
                 this.ProcessOutbound(context, continueProcessing);
             }
         }
 
-        public void ProcessInbound(EventContext context, Action continueProcessing)
+        public void ProcessInbound(MessageContext context, Action continueProcessing)
         {
             bool ourOwnRequest = false;
             Envelope env = context.Envelope;
@@ -72,7 +69,7 @@ namespace amp.eventing
             if (!ourOwnRequest) { continueProcessing(); }
         }
 
-        public void ProcessOutbound(EventContext context, Action continueProcessing)
+        public void ProcessOutbound(MessageContext context, Action continueProcessing)
         {
             Envelope env = context.Envelope;
 
@@ -111,6 +108,11 @@ namespace amp.eventing
                 _log.Debug(string.Format("Removing requestId {0} from the RPC Filter list", requestId.ToString()));
                 _sentRequests.Remove(requestId);
             }
+        }
+
+        public void Dispose()
+        {
+            //Nothing to do.
         }
     }
 
