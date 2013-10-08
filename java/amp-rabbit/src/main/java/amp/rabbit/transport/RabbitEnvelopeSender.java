@@ -3,6 +3,7 @@ package amp.rabbit.transport;
 import amp.rabbit.connection.IRabbitConnectionFactory;
 import amp.rabbit.topology.Exchange;
 import amp.rabbit.topology.ITopologyService;
+import amp.rabbit.topology.ProducingRoute;
 import amp.rabbit.topology.RouteInfo;
 import amp.rabbit.topology.RoutingInfo;
 import cmf.bus.Envelope;
@@ -13,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,21 +49,20 @@ public class RabbitEnvelopeSender implements IEnvelopeSender {
         RoutingInfo routing = _topologyService.getRoutingInfo(envelope.getHeaders());
 
         // next, pull out all the producer exchanges
-        List<Exchange> exchanges = new ArrayList<Exchange>();
+        List<ProducingRoute> proutes = routing.getProducingRoutes();
 
-        for (RouteInfo route : routing.getRoutes()) {
-
-            exchanges.add(route.getProducerExchange());
-        }
 
         // for each exchange, send the envelope
-        for (Exchange ex : exchanges) {
-            LOG.info("Sending to exchange: " + ex.toString());
+        for (ProducingRoute proute : proutes) {
+            LOG.info("Sending to exchange: " + proute.getExchange().toString());
 
             Channel channel = null;
 
             try {
-                channel = _channelFactory.getConnectionFor(ex).createChannel();
+                channel = _channelFactory.getConnectionFor(proute.getExchange()).createChannel();
+//TODO:JM      - Rich Version               channel = _channelFactory.getChannelFor(ex);
+//TODO:JM      + Justin Refactor Version    channel = _channelFactory.getChannelFor(proute);
+//TODO:JM      + MostRecent/Ken Version     channel = _channelFactory.getConnectionFor(ex).createChannel();
 
                 AMQP.BasicProperties props = new AMQP.BasicProperties.Builder().build();
 
@@ -74,11 +75,19 @@ public class RabbitEnvelopeSender implements IEnvelopeSender {
 
                 props.setHeaders(headers);
 
-                channel.exchangeDeclare(
-                        ex.getName(), ex.getExchangeType(), ex.getIsDurable(),
-                        ex.getIsAutoDelete(), ex.getArguments());
+                Exchange ex = proute.getExchange();
+                Collection<String> keys = proute.getRoutingKeys();
+                
 
-                channel.basicPublish(ex.getName(), ex.getRoutingKey(), props, envelope.getPayload());
+                channel.exchangeDeclare(
+                        ex.getName(), ex.getExchangeType(), ex.isDurable(),
+                        ex.isAutoDelete(), ex.getArguments());
+
+                for (String key: keys) {
+                	channel.basicPublish(ex.getName(), key, props, envelope.getPayload());
+                }
+
+
 
             } catch (Exception e) {
                 LOG.error("Failed to send an envelope", e);

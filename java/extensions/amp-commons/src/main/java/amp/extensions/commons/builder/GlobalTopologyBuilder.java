@@ -1,6 +1,9 @@
 package amp.extensions.commons.builder;
 
+import java.util.Arrays;
+
 import amp.commanding.ICommandReceiver;
+import amp.rabbit.topology.Broker;
 import amp.rabbit.topology.Exchange;
 import amp.utility.serialization.ISerializer;
 import amp.topology.client.DefaultApplicationExchangeProvider;
@@ -46,7 +49,7 @@ public class GlobalTopologyBuilder extends FluentExtension {
         this.busBuilder = busBuilder;
 		this.transportBuilder = transportBuilder;
 		this.primaryFallbackProvider = new DefaultApplicationExchangeProvider();
-		this.primaryFallbackProvider.setDurable(true);
+		this.primaryFallbackProvider.getExchangePrototype().setDurable(true);
 	}
 
 	/**
@@ -151,9 +154,12 @@ public class GlobalTopologyBuilder extends FluentExtension {
 	 */
 	public GlobalTopologyBuilder fallingBackOn(String hostname, int port, String vhost){
 		
-		this.primaryFallbackProvider.setHostname(hostname);
-		this.primaryFallbackProvider.setPort(port);
-		this.primaryFallbackProvider.setVhost(vhost);
+		//TODO: JM > CLUSTER_ID
+		//TODO: JM > SSL_ENABLED
+		Broker broker = new Broker("defaultCluster",hostname,port,false);	
+		this.primaryFallbackProvider.setBrokers(Arrays.asList(broker));
+		this.primaryFallbackProvider.getExchangePrototype().setVirtualHost(vhost);
+
 		
 		return this;
 	}
@@ -189,24 +195,24 @@ public class GlobalTopologyBuilder extends FluentExtension {
 		return fallingBackOn(hostname, port, vhost, exchangeName);
 	}
 	
-	/**
-	 * Fallback on the Default App Exchange at the supplied location.
-	 * @param prototype Supply all sample exchange.
-	 * @return This.
-	 */
-	public GlobalTopologyBuilder fallingBackOn(Exchange prototype){
-		
-		this.primaryFallbackProvider.setArguments(prototype.getArguments());
-		this.primaryFallbackProvider.setAutoDelete(prototype.getIsAutoDelete());
-		this.primaryFallbackProvider.setDurable(prototype.getIsDurable());
-		
-		return fallingBackOn(
-				prototype.getHostName(), 
-				prototype.getPort(), 
-				prototype.getVirtualHost(), 
-				prototype.getName(), 
-				prototype.getExchangeType());
-	}
+//	/**
+//	 * Fallback on the Default App Exchange at the supplied location.
+//	 * @param prototype Supply all sample exchange.
+//	 * @return This.
+//	 */
+//	public GlobalTopologyBuilder fallingBackOn(Exchange prototype){
+//		
+//		this.primaryFallbackProvider.setArguments(prototype.getArguments());
+//		this.primaryFallbackProvider.setAutoDelete(prototype.isAutoDelete());
+//		this.primaryFallbackProvider.setDurable(prototype.isDurable());
+//		
+//		return fallingBackOn(
+//				prototype.getHostName(), 
+//				prototype.getPort(), 
+//				prototype.getVirtualHost(), 
+//				prototype.getName(), 
+//				prototype.getExchangeType());
+//	}
 
 	/**
 	 * Build the Topology Service and return to the parent fluent.

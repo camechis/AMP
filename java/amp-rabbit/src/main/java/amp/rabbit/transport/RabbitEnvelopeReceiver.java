@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import amp.rabbit.connection.IRabbitConnectionFactory;
 import amp.rabbit.dispatch.IListenerCloseCallback;
 import amp.rabbit.dispatch.RabbitListener;
+import amp.rabbit.topology.ConsumingRoute;
 import amp.rabbit.topology.Exchange;
 import amp.rabbit.topology.ITopologyService;
 import amp.rabbit.topology.RouteInfo;
@@ -55,16 +56,13 @@ public class RabbitEnvelopeReceiver implements IEnvelopeReceiver {
         RoutingInfo routing = _topologyService.getRoutingInfo(registration.getRegistrationInfo());
 
         // next, pull out all the producer exchanges
-        List<Exchange> exchanges = new ArrayList<Exchange>();
+        List<ConsumingRoute> croutes = routing.getConsumingRoutes();
 
-        for (RouteInfo route : routing.getRoutes()) {
 
-            exchanges.add(route.getConsumerExchange());
-        }
+        for (ConsumingRoute route : croutes) {
 
-        for (Exchange exchange : exchanges) {
 
-            RabbitListener listener = createListener(registration, exchange);
+            RabbitListener listener = createListener(registration, route);
 
             // store the listener
             _listeners.put(registration, listener);
@@ -98,10 +96,10 @@ public class RabbitEnvelopeReceiver implements IEnvelopeReceiver {
 
 
 
-    protected RabbitListener createListener(IRegistration registration, Exchange exchange) throws Exception {
+    protected RabbitListener createListener(IRegistration registration, ConsumingRoute route) throws Exception {
 
         // create a listener
-        RabbitListener listener = this.getListener(registration, exchange);
+        RabbitListener listener = this.getListener(registration, route);
 
         // hook into the listener's events
         listener.onEnvelopeReceived(new IEnvelopeReceivedCallback() {
@@ -140,9 +138,9 @@ public class RabbitEnvelopeReceiver implements IEnvelopeReceiver {
      * on the registration.
      * @throws Exception 
      */
-    protected RabbitListener getListener(IRegistration registration, Exchange exchange) throws Exception {
+    protected RabbitListener getListener(IRegistration registration, ConsumingRoute route) throws Exception {
 
-        return new RabbitListener(registration, exchange, _channelFactory.getConnectionFor(exchange));
+        return new RabbitListener(registration, route, _channelFactory.getConnectionFor(route.getExchange()));
     }
 
     /**
