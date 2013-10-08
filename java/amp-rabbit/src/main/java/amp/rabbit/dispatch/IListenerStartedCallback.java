@@ -1,4 +1,4 @@
-package amp.rabbit;
+package amp.rabbit.dispatch;
 
 /**
  * Defines a callback method that handles the start of a IRabbitListener

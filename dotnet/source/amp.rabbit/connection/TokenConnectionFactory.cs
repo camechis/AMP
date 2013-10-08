@@ -6,7 +6,7 @@ using amp.utility.http;
 using amp.utility.serialization;
 using RabbitMQ.Client;
 
-namespace amp.rabbit
+namespace amp.rabbit.connection
 {
     public class TokenConnectionFactory : BaseConnectionFactory
     {

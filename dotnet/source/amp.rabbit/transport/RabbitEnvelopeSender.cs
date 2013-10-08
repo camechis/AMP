@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using amp.rabbit.connection;
 using amp.rabbit.topology;
 using cmf.bus;
 using Common.Logging;

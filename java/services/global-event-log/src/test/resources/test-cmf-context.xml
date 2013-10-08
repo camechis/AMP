@@ -37,7 +37,6 @@
     <bean id="rpcFilter" class="amp.eventing.RpcFilter" />
 
 
-
     <!-- The follow components are for our Envelope Bus -->
     <bean id="envelopeBus" class="amp.bus.DefaultEnvelopeBus" destroy-method="dispose"
           c:transportProvider-ref="transportProvider" />
@@ -47,7 +46,7 @@
           c:channelFactory-ref="channelFactory"
           c:routingInfoCache-ref="routingInfoCache" />
 
-    <bean id="channelFactory" class="amp.rabbit.TokenChannelFactory"
+    <bean id="channelFactory" class="amp.rabbit.connection.TokenChannelFactory"
           c:httpClientFactory-ref="tokenHttpClientProvider"
           c:anubisUri="https://anubis.openampere.com:15678/anubis/identity/authenticate"
           c:serializer-ref="tokenSerializer"
@@ -62,7 +61,7 @@
 
     <bean id="tokenSerializer" class="amp.utility.serialization.GsonSerializer" />
 
-    <bean id="secureChannelFactory" class="amp.rabbit.CertificateChannelFactory"
+    <bean id="secureChannelFactory" class="amp.rabbit.connection.CertificateChannelFactory"
           c:keystore="/amp-test-at-openampere.com.jks"
           c:keystorePassword="1qaz@WSX3edc$RFV"
           c:truststore="/truststore.jks"/>

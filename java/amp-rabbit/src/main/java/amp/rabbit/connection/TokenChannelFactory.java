@@ -1,4 +1,4 @@
-package amp.rabbit;
+package amp.rabbit.connection;
 
 
 import org.apache.http.HttpResponse;

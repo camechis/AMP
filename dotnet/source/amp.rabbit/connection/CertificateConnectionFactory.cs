@@ -1,10 +1,9 @@
 ﻿using System.Security.Cryptography.X509Certificates;
+using amp.bus.security;
+using amp.rabbit.topology;
 using RabbitMQ.Client;
 
-using amp.rabbit.topology;
-using amp.bus.security;
-
-namespace amp.rabbit
+namespace amp.rabbit.connection
 {
     public class CertificateConnectionFactory : BaseConnectionFactory
     {

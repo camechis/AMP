@@ -1,7 +1,7 @@
 package amp.extensions.commons.builder;
 
-import amp.rabbit.BasicChannelFactory;
-import amp.rabbit.CertificateChannelFactory;
+import amp.rabbit.connection.BasicChannelFactory;
+import amp.rabbit.connection.CertificateChannelFactory;
 
 /**
  * Build up a Channel Factory.

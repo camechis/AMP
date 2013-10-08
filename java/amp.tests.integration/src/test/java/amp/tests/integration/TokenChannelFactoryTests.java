@@ -7,7 +7,7 @@ import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 import com.rabbitmq.client.ConnectionFactory;
 
-import amp.rabbit.TokenChannelFactory;
+import amp.rabbit.connection.TokenChannelFactory;
 import amp.rabbit.topology.Exchange;
 
 import static org.mockito.Mockito.*;

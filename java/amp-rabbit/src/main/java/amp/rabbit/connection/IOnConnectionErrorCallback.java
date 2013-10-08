@@ -1,4 +1,6 @@
-package amp.rabbit;
+package amp.rabbit.connection;
+
+import amp.rabbit.dispatch.RabbitListener;
 
 
 public interface IOnConnectionErrorCallback {

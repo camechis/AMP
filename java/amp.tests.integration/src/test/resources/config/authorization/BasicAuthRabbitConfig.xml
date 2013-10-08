@@ -16,7 +16,7 @@
           c:channelFactory-ref="channelFactory"
           c:routingInfoCache-ref="routingInfoCache" />
 
-    <bean id="channelFactory" class="amp.rabbit.BasicChannelFactory"
+    <bean id="channelFactory" class="amp.rabbit.connection.BasicChannelFactory"
           c:username="openampere" c:password="openampere" />
  
 </beans>

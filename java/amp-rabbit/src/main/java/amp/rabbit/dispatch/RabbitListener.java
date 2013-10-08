@@ -1,4 +1,4 @@
-package amp.rabbit;
+package amp.rabbit.dispatch;
 
 
 import java.io.IOException;
@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 
 import amp.bus.EnvelopeHelper;
 import amp.bus.IEnvelopeReceivedCallback;
+import amp.rabbit.connection.IOnConnectionErrorCallback;
 import amp.rabbit.topology.Exchange;
 
 

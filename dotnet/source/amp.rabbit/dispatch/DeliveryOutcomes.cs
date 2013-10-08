@@ -1,4 +1,4 @@
-namespace amp.rabbit
+namespace amp.rabbit.dispatch
 
 {
     public enum DeliveryOutcomes

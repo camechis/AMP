@@ -1,4 +1,4 @@
-package amp.rabbit;
+package amp.rabbit.dispatch;
 
 import java.io.IOException;
 
