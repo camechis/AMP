@@ -29,7 +29,7 @@ namespace amp.rabbit.dispatch
         protected ILog _log;
         protected Exchange _exchange;
         protected IConnectionManager _connectionManager;
-        protected ManualResetEvent startEvent;
+        protected ManualResetEvent _startEvent;
         protected ManualResetEvent _stoppedListeningEvent;
         protected bool _connectionClosed;
 
@@ -41,25 +41,26 @@ namespace amp.rabbit.dispatch
             _connectionManager = connectionManager;
             _connectionManager.ConnectionClosed += Handle_OnConnectionClosed;
             _connectionManager.ConnectionReconnected += Handle_OnConnectionReconnected;
+            _startEvent = new ManualResetEvent(false);
             _stoppedListeningEvent = new ManualResetEvent(true);
 
             _log = LogManager.GetLogger(this.GetType());
         }
-
-
-        public void Start(object manualResetEvent)
+ 
+        public void Start()
         {
-            startEvent = manualResetEvent as ManualResetEvent;
-            Start();
+            StartOnThread();
+            _startEvent.WaitOne(TimeSpan.FromSeconds(30));
         }
 
-        private void Start()
+        private void StartOnThread()
         {
             _log.Debug("Enter Start");
             _isRunning = true;
             //Do actuall listening on a bacground thread.
             Thread listenerThread = new Thread(Listen);
-            listenerThread.Name = string.Format("{0} on {1}:{2}{3}", _exchange.QueueName, _exchange.HostName, _exchange.Port, _exchange.VirtualHost);
+            listenerThread.Name = string.Format("{0} on {1}:{2}{3}", _exchange.QueueName, _exchange.HostName, _exchange.Port,
+                _exchange.VirtualHost);
             listenerThread.Start();
         }
 
@@ -67,7 +68,7 @@ namespace amp.rabbit.dispatch
         {
             //Only restart if stop has not been called in the mean time (or conceivably, we never started to begin with).
             if (_isRunning)
-                Start();
+                StartOnThread();
         }
 
         private void Listen()
@@ -100,7 +101,7 @@ namespace amp.rabbit.dispatch
                     string consumerTag = channel.BasicConsume(_exchange.QueueName, false, consumer);
 
                 // signal the wait event that we've begun listening
-                startEvent.Set();
+                _startEvent.Set();
 
                 _log.Debug("Will now continuously listen for events using routing key: " + _exchange.RoutingKey);
                 while (_shouldContinue)

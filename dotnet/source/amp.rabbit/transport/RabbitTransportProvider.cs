@@ -133,13 +133,7 @@ namespace amp.rabbit.transport
                 listener.OnEnvelopeReceived += this.listener_OnEnvelopeReceived;
                 listener.OnClose += _listeners.Remove;
 
-                // don't continue on this thread until we've started listening
-                ManualResetEvent startEvent = new ManualResetEvent(false);
-
-                listener.Start(startEvent);
-
-                // wait for the RabbitListener to start
-                startEvent.WaitOne(new TimeSpan(0, 0, 30));
+                listener.Start();
 
                 // store the listener
                 _listeners.Add(registration, listener);

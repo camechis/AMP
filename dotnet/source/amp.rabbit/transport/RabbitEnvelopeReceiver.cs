@@ -91,10 +91,7 @@ namespace amp.rabbit.transport
             // store the listener
             _listeners.Add(registration, listener);
 
-            // don't continue on this thread until we've started listening
-            ManualResetEvent startEvent = new ManualResetEvent(false);
-
-            listener.Start(startEvent);
+            listener.Start();
 
             return listener;
         }
