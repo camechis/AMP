@@ -46,7 +46,7 @@
           c:channelFactory-ref="channelFactory"
           c:routingInfoCache-ref="routingInfoCache" />
 
-    <bean id="channelFactory" class="amp.rabbit.connection.TokenChannelFactory"
+    <bean id="channelFactory" class="amp.rabbit.connection.TokenConnectionFactory"
           c:httpClientFactory-ref="tokenHttpClientProvider"
           c:anubisUri="https://anubis.openampere.com:15678/anubis/identity/authenticate"
           c:serializer-ref="tokenSerializer"

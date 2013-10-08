@@ -11,7 +11,7 @@ import amp.rabbit.topology.Exchange;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.DefaultSaslConfig;
 
-public class SSLChannelFactory extends BaseChannelFactory {
+public class SSLConnectionFactory extends BaseConnectionFactory {
 
     private String _pathToRabbitTrustStore;
     private String _keystorePassword;
@@ -23,12 +23,12 @@ public class SSLChannelFactory extends BaseChannelFactory {
     public void setPassword(String value) { _password = value; }
 
 
-    public SSLChannelFactory(String pathToRabbitTrustStore, String keystorePassword) {
+    public SSLConnectionFactory(String pathToRabbitTrustStore, String keystorePassword) {
         _pathToRabbitTrustStore = pathToRabbitTrustStore;
         _keystorePassword = keystorePassword;
     }
 
-    public SSLChannelFactory(
+    public SSLConnectionFactory(
             String username,
             String password,
             String pathToRabbitTrustStore,

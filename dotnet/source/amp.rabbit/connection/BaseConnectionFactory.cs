@@ -9,61 +9,55 @@ namespace amp.rabbit.connection
     public abstract class BaseConnectionFactory : IRabbitConnectionFactory
     {
         protected ILog _log;
-        protected IDictionary<Exchange, IConnection> _connections;
+        protected IDictionary<Exchange, IConnectionManager> _connectionManagers;
 
         protected BaseConnectionFactory()
         {
-            _connections = new Dictionary<Exchange, IConnection>();
+            _connectionManagers = new Dictionary<Exchange, IConnectionManager>();
             _log = LogManager.GetLogger(this.GetType());
         }
 
-        public IConnection ConnectTo(Exchange exchange)
+        public IConnectionManager ConnectTo(Exchange exchange)
         {
             _log.Debug("Getting connection for exchange: " + exchange.ToString());
-            IConnection connection = null;
+            IConnectionManager manager = null;
 
             // first, see if we have a cached connection
-            if (_connections.ContainsKey(exchange))
+            if (_connectionManagers.ContainsKey(exchange))
             {
-                connection = _connections[exchange];
-
-                if (!connection.IsOpen)
-                {
-                    _log.Info("Cached connection to RabbitMQ was closed: reconnecting");
-                    connection = this.CreateConnection(exchange);
-                }
+                manager = _connectionManagers[exchange];
             }
             else
             {
                 _log.Debug("No connection to the exchange was cached: creating");
-                connection = this.CreateConnection(exchange);
+                manager = this.CreateConnectionManager(exchange);
 
                 // add the new connection to the cache
-                _connections[exchange] = connection;
+                _connectionManagers[exchange] = manager;
             }
 
-            return connection;
+            return manager;
         }
 
         public void Dispose()
         {
-            foreach (IConnection conn in _connections.Values)
+            foreach (IConnectionManager conn in _connectionManagers.Values)
             {
-                try { conn.Close(); }
+                try { conn.Dispose(); }
                 catch { }
             }
         }
 
-        private IConnection CreateConnection(Exchange exchange)
+        protected virtual IConnectionManager CreateConnectionManager(Exchange exchange)
         {
-            _log.Debug("Enter CreateConnection");
+            _log.Debug("Enter CreateConnectionManager");
 
             ConnectionFactory cf = new ConnectionFactory();
             ConfigureConnectionFactory(cf, exchange);
             try
             {
-                IConnection connection = cf.CreateConnection();
-                _log.Debug("Leave CreateConnection");
+                IConnectionManager connection = new ConnectionManager(cf);
+                _log.Debug("Leave CreateConnectionManager");
                 return connection;
             }
             catch (Exception e)

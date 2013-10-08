@@ -73,8 +73,7 @@ namespace amp.rabbit.transport
 
         protected RabbitListener createListener(IRegistration registration, Exchange exchange) 
         {
-            // create a channel
-            var connection = _connFactory.ConnectTo(exchange);
+            IConnectionManager connection = _connFactory.ConnectTo(exchange);
 
             // create a listener
             RabbitListener listener = new RabbitListener(registration, exchange, connection);
@@ -92,12 +91,7 @@ namespace amp.rabbit.transport
             // store the listener
             _listeners.Add(registration, listener);
 
-            // put it on another thread so as not to block this one
-            // don't continue on this thread until we've started listening
-            ManualResetEvent startEvent = new ManualResetEvent(false);
-            Thread listenerThread = new Thread(listener.Start);
-            listenerThread.Name = string.Format("{0} on {1}:{2}{3}", exchange.QueueName, exchange.HostName, exchange.Port, exchange.VirtualHost);
-            listenerThread.Start(startEvent);
+            listener.Start();
 
             return listener;
         }

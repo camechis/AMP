@@ -9,7 +9,7 @@ using cmf.bus;
 using amp.bus;
 
 
-namespace amp.tests
+namespace amp.tests.eventing
 {
     [TestFixture]
     public class DefaultEnvelopeBusTests

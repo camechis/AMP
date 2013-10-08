@@ -43,9 +43,9 @@ namespace amp.rabbit.transport
                 Log.Info("Sending to exchange: " + ex.ToString());
 
                 try {
-                    IConnection conn = _connFactory.ConnectTo(ex);
+                    IConnectionManager connMgr = _connFactory.ConnectTo(ex);
 
-                    using (IModel channel = conn.CreateModel())
+                    using (IModel channel = connMgr.CreateModel())
                     {
                         IBasicProperties props = channel.CreateBasicProperties();
                         props.Headers = envelope.Headers as IDictionary;

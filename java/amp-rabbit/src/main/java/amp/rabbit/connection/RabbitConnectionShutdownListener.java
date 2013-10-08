@@ -13,12 +13,12 @@ public class RabbitConnectionShutdownListener implements ShutdownListener {
 
 	private static final Logger logger = LoggerFactory.getLogger(RabbitConnectionShutdownListener.class);
 	
-	protected BaseChannelFactory channelFactory;
+	protected BaseConnectionFactory channelFactory;
 	
 	protected Exchange exchange;
 	
 	public RabbitConnectionShutdownListener(
-			BaseChannelFactory channelFactory,
+			BaseConnectionFactory channelFactory,
 			Exchange exchange) {
 	
 		this.channelFactory = channelFactory;

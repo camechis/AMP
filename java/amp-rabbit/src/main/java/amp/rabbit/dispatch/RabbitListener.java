@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.Semaphore;
 
 import cmf.bus.Envelope;
 import cmf.bus.IDisposable;
@@ -16,6 +17,7 @@ import com.rabbitmq.client.AlreadyClosedException;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.LongString;
 import com.rabbitmq.client.QueueingConsumer;
+import com.rabbitmq.client.ShutdownListener;
 import com.rabbitmq.client.QueueingConsumer.Delivery;
 import com.rabbitmq.client.ShutdownSignalException;
 import org.joda.time.DateTime;
@@ -25,7 +27,8 @@ import org.slf4j.LoggerFactory;
 
 import amp.bus.EnvelopeHelper;
 import amp.bus.IEnvelopeReceivedCallback;
-import amp.rabbit.connection.IOnConnectionErrorCallback;
+import amp.rabbit.connection.IConnectionEventHandler;
+import amp.rabbit.connection.IConnectionManager;
 import amp.rabbit.topology.Exchange;
 
 
@@ -49,17 +52,16 @@ public class RabbitListener implements IDisposable, Runnable {
     /**
      * Connection Error Listeners
      */
-    protected List<IOnConnectionErrorCallback> connectionErrorCallbacks
-    		= new ArrayList<IOnConnectionErrorCallback>();
-    
-    protected Channel channel;
+    protected IConnectionManager connectionManager;
     protected Exchange exchange;
     protected Logger log;
     protected IRegistration registration;
-    protected boolean shouldContinue;
+    protected volatile boolean shouldContinue;
+    protected volatile boolean isRunning;
     protected Thread threadImRunningOn = null;
     protected CountDownLatch threadStartSignal = new CountDownLatch(1);
-
+    protected Semaphore isListeningSemaphore;
+    protected boolean connectionClosed;
 
     /**
      * Get the Exchange this listener is listening to.
@@ -78,89 +80,54 @@ public class RabbitListener implements IDisposable, Runnable {
     }
 
 
-
     /**
-     * Initialize the Listener with the Registration and Exchange
+     * Initialize the Listener with the Registration, Exchange, and ConnectionManager
      * @param registration
      * @param exchange
+     * @param connectionManager
      */
-    public RabbitListener(IRegistration registration, Exchange exchange) {
+    public RabbitListener(IRegistration registration, Exchange exchange, IConnectionManager connectionManager) {
 
         this.registration = registration;
         this.exchange = exchange;
-
-        log = LoggerFactory.getLogger(this.getClass());
-    }
-    
-    /**
-     * Initialize the Listener with the Registration, Exchange, and Channel
-     * @param registration
-     * @param exchange
-     * @param channel
-     */
-    public RabbitListener(IRegistration registration, Exchange exchange, Channel channel) {
-
-        this.registration = registration;
-        this.exchange = exchange;
-        this.channel = channel;
+        this.connectionManager = connectionManager;
+        connectionManager.addConnectionEventHandler(new ConnectionClosedHandler());
+        this.isListeningSemaphore = new Semaphore(1);
 
         log = LoggerFactory.getLogger(this.getClass());
     }
 
-
-
-    /**
-     * Start listening on the supplied channel for messages.
-     * @param channel AMQP Channel
-     */
-    public void start(Channel channel) throws Exception {
-    	
-		if (shouldContinue) {
-			
-			shouldContinue = false;
-			
-			try {
-				
-				Thread.sleep(150);
-				
-			} catch (InterruptedException e) {
-					
-				log.error("Thread was interrupted while it was trying to sleep.", e);
-			}
-		}
-		
-		this.channel = channel;
-		
-		this.start();
-    }
     
     /**
      * Start listening on a new thread.  This won't work unless you
      * have set the Channel on the listener.
      */
     public void start() throws Exception {
-    		
-		if (this.channel == null) {
-			
-			log.error("Channel is null; cannot start.");
-			
-			return;
-			
-		} else {
-			
-			threadImRunningOn = new Thread(this);
-			
-			threadImRunningOn.start();
+    	startOnNewThread();
 
-            threadStartSignal.await(30, TimeUnit.SECONDS);
-		}
+        threadStartSignal.await(30, TimeUnit.SECONDS);
+    }
+
+	private void startOnNewThread() {
+		isRunning = true;
+		
+		threadImRunningOn = new Thread(this);
+		
+		threadImRunningOn.start();
+	}
+    
+    private void restart() {
+    	if(isRunning){
+            //Only restart if stop has not been called in the mean time (or conceivably, we never started to begin with).
+    		startOnNewThread();
+    	}
     }
     
-    public void bind(IRegistration registration, Exchange exchange) {
+    public void bind(Channel channel, IRegistration registration, Exchange exchange) {
     	
 		try {
 
-			this.createBinding(exchange.getRoutingKey());
+			this.createBinding(channel, exchange.getRoutingKey());
     			
 		} catch (IOException e) {
 			
@@ -174,7 +141,7 @@ public class RabbitListener implements IDisposable, Runnable {
      * @throws IOException
      */
     @SuppressWarnings("unchecked")
-	public void createBinding(String routingKey) throws IOException {
+	public void createBinding(Channel channel, String routingKey) throws IOException {
 		
 		log.debug("Creating binding for {}", routingKey);
 		
@@ -216,14 +183,6 @@ public class RabbitListener implements IDisposable, Runnable {
     }
     
     /**
-     * Add an onConnection Error listener
-     * @param callback listener
-     */
-    public void onConnectionError(IOnConnectionErrorCallback callback) {
-    		connectionErrorCallbacks.add(callback);
-    }
-
-    /**
      * Notify the onClose listeners that the RabbitListener is no longer
      * accepting messages.
      * @param registration Registration paired to this listener.
@@ -258,20 +217,7 @@ public class RabbitListener implements IDisposable, Runnable {
         }
     }
     
-    /**
-     * Notify the OnConnectionError listeners of the connection error. 
-     */
-    protected void raise_onConnectionErrorEvent(){
-    	
-    		for (IOnConnectionErrorCallback callback : connectionErrorCallbacks){
-    			try {
-    				callback.onConnectionError(this);
-    			} catch (Exception ex) {
-    				log.error("An exception occurred while notifing listener of connection failure.", ex);
-    			}
-    		}
-    }
-    
+   
     /**
      * Determines whether the incoming Envelope meets the criteria to actually fire
      * the Envelope handler.
@@ -296,86 +242,90 @@ public class RabbitListener implements IDisposable, Runnable {
     	
 		log.debug("Enter startListening");
         
-		// Our flag to determine whether we are still looping
+        //Don't start listining until last invocation has stopped.  
+        try {
+			isListeningSemaphore.acquire();
+		} catch (InterruptedException e) {
+			log.warn("Interupted before aquire. Exiting startListening.");
+			return;
+		}
+        log.debug("Proceeding...");
+
+        // Our flag to determine whether we are still looping
         shouldContinue = true;
 
         try {
-    		// first, declare the exchange and queue
-            this.bind(this.registration, this.exchange);
-
-            // next(), create a basic consumer
-            QueueingConsumer consumer = new QueueingConsumer(channel);
-
-            // and tell it to start consuming messages, storing the consumer tag
-            String consumerTag = channel.basicConsume(exchange.getQueueName(), false, consumer);
-
-            // signal that we have begun listening on this thread
-            threadStartSignal.countDown();
-
-            log.debug("Will now continuously listen for events using routing key: {}",
-            		exchange.getRoutingKey());
-            
-            // Loop until told to stop.
-            while (shouldContinue) {
-            	
-                try {
-                		
-            		// Get next result from the broker.
-            		Delivery result = consumer.nextDelivery(DELIVERY_INTERVAL);
-            		
-            		// If the result is null, loop again.
-            		if (result == null){ continue; }
-                		
-            		// Handle the next message delivery
-                    handleNextDelivery(result);
-                
-                } 
-                // If the thread is interrupted (perhaps by Thread.stop())
-                catch (InterruptedException interruptedException) {
-                	
-            		log.error("Listener interrupted...", interruptedException);
-                    
-            		// Thread was some how interrupted.  Stop loop.
-                    this.stopListening();
-                } 
-                // If RabbitMQ sends the shutdown signal
-                catch (ShutdownSignalException shutdownException) {
-                	
-            		// Delegate the shutdown logic to handleShutdownSignalException method
-            		boolean wasIntentional = handleShutdownSignalException(shutdownException);
-                
-            		if (!wasIntentional) {
-            			
-            			// Stop.  Nothing else we can do, but there is a chance we can
-                		// recover.  Don't fire the onClose handlers, we're going to attempt to
-                		// resolve this issue.
-            			return;
-            			
-            		} else {
-            			
-            			this.stopListening();
-            		}
-                } 
-                // Otherwise, some other error occurred, probably in the dispatcher,
-                // so we will make note of the error and continue looping.
-                catch (Exception ex) {
-                    
-            		log.warn("Caught an exception, but will not stop listening for messages", ex);
-                }
-            }
-            
-            // We've broken through the loop
-            log.debug("No longer listening for events");
-
-            try {
-            	
-        		// Attempt to unregister the consumer with the channel
-                channel.basicCancel(consumerTag);
-            
-            } catch (IOException ex) {
-            	
-        		log.error("Exception occurred attempting to cancel consumption on Channel.", ex);
-            }
+        	Channel channel = connectionManager.createChannel();
+        	channel.addShutdownListener(new ChannelShutdownHandler());
+        	
+	    	try{
+        		// first, declare the exchange and queue
+	            this.bind(channel, this.registration, this.exchange);
+	
+	            // next(), create a basic consumer
+	            QueueingConsumer consumer = new QueueingConsumer(channel);
+	
+	            // and tell it to start consuming messages, storing the consumer tag
+	            String consumerTag = channel.basicConsume(exchange.getQueueName(), false, consumer);
+	
+                    // signal that we have begun listening on this thread
+                    threadStartSignal.countDown();
+	            log.debug("Will now continuously listen for events using routing key: {}",
+	            		exchange.getRoutingKey());
+	            
+	            // Loop until told to stop.
+	            while (shouldContinue) {
+	            	
+	                try {
+	                		
+	            		// Get next result from the broker.
+	            		Delivery result = consumer.nextDelivery(DELIVERY_INTERVAL);
+	            		
+	            		// If the result is null, loop again.
+	            		if (result == null){ continue; }
+	                		
+	            		// Handle the next message delivery
+	                    handleNextDelivery(channel, result);
+	                
+	                } 
+	                // If the thread is interrupted (perhaps by Thread.stop())
+	                catch (InterruptedException interruptedException) {
+	                	
+	            		log.error("Listener interrupted.  Will stop listening.", interruptedException);
+	                    
+	            		// Thread was some how interrupted.  Stop loop.
+	                    shouldContinue = false;
+	                } 
+	                // If RabbitMQ sends the shutdown signal
+	                catch (ShutdownSignalException shutdownException) {
+	            			
+	            		log.warn("Listener ShutdownSignalException. Will stop listening.", shutdownException);
+	                	shouldContinue = false;
+	                } 
+	                // Otherwise, some other error occurred, probably in the dispatcher,
+	                // so we will make note of the error and continue looping.
+	                catch (Exception ex) {
+	                    
+	            		log.warn("Caught an exception, but will not stop listening for messages", ex);
+	                }
+	            }
+	            
+	            // We've broken through the loop
+	            log.debug("No longer listening for events");
+	
+	            try {
+	            	
+	        		// Attempt to unregister the consumer with the channel
+	                channel.basicCancel(consumerTag);
+	            
+	            } catch (IOException ex) {
+	            	
+	        		log.error("Exception occurred attempting to cancel consumption on Channel.", ex);
+	            }
+	            
+	        } finally {
+	        	channel.close();
+	        }
         } 
         // This is intermittently thrown by the client if there is a TCP error.
         // We catch the exception, determine if the intent was to close the client anyway,
@@ -385,14 +335,14 @@ public class RabbitListener implements IDisposable, Runnable {
     		if (shouldContinue) {
     			
     			log.error("Channel or Connection was closed before we could use it.", acex);
-    			
-    			raise_onConnectionErrorEvent();
     		}
         }
         // An exception has occurred attempting to consume from the channel
         catch (Exception ex) {
         	
             log.error("Caught an exception that will cause the listener to not listen for messages", ex);
+        } finally {
+        	isListeningSemaphore.release();
         }
         
         // Let everyone know we've stopped listening
@@ -407,7 +357,7 @@ public class RabbitListener implements IDisposable, Runnable {
      * @param result AMQP Message
      * @throws Exception Thread Interruption, Connection Error, etc.
      */
-    protected void handleNextDelivery(Delivery result) throws Exception {
+    protected void handleNextDelivery(Channel channel, Delivery result) throws Exception {
     		
         log.debug("Got something.");
 
@@ -417,7 +367,7 @@ public class RabbitListener implements IDisposable, Runnable {
 
         if (shouldRaiseEvent(registration.getFilterPredicate(), env.getEnvelope())) {
         	
-            dispatchEnvelope(env.getEnvelope(), result.getEnvelope().getDeliveryTag());
+            dispatchEnvelope(channel, env.getEnvelope(), result.getEnvelope().getDeliveryTag());
         }
     }
     
@@ -460,41 +410,12 @@ public class RabbitListener implements IDisposable, Runnable {
      * @param envelope Incoming Envelope
      * @param deliveryTag AMQP Delivery Tag
      */
-    protected void dispatchEnvelope(Envelope envelope, long deliveryTag){
+    protected void dispatchEnvelope(Channel channel, Envelope envelope, long deliveryTag){
     		
 		RabbitEnvelopeDispatcher dispatcher =
     		new RabbitEnvelopeDispatcher(registration, envelope, channel, deliveryTag);
         
         raise_onEnvelopeReceivedEvent(dispatcher);
-    }
-    
-    /**
-     * If a ShutdownSignalException is thrown, we need to figure out why.
-     * The RabbitMQ Client will intentionally throw this exception if the
-     * application requests the connection closed.  If the application is closed
-     * intentionally, raise the onClose event.
-     *
-     * @return True if the shutdown was intentional
-     * @param ex
-     */
-    protected boolean handleShutdownSignalException(ShutdownSignalException ex){
-    	
-		log.info("Reason for Shutdown: {}", ex.getReason());
-	
-		shouldContinue = false;
-    	
-		if(ex.isInitiatedByApplication()) {
-			
-			log.info("Shutdown requested by application, stopping thread.");
-			
-			return true;
-		}
-		else {
-			
-			this.raise_onConnectionErrorEvent();
-			
-			return false;
-		}
     }
     
     /**
@@ -505,6 +426,7 @@ public class RabbitListener implements IDisposable, Runnable {
         log.debug("Enter stopListening");
         
         shouldContinue = false;
+        isRunning = false;
         
         log.debug("Leave stopListening");
     }
@@ -534,5 +456,61 @@ public class RabbitListener implements IDisposable, Runnable {
     protected void finalize() {
     		
         dispose();
+    }
+    
+    private class ChannelShutdownHandler implements ShutdownListener {
+
+		@Override
+		public void shutdownCompleted(ShutdownSignalException cause) {
+            log.debug("Enter shutdownCompleted handler, isInitiatedByApplication: " + cause.isInitiatedByApplication());
+            
+            shouldContinue = false;
+            
+            //If we the shutdown wasn't deliberate on our part, attempt to restart
+            if (!cause.isInitiatedByApplication())
+            {
+            	log.debug("Attempting restart on new channel.");
+                //Move to a background thread so that rabbit can raise the connection closed event if that is the cause.
+                new Thread( new Runnable() {
+					
+					@Override
+					public void run() {
+	                   try {
+						Thread.sleep(100); //Give rabbit a chance to raise the connection closed event.
+					} catch (InterruptedException e) {
+						log.warn("Thread interupted while awaiting connection shutdown signal.  Aborting channel restart.");
+						return;
+					} 
+	                    
+                    if(connectionClosed)
+                        log.debug("Connection is clossed; aborting restart attempt.");
+                    else
+                        //Now restart only if the connection is not closed.  Otherwise we will restart in the OnConnectionReconnected event.
+                        restart();
+ 					}
+				}).start();
+            }
+            
+            log.debug("Leave shutdownCompleted handler.");		
+        }
+    }
+    
+    private class ConnectionClosedHandler implements IConnectionEventHandler {
+
+		@Override
+		public void onConnectionClosed(boolean willAttemptToReconnect) {
+		   log.debug("Enter Handle_OnConnectionClosed, WillAttemptReopen: " + willAttemptToReconnect);
+		   connectionClosed = true;
+		   shouldContinue = false;
+		   log.debug("Leave Handle_OnConnectionClosed");
+		}
+
+		@Override
+		public void onConnectionReconnected() {
+            log.debug("Enter Handle_OnConnectionReconnected");
+            connectionClosed = false;
+            restart();
+            log.debug("Leave Handle_OnConnectionReconnected");
+		}
     }
 }

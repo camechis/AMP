@@ -9,12 +9,10 @@ import amp.bus.IEnvelopeDispatcher;
 import amp.bus.IEnvelopeReceivedCallback;
 import cmf.bus.IEnvelopeReceiver;
 import cmf.bus.IRegistration;
-import com.rabbitmq.client.Channel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import amp.rabbit.connection.IRabbitChannelFactory;
-import amp.rabbit.connection.ReconnectOnConnectionErrorCallback;
+import amp.rabbit.connection.IRabbitConnectionFactory;
 import amp.rabbit.dispatch.IListenerCloseCallback;
 import amp.rabbit.dispatch.RabbitListener;
 import amp.rabbit.topology.Exchange;
@@ -33,12 +31,12 @@ public class RabbitEnvelopeReceiver implements IEnvelopeReceiver {
     private static final Logger LOG = LoggerFactory.getLogger(RabbitEnvelopeReceiver.class);
 
     private ITopologyService _topologyService;
-    private IRabbitChannelFactory _channelFactory;
+    private IRabbitConnectionFactory _channelFactory;
     private ConcurrentHashMap<IRegistration, RabbitListener> _listeners;
 
 
 
-    public RabbitEnvelopeReceiver(ITopologyService topologyService, IRabbitChannelFactory channelFactory) {
+    public RabbitEnvelopeReceiver(ITopologyService topologyService, IRabbitConnectionFactory channelFactory) {
 
         _topologyService = topologyService;
         _channelFactory = channelFactory;
@@ -102,9 +100,6 @@ public class RabbitEnvelopeReceiver implements IEnvelopeReceiver {
 
     protected RabbitListener createListener(IRegistration registration, Exchange exchange) throws Exception {
 
-        // create a channel
-        Channel channel = _channelFactory.getChannelFor(exchange);
-
         // create a listener
         RabbitListener listener = this.getListener(registration, exchange);
 
@@ -129,9 +124,7 @@ public class RabbitEnvelopeReceiver implements IEnvelopeReceiver {
             }
         });
 
-        listener.onConnectionError(new ReconnectOnConnectionErrorCallback(_channelFactory));
-
-        listener.start(channel);
+        listener.start();
 
         return listener;
     }
@@ -145,10 +138,11 @@ public class RabbitEnvelopeReceiver implements IEnvelopeReceiver {
      * @param exchange Routing Information
      * @return Listener that will pull messages from the broker and call the handlers
      * on the registration.
+     * @throws Exception 
      */
-    protected RabbitListener getListener(IRegistration registration, Exchange exchange) {
+    protected RabbitListener getListener(IRegistration registration, Exchange exchange) throws Exception {
 
-        return new RabbitListener(registration, exchange);
+        return new RabbitListener(registration, exchange, _channelFactory.getConnectionFor(exchange));
     }
 
     /**

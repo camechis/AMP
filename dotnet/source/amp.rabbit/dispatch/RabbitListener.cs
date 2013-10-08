@@ -13,6 +13,7 @@ using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using RabbitMQ.Client.Exceptions;
 using RabbitMQ.Util;
+using amp.rabbit.connection;
 
 namespace amp.rabbit.dispatch
 {
@@ -23,44 +24,84 @@ namespace amp.rabbit.dispatch
 
 
         protected IRegistration _registration;
-        protected bool _shouldContinue;
+        protected volatile bool _shouldContinue;
+        protected volatile bool _isRunning;
         protected ILog _log;
         protected Exchange _exchange;
-        protected IConnection _connection;
+        protected IConnectionManager _connectionManager;
+        protected ManualResetEvent _startEvent;
+        protected ManualResetEvent _stoppedListeningEvent;
+        protected bool _connectionClosed;
 
 
-        public RabbitListener(IRegistration registration, Exchange exchange, IConnection connection)
+        public RabbitListener(IRegistration registration, Exchange exchange, IConnectionManager connectionManager)
         {
             _registration = registration;
             _exchange = exchange;
-            _connection = connection;
+            _connectionManager = connectionManager;
+            _connectionManager.ConnectionClosed += Handle_OnConnectionClosed;
+            _connectionManager.ConnectionReconnected += Handle_OnConnectionReconnected;
+            _startEvent = new ManualResetEvent(false);
+            _stoppedListeningEvent = new ManualResetEvent(true);
 
             _log = LogManager.GetLogger(this.GetType());
         }
-
-
-        public void Start(object manualResetEvent)
+ 
+        public void Start()
         {
-            ManualResetEvent startEvent = manualResetEvent as ManualResetEvent;
+            StartOnThread();
+            _startEvent.WaitOne(TimeSpan.FromSeconds(30));
+        }
 
+        private void StartOnThread()
+        {
             _log.Debug("Enter Start");
+            _isRunning = true;
+            //Do actuall listening on a bacground thread.
+            Thread listenerThread = new Thread(Listen);
+            listenerThread.Name = string.Format("{0} on {1}:{2}{3}", _exchange.QueueName, _exchange.HostName, _exchange.Port,
+                _exchange.VirtualHost);
+            listenerThread.Start();
+        }
+
+        private void Restart()
+        {
+            //Only restart if stop has not been called in the mean time (or conceivably, we never started to begin with).
+            if (_isRunning)
+                StartOnThread();
+        }
+
+        private void Listen()
+        {
+            _log.Debug("Enter Listen");
+
+            //Don't start listining until last invocation has stopped.  
+            _stoppedListeningEvent.WaitOne();
+            _log.Debug("Proceeding...");
+
             _shouldContinue = true;
-
-            using (IModel channel = _connection.CreateModel())
+            _stoppedListeningEvent.Reset();
+            try
             {
-                // first, declare the exchange and queue
-                channel.ExchangeDeclare(_exchange.Name, _exchange.ExchangeType, _exchange.IsDurable, _exchange.IsAutoDelete, _exchange.Arguments);
-                channel.QueueDeclare(_exchange.QueueName, _exchange.IsDurable, false, _exchange.IsAutoDelete, _exchange.Arguments);
-                channel.QueueBind(_exchange.QueueName, _exchange.Name, _exchange.RoutingKey, _exchange.Arguments);
+                using (IModel channel = _connectionManager.CreateModel())
+                {
+                    channel.ModelShutdown += Handle_OnModelShutdown;
 
-                // next, create a basic consumer
-                QueueingBasicConsumer consumer = new QueueingBasicConsumer(channel);
+                    // first, declare the exchange and queue
+                    channel.ExchangeDeclare(_exchange.Name, _exchange.ExchangeType, _exchange.IsDurable,
+                        _exchange.IsAutoDelete, _exchange.Arguments);
+                    channel.QueueDeclare(_exchange.QueueName, _exchange.IsDurable, false, _exchange.IsAutoDelete,
+                        _exchange.Arguments);
+                    channel.QueueBind(_exchange.QueueName, _exchange.Name, _exchange.RoutingKey, _exchange.Arguments);
 
-                // and tell it to start consuming messages, storing the consumer tag
-                string consumerTag = channel.BasicConsume(_exchange.QueueName, false, consumer);
+                    // next, create a basic consumer
+                    QueueingBasicConsumer consumer = new QueueingBasicConsumer(channel);
+
+                    // and tell it to start consuming messages, storing the consumer tag
+                    string consumerTag = channel.BasicConsume(_exchange.QueueName, false, consumer);
 
                 // signal the wait event that we've begun listening
-                startEvent.Set();
+                _startEvent.Set();
 
                 _log.Debug("Will now continuously listen for events using routing key: " + _exchange.RoutingKey);
                 while (_shouldContinue)
@@ -69,57 +110,125 @@ namespace amp.rabbit.dispatch
                     {
                         object result = null;
 
-                        if (false == consumer.Queue.Dequeue(100, out result)) { continue; }
-                        BasicDeliverEventArgs e = result as BasicDeliverEventArgs;
-                        if (null == e) { continue; }
-                        else { this.LogMessage(e); }
-
-                        IBasicProperties props = e.BasicProperties;
-
-                        Envelope env = new Envelope();
-                        env.SetReceiptTime(DateTime.Now);
-                        env.Payload = e.Body;
-                        foreach (DictionaryEntry entry in props.Headers)
-                        {
-                            try
+                            if (false == consumer.Queue.Dequeue(100, out result))
                             {
-                                string key = entry.Key as string;
-                                string value = Encoding.UTF8.GetString((byte[])entry.Value);
-                                _log.Debug("Adding header to envelope: {" + key + ":" + value + "}");
-
-                                env.Headers.Add(key, value);
+                                continue;
                             }
-                            catch { }
-                        }
+                            BasicDeliverEventArgs e = result as BasicDeliverEventArgs;
+                            if (null == e)
+                            {
+                                continue;
+                            }
+                            else
+                            {
+                                this.LogMessage(e);
+                            }
 
-                        if (this.ShouldRaiseEvent(_registration.Filter, env))
+                            IBasicProperties props = e.BasicProperties;
+
+                            Envelope env = new Envelope();
+                            env.SetReceiptTime(DateTime.Now);
+                            env.Payload = e.Body;
+                            foreach (DictionaryEntry entry in props.Headers)
+                            {
+                                try
+                                {
+                                    string key = entry.Key as string;
+                                    string value = Encoding.UTF8.GetString((byte[]) entry.Value);
+                                    _log.Debug("Adding header to envelope: {" + key + ":" + value + "}");
+
+                                    env.Headers.Add(key, value);
+                                }
+                                catch { }
+                            }
+
+                            if (this.ShouldRaiseEvent(_registration.Filter, env))
+                            {
+                                RabbitEnvelopeDispatcher dispatcher = new RabbitEnvelopeDispatcher(_registration, env,
+                                    channel, e.DeliveryTag);
+                                this.Raise_OnEnvelopeReceivedEvent(dispatcher);
+                            }
+                        }
+                        catch (AlreadyClosedException)
                         {
-                            RabbitEnvelopeDispatcher dispatcher = new RabbitEnvelopeDispatcher(_registration, env, channel, e.DeliveryTag);
-                            this.Raise_OnEnvelopeReceivedEvent(dispatcher);
+                            // The consumer was closed.
+                            _shouldContinue = false;
+                        }
+                        catch (OperationInterruptedException)
+                        {
+                            // The consumer was removed, either through
+                            // channel or connection closure, or through the
+                            // action of IModel.BasicCancel().
+                            _shouldContinue = false;
+                        }
+                        catch(Exception ex)
+                        {
+                            _log.Error("Error trying to poll the queue.", ex);
                         }
                     }
-                    catch (OperationInterruptedException)
-                    {
-                        // The consumer was removed, either through
-                        // channel or connection closure, or through the
-                        // action of IModel.BasicCancel().
-                        _shouldContinue = false;
-                    }
-                    catch { }
+                    _log.Debug("No longer listening for events");
+
+                    try { channel.BasicCancel(consumerTag); }
+                    catch (OperationInterruptedException) { }
                 }
-                _log.Debug("No longer listening for events");
-
-                try { channel.BasicCancel(consumerTag); }
-                catch (OperationInterruptedException) { }
             }
+            catch (Exception ex)
+            {
+                _log.Error("Error while attempting on start listening.", ex);
+            }
+            finally
+            {
+                _stoppedListeningEvent.Set();
 
-            _log.Debug("Leave Start");
+                _log.Debug("Leave Listen");
+            }
+        }
+
+        private void Handle_OnModelShutdown(IModel model, ShutdownEventArgs reason)
+        {
+            _log.Debug(string.Format("Enter Handle_OnModelShutdown, Initiator: {0}", reason.Initiator));
+            
+            _shouldContinue = false;
+            
+            //If we the shutdown wasn't deliberate on our part, attempt to restart
+            if (reason.Initiator != ShutdownInitiator.Application)
+            {
+                _log.Debug("Attempting restart on new channel.");
+                //Move to a background thread so that rabbit can raise the connection closed event if that is the cause.
+                new Thread(() =>
+                {
+                    Thread.Sleep(100); //Give rabbit a chance to raise the connection closed event.
+                    if(_connectionClosed)
+                        _log.Debug("Connection is clossed; aborting restart attempt.");
+                    else
+                        //Now restart only if the connection is not closed.  Otherwise we will restart in the OnConnectionReconnected event.
+                        Restart();
+                }).Start();
+            }
+            _log.Debug("Leave Handle_OnModelShutdown");
+        }
+
+        private void Handle_OnConnectionClosed(bool willAttemtToReopen)
+        {
+            _log.Debug(string.Format("Enter Handle_OnConnectionClosed, WillAttemptReopen: {0}", willAttemtToReopen));
+            _connectionClosed = true;
+            _shouldContinue = false;
+            _log.Debug("Leave Handle_OnConnectionClosed");
+        }
+
+        private void Handle_OnConnectionReconnected()
+        {
+            _log.Debug("Enter Handle_OnConnectionReconnected");
+            _connectionClosed = false;
+            Restart();
+            _log.Debug("Leave Handle_OnConnectionReconnected");
         }
 
         public void Stop()
         {
             _log.Debug("Enter Stop");
             _shouldContinue = false;
+            _isRunning = false; 
             _log.Debug("Leave Stop");
         }
 

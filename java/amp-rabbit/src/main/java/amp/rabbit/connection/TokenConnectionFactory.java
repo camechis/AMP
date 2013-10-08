@@ -15,25 +15,25 @@ import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.DefaultSaslConfig;
 
 
-public class TokenChannelFactory extends BaseChannelFactory {
+public class TokenConnectionFactory extends BaseConnectionFactory {
 
     private final HttpClientProvider _httpClientFactory;
     private final String _anubisUri;
     private final ISerializer _serializer;
-    private final BaseChannelFactory _secureChannelFactory;
+    private final BaseConnectionFactory _secureChannelFactory;
 
-    public TokenChannelFactory(
+    public TokenConnectionFactory(
             HttpClientProvider httpClientFactory,
             String anubisUri,
             ISerializer serializer) {
     	this(httpClientFactory, anubisUri, serializer, null);
     }
 
-    public TokenChannelFactory(
+    public TokenConnectionFactory(
             HttpClientProvider httpClientFactory,
             String anubisUri,
             ISerializer serializer,
-            BaseChannelFactory secureChannelFactory) {
+            BaseConnectionFactory secureChannelFactory) {
        _httpClientFactory = httpClientFactory;
        _anubisUri = anubisUri;
        _serializer = serializer;

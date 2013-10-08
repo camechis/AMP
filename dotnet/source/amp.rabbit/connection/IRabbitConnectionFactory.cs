@@ -6,6 +6,6 @@ namespace amp.rabbit.connection
 {
     public interface IRabbitConnectionFactory : IDisposable
     {
-        IConnection ConnectTo(Exchange exchange);
+        IConnectionManager ConnectTo(Exchange exchange);
     }
 }

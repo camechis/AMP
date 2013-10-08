@@ -55,9 +55,9 @@ namespace amp.rabbit.transport
             foreach (Exchange ex in exchanges)
             {
                 Log.Debug("Sending to exchange: " + ex.ToString());
-                IConnection conn = _connFactory.ConnectTo(ex);
+                IConnectionManager connMgr = _connFactory.ConnectTo(ex);
                 
-                using (IModel channel = conn.CreateModel())
+                using (IModel channel = connMgr.CreateModel())
                 {
                     IBasicProperties props = channel.CreateBasicProperties();
                     props.Headers = env.Headers as IDictionary;
@@ -126,22 +126,14 @@ namespace amp.rabbit.transport
 
             foreach (Exchange ex in exchanges)
             {
-                IConnection conn = _connFactory.ConnectTo(ex);
+                IConnectionManager conn = _connFactory.ConnectTo(ex);
 
                 // create a listener
                 RabbitListener listener = new RabbitListener(registration, ex, conn);
                 listener.OnEnvelopeReceived += this.listener_OnEnvelopeReceived;
                 listener.OnClose += _listeners.Remove;
 
-                // put it on another thread so as not to block this one but
-                // don't continue on this thread until we've started listening
-                ManualResetEvent startEvent = new ManualResetEvent(false);
-                Thread listenerThread = new Thread(listener.Start);
-                listenerThread.Name = string.Format("{0} on {1}:{2}{3}", ex.QueueName, ex.HostName, ex.Port, ex.VirtualHost);
-                listenerThread.Start(startEvent);
-
-                // wait for the RabbitListener to start
-                startEvent.WaitOne(new TimeSpan(0, 0, 30));
+                listener.Start();
 
                 // store the listener
                 _listeners.Add(registration, listener);
