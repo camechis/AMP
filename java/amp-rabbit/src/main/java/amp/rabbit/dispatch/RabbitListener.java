@@ -97,32 +97,6 @@ public class RabbitListener implements IDisposable, Runnable {
         log = LoggerFactory.getLogger(this.getClass());
     }
 
-
-
-//    /**
-//     * Start listening on the supplied channel for messages.
-//     * @param channel AMQP Channel
-//     */
-//    public void start(Channel channel) throws Exception {
-//    	
-//		if (shouldContinue) {
-//			
-//			shouldContinue = false;
-//			
-//			try {
-//				
-//				Thread.sleep(150);
-//				
-//			} catch (InterruptedException e) {
-//					
-//				log.error("Thread was interrupted while it was trying to sleep.", e);
-//			}
-//		}
-//		
-//		this.channel = channel;
-//		
-//		this.start();
-//    }
     
     /**
      * Start listening on a new thread.  This won't work unless you
@@ -134,13 +108,13 @@ public class RabbitListener implements IDisposable, Runnable {
         threadStartSignal.await(30, TimeUnit.SECONDS);
     }
 
-private void startOnNewThread() {
-	isRunning = true;
-	
-	threadImRunningOn = new Thread(this);
-	
-	threadImRunningOn.start();
-}
+	private void startOnNewThread() {
+		isRunning = true;
+		
+		threadImRunningOn = new Thread(this);
+		
+		threadImRunningOn.start();
+	}
     
     private void restart() {
     	if(isRunning){
