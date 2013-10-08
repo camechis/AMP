@@ -22,25 +22,14 @@ public class GlobalTopologyService implements ITopologyService {
 	public static final String HEADER_PREFERRED_QUEUENAME = "amp.topology.request.prefs.queue.name";
 	public static final String HEADER_PREFERRED_QUEUE_PREFIX = "amp.topology.request.prefs.queue.prefix";
 	
-	ITopologyRepository topologyRepository;
+	//ITopologyRepository topologyRepository;
 	
 	RouteCreator routeCreator = null;
 
-
-    public GlobalTopologyService(ITopologyRepository topologyRepository){
-	
-		this.topologyRepository = topologyRepository;
-	}
-
-	public GlobalTopologyService(ITopologyRepository topologyRepository, RouteCreator routeCreator){
-		
-		this.topologyRepository = topologyRepository;
-		this.routeCreator = routeCreator;
-	}
 	
 	@Override
 	public RoutingInfo getRoutingInfo(Map<String, String> routingHints) {
-		
+		/*
 		String topic = routingHints.get(EnvelopeHeaderConstants.MESSAGE_TOPIC);
 		String client = routingHints.get(EnvelopeHeaderConstants.MESSAGE_SENDER_IDENTITY);
 		
@@ -77,17 +66,18 @@ public class GlobalTopologyService implements ITopologyService {
 			routeCreator.create(routeInfos, context);
 		}
 		
-		return new RoutingInfo(routeInfos);
+		return new RoutingInfo(routeInfos);*/
+		return null;
 	}
 
-	protected boolean shouldPrecreateRoute(Map<String, String> routingHints){
-		
-		if (routingHints.containsKey(HEADER_REQUEST_TOPO_CREATION)){
-			
-			return !routingHints.get(HEADER_REQUEST_TOPO_CREATION).equals("false");
-		}
-		return false;
-	}
+//	protected boolean shouldPrecreateRoute(Map<String, String> routingHints){
+//		
+//		if (routingHints.containsKey(HEADER_REQUEST_TOPO_CREATION)){
+//			
+//			return !routingHints.get(HEADER_REQUEST_TOPO_CREATION).equals("false");
+//		}
+//		return false;
+//	}
 	
 	
 	@Override

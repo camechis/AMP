@@ -12,15 +12,13 @@ import com.fasterxml.jackson.databind.util.JSONPObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import amp.topology.core.repo.listeners.NoRouteInfoForTopicListener;
-import amp.topology.core.repo.listeners.TopicMiss;
-
 import com.yammer.metrics.annotation.Timed;
 
 @Path("/missed")
 @Produces(MediaType.APPLICATION_JSON)
 public class MissedTopicsResource {
 
+	/*
 	private static final Logger logger = LoggerFactory.getLogger(MissedTopicsResource.class);
 	
 	NoRouteInfoForTopicListener noRouteForTopicListener;
@@ -44,5 +42,5 @@ public class MissedTopicsResource {
         }
         return topicMisses;
 	}
-	
+	*/
 }
