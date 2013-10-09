@@ -20,7 +20,7 @@
           c:httpClientFactory-ref="tokenHttpClientProvider" 
           c:anubisUri="https://anubis.openampere.com:15678/anubis/identity/authenticate" 
           c:serializer-ref="tokenSerializer"
-          c:secureChannelFactory-ref="secureChannelFactory"/>
+          c:secureConnectionFactory-ref="secureConnectionFactory"/>
 
     <bean id="tokenHttpClientProvider" class="amp.utility.http.SslHttpClientProvider"
           c:keystore="/test-certs/amp-test-at-openampere.com.jks"
@@ -30,7 +30,7 @@
 
     <bean id="tokenSerializer" class="amp.utility.serialization.GsonSerializer" />
  
-    <bean id="secureChannelFactory" class="amp.rabbit.connection.CertificateConnectionFactory"
+    <bean id="secureConnectionFactory" class="amp.rabbit.connection.CertificateConnectionFactory"
           c:keystore="/test-certs/amp-test-at-openampere.com.jks" 
           c:keystorePassword="1qaz@WSX3edc$RFV" 
           c:truststore="/test-certs/truststore.jks"/>

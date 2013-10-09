@@ -13,7 +13,7 @@ import amp.rabbit.topology.Exchange;
 import static org.mockito.Mockito.*;
 import static org.hamcrest.Matchers.*;
 
-public class TokenChannelFactoryTests {
+public class TokenConnectionFactoryTests {
     
 	protected static FileSystemXmlApplicationContext context;
 	protected static TokenConnectionFactory factory;

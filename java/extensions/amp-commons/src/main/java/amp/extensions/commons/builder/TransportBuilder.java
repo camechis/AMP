@@ -40,7 +40,7 @@ public class TransportBuilder extends FluentExtension {
      * Set the Channel Factory.
      * @param channelFactory Channel Factory to use.
      */
-    public void setChannelFactory(IRabbitConnectionFactory channelFactory){
+    public void setConnectionFactory(IRabbitConnectionFactory channelFactory){
 
         this.channelFactory = channelFactory;
     }
@@ -91,9 +91,9 @@ public class TransportBuilder extends FluentExtension {
 	 * Select the Channel Factory to use.
 	 * @return Channel Factory Builder interface.
 	 */
-	public ChannelFactoryBuilder connectWith(){
+	public ConnectionFactoryBuilder connectWith(){
 		
-		return new ChannelFactoryBuilder(this.parent, this);
+		return new ConnectionFactoryBuilder(this.parent, this);
 	}
 
     /**

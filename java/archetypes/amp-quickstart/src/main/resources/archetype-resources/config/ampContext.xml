@@ -53,11 +53,11 @@
           c:channelFactory-ref="channelFactory"
           c:routingInfoCache-ref="routingInfoCache" />
 
-    <bean id="channelFactory" class="amp.rabbit.TokenChannelFactory"
+    <bean id="channelFactory" class="amp.rabbit.TokenConnectionFactory"
           c:httpClientFactory-ref="httpClientProvider"
           c:anubisUri="https://anubis.openampere.com:15678/anubis/identity/authenticate"
           c:serializer-ref="serializer"
-          c:secureChannelFactory-ref="secureChannelFactory"/>
+          c:secureConnectionFactory-ref="secureConnectionFactory"/>
 
     <bean id="httpClientProvider" class="amp.utility.http.SslHttpClientProvider"
           c:keystore="/keys/amp-test-at-openampere.com.jks"
@@ -67,7 +67,7 @@
 
     <bean id="serializer" class="amp.utility.serialization.GsonSerializer" />
 
-    <bean id="secureChannelFactory" class="amp.rabbit.CertificateChannelFactory"
+    <bean id="secureConnectionFactory" class="amp.rabbit.CertificateConnectionFactory"
           c:keystore="/keys/amp-test-at-openampere.com.jks"
           c:keystorePassword="1qaz@WSX3edc$RFV"
           c:truststore="/keys/truststore.jks"/>

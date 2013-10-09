@@ -8,7 +8,7 @@ import amp.rabbit.connection.CertificateConnectionFactory;
  * 
  * @author Richard Clayton (Berico Technologies)
  */
-public class ChannelFactoryBuilder extends FluentExtension {
+public class ConnectionFactoryBuilder extends FluentExtension {
 	
 	TransportBuilder transportBuilder;
 	
@@ -16,7 +16,7 @@ public class ChannelFactoryBuilder extends FluentExtension {
 	 * Initialize the builder with a reference to the parent fluent interface.
 	 * @param parent Parent builder.
 	 */
-	public ChannelFactoryBuilder(BusBuilder parent, TransportBuilder transportBuilder) {
+	public ConnectionFactoryBuilder(BusBuilder parent, TransportBuilder transportBuilder) {
 		
 		super(parent);
 		
@@ -33,7 +33,7 @@ public class ChannelFactoryBuilder extends FluentExtension {
 		
 		BasicConnectionFactory channelFactory = new BasicConnectionFactory(username, password);
 		
-		this.transportBuilder.setChannelFactory(channelFactory);
+		this.transportBuilder.setConnectionFactory(channelFactory);
 		
 		return this.transportBuilder;
 	}
@@ -51,7 +51,7 @@ public class ChannelFactoryBuilder extends FluentExtension {
 		CertificateConnectionFactory channelFactory =
 			new CertificateConnectionFactory(pathToClientCert, certPassword, pathToTrustStore);
 		
-		this.transportBuilder.setChannelFactory(channelFactory);
+		this.transportBuilder.setConnectionFactory(channelFactory);
 		
 		return this.transportBuilder;
 	}

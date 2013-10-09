@@ -28,7 +28,7 @@ public abstract class BaseConnectionFactory implements IRabbitConnectionFactory,
 	protected ConcurrentHashMap<Exchange, IConnectionManager> pooledManagers = new ConcurrentHashMap<Exchange, IConnectionManager>();
 	
 	/**
-	 * Create a new instance of the ChannelFactory using the "SameBrokerStrategy"
+	 * Create a new instance of the ConnectionFactory using the "SameBrokerStrategy"
 	 */
 	public BaseConnectionFactory() {
         log = LoggerFactory.getLogger(this.getClass());
