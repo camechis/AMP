@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import cmf.bus.Envelope;
-import cmf.bus.EnvelopeHeaderConstants;
+import amp.messaging.EnvelopeHeaderConstants;
 import cmf.bus.IEnvelopeBus;
 import cmf.eventing.IEventHandler;
 import cmf.eventing.patterns.rpc.IRpcEventBus;

@@ -10,7 +10,7 @@ import amp.rabbit.topology.Exchange;
 import amp.rabbit.topology.RouteInfo;
 import amp.rabbit.topology.RoutingInfo;
 
-import cmf.bus.EnvelopeHeaderConstants;
+import amp.messaging.EnvelopeHeaderConstants;
 
 public class TestUtils {
 

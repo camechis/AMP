@@ -2,7 +2,7 @@ package amp.topology.client;
 
 import java.util.Map;
 
-import cmf.bus.EnvelopeHeaderConstants;
+import amp.messaging.EnvelopeHeaderConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

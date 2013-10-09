@@ -27,7 +27,7 @@ import amp.rabbit.transport.RabbitTransportProvider;
 import amp.rabbit.transport.SimpleRoutingInfoCache;
 
 import cmf.bus.Envelope;
-import cmf.bus.EnvelopeHeaderConstants;
+import amp.messaging.EnvelopeHeaderConstants;
 import cmf.bus.IEnvelopeFilterPredicate;
 
 import com.rabbitmq.client.Channel;
