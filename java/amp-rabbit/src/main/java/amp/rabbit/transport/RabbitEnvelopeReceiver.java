@@ -1,8 +1,6 @@
 package amp.rabbit.transport;
 
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 import amp.bus.IEnvelopeDispatcher;
@@ -13,13 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import amp.rabbit.connection.IRabbitConnectionFactory;
-import amp.rabbit.dispatch.IListenerCloseCallback;
-import amp.rabbit.dispatch.RabbitListener;
-import amp.rabbit.topology.Broker;
-import amp.rabbit.topology.ConsumingRoute;
-import amp.rabbit.topology.Exchange;
 import amp.rabbit.topology.ITopologyService;
-import amp.rabbit.topology.RouteInfo;
 import amp.rabbit.topology.RoutingInfo;
 
 
@@ -34,7 +26,7 @@ public class RabbitEnvelopeReceiver implements IEnvelopeReceiver {
 
     private ITopologyService _topologyService;
     private IRabbitConnectionFactory _channelFactory;
-    private ConcurrentHashMap<IRegistration, RabbitListener> _listeners;
+    private ConcurrentHashMap<IRegistration, MultiConnectionRabbitReceiver> _listeners;
 
 
 
@@ -43,7 +35,7 @@ public class RabbitEnvelopeReceiver implements IEnvelopeReceiver {
         _topologyService = topologyService;
         _channelFactory = channelFactory;
 
-        _listeners = new ConcurrentHashMap<IRegistration, RabbitListener>();
+        _listeners = new ConcurrentHashMap<IRegistration, MultiConnectionRabbitReceiver>();
     }
 
 
@@ -56,29 +48,30 @@ public class RabbitEnvelopeReceiver implements IEnvelopeReceiver {
         // first, get the topology based on the registration info
         RoutingInfo routing = _topologyService.getRoutingInfo(registration.getRegistrationInfo());
 
-        // next, pull out all the producer exchanges
-        List<ConsumingRoute> croutes = routing.getConsumingRoutes();
+        // Create the envelope handler...
+        IEnvelopeReceivedCallback handler= new IEnvelopeReceivedCallback() {
+            @Override
+            public void handleReceive(IEnvelopeDispatcher dispatcher) {
+                LOG.debug("Got an envelope from the RabbitListener: dispatching.");
+                // the dispatcher encapsulates the logic of giving the envelope to handlers
+                dispatcher.dispatch();
+            }};
+            
+        MultiConnectionRabbitReceiver receiver = 
+        		new MultiConnectionRabbitReceiver(_channelFactory,routing, registration,handler);
         
-
-        for (ConsumingRoute route : croutes) {
-
-
-            RabbitListener listener = createListener(registration, route);
-
-            // store the listener
-            _listeners.put(registration, listener);
-        }
-
+        // store the listener
+        _listeners.put(registration, receiver);
+ 
         LOG.debug("Leave Register");
     }
 
     @Override
     public void unregister(IRegistration registration) throws Exception {
-        RabbitListener listener = _listeners.remove(registration);
+    	MultiConnectionRabbitReceiver receiver = _listeners.remove(registration);
 
-        if (listener != null) {
-
-            listener.stopListening();
+        if (receiver != null) {
+        	receiver.stopListening();
         }
     }
 
@@ -89,7 +82,7 @@ public class RabbitEnvelopeReceiver implements IEnvelopeReceiver {
 
         try {  _topologyService.dispose(); } catch (Exception ex) { }
 
-        for (RabbitListener l : _listeners.values()) {
+        for (MultiConnectionRabbitReceiver l : _listeners.values()) {
 
             try { l.dispose(); } catch (Exception ex) { }
         }
@@ -97,52 +90,18 @@ public class RabbitEnvelopeReceiver implements IEnvelopeReceiver {
 
 
 
-    protected RabbitListener createListener(IRegistration registration,  ConsumingRoute route) throws Exception {
+          //TODO: >>  JM handle closing... 
+//        listener.onClose(new IListenerCloseCallback() {
+//
+//            @Override
+//            public void onClose(IRegistration registration) {
+//
+//                _listeners.remove(registration);
+//            }
+//        });
 
-        // create a listener
-        RabbitListener listener = this.getListener(registration, route);
+  
 
-        // hook into the listener's events
-        listener.onEnvelopeReceived(new IEnvelopeReceivedCallback() {
-
-            @Override
-            public void handleReceive(IEnvelopeDispatcher dispatcher) {
-
-                LOG.debug("Got an envelope from the RabbitListener: dispatching.");
-                // the dispatcher encapsulates the logic of giving the envelope to handlers
-                dispatcher.dispatch();
-            }
-        });
-
-        listener.onClose(new IListenerCloseCallback() {
-
-            @Override
-            public void onClose(IRegistration registration) {
-
-                _listeners.remove(registration);
-            }
-        });
-
-        listener.start();
-
-        return listener;
-    }
-
-    /**
-     * Get a new Rabbit Listener for the provided registration and exchange.
-     * This was pulled out as an extension point for deriving classes, as well as,
-     * to make testing a little easier.
-     *
-     * @param registration Handlers and hints
-     * @param exchange Routing Information
-     * @return Listener that will pull messages from the broker and call the handlers
-     * on the registration.
-     * @throws Exception 
-     */
-    protected RabbitListener getListener(IRegistration registration, ConsumingRoute route) throws Exception {
-
-        return new RabbitListener(registration, route, _channelFactory.getConnectionManagersFor(route));
-    }
 
     /**
      * Called before the instance is recycled.
