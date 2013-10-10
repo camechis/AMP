@@ -1,6 +1,5 @@
 package amp.rabbit.connection;
 
-import java.io.FileInputStream;
 import java.security.KeyStore;
 
 import javax.net.ssl.SSLContext;
@@ -11,10 +10,9 @@ import amp.rabbit.topology.Exchange;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.DefaultSaslConfig;
 
-public class SSLConnectionFactory extends BaseConnectionFactory {
+public class SslConnectionFactory extends BaseConnectionFactory {
 
-    private String _pathToRabbitTrustStore;
-    private String _keystorePassword;
+    private String _truststore;
     private String _username;
     private String _password;
 
@@ -23,21 +21,18 @@ public class SSLConnectionFactory extends BaseConnectionFactory {
     public void setPassword(String value) { _password = value; }
 
 
-    public SSLConnectionFactory(String pathToRabbitTrustStore, String keystorePassword) {
-        _pathToRabbitTrustStore = pathToRabbitTrustStore;
-        _keystorePassword = keystorePassword;
+    public SslConnectionFactory(String truststore) {
+        _truststore = truststore;
     }
 
-    public SSLConnectionFactory(
+    public SslConnectionFactory(
             String username,
             String password,
-            String pathToRabbitTrustStore,
-            String keystorePassword) {
+            String truststore) {
 
         _username = username;
         _password = password;
-        _pathToRabbitTrustStore = pathToRabbitTrustStore;
-        _keystorePassword = keystorePassword;
+        _truststore = truststore;
     }
 
 
@@ -45,13 +40,9 @@ public class SSLConnectionFactory extends BaseConnectionFactory {
 	public void configureConnectionFactory(ConnectionFactory factory, Exchange exchange) throws Exception {
     	super.configureConnectionFactory(factory, exchange);
     	
-        // apparently, a string isn't good enough
-        char[] keyPassphrase = _keystorePassword.toCharArray();
-
         // load the java key store
-        KeyStore remoteCertStore = KeyStore.getInstance("JKS");
-        remoteCertStore.load(new FileInputStream(_pathToRabbitTrustStore), keyPassphrase);
-
+        KeyStore remoteCertStore = CertificateConnectionFactory.getAndLoad(_truststore, null); //KeyStore.getInstance("JKS");
+        
         // use it to build the trust manager
         TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");
         tmf.init(remoteCertStore);

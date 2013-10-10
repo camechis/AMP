@@ -62,9 +62,7 @@
 
     <bean id="serializer" class="amp.utility.serialization.GsonSerializer" />
  
-    <bean id="secureConnectionFactory" class="amp.rabbit.connection.CertificateConnectionFactory"
-          c:keystore="../../amp.tests.integration/src/test/resources/test-certs/amp-test-at-openampere.com.jks" 
-          c:keystorePassword="1qaz@WSX3edc$RFV" 
+    <bean id="secureConnectionFactory" class="amp.rabbit.connection.SslConnectionFactory"
           c:truststore="../../amp.tests.integration/src/test/resources/test-certs/trust.openampere.com.jks"/>
 
     <bean id="topologyService" class="amp.topology.client.GlobalTopologyService"
