@@ -149,6 +149,11 @@ namespace amp.rabbit.dispatch
                                 this.Raise_OnEnvelopeReceivedEvent(dispatcher);
                             }
                         }
+                        catch (EndOfStreamException)
+                        {
+                            // The consumer was closed.
+                            _shouldContinue = false;
+                        }
                         catch (AlreadyClosedException)
                         {
                             // The consumer was closed.
@@ -168,7 +173,7 @@ namespace amp.rabbit.dispatch
                     }
                     _log.Debug("No longer listening for events");
 
-                    try { channel.BasicCancel(consumerTag); }
+                    try { if(channel.IsOpen) channel.BasicCancel(consumerTag); }
                     catch (OperationInterruptedException) { }
                 }
             }
