@@ -127,7 +127,7 @@ public class RabbitListener implements IDisposable, Runnable {
     }
     
 
-    public void bind(Channel channel, ConsumingRoute route) {
+    protected void bind(Channel channel, ConsumingRoute route) {
     	
 		try {
 
@@ -145,7 +145,7 @@ public class RabbitListener implements IDisposable, Runnable {
      * @throws IOException
      */
     @SuppressWarnings("unchecked")
-	public void createBinding(Channel channel, Collection<String> routingKeys) throws IOException {
+	protected void createBinding(Channel channel, Collection<String> routingKeys) throws IOException {
 		
 		log.debug("Creating binding for {}", routingKeys);
 		

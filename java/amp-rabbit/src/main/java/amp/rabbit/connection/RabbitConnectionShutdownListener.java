@@ -15,24 +15,26 @@ public class RabbitConnectionShutdownListener implements ShutdownListener {
 	
 	protected BaseConnectionFactory channelFactory;
 	
-	protected Exchange exchange;
+	//TODO: JM Complete refactor -- context is not what's listened to.
+	protected ConnectionContext context;
 	
 	public RabbitConnectionShutdownListener(
 			BaseConnectionFactory channelFactory,
-			Exchange exchange) {
+			ConnectionContext context) {
 	
 		this.channelFactory = channelFactory;
-		this.exchange = exchange;
+		this.context = context;
 	}
 
 	@Override
 	public void shutdownCompleted(ShutdownSignalException ex) {
 		
-		boolean removed = this.channelFactory.removeConnection(exchange);
-		
+	//TODO: JM Restore this-- context isn't exactly what we listen to here...
+	//	boolean removed = this.channelFactory.removeConnection(context);
+		boolean removed = false;
 		if (removed == false){
 			
-			logger.warn("Could not find Channel for exchange '{}' in the pool.", exchange.getName());
+			logger.warn("Could not find Channel for exchange '{}' in the pool.", context);
 		}
 	}
 

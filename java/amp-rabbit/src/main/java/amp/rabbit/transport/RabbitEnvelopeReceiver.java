@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import amp.rabbit.connection.IRabbitConnectionFactory;
 import amp.rabbit.dispatch.IListenerCloseCallback;
 import amp.rabbit.dispatch.RabbitListener;
+import amp.rabbit.topology.Broker;
 import amp.rabbit.topology.ConsumingRoute;
 import amp.rabbit.topology.Exchange;
 import amp.rabbit.topology.ITopologyService;
@@ -57,7 +58,7 @@ public class RabbitEnvelopeReceiver implements IEnvelopeReceiver {
 
         // next, pull out all the producer exchanges
         List<ConsumingRoute> croutes = routing.getConsumingRoutes();
-
+        
 
         for (ConsumingRoute route : croutes) {
 
@@ -96,7 +97,7 @@ public class RabbitEnvelopeReceiver implements IEnvelopeReceiver {
 
 
 
-    protected RabbitListener createListener(IRegistration registration, ConsumingRoute route) throws Exception {
+    protected RabbitListener createListener(IRegistration registration,  ConsumingRoute route) throws Exception {
 
         // create a listener
         RabbitListener listener = this.getListener(registration, route);
@@ -140,7 +141,7 @@ public class RabbitEnvelopeReceiver implements IEnvelopeReceiver {
      */
     protected RabbitListener getListener(IRegistration registration, ConsumingRoute route) throws Exception {
 
-        return new RabbitListener(registration, route, _channelFactory.getConnectionFor(route.getExchange()));
+        return new RabbitListener(registration, route, _channelFactory.getConnectionManagersFor(route));
     }
 
     /**

@@ -5,7 +5,8 @@ import java.security.KeyStore;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManagerFactory;
 
-import amp.rabbit.topology.Exchange;
+import amp.rabbit.topology.BaseRoute;
+import amp.rabbit.topology.Broker;
 
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.DefaultSaslConfig;
@@ -37,8 +38,8 @@ public class SslConnectionFactory extends BaseConnectionFactory {
 
 
     @Override
-	public void configureConnectionFactory(ConnectionFactory factory, Exchange exchange) throws Exception {
-    	super.configureConnectionFactory(factory, exchange);
+	public void configureConnectionFactory(ConnectionFactory factory, Broker broker, BaseRoute route) throws Exception {
+    	super.configureConnectionFactory(factory, broker, route);
     	
         // load the java key store
         KeyStore remoteCertStore = CertificateConnectionFactory.getAndLoad(_truststore, null); //KeyStore.getInstance("JKS");

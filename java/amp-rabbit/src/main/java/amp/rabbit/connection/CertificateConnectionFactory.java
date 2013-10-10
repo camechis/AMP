@@ -18,6 +18,8 @@ import javax.net.ssl.TrustManagerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import amp.rabbit.topology.BaseRoute;
+import amp.rabbit.topology.Broker;
 import amp.rabbit.topology.Exchange;
 
 import com.rabbitmq.client.ConnectionFactory;
@@ -42,9 +44,9 @@ public class CertificateConnectionFactory extends BaseConnectionFactory {
 
 	
 	@Override
-	public void configureConnectionFactory(ConnectionFactory factory, Exchange exchange) throws Exception {
+	public void configureConnectionFactory(ConnectionFactory factory, Broker broker, BaseRoute route) throws Exception {
 
-        log.debug("Getting connection for exchange: {}", exchange.toString());
+        log.debug("Getting connection for exchange: {}", route.getExchange().toString());
 
 
         char[] charPassword = (keystorePassword == null)? null : keystorePassword.toCharArray();
@@ -76,7 +78,7 @@ public class CertificateConnectionFactory extends BaseConnectionFactory {
         SSLContext ctx = SSLContext.getInstance("TLSv1");
         ctx.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);
 
-    	super.configureConnectionFactory(factory, exchange);
+    	super.configureConnectionFactory(factory, broker, route);
         factory.setSaslConfig(DefaultSaslConfig.EXTERNAL);
         factory.useSslProtocol(ctx);
 	}

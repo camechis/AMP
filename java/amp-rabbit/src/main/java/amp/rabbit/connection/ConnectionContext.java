@@ -1,7 +1,12 @@
-package amp.rabbit.topology;
+package amp.rabbit.connection;
 
 import java.util.ArrayList;
 import java.util.Collection;
+
+import amp.rabbit.topology.BaseRoute;
+import amp.rabbit.topology.Broker;
+import amp.rabbit.topology.ConsumingRoute;
+import amp.rabbit.topology.ProducingRoute;
 
 import com.rabbitmq.client.Connection;
 

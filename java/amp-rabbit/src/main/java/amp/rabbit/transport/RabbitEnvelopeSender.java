@@ -59,8 +59,8 @@ public class RabbitEnvelopeSender implements IEnvelopeSender {
             Channel channel = null;
 
             try {
-                channel = _channelFactory.getConnectionFor(proute.getExchange()).createChannel();
-//TODO:JM      - Rich Version               channel = _channelFactory.getChannelFor(ex);
+                channel = _channelFactory.getConnectionFor(proute).createChannel();
+//TODO:JM      - Old Version               channel = _channelFactory.getChannelFor(ex);
 //TODO:JM      + Justin Refactor Version    channel = _channelFactory.getChannelFor(proute);
 //TODO:JM      + MostRecent/Ken Version     channel = _channelFactory.getConnectionFor(ex).createChannel();
 

@@ -22,8 +22,10 @@ import amp.bus.ITransportProvider;
 import amp.rabbit.connection.IRabbitConnectionFactory;
 import amp.rabbit.dispatch.IListenerCloseCallback;
 import amp.rabbit.dispatch.RabbitListener;
+import amp.rabbit.topology.ConsumingRoute;
 import amp.rabbit.topology.Exchange;
 import amp.rabbit.topology.ITopologyService;
+import amp.rabbit.topology.ProducingRoute;
 import amp.rabbit.topology.RouteInfo;
 import amp.rabbit.topology.RoutingInfo;
 
@@ -80,9 +82,9 @@ public class RabbitTransportProvider implements ITransportProvider {
         // next, pull out all the producer exchanges
         List<Exchange> exchanges = new ArrayList<Exchange>();
         
-        for (RouteInfo route : routing.getRoutes()) {
+        for (ConsumingRoute route : routing.getConsumingRoutes()) {
         
-            exchanges.add(route.getConsumerExchange());
+            exchanges.add(route.getExchange());
         }
 
         for (Exchange exchange : exchanges) {
@@ -108,7 +110,7 @@ public class RabbitTransportProvider implements ITransportProvider {
         // next, pull out all the producer exchanges
         List<Exchange> exchanges = new ArrayList<Exchange>();
 
-        for (RouteInfo route : routing.getRoutes()) {
+        for (ProducingRoute route : routing.getProducingRoutes()) {
 
             exchanges.add(route.getProducerExchange());
         }
