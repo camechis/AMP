@@ -1,6 +1,5 @@
 package amp.rabbit.connection;
 
-import java.io.FileInputStream;
 import java.security.KeyStore;
 
 import javax.net.ssl.SSLContext;
@@ -42,9 +41,8 @@ public class SslConnectionFactory extends BaseConnectionFactory {
     	super.configureConnectionFactory(factory, exchange);
     	
         // load the java key store
-        KeyStore remoteCertStore = KeyStore.getInstance("JKS");
-        remoteCertStore.load(new FileInputStream(_truststore), null);
-
+        KeyStore remoteCertStore = CertificateConnectionFactory.getAndLoad(_truststore, null); //KeyStore.getInstance("JKS");
+        
         // use it to build the trust manager
         TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");
         tmf.init(remoteCertStore);
