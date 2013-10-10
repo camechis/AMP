@@ -31,8 +31,6 @@
 
   <object id="token-ISerializer" type="amp.utility.serialization.Utf8JsonDeserializer&lt;amp.rabbit.connection.TokenConnectionFactory+NamedToken&gt;, amp.utility" />
 
-  <object id="secuire-IRabbitConnectionFactory" type="amp.rabbit.connection.CertificateConnectionFactory, amp.rabbit">
-    <constructor-arg name="certificateProvider" ref="ICertificateProvider"/>
-  </object>
+  <object id="secuire-IRabbitConnectionFactory" type="amp.rabbit.connection.SslConnectionFactory, amp.rabbit" />
 
 </objects>

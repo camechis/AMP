@@ -1,14 +1,20 @@
 ﻿using System;
+using System.Net;
 using System.Threading;
 using cmf.eventing;
 using NUnit.Framework;
 using Spring.Context;
 using Spring.Context.Support;
 
-namespace amp.tests.integration.Eventing
+namespace amp.tests.integration.ConfigScenarios
 {
+    // ReSharper disable once InconsistentNaming
+    /// <summary>
+    /// Tests ability to connect and do basic using simple topo, basic auth in the clear,
+    /// but with credentials from Anubis.
+    /// </summary>
     [TestFixture]
-    public class DefaultEventBusTests
+    public class GtsAnubisAndOneWaySSLforRabbit
     {
         protected IApplicationContext _context;
         protected IEventBus _bus;
@@ -26,11 +32,17 @@ namespace amp.tests.integration.Eventing
         {
             _context = new XmlApplicationContext(ConfigFiles);
             _bus = _context.GetObject("IEventBus") as IEventBus;
+          
+            //Hack so that we don't have to validate the Anubis server certificate.
+            ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
         }
 
         [TestFixtureTearDown]
         public virtual void TestFixtureTearDown()
         {
+            //Reverse the Hack
+            ServicePointManager.ServerCertificateValidationCallback = null;
+
             _context.Dispose();
         }
 

@@ -18,7 +18,7 @@ namespace amp.tests.integration.Rabbit
         [TestFixtureSetUp]
         public virtual void TestFixtureSetUp()
         {
-            _context = new XmlApplicationContext(Config.Authorization.AnubisTwoWaySsl, Config.Topology.GtsSSL);
+            _context = new XmlApplicationContext(Config.Authorization.AnubisOneWaySsl, Config.Topology.GtsSSL);
             _factory = _context.GetObject("IRabbitConnectionFactory") as TokenConnectionFactory;
 
             //Hack so that we don't have to validate the Anubis server certificate.

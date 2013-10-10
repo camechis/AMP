@@ -10,6 +10,7 @@ import static org.hamcrest.Matchers.*;
 
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
+import amp.tests.integration.Config;
 import amp.tests.integration.TestEvent;
 import amp.tests.integration.Config.Authorization;
 import amp.tests.integration.Config.Bus;
@@ -25,16 +26,16 @@ import cmf.eventing.IEventHandler;
  * @author kbaltrinic
  *
  */
-public class AnubisOnlyTests {
+public class GtsAnubisAndOneWaySSLforRabbit {
     
 	protected static FileSystemXmlApplicationContext context;
 	protected static IEventBus bus;
 	
 	public static String[] getConfigFiles(){
 		return new String[]{
-				Bus.All, 
-				Authorization.AnubisOneWaySsl,
-				Topology.GtsSSL};
+				Config.Bus.All, 
+				Config.Authorization.AnubisOneWaySsl, 
+				Config.Topology.GtsSSL};
 	}
 	
 	@BeforeClass
@@ -54,7 +55,7 @@ public class AnubisOnlyTests {
     {
     	TestHandler handler = new TestHandler();
         bus.subscribe(handler);
-        Thread.sleep(5000);
+
         TestEvent sentEvent = new TestEvent();
 
         bus.publish(sentEvent);
