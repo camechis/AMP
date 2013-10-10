@@ -100,15 +100,15 @@ namespace amp.rabbit.dispatch
                     // and tell it to start consuming messages, storing the consumer tag
                     string consumerTag = channel.BasicConsume(_exchange.QueueName, false, consumer);
 
-                // signal the wait event that we've begun listening
-                _startEvent.Set();
+                    // signal the wait event that we've begun listening
+                    _startEvent.Set();
 
-                _log.Debug("Will now continuously listen for events using routing key: " + _exchange.RoutingKey);
-                while (_shouldContinue)
-                {
-                    try
+                    _log.Debug("Will now continuously listen for events using routing key: " + _exchange.RoutingKey);
+                    while (_shouldContinue)
                     {
-                        object result = null;
+                        try
+                        {
+                            object result = null;
 
                             if (false == consumer.Queue.Dequeue(100, out result))
                             {
