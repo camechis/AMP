@@ -108,6 +108,10 @@
       <Project>{24D9184A-81B9-4D67-86E4-1B8B4EAB27BB}</Project>
       <Name>amp.eventing</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\source\amp.messaging\amp.messaging.csproj">
+      <Project>{80F80EE5-5C74-48FF-9F25-225CFD77D0EC}</Project>
+      <Name>amp.messaging</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\source\amp.rabbit\amp.rabbit.csproj">
       <Project>{1D9A3ED8-779B-4F1B-93F5-837320AF4656}</Project>
       <Name>amp.rabbit</Name>
