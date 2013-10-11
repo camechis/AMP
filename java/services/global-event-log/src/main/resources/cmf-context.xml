@@ -49,8 +49,7 @@
     <bean id="httpClientProvider" class="amp.utility.http.SslHttpClientProvider"
           c:keystore="../../amp.tests.integration/src/test/resources/test-certs/amp-test-at-openampere.com.jks" 
           c:keystorePassword="1qaz@WSX3edc$RFV" 
-          c:truststore="../../amp.tests.integration/src/test/resources/test-certs/trust.openampere.com.jks"
-          c:port="443"/>
+          c:truststore="../../amp.tests.integration/src/test/resources/test-certs/trust.openampere.com.jks"/>
 
     <bean id="serializer" class="amp.utility.serialization.GsonSerializer" />
  

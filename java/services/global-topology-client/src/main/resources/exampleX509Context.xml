@@ -7,7 +7,7 @@
 
 	<bean id="httpClientProvider" class="amp.utility.http.SslHttpClientProvider"
 		c:keystore="ssl/app01.jks" c:keystorePassword="password" 
-		c:truststore="ssl/app01.jks" c:trustStorePassword="password" c:port="15677" />
+		c:truststore="ssl/app01.jks" c:trustStorePassword="password" />
 
     <bean id="routingInfoRetriever" class="amp.topology.client.HttpRoutingInfoRetriever"
         c:httpClientProvider-ref="httpClientProvider" 

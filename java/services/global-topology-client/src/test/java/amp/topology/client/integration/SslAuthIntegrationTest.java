@@ -44,7 +44,7 @@ public class SslAuthIntegrationTest {
 		logger.debug("Calling GTS with SSL Auth.");
 		
 		HttpClientProvider provider = 
-			new SslHttpClientProvider(keystoreLocation, keystorePassword, port);
+			new SslHttpClientProvider(keystoreLocation, keystorePassword);
 		
 		JsonRoutingInfoSerializer serializer = new JsonRoutingInfoSerializer();
 		

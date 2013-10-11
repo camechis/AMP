@@ -56,8 +56,7 @@
           c:keystore="/amp-test-at-openampere.com.jks"
           c:keystorePassword="1qaz@WSX3edc$RFV"
           c:truststore="/truststore.jks"
-          c:trustStorePassword="1qaz@WSX3edc$RFV"
-          c:port="15678"/>
+          c:trustStorePassword="1qaz@WSX3edc$RFV" />
 
     <bean id="tokenSerializer" class="amp.utility.serialization.GsonSerializer" />
 
@@ -79,8 +78,7 @@
           c:keystore="/amp-test-at-openampere.com.jks"
           c:keystorePassword="1qaz@WSX3edc$RFV"
           c:truststore="/truststore.jks"
-          c:trustStorePassword="1qaz@WSX3edc$RFV"
-          c:port="15677" />
+          c:trustStorePassword="1qaz@WSX3edc$RFV" />
 
     <bean id="routingSerializer" class="amp.utility.serialization.GsonSerializer" />
 

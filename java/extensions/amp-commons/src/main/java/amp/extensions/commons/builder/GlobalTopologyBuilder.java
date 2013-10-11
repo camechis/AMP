@@ -78,7 +78,7 @@ public class GlobalTopologyBuilder extends FluentExtension {
 	public GlobalTopologyBuilder usingHttps(
 		String host, String keystore, String password, int port){
 		
-		this.httpClientProvider = new SslHttpClientProvider(keystore, password, port);
+		this.httpClientProvider = new SslHttpClientProvider(keystore, password);
 		this.host = host;
 		this.port = port;
 		this.useSSL = true;
