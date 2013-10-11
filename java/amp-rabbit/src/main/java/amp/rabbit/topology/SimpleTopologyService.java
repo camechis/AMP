@@ -85,7 +85,6 @@ public class SimpleTopologyService implements ITopologyService {
     }
     
     @Override
-    public void dispose() {}
-    
+    public void dispose() {}   
     
 }
