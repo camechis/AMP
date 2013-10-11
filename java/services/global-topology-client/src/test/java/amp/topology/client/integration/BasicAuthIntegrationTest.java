@@ -39,14 +39,13 @@ public class BasicAuthIntegrationTest {
 		String hostname = System.getProperty("amp.gtc.test.hostname");
 		String username = System.getProperty("amp.gtc.test.basic.username");
 		String password = System.getProperty("amp.gtc.test.basic.password");
-		int port = Integer.parseInt(System.getProperty("amp.gtc.test.port"));
 		String serviceUrlExpression = System.getProperty("amp.gtc.test.url");
 		String eventType = System.getProperty("amp.gtc.test.event");
 		
 		logger.debug("Calling GTS with Basic Auth.");
 		
 		HttpClientProvider provider = 
-				new BasicAuthHttpClientProvider(hostname, port, username, password);
+				new BasicAuthHttpClientProvider(hostname, username, password);
 		
 		JsonRoutingInfoSerializer serializer = new JsonRoutingInfoSerializer();
 		

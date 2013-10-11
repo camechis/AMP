@@ -6,7 +6,7 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
 	<bean id="httpClientProvider" class="amp.utility.http.BasicAuthHttpClientProvider"
-		c:hostname="gts" c:port="15677" c:username="App01" c:password="password" />
+		c:hostname="gts" c:username="App01" c:password="password" />
     <bean id="routingInfoRetriever" class="amp.topology.client.HttpRoutingInfoRetriever"
         c:httpClientProvider-ref="httpClientProvider" 
  		c:serializer-ref="serializer"
