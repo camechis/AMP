@@ -53,7 +53,7 @@ public class GlobalTopologyServiceTest {
 		logger.debug("Calling GTS with Basic Auth.");
 
 		HttpClientProvider provider = 
-				new BasicAuthHttpClientProvider(hostname, port, username, password);
+				new BasicAuthHttpClientProvider(hostname,  username, password);
 		
 		JsonRoutingInfoSerializer serializer = new JsonRoutingInfoSerializer();
 		
