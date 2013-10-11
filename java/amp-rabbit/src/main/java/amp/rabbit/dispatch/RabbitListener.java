@@ -316,7 +316,9 @@ public class RabbitListener implements IDisposable, Runnable {
 	            try {
 	            	
 	        		// Attempt to unregister the consumer with the channel
-	                channel.basicCancel(consumerTag);
+	            	if(channel.isOpen()){
+	            		channel.basicCancel(consumerTag);
+	            	}
 	            
 	            } catch (IOException ex) {
 	            	
