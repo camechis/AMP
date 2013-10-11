@@ -4,14 +4,12 @@ import java.util.Arrays;
 
 import amp.commanding.ICommandReceiver;
 import amp.rabbit.topology.Broker;
-import amp.rabbit.topology.Exchange;
 import amp.utility.serialization.GsonSerializer;
 import amp.utility.serialization.ISerializer;
 import amp.topology.client.DefaultApplicationExchangeProvider;
 import amp.topology.client.FallbackRoutingInfoProvider;
 import amp.topology.client.GlobalTopologyService;
 import amp.topology.client.HttpRoutingInfoRetriever;
-import amp.topology.client.JsonRoutingInfoSerializer;
 import amp.utility.http.HttpClientProvider;
 import amp.utility.http.BasicAuthHttpClientProvider;
 import amp.utility.http.SslHttpClientProvider;
@@ -24,7 +22,7 @@ import amp.utility.http.SslHttpClientProvider;
 public class GlobalTopologyBuilder extends FluentExtension {
 
 	HttpClientProvider httpClientProvider;
-	GsonSerializer serializer = new GsonSerializer();
+	ISerializer serializer = new GsonSerializer();
 	DefaultApplicationExchangeProvider primaryFallbackProvider;
 	FallbackRoutingInfoProvider fallbackProvider;
     ICommandReceiver commandReceiver;
