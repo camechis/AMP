@@ -8,7 +8,8 @@ import org.springframework.context.support.FileSystemXmlApplicationContext;
 import com.rabbitmq.client.ConnectionFactory;
 
 import amp.rabbit.connection.TokenConnectionFactory;
-import amp.rabbit.topology.Exchange;
+import amp.rabbit.topology.Broker;
+import amp.rabbit.topology.ProducingRoute;
 
 import static org.mockito.Mockito.*;
 import static org.hamcrest.Matchers.*;
@@ -33,7 +34,7 @@ public class TokenConnectionFactoryTests {
     public void Should_be_able_to_get_token_from_Anubis() throws Exception
     {
     	ConnectionFactory rabbitFactory = mock(ConnectionFactory.class);
-    	factory.configureConnectionFactory(rabbitFactory, new Exchange());
+    	factory.configureConnectionFactory(rabbitFactory, new Broker(), new ProducingRoute());
     	
     	verify(rabbitFactory).setUsername((String)isNotNull());
     	verify(rabbitFactory).setPassword((String)isNotNull());

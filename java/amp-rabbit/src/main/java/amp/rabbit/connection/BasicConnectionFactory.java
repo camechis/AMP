@@ -3,7 +3,6 @@ package amp.rabbit.connection;
 
 import amp.rabbit.topology.BaseRoute;
 import amp.rabbit.topology.Broker;
-import amp.rabbit.topology.Exchange;
 
 import com.rabbitmq.client.ConnectionFactory;
 

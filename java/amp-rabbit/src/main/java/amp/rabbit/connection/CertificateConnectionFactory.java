@@ -20,7 +20,6 @@ import org.slf4j.LoggerFactory;
 
 import amp.rabbit.topology.BaseRoute;
 import amp.rabbit.topology.Broker;
-import amp.rabbit.topology.Exchange;
 
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.DefaultSaslConfig;
