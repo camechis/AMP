@@ -1,18 +1,13 @@
 package amp.topology.core;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Map;
 
-import amp.rabbit.topology.Exchange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-import amp.rabbit.topology.RouteInfo;
 import amp.rabbit.topology.RoutingInfo;
 import amp.rabbit.topology.ITopologyService;
-import cmf.bus.EnvelopeHeaderConstants;
 
 public class GlobalTopologyService implements ITopologyService {
 	

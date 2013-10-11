@@ -12,7 +12,6 @@ import amp.rabbit.topology.Broker;
 import amp.rabbit.topology.ProducingRoute;
 
 import static org.mockito.Mockito.*;
-import static org.hamcrest.Matchers.*;
 
 public class TokenConnectionFactoryTests {
     

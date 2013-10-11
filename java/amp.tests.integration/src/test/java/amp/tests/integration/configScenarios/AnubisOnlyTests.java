@@ -12,7 +12,6 @@ import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 import amp.tests.integration.TestEvent;
 import amp.tests.integration.Config.Authorization;
-import amp.tests.integration.Config.Bus;
 import amp.tests.integration.Config.Topology;
 
 import cmf.bus.Envelope;
