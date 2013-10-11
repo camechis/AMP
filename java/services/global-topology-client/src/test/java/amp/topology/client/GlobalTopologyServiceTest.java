@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import amp.rabbit.topology.RoutingInfo;
 import amp.utility.http.HttpClientProvider;
 import amp.utility.http.BasicAuthHttpClientProvider;
+import amp.utility.serialization.GsonSerializer;
 
 import com.berico.test.RequireProperties;
 import com.berico.test.TestProperties;
@@ -55,7 +56,7 @@ public class GlobalTopologyServiceTest {
 		HttpClientProvider provider = 
 				new BasicAuthHttpClientProvider(hostname,  username, password);
 		
-		JsonRoutingInfoSerializer serializer = new JsonRoutingInfoSerializer();
+		GsonSerializer serializer = new GsonSerializer();
 		
 		IRoutingInfoRetriever routingInfoRetriever = 
 			new HttpRoutingInfoRetriever(provider, serviceUrlExpression, serializer);

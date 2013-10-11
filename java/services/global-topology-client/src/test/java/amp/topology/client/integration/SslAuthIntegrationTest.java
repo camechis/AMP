@@ -13,9 +13,9 @@ import com.berico.test.TestProperties;
 import amp.rabbit.topology.RoutingInfo;
 import amp.topology.client.HttpRoutingInfoRetriever;
 import amp.topology.client.IRoutingInfoRetriever;
-import amp.topology.client.JsonRoutingInfoSerializer;
 import amp.utility.http.HttpClientProvider;
 import amp.utility.http.SslHttpClientProvider;
+import amp.utility.serialization.GsonSerializer;
 
 
 public class SslAuthIntegrationTest {
@@ -46,7 +46,7 @@ public class SslAuthIntegrationTest {
 		HttpClientProvider provider = 
 			new SslHttpClientProvider(keystoreLocation, keystorePassword);
 		
-		JsonRoutingInfoSerializer serializer = new JsonRoutingInfoSerializer();
+		GsonSerializer serializer = new GsonSerializer();
 		
 		IRoutingInfoRetriever routingInfoRetriever = 
 			new HttpRoutingInfoRetriever(provider, serviceUrlExpression, serializer);
