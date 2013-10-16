@@ -151,22 +151,23 @@ public class RabbitListener implements IDisposable, Runnable {
 
 		log.debug("Creating binding for {}", routingKeys);
 
-		if (consumingRoute.getExchange().shouldDeclare()
-				&& consumingRoute.getQueue().shouldDeclare()) {
+		Exchange exchange = consumingRoute.getExchange();
+		Queue queue = consumingRoute.getQueue();
 
-			Exchange exchange = consumingRoute.getExchange();
+		if (exchange.shouldDeclare()) {
+
 			channel.exchangeDeclare(exchange.getName(),
 					exchange.getExchangeType(), exchange.isDurable(),
 					exchange.isAutoDelete(), exchange.getArguments());
+		}
 
-			Queue queue = consumingRoute.getQueue();
+		if (queue.shouldDeclare()) {
 
 			channel.queueDeclare(queue.getName(), queue.isDurable(), false,
 					queue.isAutoDelete(), queue.getArguments());
 
 			for (String key : routingKeys) {
 				channel.queueBind(queue.getName(), exchange.getName(), key);
-
 			}
 		}
 	}
