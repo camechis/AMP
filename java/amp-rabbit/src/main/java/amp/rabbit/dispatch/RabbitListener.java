@@ -126,6 +126,7 @@ public class RabbitListener implements IDisposable, Runnable {
 		}
 	}
 
+	//TODO: remove ConsumingRoute from signature, its a property of the class.
 	protected void bind(Channel channel, ConsumingRoute route) {
 
 		try {
@@ -146,6 +147,7 @@ public class RabbitListener implements IDisposable, Runnable {
 	 * @param routingKey
 	 * @throws IOException
 	 */
+	//TODO: Collapse this into bind?
 	protected void createBinding(Channel channel, Collection<String> routingKeys)
 			throws IOException {
 

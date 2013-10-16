@@ -86,6 +86,7 @@ public abstract class BaseConnectionFactory implements IRabbitConnectionFactory,
 	 * @param exchange Exchange configuration for the Channel
 	 * @return an AMQP Channel
 	 */	
+	//TODO: Does this need to be synchronized if we are using a concurrent hash map for our manager? or maybe better to not use a concurrent map?
 	protected synchronized Collection<IConnectionManager> getConnectionManagers(BaseRoute route) throws Exception {
 		
 		
@@ -96,6 +97,7 @@ public abstract class BaseConnectionFactory implements IRabbitConnectionFactory,
 			log.trace("Getting connection manager for exchange: {}", broker);
 			
 			IConnectionManager manager = null;
+			//TODO: Faster performance to just get manager and if null create?  Why lookup then get?
 			if (pooledManagers.containsKey(broker)){
 				
 				manager = pooledManagers.get(broker);
