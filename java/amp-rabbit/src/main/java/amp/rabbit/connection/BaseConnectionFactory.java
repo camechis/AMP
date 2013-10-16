@@ -29,8 +29,8 @@ public abstract class BaseConnectionFactory implements IRabbitConnectionFactory,
 
     protected Logger log;
 
-	public ConnectionReuseStrategy consumerReuseStrategy = ConnectionReuseStrategy.SAME_BROKER;
-	public ConnectionReuseStrategy producerReuseStrategy = ConnectionReuseStrategy.SAME_BROKER;
+//	public ConnectionReuseStrategy consumerReuseStrategy = ConnectionReuseStrategy.SAME_BROKER;
+//	public ConnectionReuseStrategy producerReuseStrategy = ConnectionReuseStrategy.SAME_BROKER;
 		
 	protected ConcurrentHashMap<Broker, IConnectionManager> pooledManagers =
 			new ConcurrentHashMap<Broker, IConnectionManager>();
