@@ -33,8 +33,8 @@ public class AnubisOnlyTests {
 	public static String[] getConfigFiles(){
 		return new String[]{
 				Bus.All, 
-				Authorization.AnubisOneWaySsl,
-				Topology.GtsSSL};
+				Authorization.AnubisBasic,
+				Topology.Simple};
 	}
 	
 	@BeforeClass
