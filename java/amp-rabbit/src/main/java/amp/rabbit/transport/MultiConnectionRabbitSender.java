@@ -34,8 +34,7 @@ public class MultiConnectionRabbitSender implements IDisposable  {
 	private IRabbitConnectionFactory _connectionFactory;
 	
 	public MultiConnectionRabbitSender(IRabbitConnectionFactory factory) {
-		
-		
+		_connectionFactory = factory;
 	}
 	
 	public void send(RoutingInfo routing, Envelope envelope)  throws Exception {
@@ -80,8 +79,10 @@ public class MultiConnectionRabbitSender implements IDisposable  {
 			Exchange ex = route.getExchange();
 			Collection<String> keys = route.getRoutingKeys();
 
-			channel.exchangeDeclare(ex.getName(), ex.getExchangeType(),
-					ex.isDurable(), ex.isAutoDelete(), ex.getArguments());
+			if(ex.shouldDeclare()){
+				channel.exchangeDeclare(ex.getName(), ex.getExchangeType(),
+						ex.isDurable(), ex.isAutoDelete(), ex.getArguments());
+			}
 
 			// For the channel, publish the topic...
 			for (String key : keys) {

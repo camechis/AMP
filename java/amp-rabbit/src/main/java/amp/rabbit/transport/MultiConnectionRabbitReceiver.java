@@ -45,7 +45,7 @@ public class MultiConnectionRabbitReceiver implements IDisposable{
 	public  MultiConnectionRabbitReceiver(IRabbitConnectionFactory connectionFactory, 
 			RoutingInfo routingInfo, IRegistration registration, IEnvelopeReceivedCallback handler) throws Exception {
 		
-		if (envelopeHandler == null || registration==null) {
+		if (handler == null || registration==null) {
 			throw new NullPointerException();
 		}
 		
