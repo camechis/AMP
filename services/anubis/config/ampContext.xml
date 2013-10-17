@@ -80,11 +80,17 @@
 
     <bean id="routingSerializer" class="amp.topology.client.JsonRoutingInfoSerializer" />
 
-    <bean id="fallbackProvider" class="amp.topology.client.DefaultApplicationExchangeProvider">
-        <property name="hostname" value="devexample.com" />
-        <property name="port" value="5672" />
-        <property name="exchangeName" value="amp.fallback" />
-    </bean>
+    <bean id="fallbackProvider" class="amp.topology.client.DefaultApplicationExchangeProvider"
+          c:clientProfile=""
+          c:brokers-ref="brokers" />
+
+    <util:list id="brokers" value-type="amp.rabbit.topology.Broker">
+	    <bean class="amp.rabbit.topology.Broker"
+	          c:clusterId=""
+	          c:hostname="rabbit.openampere.com"
+	          c:port="5672"
+	          c:isSslEnabled="false" />
+    </util:list>
 
     <bean id="routingInfoCache" class="amp.bus.rabbit.CommandableCache">
         <constructor-arg name="commandReceiver" ref="commandReceiver" />
