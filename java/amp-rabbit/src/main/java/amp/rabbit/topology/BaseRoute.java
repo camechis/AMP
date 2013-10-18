@@ -27,7 +27,8 @@ public abstract class BaseRoute {
 	}
 	
 	public void setBrokers(Collection<Broker> brokers){
-		
+
+		this.brokers.clear();
 		this.brokers.addAll(brokers);
 	}
 	
@@ -48,6 +49,7 @@ public abstract class BaseRoute {
 	
 	public void setRoutingKeys(Collection<String> routingKeys){
 		
+		this.routingKeys.clear();
 		this.routingKeys.addAll(routingKeys);
 	}
 	
