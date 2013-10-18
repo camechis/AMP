@@ -21,6 +21,8 @@ import org.mockito.stubbing.Answer;
 import amp.messaging.MessageRegistration;
 import amp.messaging.NullHandler;
 import amp.messaging.NullMessageProcessor;
+import amp.rabbit.topology.BaseRoute;
+import amp.rabbit.topology.Broker;
 import amp.rabbit.topology.Exchange;
 import amp.rabbit.topology.SimpleTopologyService;
 import amp.rabbit.transport.RabbitTransportProvider;
@@ -94,6 +96,9 @@ public class ConnectionManagementTests {
 		                return channel;
 		             }
 	            });
+                
+                //We are assuming that the purpose of calling isOpen is see if it is safe to close the connection.
+                when(connection.isOpen()).thenReturn(true).thenReturn(false);
 
 		        return connection;
 	               
@@ -101,7 +106,7 @@ public class ConnectionManagementTests {
         });
 
         _transport = new RabbitTransportProvider(
-            new SimpleTopologyService(null, "test", "nowhere.com", "/", 0),
+            new SimpleTopologyService(null, new Broker("test", "nowhere.com", 0, false)),
             new TestConnectionFactory(_rmqFactory),
             new SimpleRoutingInfoCache(100));
    	}
@@ -237,7 +242,7 @@ public class ConnectionManagementTests {
         }
 
         @Override
-        protected IConnectionManager createConnectionManager(Exchange exchange) throws IOException {
+        protected IConnectionManager createConnectionManager(Broker broker, BaseRoute route) throws IOException {
             return new ConnectionManager(_factory);    
         }
     }
