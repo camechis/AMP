@@ -42,11 +42,35 @@ public class Exchange extends AmqpBaseModel {
     public void setExchangeType(String exchangeType) {
         this.exchangeType = exchangeType;
     }
-    public void setVirtualHost(String virtualHost) {
-        this.virtualHost = virtualHost;
-    }
-
+ 
     @Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result
+				+ ((exchangeType == null) ? 0 : exchangeType.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		//Not needed as super performs this test
+		//if (getClass() != obj.getClass())
+		//	return false;
+		Exchange other = (Exchange) obj;
+		if (exchangeType == null) {
+			if (other.exchangeType != null)
+				return false;
+		} else if (!exchangeType.equals(other.exchangeType))
+			return false;
+		return true;
+	}
+
+	@Override
     public String toString() {
     	return 
     		super.getCommonStringInfo()

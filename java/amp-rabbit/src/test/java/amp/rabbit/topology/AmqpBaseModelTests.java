@@ -8,9 +8,9 @@ import static org.junit.Assert.*;
 
 public class AmqpBaseModelTests {
 
-	AmqpBaseModel referenceModel = new Model();
-	AmqpBaseModel equivelentModel = new Model();
-	AmqpBaseModel notEquivelentModel = new Model();
+	protected AmqpBaseModel referenceModel = new Model();
+	protected AmqpBaseModel equivelentModel = new Model();
+	protected AmqpBaseModel notEquivelentModel = new Model();
 	
 	@Before
 	public void setup(){
