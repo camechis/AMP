@@ -50,47 +50,36 @@ public class RoutingInfo {
 		return routes;
 	}
 	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((consumingRoutes == null) ? 0 : consumingRoutes.hashCode());
+		result = prime * result
+				+ ((producingRoutes == null) ? 0 : producingRoutes.hashCode());
+		return result;
+	}
 	
 	@Override
-	public boolean equals(Object other) {
-		if (other ==null) 
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
 			return false;
-		
-		if (other.getClass() != this.getClass()) 
+		if (getClass() != obj.getClass())
 			return false;
-		
-		RoutingInfo otherRoutingInfo = (RoutingInfo) other;
-		
-		List<ConsumingRoute> croutes1 = consumingRoutes;
-		List<ConsumingRoute> croutes2 = otherRoutingInfo.getConsumingRoutes();
-		List<ProducingRoute> proutes1 = producingRoutes;
-		List<ProducingRoute> proutes2 = otherRoutingInfo.getProducingRoutes();
-		
-		if (croutes1.size() != croutes2.size())
-			return false;
-
-		if (proutes1.size() != proutes2.size())
-			return false;
-		
-		Iterator<ConsumingRoute> croute1it = croutes1.iterator();
-		Iterator<ConsumingRoute> croute2it = croutes2.iterator();
-		
-		while (croute1it.hasNext()) {
-			ConsumingRoute cr1= croute1it.next();
-			ConsumingRoute cr2= croute2it.next();
-			if (!Objects.equal(cr1,cr2)) 
+		RoutingInfo other = (RoutingInfo) obj;
+		if (consumingRoutes == null) {
+			if (other.consumingRoutes != null)
 				return false;
-		}
-		
-		Iterator<ProducingRoute> proute1it = proutes1.iterator();
-		Iterator<ProducingRoute> proute2it = proutes2.iterator();
-		
-		while (proute1it.hasNext()) {
-			ProducingRoute pr1= proute1it.next();
-			ProducingRoute pr2= proute2it.next();
-			if (!Objects.equal(pr1,pr2)) 
+		} else if (!consumingRoutes.equals(other.consumingRoutes))
+			return false;
+		if (producingRoutes == null) {
+			if (other.producingRoutes != null)
 				return false;
-		}
-		return true;	
+		} else if (!producingRoutes.equals(other.producingRoutes))
+			return false;
+		return true;
 	}
 }
