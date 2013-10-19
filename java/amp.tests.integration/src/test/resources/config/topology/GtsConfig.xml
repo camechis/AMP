@@ -50,7 +50,7 @@
 
     <bean id="envelopeReceiver" class="amp.rabbit.transport.RabbitEnvelopeReceiver"
           c:topologyService-ref="topologyService"
-          c:channelFactory-ref="channelFactory" />
+          c:connectionFactory-ref="connectionFactory" />
 
     <bean id="Cmd-JsonSerializationProcessor" class="amp.messaging.JsonSerializationProcessor" />
 

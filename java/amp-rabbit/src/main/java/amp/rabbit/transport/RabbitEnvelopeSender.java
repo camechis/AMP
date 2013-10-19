@@ -22,10 +22,10 @@ public class RabbitEnvelopeSender implements IEnvelopeSender {
     private ITopologyService 					  _topologyService;    
     private MultiConnectionRabbitSender _rabbitSender;
 
-    public RabbitEnvelopeSender(ITopologyService topologyService, IRabbitConnectionFactory channelFactory) {
+    public RabbitEnvelopeSender(ITopologyService topologyService, IRabbitConnectionFactory connectionFactory) {
 
         _topologyService = topologyService;
-        _rabbitSender = new MultiConnectionRabbitSender(channelFactory);
+        _rabbitSender = new MultiConnectionRabbitSender(connectionFactory);
     }
 
     @Override

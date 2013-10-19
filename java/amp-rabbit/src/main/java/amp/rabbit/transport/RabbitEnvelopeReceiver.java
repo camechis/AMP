@@ -25,15 +25,15 @@ public class RabbitEnvelopeReceiver implements IEnvelopeReceiver {
     private static final Logger LOG = LoggerFactory.getLogger(RabbitEnvelopeReceiver.class);
 
     private ITopologyService _topologyService;
-    private IRabbitConnectionFactory _channelFactory;
+    private IRabbitConnectionFactory _connectionFactory;
     private ConcurrentHashMap<IRegistration, MultiConnectionRabbitReceiver> _listeners;
 
 
 
-    public RabbitEnvelopeReceiver(ITopologyService topologyService, IRabbitConnectionFactory channelFactory) {
+    public RabbitEnvelopeReceiver(ITopologyService topologyService, IRabbitConnectionFactory connectionFactory) {
 
         _topologyService = topologyService;
-        _channelFactory = channelFactory;
+        _connectionFactory = connectionFactory;
 
         _listeners = new ConcurrentHashMap<IRegistration, MultiConnectionRabbitReceiver>();
     }
@@ -58,7 +58,7 @@ public class RabbitEnvelopeReceiver implements IEnvelopeReceiver {
             }};
             
         MultiConnectionRabbitReceiver receiver = 
-        		new MultiConnectionRabbitReceiver(_channelFactory,routing, registration,handler);
+        		new MultiConnectionRabbitReceiver(_connectionFactory,routing, registration,handler);
         
         // store the listener
         _listeners.put(registration, receiver);
@@ -78,7 +78,7 @@ public class RabbitEnvelopeReceiver implements IEnvelopeReceiver {
     @Override
     public void dispose() {
 
-        try {  _channelFactory.dispose(); } catch (Exception ex) { }
+        try {  _connectionFactory.dispose(); } catch (Exception ex) { }
 
         try {  _topologyService.dispose(); } catch (Exception ex) { }
 

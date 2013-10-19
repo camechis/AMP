@@ -7,7 +7,7 @@ package amp.rabbit.topology;
 public class Broker {
 
 	/**
-	 * This is used primarily to coach the ChannelFactory
+	 * This is used primarily to coach the ConnectionFactory
 	 * to the credentials that should be used for this broker.
 	 */
 	protected String clusterId;

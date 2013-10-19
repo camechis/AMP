@@ -24,7 +24,7 @@ public class TokenConnectionFactoryTests {
 	@BeforeClass
 	public static void BeforeAllTests(){
 		context = new FileSystemXmlApplicationContext(Config.Authorization.AnubisBasic, Config.Topology.Simple);
-		factory = (TokenConnectionFactory) context.getBean("channelFactory");
+		factory = (TokenConnectionFactory) context.getBean("connectionFactory");
 	}
 	
 	@AfterClass

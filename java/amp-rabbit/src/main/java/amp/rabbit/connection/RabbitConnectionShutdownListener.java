@@ -11,16 +11,16 @@ public class RabbitConnectionShutdownListener implements ShutdownListener {
 
 	private static final Logger logger = LoggerFactory.getLogger(RabbitConnectionShutdownListener.class);
 	
-	protected BaseConnectionFactory channelFactory;
+	protected BaseConnectionFactory connectionFactory;
 	
 	//TODO: JM Complete refactor -- context is not what's listened to.
 	protected ConnectionContext context;
 	
 	public RabbitConnectionShutdownListener(
-			BaseConnectionFactory channelFactory,
+			BaseConnectionFactory connectionFactory,
 			ConnectionContext context) {
 	
-		this.channelFactory = channelFactory;
+		this.connectionFactory = connectionFactory;
 		this.context = context;
 	}
 
@@ -28,7 +28,7 @@ public class RabbitConnectionShutdownListener implements ShutdownListener {
 	public void shutdownCompleted(ShutdownSignalException ex) {
 		
 	//TODO: JM Restore this-- context isn't exactly what we listen to here...
-	//	boolean removed = this.channelFactory.removeConnection(context);
+	//	boolean removed = this.connectionFactory.removeConnection(context);
 		boolean removed = false;
 		if (removed == false){
 			

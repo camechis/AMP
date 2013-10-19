@@ -4,7 +4,7 @@ import amp.rabbit.connection.BasicConnectionFactory;
 import amp.rabbit.connection.CertificateConnectionFactory;
 
 /**
- * Build up a Channel Factory.
+ * Build up a Connection Factory.
  * 
  * @author Richard Clayton (Berico Technologies)
  */
@@ -31,9 +31,9 @@ public class ConnectionFactoryBuilder extends FluentExtension {
 	 */
 	public TransportBuilder basicAuth(String username, String password){
 		
-		BasicConnectionFactory channelFactory = new BasicConnectionFactory(username, password);
+		BasicConnectionFactory connectionFactory = new BasicConnectionFactory(username, password);
 		
-		this.transportBuilder.setConnectionFactory(channelFactory);
+		this.transportBuilder.setConnectionFactory(connectionFactory);
 		
 		return this.transportBuilder;
 	}
@@ -48,10 +48,10 @@ public class ConnectionFactoryBuilder extends FluentExtension {
 	public TransportBuilder sslAuth(
 		String pathToClientCert, String certPassword, String pathToTrustStore){
 		
-		CertificateConnectionFactory channelFactory =
+		CertificateConnectionFactory connectionFactory =
 			new CertificateConnectionFactory(pathToClientCert, certPassword, pathToTrustStore);
 		
-		this.transportBuilder.setConnectionFactory(channelFactory);
+		this.transportBuilder.setConnectionFactory(connectionFactory);
 		
 		return this.transportBuilder;
 	}

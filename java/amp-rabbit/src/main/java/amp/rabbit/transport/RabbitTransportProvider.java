@@ -34,7 +34,7 @@ public class RabbitTransportProvider implements ITransportProvider {
 	/** cache for routing info (from topology service) */
 	protected IRoutingInfoCache routingInfoCache;
 	
-	protected IRabbitConnectionFactory channelFactory;
+	protected IRabbitConnectionFactory connectionFactory;
 	
 	/** These are the channel/queue listeners that actually receive events. */
 	protected ConcurrentHashMap<IRegistration, MultiConnectionRabbitReceiver> listenerMap = 
@@ -47,23 +47,23 @@ public class RabbitTransportProvider implements ITransportProvider {
 	
 	/**
 	 * Initialize the Transport Provider with the Topology Service and the
-	 * Channel Factory.
+	 * Connection Factory.
 	 * 
 	 * @param topologyService
 	 *            Service that determines the correct exchange and broker to
 	 *            send messages to.
-	 * @param channelFactory
+	 * @param connectionFactory
 	 *            Service that uses topology information to establish
 	 *            connections to the broker.
 	 */
 	public RabbitTransportProvider(ITopologyService topologyService,
-			IRabbitConnectionFactory channelFactory,
+			IRabbitConnectionFactory connectionFactory,
 			IRoutingInfoCache routingInfoCache) {
 
 		this.topologyService = topologyService;
-		this.channelFactory = channelFactory;
+		this.connectionFactory = connectionFactory;
 		this.routingInfoCache = routingInfoCache;
-		this.rabbitSender = new MultiConnectionRabbitSender(channelFactory);
+		this.rabbitSender = new MultiConnectionRabbitSender(connectionFactory);
 	}
 
 	/**
@@ -91,7 +91,7 @@ public class RabbitTransportProvider implements ITransportProvider {
 			}};
 		
 		MultiConnectionRabbitReceiver receiver = 
-				new MultiConnectionRabbitReceiver(channelFactory,routing,registration,handler);
+				new MultiConnectionRabbitReceiver(connectionFactory,routing,registration,handler);
 		
 		listenerMap.put(registration, receiver);
 		
@@ -195,7 +195,7 @@ public class RabbitTransportProvider implements ITransportProvider {
 	public void dispose() {
 
 		try {
-			channelFactory.dispose();
+			connectionFactory.dispose();
 		} catch (Exception ex) {
 		}
 
