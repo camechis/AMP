@@ -34,6 +34,32 @@ public class ConsumingRoute extends BaseRoute {
 				+ ", exchange=" + exchange + ", routingKey=" + routingKeys + "]";
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((queue == null) ? 0 : queue.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		//Not needed.  Super tests this.
+		//if (getClass() != obj.getClass())
+		//	return false;
+		ConsumingRoute other = (ConsumingRoute) obj;
+		if (queue == null) {
+			if (other.queue != null)
+				return false;
+		} else if (!queue.equals(other.queue))
+			return false;
+		return true;
+	}
+
 	public static ConsumingRouteBuilder builder(){
 		
 		return new ConsumingRouteBuilder();

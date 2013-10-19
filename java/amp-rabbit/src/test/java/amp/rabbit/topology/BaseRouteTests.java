@@ -6,12 +6,11 @@ import static org.junit.Assert.*;
 
 public class BaseRouteTests {
 
-	BaseRoute referenceModel = new Route();
-	BaseRoute equivelentModel = new Route();
-	BaseRoute brokerNotEquivelentModel = new Route();
-	BaseRoute exchangeNotEquivelentModel = new Route();
-	BaseRoute routeEquivelentModel = new Route();
-	BaseRoute routeNotEquivelentModel = new Route();
+	protected BaseRoute referenceModel = new Route();
+	protected BaseRoute equivelentModel = new Route();
+	protected BaseRoute brokerNotEquivelentModel = new Route();
+	protected BaseRoute exchangeNotEquivelentModel = new Route();
+	protected BaseRoute routeNotEquivelentModel = new Route();
 	
 	@Before
 	public void setup(){
