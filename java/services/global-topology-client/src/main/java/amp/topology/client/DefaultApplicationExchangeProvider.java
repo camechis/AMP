@@ -20,17 +20,17 @@ public class DefaultApplicationExchangeProvider extends SimpleTopologyService im
 	
 	public DefaultApplicationExchangeProvider(String clientProfile, String hostname) {
 		
-		super(clientProfile, new Broker("default", hostname, 5672, false));
+		super(clientProfile, new Broker("default", hostname, 5672, "default"));
 	}
 	
 	public DefaultApplicationExchangeProvider(String clientProfile, String hostname, int port) {
 		
-		super(clientProfile, new Broker("default", hostname, port, false));
+		super(clientProfile, new Broker("default", hostname, port, "default"));
 	}
 	
-	public DefaultApplicationExchangeProvider(String clientProfile, String hostname, int port, boolean useSsl) {
+	public DefaultApplicationExchangeProvider(String clientProfile, String hostname, int port, String connectionStrategy) {
 		
-		super(clientProfile, new Broker("default", hostname, port, useSsl));
+		super(clientProfile, new Broker("default", hostname, port, connectionStrategy));
 	}
 	
 	public DefaultApplicationExchangeProvider(String clientProfile, Collection<Broker> brokers) {

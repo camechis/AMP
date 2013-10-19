@@ -31,7 +31,7 @@
 	          c:clusterId=""
 	          c:hostname="rabbit.openampere.com"
 	          c:port="5671"
-	          c:isSslEnabled="true" />
+	          c:connectionStrategy="ssl" />
     </util:list>	
 	<bean id="topologyService" class="amp.topology.client.GlobalTopologyService" 
 		c:routingInfoRetriever-ref="routingInfoRetriever"

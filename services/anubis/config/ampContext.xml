@@ -89,7 +89,7 @@
 	          c:clusterId=""
 	          c:hostname="rabbit.openampere.com"
 	          c:port="5672"
-	          c:isSslEnabled="false" />
+	          c:connectionStrategy="basic-auth" />
     </util:list>
 
     <bean id="routingInfoCache" class="amp.bus.rabbit.CommandableCache">

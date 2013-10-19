@@ -16,53 +16,53 @@ public class RoutingInfoTests {
 		
 		referenceRoute.consumingRoutes.add(new ConsumingRoute());
 		ConsumingRoute consumingRoute = referenceRoute.consumingRoutes.get(0);
-		consumingRoute.brokers.add(new Broker(null,"reference", 0, true));
+		consumingRoute.brokers.add(new Broker(null,"reference", 0, "basic"));
 		consumingRoute.exchange = new Exchange("reference", "direct", true, true, true, null, null);
 		consumingRoute.routingKeys.add("route");
 		consumingRoute.queue = new Queue("queue", true, true, true, true, null, null);
 		
 		referenceRoute.producingRoutes.add(new ProducingRoute());
 		ProducingRoute producingRoute = referenceRoute.producingRoutes.get(0);
-		producingRoute.brokers.add(new Broker(null,"reference", 0, true));
+		producingRoute.brokers.add(new Broker(null,"reference", 0, "basic"));
 		producingRoute.exchange = new Exchange("reference", "direct", true, true, true, null, null);
 		producingRoute.routingKeys.add("route");
 
 		equivelentRoute.consumingRoutes.add(new ConsumingRoute());
 		consumingRoute = equivelentRoute.consumingRoutes.get(0);
-		consumingRoute.brokers.add(new Broker(null,"reference", 0, true));
+		consumingRoute.brokers.add(new Broker(null,"reference", 0, "basic"));
 		consumingRoute.exchange = new Exchange("reference", "direct", true, true, true, null, null);
 		consumingRoute.routingKeys.add("route");
 		consumingRoute.queue = new Queue("queue", true, true, true, true, null, null);
 		
 		equivelentRoute.producingRoutes.add(new ProducingRoute());
 		producingRoute = equivelentRoute.producingRoutes.get(0);
-		producingRoute.brokers.add(new Broker(null,"reference", 0, true));
+		producingRoute.brokers.add(new Broker(null,"reference", 0, "basic"));
 		producingRoute.exchange = new Exchange("reference", "direct", true, true, true, null, null);
 		producingRoute.routingKeys.add("route");
 
 		producingRoutesNotEquivelentRoute.consumingRoutes.add(new ConsumingRoute());
 		consumingRoute = producingRoutesNotEquivelentRoute.consumingRoutes.get(0);
-		consumingRoute.brokers.add(new Broker(null,"reference", 0, true));
+		consumingRoute.brokers.add(new Broker(null,"reference", 0, "basic"));
 		consumingRoute.exchange = new Exchange("reference", "direct", true, true, true, null, null);
 		consumingRoute.routingKeys.add("route");
 		consumingRoute.queue = new Queue("queue", true, true, true, true, null, null);
 		
 		producingRoutesNotEquivelentRoute.producingRoutes.add(new ProducingRoute());
 		producingRoute = producingRoutesNotEquivelentRoute.producingRoutes.get(0);
-		producingRoute.brokers.add(new Broker(null,"reference", 0, true));
+		producingRoute.brokers.add(new Broker(null,"reference", 0, "basic"));
 		producingRoute.exchange = new Exchange("reference", "direct", true, true, true, null, null);
 		producingRoute.routingKeys.add("other-route");
 
 		consumingRoutesNotEquivelent.consumingRoutes.add(new ConsumingRoute());
 		consumingRoute = consumingRoutesNotEquivelent.consumingRoutes.get(0);
-		consumingRoute.brokers.add(new Broker(null,"reference", 0, true));
+		consumingRoute.brokers.add(new Broker(null,"reference", 0, "basic"));
 		consumingRoute.exchange = new Exchange("reference", "direct", true, true, true, null, null);
 		consumingRoute.routingKeys.add("other-route");
 		consumingRoute.queue = new Queue("queue", true, true, true, true, null, null);
 		
 		consumingRoutesNotEquivelent.producingRoutes.add(new ProducingRoute());
 		producingRoute = consumingRoutesNotEquivelent.producingRoutes.get(0);
-		producingRoute.brokers.add(new Broker(null,"reference", 0, true));
+		producingRoute.brokers.add(new Broker(null,"reference", 0, "basic"));
 		producingRoute.exchange = new Exchange("reference", "direct", true, true, true, null, null);
 		producingRoute.routingKeys.add("route");
 

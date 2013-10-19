@@ -13,16 +13,16 @@ public class Broker {
 	protected String clusterId;
 	protected String hostname;
 	protected int port = 5672;
-	protected boolean isSslEnabled = false;
+	protected String connectionStrategy;
 	
 	public Broker(){}
 	
-	public Broker(String clusterId, String hostname, int port, boolean isSslEnabled) {
+	public Broker(String clusterId, String hostname, int port, String connectionStrategy) {
 		
 		this.clusterId = clusterId;
 		this.hostname = hostname;
 		this.port = port;
-		this.isSslEnabled = isSslEnabled;
+		this.connectionStrategy = connectionStrategy;
 	}
 
 	public String getClusterId() {
@@ -49,18 +49,18 @@ public class Broker {
 		this.port = port;
 	}
 	
-	public boolean isSslEnabled() {
-		return isSslEnabled;
+	public String getConnectionStrategy() {
+		return connectionStrategy;
 	}
 	
-	public void setSslEnabled(boolean isSslEnabled) {
-		this.isSslEnabled = isSslEnabled;
+	public void setConnectionStrategy(String strategy) {
+		this.connectionStrategy = strategy;
 	}
 	
 	@Override
 	public String toString() {
 		return "Broker [clusterId=" + clusterId + ", hostname=" + hostname
-				+ ", port=" + port + ", isSslEnabled=" + isSslEnabled + "]";
+				+ ", port=" + port + ", connectionStrategy=" + connectionStrategy + "]";
 	}
 	
 	@Override
@@ -71,7 +71,8 @@ public class Broker {
 				+ ((clusterId == null) ? 0 : clusterId.hashCode());
 		result = prime * result
 				+ ((hostname == null) ? 0 : hostname.hashCode());
-		result = prime * result + (isSslEnabled ? 1231 : 1237);
+		result = prime * result 
+				+ ((connectionStrategy == null) ? 0 : connectionStrategy.hashCode());
 		result = prime * result + port;
 		return result;
 	}
@@ -95,7 +96,10 @@ public class Broker {
 				return false;
 		} else if (!hostname.equals(other.hostname))
 			return false;
-		if (isSslEnabled != other.isSslEnabled)
+		if (connectionStrategy == null) {
+			if (other.connectionStrategy != null)
+				return false;
+		} else if (!connectionStrategy.equals(other.connectionStrategy))
 			return false;
 		if (port != other.port)
 			return false;
@@ -137,9 +141,9 @@ public class Broker {
 			return this;
 		}
 		
-		public BrokerBuilder useSsl(boolean useSsl){
+		public BrokerBuilder connectionStrategy(String strategy){
 			
-			broker.setSslEnabled(useSsl);
+			broker.setConnectionStrategy(strategy);
 			
 			return this;
 		}

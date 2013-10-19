@@ -18,14 +18,14 @@ import amp.utility.serialization.GsonSerializer;
 
 public class RoutingInfoWithGsonSerializerTest {
 	
-	private String SERIALIZED_ROUTING_INFO = "{\"producingRoutes\":[{\"brokers\":[{\"clusterId\":\"clusterIdOne\",\"hostname\":\"devexample.com\",\"port\":5672,\"isSslEnabled\":false}],\"exchange\":{\"exchangeType\":\"topic\",\"name\":\"exchange.cmf.security\",\"isAutoDelete\":true,\"isDurable\":false,\"shouldDeclare\":true,\"virtualHost\":\"/\"},\"routingKeys\":[\"producingTopicAlpha\",\"producingTopicBravo\"]}],\"consumingRoutes\":[{\"queue\":{\"isExclusive\":true,\"name\":\"queue.cmf.security\",\"isAutoDelete\":true,\"isDurable\":false,\"shouldDeclare\":true,\"virtualHost\":\"/\"},\"brokers\":[{\"clusterId\":\"clusterIdOne\",\"hostname\":\"devexample.com\",\"port\":5672,\"isSslEnabled\":false}],\"exchange\":{\"exchangeType\":\"topic\",\"name\":\"exchange.cmf.security\",\"isAutoDelete\":true,\"isDurable\":false,\"shouldDeclare\":true,\"virtualHost\":\"/\"},\"routingKeys\":[\"queueTopic1\"]}]}";
+	private String SERIALIZED_ROUTING_INFO = "{\"producingRoutes\":[{\"brokers\":[{\"clusterId\":\"clusterIdOne\",\"hostname\":\"devexample.com\",\"port\":5672,\"connectionStrategy\":\"default\"}],\"exchange\":{\"exchangeType\":\"topic\",\"name\":\"exchange.cmf.security\",\"isAutoDelete\":true,\"isDurable\":false,\"shouldDeclare\":true,\"virtualHost\":\"/\"},\"routingKeys\":[\"producingTopicAlpha\",\"producingTopicBravo\"]}],\"consumingRoutes\":[{\"queue\":{\"isExclusive\":true,\"name\":\"queue.cmf.security\",\"isAutoDelete\":true,\"isDurable\":false,\"shouldDeclare\":true,\"virtualHost\":\"/\"},\"brokers\":[{\"clusterId\":\"clusterIdOne\",\"hostname\":\"devexample.com\",\"port\":5672,\"connectionStrategy\":\"default\"}],\"exchange\":{\"exchangeType\":\"topic\",\"name\":\"exchange.cmf.security\",\"isAutoDelete\":true,\"isDurable\":false,\"shouldDeclare\":true,\"virtualHost\":\"/\"},\"routingKeys\":[\"queueTopic1\"]}]}";
 	
 	// Create the components of the Route
 
 
 	private RoutingInfo createTestRoutingInfoObject() {
 		
-		Broker broker = new Broker("clusterIdOne","devexample.com",5672,false);
+		Broker broker = new Broker("clusterIdOne","devexample.com",5672,"default");
 		Exchange exchange = new Exchange("exchange.cmf.security","topic",true,false,true,"/",null);
 		Queue queue = new Queue("queue.cmf.security",true,false,true,true,"/",null);
 		String[] routeKeys = {"producingTopicAlpha","producingTopicBravo"};
