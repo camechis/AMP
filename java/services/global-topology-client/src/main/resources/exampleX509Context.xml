@@ -28,10 +28,8 @@
 
     <util:list id="brokers" value-type="amp.rabbit.topology.Broker">
 	    <bean class="amp.rabbit.topology.Broker"
-	          c:clusterId=""
 	          c:hostname="rabbit.openampere.com"
-	          c:port="5671"
-	          c:connectionStrategy="ssl" />
+	          c:port="5671" />
     </util:list>	
 	<bean id="topologyService" class="amp.topology.client.GlobalTopologyService" 
 		c:routingInfoRetriever-ref="routingInfoRetriever"

@@ -127,7 +127,7 @@ public class SimpleTopologyBuilder extends FluentExtension {
 	 */
 	void buildTopologyService(){
 		
-		Broker broker = new Broker(null,hostname,port, "default");
+		Broker broker = new Broker(hostname,port);
 		
 		SimpleTopologyService sts = 				
 			new SimpleTopologyService(clientName, broker);

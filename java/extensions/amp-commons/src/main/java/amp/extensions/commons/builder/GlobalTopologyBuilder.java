@@ -155,7 +155,7 @@ public class GlobalTopologyBuilder extends FluentExtension {
 		
 		//TODO: JM > CLUSTER_ID
 		//TODO: JM > SSL_ENABLED
-		Broker broker = new Broker("defaultCluster",hostname,port,"default");	
+		Broker broker = new Broker(hostname,port);	
 		this.primaryFallbackProvider.setBrokers(Arrays.asList(broker));
 		this.primaryFallbackProvider.getExchangePrototype().setVirtualHost(vhost);
 

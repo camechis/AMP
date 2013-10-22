@@ -86,10 +86,8 @@
 
     <util:list id="brokers" value-type="amp.rabbit.topology.Broker">
 	    <bean class="amp.rabbit.topology.Broker"
-	          c:clusterId=""
 	          c:hostname="rabbit.openampere.com"
-	          c:port="5672"
-	          c:connectionStrategy="basic-auth" />
+	          c:port="5672" />
     </util:list>
 
     <bean id="routingInfoCache" class="amp.bus.rabbit.CommandableCache">

@@ -106,7 +106,7 @@ public class ConnectionManagementTests {
         });
 
         _transport = new RabbitTransportProvider(
-            new SimpleTopologyService(null, new Broker("test", "nowhere.com", 0, "")),
+            new SimpleTopologyService(null, new Broker("nowhere.com", 0)),
             new TestConnectionFactory(_rmqFactory),
             new SimpleRoutingInfoCache(100));
    	}

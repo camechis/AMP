@@ -24,7 +24,7 @@ public class ConsummingRouteTests extends BaseRouteTests {
 		((ConsumingRoute)exchangeNotEquivelentModel).queue = new Queue("reference", true, true, true, true, null, null);
 		((ConsumingRoute)routeNotEquivelentModel).queue = new Queue("reference", true, true, true, true, null, null);
 
-		queueNotEquivelentModel.brokers.add(new Broker(null,"reference", 0, "basic"));
+		queueNotEquivelentModel.brokers.add(new Broker("reference", 0, "basic"));
 		queueNotEquivelentModel.exchange = new Exchange("reference", "direct", true, true, true, null, null);
 		queueNotEquivelentModel.routingKeys.add("route");
 		queueNotEquivelentModel.queue = new Queue("other-queue", true, true, true, true, null, null);

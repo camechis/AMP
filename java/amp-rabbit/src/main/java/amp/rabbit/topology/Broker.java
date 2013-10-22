@@ -17,6 +17,21 @@ public class Broker {
 	
 	public Broker(){}
 	
+	public Broker(String hostname, int port) {
+		
+		this(null, hostname, port, "");
+	}
+	
+	public Broker(String clusterId, String hostname, int port) {
+		
+		this(clusterId, hostname, port, "");
+	}
+	
+	public Broker(String hostname, int port, String connectionStrategy) {
+		
+		this(null, hostname, port, connectionStrategy);
+	}
+	
 	public Broker(String clusterId, String hostname, int port, String connectionStrategy) {
 		
 		this.clusterId = clusterId;
