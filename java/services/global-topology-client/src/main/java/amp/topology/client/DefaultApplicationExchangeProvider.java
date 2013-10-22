@@ -60,16 +60,7 @@ public class DefaultApplicationExchangeProvider extends SimpleTopologyService im
 		
 		this.getExchangePrototype().setExchangeType(exchangeType);
 	}
-	
-	/**
-	 * Convenience method to set the virtual host on the prototype.
-	 * @param virtualHost Name of the virtual host.
-	 */
-	public void setVirtualHost(String virtualHost){
 		
-		this.getExchangePrototype().setVirtualHost(virtualHost);
-	}
-	
 	/**
 	 * Convenience method to set the queue name on the prototype.
 	 * @param queueName Name of the queue.

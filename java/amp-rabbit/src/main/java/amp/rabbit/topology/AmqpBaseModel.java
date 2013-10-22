@@ -29,8 +29,6 @@ public abstract class AmqpBaseModel {
 	/** should create the queue/exchange if it doesn't exist? */
 	protected boolean shouldDeclare = true;
 
-	protected String virtualHost = "/";
-
 	protected Map<String, Object> arguments;
 
 	public AmqpBaseModel() {
@@ -46,14 +44,12 @@ public abstract class AmqpBaseModel {
 	 * @param arguments
 	 */
 	public AmqpBaseModel(String name, boolean isAutoDelete, boolean isDurable,
-			boolean shouldDeclare, String virtualHost,
-			Map<String, Object> arguments) {
+			boolean shouldDeclare, Map<String, Object> arguments) {
 
 		this.name = name;
 		this.isAutoDelete = isAutoDelete;
 		this.isDurable = isDurable;
 		this.shouldDeclare = shouldDeclare;
-		this.virtualHost = virtualHost;
 		this.arguments = arguments;
 	}
 
@@ -93,14 +89,6 @@ public abstract class AmqpBaseModel {
 		this.shouldDeclare = shouldDeclare;
 	}
 
-	public String getVirtualHost() {
-		return virtualHost;
-	}
-
-	public void setVirtualHost(String virtualHost) {
-		this.virtualHost = virtualHost;
-	}
-
 	public Map<String, Object> getArguments() {
 		return arguments;
 	}
@@ -120,7 +108,7 @@ public abstract class AmqpBaseModel {
 		// all the arguments (not the instance itself) determine equality/match
 		Object argsValue = arguments == null ? null : arguments.hashCode();
 		return Objects.hashCode(argsValue,isAutoDelete,
-				isDurable,name,shouldDeclare,virtualHost);		
+				isDurable,name,shouldDeclare);		
 	}
 
 	@Override
@@ -136,8 +124,7 @@ public abstract class AmqpBaseModel {
 			isAutoDelete == other.isAutoDelete &&
 			isDurable == other.isDurable &&
 			Objects.equal(name, other.name) &&
-			shouldDeclare == other.shouldDeclare &&
-			Objects.equal(virtualHost,other.virtualHost);
+			shouldDeclare == other.shouldDeclare;
 		
 	}
 	
@@ -146,8 +133,7 @@ public abstract class AmqpBaseModel {
 		.add("name",name)		
 		.add("autoDelete",isAutoDelete)
 		.add("durable",isDurable)
-		.add("shouldDeclare",shouldDeclare)
-		.add("vhost",virtualHost);
+		.add("shouldDeclare",shouldDeclare);
 	}
 		
 }

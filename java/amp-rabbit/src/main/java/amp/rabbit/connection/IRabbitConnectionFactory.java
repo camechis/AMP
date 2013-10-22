@@ -1,6 +1,5 @@
 package amp.rabbit.connection;
 
-import amp.rabbit.topology.BaseRoute;
 import amp.rabbit.topology.Broker;
 
 /**
@@ -11,5 +10,5 @@ import amp.rabbit.topology.Broker;
  */
 public interface IRabbitConnectionFactory {
 
-	IConnectionManager getConnectionManagerFor(Broker broker, BaseRoute route) throws Exception;
+	IConnectionManager getConnectionManagerFor(Broker broker) throws Exception;
 }

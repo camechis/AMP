@@ -54,7 +54,6 @@ public class TestUtils {
 		logger.debug("  >>  EXCHANGE INFO: ");
 		logger.debug("\t\tExchange Name: {}", exchange.getName());
 		logger.debug("\t\tExchange Type: {}", exchange.getExchangeType());		
-		logger.debug("\t\tVirtual Host: {}", exchange.getVirtualHost());		
 		logger.debug("\t\tIs Durable: {}", exchange.isDurable());
 		logger.debug("\t\tIs Auto Delete: {}", exchange.isAutoDelete());
 		
@@ -64,7 +63,6 @@ public class TestUtils {
 			Queue queue = ((ConsumingRoute)route).getQueue();
 			logger.debug("  >>  Queue INFO: ");
 			logger.debug("\t\tQueue Name: {}", queue.getName());				
-			logger.debug("\t\tVirtual Host: {}", queue.getVirtualHost());
 			logger.debug("\t\tIs Exclusive: {}", queue.isExclusive());
 			logger.debug("\t\tIs Durable: {}", queue.isDurable());
 			logger.debug("\t\tIs Auto Delete: {}", queue.isAutoDelete());

@@ -18,16 +18,16 @@ public class ConsummingRouteTests extends BaseRouteTests {
 
 		super.setup();
 		
-		((ConsumingRoute)referenceModel).queue = new Queue("reference", true, true, true, true, null, null);
-		((ConsumingRoute)equivelentModel).queue = new Queue("reference", true, true, true, true, null, null);
-		((ConsumingRoute)brokerNotEquivelentModel).queue = new Queue("reference", true, true, true, true, null, null);
-		((ConsumingRoute)exchangeNotEquivelentModel).queue = new Queue("reference", true, true, true, true, null, null);
-		((ConsumingRoute)routeNotEquivelentModel).queue = new Queue("reference", true, true, true, true, null, null);
+		((ConsumingRoute)referenceModel).queue = new Queue("reference", true, true, true, true, null);
+		((ConsumingRoute)equivelentModel).queue = new Queue("reference", true, true, true, true, null);
+		((ConsumingRoute)brokerNotEquivelentModel).queue = new Queue("reference", true, true, true, true, null);
+		((ConsumingRoute)exchangeNotEquivelentModel).queue = new Queue("reference", true, true, true, true, null);
+		((ConsumingRoute)routeNotEquivelentModel).queue = new Queue("reference", true, true, true, true, null);
 
 		queueNotEquivelentModel.brokers.add(new Broker("reference", 0, "basic"));
-		queueNotEquivelentModel.exchange = new Exchange("reference", "direct", true, true, true, null, null);
+		queueNotEquivelentModel.exchange = new Exchange("reference", "direct", true, true, true, null);
 		queueNotEquivelentModel.routingKeys.add("route");
-		queueNotEquivelentModel.queue = new Queue("other-queue", true, true, true, true, null, null);
+		queueNotEquivelentModel.queue = new Queue("other-queue", true, true, true, true, null);
 		
 	}
 	

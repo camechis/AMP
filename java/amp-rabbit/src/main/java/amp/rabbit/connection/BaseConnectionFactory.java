@@ -3,7 +3,6 @@ package amp.rabbit.connection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import amp.rabbit.topology.BaseRoute;
 import amp.rabbit.topology.Broker;
 
 import com.rabbitmq.client.ConnectionFactory;
@@ -32,29 +31,28 @@ public abstract class BaseConnectionFactory implements IRabbitConnectionFactory 
 	 * Derived classes have the sole responsibility of configuring the RabbitConnectionFactory.
 	 * (however that is done: username/password, certificates, etc.).
 	 */
-	protected void configureConnectionFactory(ConnectionFactory factory, Broker broker, BaseRoute route) 
+	protected void configureConnectionFactory(ConnectionFactory factory, Broker broker) 
 			throws Exception {
 
         factory.setHost(broker.getHostname());
         factory.setPort(broker.getPort());
-        factory.setVirtualHost(route.getExchange().getVirtualHost());
+        factory.setVirtualHost(broker.getVirtualHost());
 	}
 
 	/**
 	 * Convenience method for DRY principle -- absolutely no difference between how we 
 	 * create a connection for a ConsumingRoute or a ProducingRoute.  Just use the BaseRoute.
 	 * @param broker
-	 * @param route
 	 * @return
 	 * @throws Exception
 	 */
-	public IConnectionManager getConnectionManagerFor(Broker broker, BaseRoute route) throws Exception {
+	public IConnectionManager getConnectionManagerFor(Broker broker) throws Exception {
 		
-        log.debug("Creating connection manager for route: {}", route);
+        log.debug("Creating connection manager for broker: {}", broker);
 
 		ConnectionFactory factory = new ConnectionFactory();
 
-		configureConnectionFactory(factory, broker, route);
+		configureConnectionFactory(factory, broker);
 		
         return new ConnectionManager(factory);
 	}

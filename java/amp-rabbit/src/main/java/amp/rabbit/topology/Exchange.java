@@ -28,9 +28,9 @@ public class Exchange extends AmqpBaseModel {
      */
     public Exchange(String exchangeName, String exchangeType,
 			boolean isAutoDelete, boolean isDurable, boolean shouldDeclare,
-			String virtualHost, Map<String, Object> arguments) {
+			Map<String, Object> arguments) {
 
-		super(exchangeName, isAutoDelete, isDurable, shouldDeclare, virtualHost,
+		super(exchangeName, isAutoDelete, isDurable, shouldDeclare,
 				arguments);
 		this.exchangeType = exchangeType;
     }
@@ -118,13 +118,6 @@ public static class ExchangeBuilder {
 	public ExchangeBuilder declare(boolean trueIfShouldDeclare){
 		
 		this.exchange.setShouldDeclare(trueIfShouldDeclare);
-		
-		return this;
-	}
-	
-	public ExchangeBuilder vhost(String vhost){
-		
-		this.exchange.setVirtualHost(vhost);
 		
 		return this;
 	}

@@ -13,13 +13,14 @@ public class Broker {
 	protected String clusterId;
 	protected String hostname;
 	protected int port = 5672;
+	protected String virtualHost = "/";
 	protected String connectionStrategy;
 	
 	public Broker(){}
 	
 	public Broker(String hostname, int port) {
 		
-		this(null, hostname, port, "");
+		this(null, hostname, port);
 	}
 	
 	public Broker(String clusterId, String hostname, int port) {
@@ -34,9 +35,15 @@ public class Broker {
 	
 	public Broker(String clusterId, String hostname, int port, String connectionStrategy) {
 		
+		this(clusterId, hostname, port, "/", connectionStrategy);
+	}
+	
+	public Broker(String clusterId, String hostname, int port, String virtualhost, String connectionStrategy) {
+		
 		this.clusterId = clusterId;
 		this.hostname = hostname;
 		this.port = port;
+		this.virtualHost = virtualhost;
 		this.connectionStrategy = connectionStrategy;
 	}
 
@@ -63,6 +70,14 @@ public class Broker {
 	public void setPort(int port) {
 		this.port = port;
 	}
+
+	public String getVirtualHost() {
+		return virtualHost;
+	}
+
+	public void setVirtualHost(String virtualHost) {
+		this.virtualHost = virtualHost;
+	}
 	
 	public String getConnectionStrategy() {
 		return connectionStrategy;
@@ -75,7 +90,7 @@ public class Broker {
 	@Override
 	public String toString() {
 		return "Broker [clusterId=" + clusterId + ", hostname=" + hostname
-				+ ", port=" + port + ", connectionStrategy=" + connectionStrategy + "]";
+				+ ", port=" + port + ", vhost=" + virtualHost + ", connectionStrategy=" + connectionStrategy + "]";
 	}
 	
 	@Override
@@ -89,6 +104,8 @@ public class Broker {
 		result = prime * result 
 				+ ((connectionStrategy == null) ? 0 : connectionStrategy.hashCode());
 		result = prime * result + port;
+		result = prime * result 
+				+ ((virtualHost == null) ? 0 : virtualHost.hashCode());
 		return result;
 	}
 
@@ -117,6 +134,11 @@ public class Broker {
 		} else if (!connectionStrategy.equals(other.connectionStrategy))
 			return false;
 		if (port != other.port)
+			return false;
+		if (virtualHost == null) {
+			if (other.virtualHost != null)
+				return false;
+		} else if (!virtualHost.equals(other.virtualHost))
 			return false;
 		return true;
 	}
@@ -152,6 +174,13 @@ public class Broker {
 		public BrokerBuilder port(int port){
 			
 			broker.setPort(port);
+			
+			return this;
+		}
+		
+		public BrokerBuilder vhost(String vhost){
+			
+			broker.setVirtualHost(vhost);
 			
 			return this;
 		}

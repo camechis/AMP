@@ -16,23 +16,23 @@ public class BaseRouteTests {
 	public void setup(){
 		
 		referenceModel.brokers.add(new Broker("reference", 0, "basic"));
-		referenceModel.exchange = new Exchange("reference", "direct", true, true, true, null, null);
+		referenceModel.exchange = new Exchange("reference", "direct", true, true, true, null);
 		referenceModel.routingKeys.add("route");
 
 		equivelentModel.brokers.add(new Broker("reference", 0, "basic"));
-		equivelentModel.exchange = new Exchange("reference", "direct", true, true, true, null, null);
+		equivelentModel.exchange = new Exchange("reference", "direct", true, true, true, null);
 		equivelentModel.routingKeys.add("route");
 
 		brokerNotEquivelentModel.brokers.add(new Broker("reference", 0, "ssl"));
-		brokerNotEquivelentModel.exchange = new Exchange("reference", "direct", true, true, true, null, null);
+		brokerNotEquivelentModel.exchange = new Exchange("reference", "direct", true, true, true, null);
 		brokerNotEquivelentModel.routingKeys.add("route");
 
 		exchangeNotEquivelentModel.brokers.add(new Broker("reference", 0, "basic"));
-		exchangeNotEquivelentModel.exchange = new Exchange("other", "direct", true, true, true, null, null);
+		exchangeNotEquivelentModel.exchange = new Exchange("other", "direct", true, true, true, null);
 		exchangeNotEquivelentModel.routingKeys.add("route");
 
 		routeNotEquivelentModel.routingKeys.add("other-route");
-		routeNotEquivelentModel.exchange = new Exchange("reference", "direct", true, true, true, null, null);
+		routeNotEquivelentModel.exchange = new Exchange("reference", "direct", true, true, true, null);
 		routeNotEquivelentModel.brokers.add(new Broker("reference", 0, "basic"));
 	}
 

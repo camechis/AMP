@@ -128,11 +128,12 @@ public class SimpleTopologyBuilder extends FluentExtension {
 	void buildTopologyService(){
 		
 		Broker broker = new Broker(hostname,port);
+		broker.setVirtualHost(vhost);
 		
 		SimpleTopologyService sts = 				
 			new SimpleTopologyService(clientName, broker);
 		
-		Exchange exchange = new Exchange(this.defaultExchange,"topic",true,false,false,vhost,null);
+		Exchange exchange = new Exchange(this.defaultExchange,"topic",true,false,false,null);
 		 
 		sts.setExchangePrototype(exchange);
 		

@@ -42,7 +42,7 @@ public class TokenConnectionFactoryTests {
     			new Exchange(), 
     			new ArrayList<String>());
     	
-    	factory.configureConnectionFactory(rabbitFactory, new Broker(), route);
+    	factory.configureConnectionFactory(rabbitFactory, new Broker());
     	
     	verify(rabbitFactory).setUsername((String)isNotNull());
     	verify(rabbitFactory).setPassword((String)isNotNull());

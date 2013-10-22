@@ -2,10 +2,7 @@ package amp.rabbit.topology;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-
-import com.google.common.base.Objects;
 
 /**
  * RoutingInfo is the information needed by the Topology Client to creating connections

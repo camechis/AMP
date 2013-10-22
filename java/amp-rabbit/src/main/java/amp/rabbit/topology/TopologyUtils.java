@@ -13,7 +13,6 @@ public class TopologyUtils {
 				.declare(target.shouldDeclare())
 				.isAutoDelete(target.isAutoDelete())
 				.isDurable(target.isDurable())
-				.vhost(target.getVirtualHost())
 				.type(target.getExchangeType())
 				.build();
 	}

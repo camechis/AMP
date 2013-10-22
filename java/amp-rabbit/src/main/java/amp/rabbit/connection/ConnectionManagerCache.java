@@ -56,7 +56,7 @@ public class ConnectionManagerCache implements IConnectionManagerCache {
 				} 
 				
 				manager = connectionFactoryForStrategy
-						.getConnectionManagerFor(broker, route);
+						.getConnectionManagerFor(broker);
 				
 				pooledManagers.put(broker, manager);
 			}

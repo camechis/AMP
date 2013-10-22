@@ -21,7 +21,6 @@ import org.mockito.stubbing.Answer;
 import amp.messaging.MessageRegistration;
 import amp.messaging.NullHandler;
 import amp.messaging.NullMessageProcessor;
-import amp.rabbit.topology.BaseRoute;
 import amp.rabbit.topology.Broker;
 import amp.rabbit.topology.Exchange;
 import amp.rabbit.topology.SimpleTopologyService;
@@ -242,7 +241,7 @@ public class ConnectionManagementTests {
         }
 
         @Override
-        public IConnectionManager getConnectionManagerFor(Broker broker, BaseRoute route) throws Exception {
+        public IConnectionManager getConnectionManagerFor(Broker broker) throws Exception {
             return new ConnectionManager(_factory);    
         }
     }

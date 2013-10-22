@@ -7,7 +7,6 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.util.EntityUtils;
 
 import amp.anubis.core.NamedToken;
-import amp.rabbit.topology.BaseRoute;
 import amp.rabbit.topology.Broker;
 import amp.utility.http.HttpClientProvider;
 import amp.utility.serialization.ISerializer;
@@ -44,16 +43,16 @@ public class TokenConnectionFactory extends BaseConnectionFactory {
 
     @Override
 	public void configureConnectionFactory(ConnectionFactory factory, 
-			Broker broker, BaseRoute route) throws Exception {
+			Broker broker) throws Exception {
         try {
 
             NamedToken token = this.getNamedToken();
 
-        	super.configureConnectionFactory(factory, broker, route);
+        	super.configureConnectionFactory(factory, broker);
 
         	if(_secureConnectionFactory != null){
         		_secureConnectionFactory.configureConnectionFactory(factory, 
-        				broker, route);
+        				broker);
             }
             
             // set the username and password from the token
