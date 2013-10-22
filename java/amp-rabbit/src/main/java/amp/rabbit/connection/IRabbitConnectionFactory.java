@@ -1,14 +1,7 @@
 package amp.rabbit.connection;
 
-
-import java.util.Collection;
-
-import cmf.bus.IDisposable;
-
-
-import amp.rabbit.topology.ConsumingRoute;
-import amp.rabbit.topology.ProducingRoute;
-
+import amp.rabbit.topology.BaseRoute;
+import amp.rabbit.topology.Broker;
 
 /**
  * Factory that creates the managers for connection+channel generation 
@@ -16,8 +9,7 @@ import amp.rabbit.topology.ProducingRoute;
  *
  * @author jmccune
  */
-public interface IRabbitConnectionFactory extends IDisposable {
+public interface IRabbitConnectionFactory {
 
-	Collection<IConnectionManager> getConnectionManagersFor(ProducingRoute route) throws Exception;
-	Collection<IConnectionManager> getConnectionManagersFor(ConsumingRoute route) throws Exception;
+	IConnectionManager getConnectionManagerFor(Broker broker, BaseRoute route) throws Exception;
 }

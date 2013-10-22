@@ -1,6 +1,7 @@
 package amp.rabbit.transport;
 
 
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import amp.bus.IEnvelopeDispatcher;
@@ -10,6 +11,8 @@ import cmf.bus.IRegistration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import amp.rabbit.connection.ConnectionManagerCache;
+import amp.rabbit.connection.IConnectionManagerCache;
 import amp.rabbit.connection.IRabbitConnectionFactory;
 import amp.rabbit.topology.ITopologyService;
 import amp.rabbit.topology.RoutingInfo;
@@ -25,19 +28,26 @@ public class RabbitEnvelopeReceiver implements IEnvelopeReceiver {
     private static final Logger LOG = LoggerFactory.getLogger(RabbitEnvelopeReceiver.class);
 
     private ITopologyService _topologyService;
-    private IRabbitConnectionFactory _connectionFactory;
+    private IConnectionManagerCache _connectionFactory;
     private ConcurrentHashMap<IRegistration, MultiConnectionRabbitReceiver> _listeners;
-
-
 
     public RabbitEnvelopeReceiver(ITopologyService topologyService, IRabbitConnectionFactory connectionFactory) {
 
+		this(topologyService, new ConnectionManagerCache(connectionFactory));
+    }
+
+    public RabbitEnvelopeReceiver(ITopologyService topologyService, Map<String, IRabbitConnectionFactory> connectionFactories) {
+
+		this(topologyService, new ConnectionManagerCache(connectionFactories));
+    }
+
+    private RabbitEnvelopeReceiver(ITopologyService topologyService, IConnectionManagerCache connectionManagerCache) {
+
         _topologyService = topologyService;
-        _connectionFactory = connectionFactory;
+        _connectionFactory = connectionManagerCache;
 
         _listeners = new ConcurrentHashMap<IRegistration, MultiConnectionRabbitReceiver>();
     }
-
 
 
     @Override

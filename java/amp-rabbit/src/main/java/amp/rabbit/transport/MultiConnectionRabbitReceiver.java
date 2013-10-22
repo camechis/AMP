@@ -10,7 +10,7 @@ import cmf.bus.IDisposable;
 import cmf.bus.IRegistration;
 import amp.bus.IEnvelopeReceivedCallback;
 import amp.rabbit.connection.IConnectionManager;
-import amp.rabbit.connection.IRabbitConnectionFactory;
+import amp.rabbit.connection.IConnectionManagerCache;
 import amp.rabbit.dispatch.IListenerCloseCallback;
 import amp.rabbit.dispatch.RabbitListener;
 import amp.rabbit.topology.ConsumingRoute;
@@ -42,7 +42,7 @@ public class MultiConnectionRabbitReceiver implements IDisposable{
 	 * @param handler  is used to process whatever envelope/message comes in on the channels implied by the routingInfo.
 	 * @throws Exception  can occur when configuring/establishing the connections doesn't work. 
 	 */
-	public  MultiConnectionRabbitReceiver(IRabbitConnectionFactory connectionFactory, 
+	public  MultiConnectionRabbitReceiver(IConnectionManagerCache connectionFactory, 
 			RoutingInfo routingInfo, IRegistration registration, IEnvelopeReceivedCallback handler) throws Exception {
 		
 		if (handler == null || registration==null) {

@@ -14,7 +14,7 @@ import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
 
 import amp.rabbit.connection.IConnectionManager;
-import amp.rabbit.connection.IRabbitConnectionFactory;
+import amp.rabbit.connection.IConnectionManagerCache;
 import amp.rabbit.topology.Exchange;
 import amp.rabbit.topology.ProducingRoute;
 import amp.rabbit.topology.RoutingInfo;
@@ -31,10 +31,10 @@ public class MultiConnectionRabbitSender implements IDisposable  {
 	private static final Logger LOG = LoggerFactory.getLogger(MultiConnectionRabbitSender.class);
 	
 	/** The factory that provides us our connections & channels */
-	private IRabbitConnectionFactory _connectionFactory;
+	private IConnectionManagerCache _connectionFactory;
 	
-	public MultiConnectionRabbitSender(IRabbitConnectionFactory factory) {
-		_connectionFactory = factory;
+	public MultiConnectionRabbitSender(IConnectionManagerCache connectionFactory) {
+		_connectionFactory = connectionFactory;
 	}
 	
 	public void send(RoutingInfo routing, Envelope envelope)  throws Exception {

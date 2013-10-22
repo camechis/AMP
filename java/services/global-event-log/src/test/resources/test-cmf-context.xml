@@ -91,7 +91,7 @@
 	          c:clusterId=""
 	          c:hostname="rabbit.openampere.com"
 	          c:port="5671"
-	          c:connectionStrategy="ssl" />
+	          c:connectionStrategy="" />
     </util:list>
 
     <bean id="routingInfoCache" class="amp.rabbit.transport.CommandableCache"

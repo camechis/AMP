@@ -1,5 +1,9 @@
 package amp.rabbit.transport;
 
+import java.util.Map;
+
+import amp.rabbit.connection.ConnectionManagerCache;
+import amp.rabbit.connection.IConnectionManagerCache;
 import amp.rabbit.connection.IRabbitConnectionFactory;
 import amp.rabbit.topology.ITopologyService;
 import amp.rabbit.topology.RoutingInfo;
@@ -24,8 +28,18 @@ public class RabbitEnvelopeSender implements IEnvelopeSender {
 
     public RabbitEnvelopeSender(ITopologyService topologyService, IRabbitConnectionFactory connectionFactory) {
 
+		this(topologyService, new ConnectionManagerCache(connectionFactory));
+    }
+
+    public RabbitEnvelopeSender(ITopologyService topologyService, Map<String, IRabbitConnectionFactory> connectionFactories) {
+
+		this(topologyService, new ConnectionManagerCache(connectionFactories));
+    }
+
+    private RabbitEnvelopeSender(ITopologyService topologyService, IConnectionManagerCache connectionManagerCache) {
+
         _topologyService = topologyService;
-        _rabbitSender = new MultiConnectionRabbitSender(connectionFactory);
+        _rabbitSender = new MultiConnectionRabbitSender(connectionManagerCache);
     }
 
     @Override

@@ -83,9 +83,4 @@ public class TokenConnectionFactory extends BaseConnectionFactory {
         // deserialize the named token and return it
         return _serializer.stringDeserialize(content, NamedToken.class);
     }
-
-
-    @Override
-    public void dispose() {
-    }
 }

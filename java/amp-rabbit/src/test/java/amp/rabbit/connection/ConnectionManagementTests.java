@@ -106,7 +106,7 @@ public class ConnectionManagementTests {
         });
 
         _transport = new RabbitTransportProvider(
-            new SimpleTopologyService(null, new Broker("test", "nowhere.com", 0, "basic")),
+            new SimpleTopologyService(null, new Broker("test", "nowhere.com", 0, "")),
             new TestConnectionFactory(_rmqFactory),
             new SimpleRoutingInfoCache(100));
    	}
@@ -242,7 +242,7 @@ public class ConnectionManagementTests {
         }
 
         @Override
-        protected IConnectionManager createConnectionManager(Broker broker, BaseRoute route) throws IOException {
+        public IConnectionManager getConnectionManagerFor(Broker broker, BaseRoute route) throws Exception {
             return new ConnectionManager(_factory);    
         }
     }

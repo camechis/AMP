@@ -29,4 +29,5 @@ public class BasicConnectionFactory extends BaseConnectionFactory {
         factory.setUsername(username);
         factory.setPassword(password);
 	}
+
 }

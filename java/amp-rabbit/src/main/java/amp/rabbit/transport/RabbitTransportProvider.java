@@ -14,6 +14,8 @@ import org.slf4j.LoggerFactory;
 import amp.bus.IEnvelopeDispatcher;
 import amp.bus.IEnvelopeReceivedCallback;
 import amp.bus.ITransportProvider;
+import amp.rabbit.connection.ConnectionManagerCache;
+import amp.rabbit.connection.IConnectionManagerCache;
 import amp.rabbit.connection.IRabbitConnectionFactory;
 import amp.rabbit.topology.ITopologyService;
 import amp.rabbit.topology.RoutingInfo;
@@ -34,7 +36,7 @@ public class RabbitTransportProvider implements ITransportProvider {
 	/** cache for routing info (from topology service) */
 	protected IRoutingInfoCache routingInfoCache;
 	
-	protected IRabbitConnectionFactory connectionFactory;
+	protected IConnectionManagerCache connectionFactory;
 	
 	/** These are the channel/queue listeners that actually receive events. */
 	protected ConcurrentHashMap<IRegistration, MultiConnectionRabbitReceiver> listenerMap = 
@@ -46,7 +48,7 @@ public class RabbitTransportProvider implements ITransportProvider {
 	protected MultiConnectionRabbitSender rabbitSender;
 	
 	/**
-	 * Initialize the Transport Provider with the Topology Service and the
+	 * Initialize the Transport Provider with the Topology Service and a default
 	 * Connection Factory.
 	 * 
 	 * @param topologyService
@@ -60,10 +62,39 @@ public class RabbitTransportProvider implements ITransportProvider {
 			IRabbitConnectionFactory connectionFactory,
 			IRoutingInfoCache routingInfoCache) {
 
+		this(topologyService, 
+				new ConnectionManagerCache(connectionFactory), 
+				routingInfoCache);
+	}
+
+	/**
+	 * Initialize the Transport Provider with the Topology Service and a default
+	 * Connection Factory.
+	 * 
+	 * @param topologyService
+	 *            Service that determines the correct exchange and broker to
+	 *            send messages to.
+	 * @param connectionFactory
+	 *            Service that uses topology information to establish
+	 *            connections to the broker.
+	 */
+	public RabbitTransportProvider(ITopologyService topologyService,
+			Map<String, IRabbitConnectionFactory> connectionFactories,
+			IRoutingInfoCache routingInfoCache) {
+		
+		this(topologyService, 
+			new ConnectionManagerCache(connectionFactories), 
+			routingInfoCache);
+	}
+
+	private RabbitTransportProvider(ITopologyService topologyService,
+			IConnectionManagerCache connectionManagerCache,
+			IRoutingInfoCache routingInfoCache) {
+
 		this.topologyService = topologyService;
-		this.connectionFactory = connectionFactory;
+		this.connectionFactory = connectionManagerCache;
 		this.routingInfoCache = routingInfoCache;
-		this.rabbitSender = new MultiConnectionRabbitSender(connectionFactory);
+		this.rabbitSender = new MultiConnectionRabbitSender(connectionManagerCache);
 	}
 
 	/**
