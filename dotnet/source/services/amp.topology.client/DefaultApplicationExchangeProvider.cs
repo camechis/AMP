@@ -55,9 +55,8 @@ namespace amp.topology.client
 
             // there's only one exchange
             Exchange oneExchangeToFindThem = new Exchange(
-                    this.ExchangeName, this.Hostname, this.VHost,
-                    this.Port, topic, oneQueueToRuleThemAll, this.ExchangeType,
-                    this.IsDurable, this.IsAutoDelete, this.Arguments);
+                    this.ExchangeName, exchangeType: this.ExchangeType,
+                    isDurable: this.IsDurable, autoDelete: this.IsAutoDelete, arguments: this.Arguments);
  
             ProducingRoute producingRoute = new ProducingRoute(
                 new[] { new Broker(this.Hostname, this.Port) },

@@ -16,9 +16,9 @@ namespace amp.rabbit.connection
         }
 
 
-        public override void ConfigureConnectionFactory(ConnectionFactory factory, Exchange exchange)
+        public override void ConfigureConnectionFactory(ConnectionFactory factory, Broker broker)
         {
-            base.ConfigureConnectionFactory(factory, exchange);
+            base.ConfigureConnectionFactory(factory, broker);
 
             factory.UserName = _username;
             factory.Password = _password;

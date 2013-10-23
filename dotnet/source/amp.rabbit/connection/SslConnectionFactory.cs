@@ -5,11 +5,11 @@ namespace amp.rabbit.connection
 {
     public class SslConnectionFactory : BaseConnectionFactory
     {
-        public override void ConfigureConnectionFactory(ConnectionFactory factory, Exchange exchange)
+        public override void ConfigureConnectionFactory(ConnectionFactory factory, Broker broker)
         {
-            base.ConfigureConnectionFactory(factory, exchange);
+            base.ConfigureConnectionFactory(factory, broker);
 
-            factory.Ssl.ServerName = exchange.HostName;
+            factory.Ssl.ServerName = broker.Hostname;
             factory.Ssl.Enabled = true;
         }
     }

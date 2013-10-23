@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using amp.bus;
 using amp.messaging;
 using amp.rabbit.connection;
@@ -46,16 +45,12 @@ namespace amp.rabbit.transport
             // first, get the topology based on the headers
             RoutingInfo routing = this.GetRoutingFromCacheOrService(_routingInfoCache, _topoSvc, env.Headers);
 
-            // next, pull out all the producer exchanges
-            IEnumerable<Exchange> exchanges =
-                from route in routing.ProducingRoutes
-                select route.Exchange;
-
             // for each exchange, send the envelope
-            foreach (Exchange ex in exchanges)
+            foreach (ProducingRoute route in routing.ProducingRoutes)
             {
+                Exchange ex = route.Exchange;
                 Log.Debug("Sending to exchange: " + ex.ToString());
-                IConnectionManager connMgr = _connFactory.ConnectTo(ex);
+                IConnectionManager connMgr = _connFactory.ConnectTo(route.Brokers.First());
                 
                 using (IModel channel = connMgr.CreateModel())
                 {
@@ -63,7 +58,20 @@ namespace amp.rabbit.transport
                     props.Headers = env.Headers as IDictionary;
 
                     channel.ExchangeDeclare(ex.Name, ex.ExchangeType, ex.IsDurable, ex.IsAutoDelete, ex.Arguments);
-                    channel.BasicPublish(ex.Name, ex.RoutingKey, props, env.Payload);
+
+                    foreach (string routingKey in route.RoutingKeys)
+                    {
+                        try
+                        {
+                            channel.BasicPublish(ex.Name, routingKey, props, env.Payload);
+
+                        }
+                        catch (Exception e)
+                        {
+                            Log.Error(string.Format("Failed to send an envelope to route: {0} on excange {1}.", routingKey, ex), e);
+                            throw;
+                        }
+                    }
 
                     // close the channel, but not the connection.  Channels are cheap.
                     channel.Close();
@@ -119,17 +127,12 @@ namespace amp.rabbit.transport
             // first, get the topology based on the registration info
             RoutingInfo routing = this.GetRoutingFromCacheOrService(_routingInfoCache, _topoSvc, registration.Info);
 
-            // next, pull out all the consumer exchanges
-            IEnumerable<Exchange> exchanges =
-                from route in routing.ConsumingRoutes
-                select route.Exchange;
-
-            foreach (Exchange ex in exchanges)
+            foreach (ConsumingRoute route in routing.ConsumingRoutes)
             {
-                IConnectionManager conn = _connFactory.ConnectTo(ex);
+                IConnectionManager conn = _connFactory.ConnectTo(route.Brokers.First());
 
                 // create a listener
-                RabbitListener listener = new RabbitListener(registration, ex, conn);
+                RabbitListener listener = new RabbitListener(registration, route, conn);
                 listener.OnEnvelopeReceived += this.listener_OnEnvelopeReceived;
                 listener.OnClose += _listeners.Remove;
 

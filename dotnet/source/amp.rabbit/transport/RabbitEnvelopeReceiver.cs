@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using amp.rabbit.connection;
 using amp.rabbit.dispatch;
@@ -39,11 +40,7 @@ namespace amp.rabbit.transport
             foreach (var route in routing.ConsumingRoutes) 
             {
                 exchanges.Add(route.Exchange);
-            }
-
-            foreach (var exchange in exchanges)
-            {
-                RabbitListener listener = createListener(registration, exchange);
+                RabbitListener listener = createListener(registration, route);
             }
 
             Log.Debug("Leave Register");        
@@ -70,12 +67,12 @@ namespace amp.rabbit.transport
             _connFactory.Dispose();
         }
 
-        protected RabbitListener createListener(IRegistration registration, Exchange exchange) 
+        protected RabbitListener createListener(IRegistration registration, ConsumingRoute route) 
         {
-            IConnectionManager connection = _connFactory.ConnectTo(exchange);
+            IConnectionManager connection = _connFactory.ConnectTo(route.Brokers.First());
 
             // create a listener
-            RabbitListener listener = new RabbitListener(registration, exchange, connection);
+            RabbitListener listener = new RabbitListener(registration, route, connection);
             listener.OnEnvelopeReceived += dispatcher =>
                 {
                     Log.Debug("Got an envelope from the RabbitListener: dispatching.");

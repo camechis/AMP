@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using amp.rabbit.connection;
 using amp.rabbit.topology;
@@ -32,18 +31,18 @@ namespace amp.rabbit.transport
             // first, get the topology based on the headers
             RoutingInfo routing = _topologyService.GetRoutingInfo(envelope.Headers);
 
-            // next, pull out all the producer exchanges
-            IEnumerable<Exchange> exchanges =
-                from route in routing.ProducingRoutes
-                select route.Exchange;
-
             // for each exchange, send the envelope
-            foreach (Exchange ex in exchanges)
+            foreach (ProducingRoute route in routing.ProducingRoutes)
             {
+                Exchange ex = route.Exchange;
                 Log.Info("Sending to exchange: " + ex.ToString());
 
+                //TODO: There is a problem here in how exceptions are being logged/rethrown:
+                //It is possible for a envelope to go out on some exchanges and/or routes and then not others.
+                //A failure aborts attempts at subequent exchanges/routes but does not role back previous.
+                //Seems we should either continue to attempt later routes and throw at the end or role back.
                 try {
-                    IConnectionManager connMgr = _connFactory.ConnectTo(ex);
+                    IConnectionManager connMgr = _connFactory.ConnectTo(route.Brokers.First());
 
                     using (IModel channel = connMgr.CreateModel())
                     {
@@ -51,7 +50,20 @@ namespace amp.rabbit.transport
                         props.Headers = envelope.Headers as IDictionary;
 
                         channel.ExchangeDeclare(ex.Name, ex.ExchangeType, ex.IsDurable, ex.IsAutoDelete, ex.Arguments);
-                        channel.BasicPublish(ex.Name, ex.RoutingKey, props, envelope.Payload);
+
+                        foreach (string routingKey in route.RoutingKeys)
+                        {
+                            try
+                            {
+                                channel.BasicPublish(ex.Name, routingKey, props, envelope.Payload);
+
+                            }
+                            catch (Exception e)
+                            {
+                                Log.Error(string.Format("Failed to send an envelope to route: {0} on excange {1}.", routingKey, ex), e);
+                                throw;
+                            }
+                        }
 
                         // close the channel, but not the connection.  Channels are cheap.
                         channel.Close();
@@ -59,7 +71,7 @@ namespace amp.rabbit.transport
 
                 } catch (Exception e) {
                     Log.Error("Failed to send an envelope", e);
-                    throw e;
+                    throw;
                 }
             }
 

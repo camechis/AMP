@@ -29,15 +29,10 @@ namespace amp.rabbit.topology
             string topic = routingHints.GetMessageTopic();
         
             Exchange theOneExchange = new Exchange(
-                this.Name, 
-                this.Hostname, 
-                this.VirtualHost, 
-                this.Port,
-                topic, 
-                string.Format("{0}#{1}", this.ClientProfile, topic),
-                "direct", 
-                false, 
-                true);
+                this.Name,
+                exchangeType: "direct", 
+                isDurable: false, 
+                autoDelete: true);
 
             ProducingRoute producingRoute = new ProducingRoute(
                 new[]{new Broker(this.Hostname, this.Port)},
