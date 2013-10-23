@@ -53,6 +53,8 @@ namespace amp.tests.rabbit.connection
                     return model.Object;
                 });
 
+                connection.Setup(c => c.IsOpen).Returns(true);
+
                 return connection.Object;
             });
 
