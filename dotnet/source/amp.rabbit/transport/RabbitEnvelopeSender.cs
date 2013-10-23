@@ -34,8 +34,8 @@ namespace amp.rabbit.transport
 
             // next, pull out all the producer exchanges
             IEnumerable<Exchange> exchanges =
-                from route in routing.Routes
-                select route.ProducerExchange;
+                from route in routing.ProducingRoutes
+                select route.Exchange;
 
             // for each exchange, send the envelope
             foreach (Exchange ex in exchanges)

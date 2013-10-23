@@ -39,9 +39,18 @@ namespace amp.rabbit.topology
                 false, 
                 true);
 
-            RouteInfo theOneRoute = new RouteInfo(theOneExchange, theOneExchange);
+            ProducingRoute producingRoute = new ProducingRoute(
+                new[]{new Broker(this.Hostname, this.Port)},
+                theOneExchange,
+                new[]{ topic });
 
-            return new RoutingInfo(new RouteInfo[] { theOneRoute });
+            ConsumingRoute consumingRoute = new ConsumingRoute(
+                new[]{new Broker(this.Hostname, this.Port)},
+                theOneExchange,
+                new Queue(string.Format("{0}#{1}", this.ClientProfile, topic), true, false, true, true, null), 
+                new[]{ topic });
+
+            return new RoutingInfo(new[]{producingRoute}, new []{consumingRoute});
         }
 
         public void Dispose()

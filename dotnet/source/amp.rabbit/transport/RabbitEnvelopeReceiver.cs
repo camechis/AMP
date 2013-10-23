@@ -36,10 +36,9 @@ namespace amp.rabbit.transport
             // next, pull out all the producer exchanges
             List<Exchange> exchanges = new List<Exchange>();
 
-            foreach (RouteInfo route in routing.Routes) 
+            foreach (var route in routing.ConsumingRoutes) 
             {
-
-                exchanges.Add(route.ConsumerExchange);
+                exchanges.Add(route.Exchange);
             }
 
             foreach (var exchange in exchanges)

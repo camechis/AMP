@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using amp.rabbit.topology;
+using Queue = amp.rabbit.topology.Queue;
 
 namespace amp.topology.client
 {
@@ -57,15 +58,19 @@ namespace amp.topology.client
                     this.ExchangeName, this.Hostname, this.VHost,
                     this.Port, topic, oneQueueToRuleThemAll, this.ExchangeType,
                     this.IsDurable, this.IsAutoDelete, this.Arguments);
+ 
+            ProducingRoute producingRoute = new ProducingRoute(
+                new[] { new Broker(this.Hostname, this.Port) },
+                oneExchangeToFindThem,
+                new[] { topic });
 
-            // for both producing and consuming
-            RouteInfo oneRouteToBringThemAll = new RouteInfo(oneExchangeToFindThem, oneExchangeToFindThem);
+            ConsumingRoute consumingRoute = new ConsumingRoute(
+                new[] { new Broker(this.Hostname, this.Port) },
+                oneExchangeToFindThem,
+                new Queue(oneQueueToRuleThemAll, this.IsAutoDelete, this.IsDurable, true, true, null),
+                new[] { topic });
 
-            // make a list out of the one route
-            List<RouteInfo> andInTheDarknessBindThem = new RouteInfo[] { oneRouteToBringThemAll }.ToList();
-
-            // and create routing info from it
-            return new RoutingInfo(andInTheDarknessBindThem);
+            return new RoutingInfo(new[] { producingRoute }, new[] { consumingRoute });
         }
 
         public void Dispose()
