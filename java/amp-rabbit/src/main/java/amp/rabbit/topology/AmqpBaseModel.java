@@ -26,7 +26,7 @@ public abstract class AmqpBaseModel {
 	/** indicates that the queue/exchange persists when the server restarts */
 	protected boolean isDurable = false;
 
-	/** should create the queue/exchange if it doesn't exist? */
+	/** Indicates if the client should create the queue/exchange if it doesn't exist. */
 	protected boolean shouldDeclare = true;
 
 	protected Map<String, Object> arguments;
@@ -135,5 +135,4 @@ public abstract class AmqpBaseModel {
 		.add("durable",isDurable)
 		.add("shouldDeclare",shouldDeclare);
 	}
-		
 }
