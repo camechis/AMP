@@ -63,7 +63,9 @@
     <Compile Include="connection\BasicConnectionFactory.cs" />
     <Compile Include="connection\CertificateConnectionFactory.cs" />
     <Compile Include="connection\ConnectionManager.cs" />
+    <Compile Include="connection\ConnectionManagerCache.cs" />
     <Compile Include="connection\IConnectionManager.cs" />
+    <Compile Include="connection\IConnectionManagerCache.cs" />
     <Compile Include="connection\SslConnectionFactory.cs" />
     <Compile Include="topology\AmqpBaseModel.cs" />
     <Compile Include="topology\BaseRoute.cs" />

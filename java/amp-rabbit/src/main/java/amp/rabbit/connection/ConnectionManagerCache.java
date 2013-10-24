@@ -34,9 +34,7 @@ public class ConnectionManagerCache implements IConnectionManagerCache {
 	public synchronized Collection<IConnectionManager> getConnectionManagersFor(BaseRoute route) throws Exception {
 		
 		Collection<IConnectionManager> managers = new ArrayList<IConnectionManager>();
-		Collection<Broker> brokers = route.getBrokers();
-	
-		for (Broker broker : brokers) {
+		for (Broker broker : route.getBrokers()) {
 			log.trace("Getting connection manager for broker: {}", broker);
 			
 			IConnectionManager manager = null;
