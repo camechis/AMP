@@ -77,16 +77,20 @@ public class MultiConnectionRabbitSender implements IDisposable  {
 			props.setHeaders(headers);
 
 			Exchange ex = route.getExchange();
-			Collection<String> keys = route.getRoutingKeys();
-
 			if(ex.shouldDeclare()){
 				channel.exchangeDeclare(ex.getName(), ex.getExchangeType(),
 						ex.isDurable(), ex.isAutoDelete(), ex.getArguments());
 			}
 
 			// For the channel, publish the topic...
-			for (String key : keys) {
-				channel.basicPublish(ex.getName(), key, props, envelope.getPayload());
+			for (String key : route.getRoutingKeys()) {
+				try {
+					channel.basicPublish(ex.getName(), key, props, envelope.getPayload());
+				} catch (Exception e) {
+					LOG.error("Failed to send an envelope to route: " + key);
+							
+					throw e;
+				}
 			}
 		} catch (Exception x) {
 			LOG.error("Error attempting to send envelope: ", x);
@@ -97,6 +101,7 @@ public class MultiConnectionRabbitSender implements IDisposable  {
 	public void dispose() {
 		//Shoudl I dispose of hte factory...??
 		
-		try { _connectionFactory.dispose(); } catch(Exception x) {}
+		try { _connectionFactory.dispose(); } 
+		catch(Exception x) { LOG.warn("Error closing connection factory cache.", x);}
 	}
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using amp.bus;
@@ -9,7 +8,6 @@ using amp.rabbit.dispatch;
 using amp.rabbit.topology;
 using cmf.bus;
 using Common.Logging;
-using RabbitMQ.Client;
 
 namespace amp.rabbit.transport
 {
@@ -22,6 +20,7 @@ namespace amp.rabbit.transport
         protected IDictionary<IRegistration, RabbitListener> _listeners;
         protected ITopologyService _topoSvc;
         protected IRabbitConnectionFactory _connFactory;
+        protected MultiConnectionRabbitSender _rabbitSender;
         protected IRoutingInfoCache _routingInfoCache;
 
 
@@ -32,6 +31,7 @@ namespace amp.rabbit.transport
         {
             _topoSvc = topologyService;
             _connFactory = connFactory;
+            _rabbitSender = new MultiConnectionRabbitSender(new ConnectionManagerCache(connFactory));
             _routingInfoCache = routingInfoCache;
 
             _listeners = new Dictionary<IRegistration, RabbitListener>();
@@ -45,39 +45,8 @@ namespace amp.rabbit.transport
             // first, get the topology based on the headers
             RoutingInfo routing = this.GetRoutingFromCacheOrService(_routingInfoCache, _topoSvc, env.Headers);
 
-            // for each exchange, send the envelope
-            foreach (ProducingRoute route in routing.ProducingRoutes)
-            {
-                Exchange ex = route.Exchange;
-                Log.Debug("Sending to exchange: " + ex.ToString());
-                IConnectionManager connMgr = _connFactory.ConnectTo(route.Brokers.First());
-                
-                using (IModel channel = connMgr.CreateModel())
-                {
-                    IBasicProperties props = channel.CreateBasicProperties();
-                    props.Headers = env.Headers as IDictionary;
-
-                    channel.ExchangeDeclare(ex.Name, ex.ExchangeType, ex.IsDurable, ex.IsAutoDelete, ex.Arguments);
-
-                    foreach (string routingKey in route.RoutingKeys)
-                    {
-                        try
-                        {
-                            channel.BasicPublish(ex.Name, routingKey, props, env.Payload);
-
-                        }
-                        catch (Exception e)
-                        {
-                            Log.Error(string.Format("Failed to send an envelope to route: {0} on excange {1}.", routingKey, ex), e);
-                            throw;
-                        }
-                    }
-
-                    // close the channel, but not the connection.  Channels are cheap.
-                    channel.Close();
-                }
-            }
-
+            _rabbitSender.Send(routing, env);
+         
             Log.Debug("Leave Send");
         }
 
