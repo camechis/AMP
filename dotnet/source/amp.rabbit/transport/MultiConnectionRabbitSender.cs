@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using amp.rabbit.connection;
 using amp.rabbit.topology;
 using cmf.bus;
@@ -62,8 +63,7 @@ namespace amp.rabbit.transport
             if (ex.ShouldDeclare)
             {
                 channel.ExchangeDeclare(ex.Name, ex.ExchangeType, ex.IsDurable, ex.IsAutoDelete,
-                    ex.Arguments);
-            }
+                    new Dictionary<string, object>(ex.Arguments));            }
 
             foreach (string routingKey in route.RoutingKeys)
             {

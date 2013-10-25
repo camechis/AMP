@@ -1,19 +1,12 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections.Generic;
 using System.Text;
 using amp.utility;
 
 namespace amp.rabbit.topology
 {
-    public struct Exchange : IEquatable<Exchange>
+    public class Exchange : AmqpBaseModel
     {
-        public string Name { get; private set; }
         public string ExchangeType { get; private set; }
-        public bool IsDurable { get; private set; }
-        public bool IsAutoDelete { get; private set; }
-        public bool ShouldDeclare { get; private set; }
-        public IDictionary Arguments { get; private set; }
-
 
         public Exchange(
             string name, 
@@ -21,15 +14,10 @@ namespace amp.rabbit.topology
             bool isDurable = false,
             bool autoDelete = false,
             bool shouldDeclare = false,
-            IDictionary arguments = null)
-            : this()
+            IDictionary<string, object> arguments = null)
+            : base(name, autoDelete, isDurable, shouldDeclare, arguments)
         {
-            this.Name = name;
             this.ExchangeType = exchangeType;
-            this.IsDurable = isDurable;
-            this.IsAutoDelete = autoDelete;
-            this.ShouldDeclare = shouldDeclare;
-            this.Arguments = arguments;
         }
 
 

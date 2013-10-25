@@ -30,7 +30,7 @@ namespace amp.topology.client
         public string QueueName { get; set; }
         public bool IsDurable { get; set; }
         public bool IsAutoDelete { get; set; }
-        public Hashtable Arguments { get; set; }
+        public Dictionary<string,object> Arguments { get; set; }
 
 
         public DefaultApplicationExchangeProvider()
