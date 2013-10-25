@@ -7,7 +7,12 @@ namespace amp.rabbit.topology
     {
         public bool IsExclusive { get; private set; }
 
-        public Queue(string name, bool isAutoDelete, bool isDurable, bool isExclusive, bool shouldDeclare, IDictionary<string, object> arguments) 
+        public Queue(string name, 
+            bool isAutoDelete = false, 
+            bool isDurable = false, 
+            bool isExclusive = true, 
+            bool shouldDeclare = false, 
+            IDictionary<string, object> arguments = null) 
             : base(name, isAutoDelete, isDurable, shouldDeclare, arguments)
         {
             IsExclusive = isExclusive;
