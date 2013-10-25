@@ -4,7 +4,6 @@ using System.Linq;
 using amp.bus;
 using amp.messaging;
 using amp.rabbit.connection;
-using amp.rabbit.dispatch;
 using amp.rabbit.topology;
 using cmf.bus;
 using Common.Logging;
@@ -17,9 +16,9 @@ namespace amp.rabbit.transport
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(RabbitTransportProvider));
 
-        protected IDictionary<IRegistration, RabbitListener> _listeners;
+        protected IDictionary<IRegistration, MultiConnectionRabbitReceiver> _listeners;
         protected ITopologyService _topoSvc;
-        protected IRabbitConnectionFactory _connFactory;
+        protected IConnectionManagerCache _connFactory;
         protected MultiConnectionRabbitSender _rabbitSender;
         protected IRoutingInfoCache _routingInfoCache;
 
@@ -30,11 +29,11 @@ namespace amp.rabbit.transport
             IRoutingInfoCache routingInfoCache)
         {
             _topoSvc = topologyService;
-            _connFactory = connFactory;
-            _rabbitSender = new MultiConnectionRabbitSender(new ConnectionManagerCache(connFactory));
+            _connFactory = new ConnectionManagerCache(connFactory);
+            _rabbitSender = new MultiConnectionRabbitSender(_connFactory);
             _routingInfoCache = routingInfoCache;
 
-            _listeners = new Dictionary<IRegistration, RabbitListener>();
+            _listeners = new Dictionary<IRegistration, MultiConnectionRabbitReceiver>();
         }
 
 
@@ -96,20 +95,11 @@ namespace amp.rabbit.transport
             // first, get the topology based on the registration info
             RoutingInfo routing = this.GetRoutingFromCacheOrService(_routingInfoCache, _topoSvc, registration.Info);
 
-            foreach (ConsumingRoute route in routing.ConsumingRoutes)
-            {
-                IConnectionManager conn = _connFactory.ConnectTo(route.Brokers.First());
+            var receiver = new MultiConnectionRabbitReceiver(_connFactory, routing, registration, listener_OnEnvelopeReceived);
 
-                // create a listener
-                RabbitListener listener = new RabbitListener(registration, route, conn);
-                listener.OnEnvelopeReceived += this.listener_OnEnvelopeReceived;
-                listener.OnClose += _listeners.Remove;
+            //TODO: Is this a good idea?  What if they register the same registration multiple times (easy way to do multi-threading...)  Just use a list instead!
+            _listeners.Add(registration, receiver);
 
-                listener.Start();
-
-                // store the listener
-                _listeners.Add(registration, listener);
-            }
 
             Log.Debug("Leave Register");
         }
@@ -118,8 +108,8 @@ namespace amp.rabbit.transport
         {
             if (_listeners.ContainsKey(registration))
             {
-                RabbitListener listener = _listeners[registration];
-                listener.Stop();
+                MultiConnectionRabbitReceiver listener = _listeners[registration];
+                listener.StopListening();
 
                 _listeners.Remove(registration);
             }
@@ -151,7 +141,7 @@ namespace amp.rabbit.transport
             if (disposing)
             {
                 // get rid of managed resources
-                try { _listeners.Values.ToList().ForEach(l => l.Stop()); }
+                try { _listeners.Values.ToList().ForEach(l => l.Dispose()); }
                 catch { }
 
                 try { _connFactory.Dispose(); }

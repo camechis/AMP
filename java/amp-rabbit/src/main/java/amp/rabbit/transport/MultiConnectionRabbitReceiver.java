@@ -56,13 +56,17 @@ public class MultiConnectionRabbitReceiver implements IDisposable{
 				
 			// Each route may talk to multiple brokers  (requiring multiple channels) 
 			// which should be over exactly one connection...
-			for (IConnectionManager channelSupplier : connectionFactory.getConnectionManagersFor(route)) {
+			for (IConnectionManager channelProvider : connectionFactory.getConnectionManagersFor(route)) {
 				
 				try {
 					
 					//Create one listener for each connection/broker to the given exchange.
-					RabbitListener listener =  createListener(registration, route, channelSupplier);
-					listeners.add(listener);
+					RabbitListener listener =  createListener(registration, route, channelProvider);
+					
+					// Important to add listener before starting just in-case StopListening is called in the mean time.
+                    listeners.add(listener);
+
+					listener.start();
 				}
 				catch (Exception x) {
 					//Accept partial (or worst case complete) failure...
@@ -81,21 +85,13 @@ public class MultiConnectionRabbitReceiver implements IDisposable{
 				LOG.error("Unable to stop listening for a particular Rabbit listener... " , x);
 			}
 		}
+		listeners.clear();
 	}
 	
 	
 	@Override
 	public void dispose() {
-
-		//TODO:  JM - I believe this is broken and doesn't work as desired-- need to verify & discuss with JRuiz.
-//		try {  this..dispose(); } catch (Exception ex) { }
-//
-//	    try {  topologyService.dispose(); } catch (Exception ex) { }
-//
-//        for (RabbitListener l : listeners.values()) {
-//	            try { l.dispose(); } catch (Exception ex) { }
-//	     }
-		
+		stopListening();
 	}
 
 
@@ -118,8 +114,6 @@ public class MultiConnectionRabbitReceiver implements IDisposable{
 				//TODO: >>> if (listeners.isEmpty())  --- then remove this from the parent...			
 			}			
 		});
-
-		listener.start();
 
 		return listener;
 	}

@@ -71,6 +71,7 @@ public class RabbitEnvelopeReceiver implements IEnvelopeReceiver {
         		new MultiConnectionRabbitReceiver(_connectionFactory,routing, registration,handler);
         
         // store the listener
+        //TODO: Is this a good idea?  What if they register the same registration multiple times (easy way to do multi-threading...)  Just use a list instead!
         _listeners.put(registration, receiver);
  
         LOG.debug("Leave Register");
@@ -88,14 +89,14 @@ public class RabbitEnvelopeReceiver implements IEnvelopeReceiver {
     @Override
     public void dispose() {
 
-        try {  _connectionFactory.dispose(); } catch (Exception ex) { }
-
-        try {  _topologyService.dispose(); } catch (Exception ex) { }
-
         for (MultiConnectionRabbitReceiver l : _listeners.values()) {
 
             try { l.dispose(); } catch (Exception ex) { }
         }
+
+        try {  _topologyService.dispose(); } catch (Exception ex) { }
+
+        try {  _connectionFactory.dispose(); } catch (Exception ex) { }
     }
 
 

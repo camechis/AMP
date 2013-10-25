@@ -124,6 +124,7 @@ public class RabbitTransportProvider implements ITransportProvider {
 		MultiConnectionRabbitReceiver receiver = 
 				new MultiConnectionRabbitReceiver(connectionFactory,routing,registration,handler);
 		
+        //TODO: Is this a good idea?  What if they register the same registration multiple times (easy way to do multi-threading...)  Just use a list instead!
 		listenerMap.put(registration, receiver);
 		
 		LOG.debug("Leave Register");

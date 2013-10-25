@@ -71,6 +71,7 @@
     <Compile Include="topology\BaseRoute.cs" />
     <Compile Include="topology\Broker.cs" />
     <Compile Include="topology\ConsumingRoute.cs" />
+    <Compile Include="transport\MultiConnectionRabbitReceiver.cs" />
     <Compile Include="transport\MultiConnectionRabbitSender.cs" />
     <Compile Include="topology\ProducingRoute.cs" />
     <Compile Include="topology\Queue.cs" />
