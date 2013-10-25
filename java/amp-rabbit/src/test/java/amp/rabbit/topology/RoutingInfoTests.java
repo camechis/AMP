@@ -4,97 +4,73 @@ import org.junit.*;
 
 import static org.junit.Assert.*;
 
+/** 
+*  These tests assert that equality and hashcode generation use value semantics
+*  not just in-so-far as properties have the same reference values but that 
+* properties themselves are compared using a value semantic.  
+*/
 public class RoutingInfoTests {
 
-	protected RoutingInfo referenceRoute = new RoutingInfo();
-	protected RoutingInfo equivelentRoute = new RoutingInfo();
-	protected RoutingInfo producingRoutesNotEquivelentRoute = new RoutingInfo();
-	protected RoutingInfo consumingRoutesNotEquivelent = new RoutingInfo();
+	protected RoutingInfo _referenceRoute = new RoutingInfo();
+	protected RoutingInfo _equivelentRoute = new RoutingInfo();
+	protected RoutingInfo _producingRoutesNotEquivelentRoute = new RoutingInfo();
+	protected RoutingInfo _consumingRoutesNotEquivelent = new RoutingInfo();
 	
 	@Before
 	public void setup(){
 		
-		referenceRoute.consumingRoutes.add(new ConsumingRoute());
-		ConsumingRoute consumingRoute = referenceRoute.consumingRoutes.get(0);
-		consumingRoute.brokers.add(new Broker("reference", 0));
-		consumingRoute.exchange = new Exchange("reference", "direct", true, true, true, null);
-		consumingRoute.routingKeys.add("route");
-		consumingRoute.queue = new Queue("queue", true, true, true, true, null);
-		
-		referenceRoute.producingRoutes.add(new ProducingRoute());
-		ProducingRoute producingRoute = referenceRoute.producingRoutes.get(0);
-		producingRoute.brokers.add(new Broker("reference", 0));
-		producingRoute.exchange = new Exchange("reference", "direct", true, true, true, null);
-		producingRoute.routingKeys.add("route");
-
-		equivelentRoute.consumingRoutes.add(new ConsumingRoute());
-		consumingRoute = equivelentRoute.consumingRoutes.get(0);
-		consumingRoute.brokers.add(new Broker("reference", 0));
-		consumingRoute.exchange = new Exchange("reference", "direct", true, true, true, null);
-		consumingRoute.routingKeys.add("route");
-		consumingRoute.queue = new Queue("queue", true, true, true, true, null);
-		
-		equivelentRoute.producingRoutes.add(new ProducingRoute());
-		producingRoute = equivelentRoute.producingRoutes.get(0);
-		producingRoute.brokers.add(new Broker("reference", 0));
-		producingRoute.exchange = new Exchange("reference", "direct", true, true, true, null);
-		producingRoute.routingKeys.add("route");
-
-		producingRoutesNotEquivelentRoute.consumingRoutes.add(new ConsumingRoute());
-		consumingRoute = producingRoutesNotEquivelentRoute.consumingRoutes.get(0);
-		consumingRoute.brokers.add(new Broker("reference", 0));
-		consumingRoute.exchange = new Exchange("reference", "direct", true, true, true, null);
-		consumingRoute.routingKeys.add("route");
-		consumingRoute.queue = new Queue("queue", true, true, true, true, null);
-		
-		producingRoutesNotEquivelentRoute.producingRoutes.add(new ProducingRoute());
-		producingRoute = producingRoutesNotEquivelentRoute.producingRoutes.get(0);
-		producingRoute.brokers.add(new Broker("reference", 0));
-		producingRoute.exchange = new Exchange("reference", "direct", true, true, true, null);
-		producingRoute.routingKeys.add("other-route");
-
-		consumingRoutesNotEquivelent.consumingRoutes.add(new ConsumingRoute());
-		consumingRoute = consumingRoutesNotEquivelent.consumingRoutes.get(0);
-		consumingRoute.brokers.add(new Broker("reference", 0));
-		consumingRoute.exchange = new Exchange("reference", "direct", true, true, true, null);
-		consumingRoute.routingKeys.add("other-route");
-		consumingRoute.queue = new Queue("queue", true, true, true, true, null);
-		
-		consumingRoutesNotEquivelent.producingRoutes.add(new ProducingRoute());
-		producingRoute = consumingRoutesNotEquivelent.producingRoutes.get(0);
-		producingRoute.brokers.add(new Broker("reference", 0));
-		producingRoute.exchange = new Exchange("reference", "direct", true, true, true, null);
-		producingRoute.routingKeys.add("route");
-
+        _referenceRoute = newRoutingInfo("prodRoute1", "conRoute1");
+        _equivelentRoute = newRoutingInfo("prodRoute1", "conRoute1");
+        _producingRoutesNotEquivelentRoute = newRoutingInfo("prodRoute2", "conRoute1");
+        _consumingRoutesNotEquivelent = newRoutingInfo("prodRoute1", "conRoute2");
 	}
+
+    private RoutingInfo newRoutingInfo(String producingRouteKey, String consumingRouteKey) {
+        RoutingInfo routing = new RoutingInfo();
+        
+        routing.producingRoutes.add(new ProducingRoute());
+		ProducingRoute route = routing.producingRoutes.get(0);
+		route.brokers.add(new Broker("host", 0));
+		route.exchange = new Exchange("exchange", "direct", true, true, true, null);
+		route.routingKeys.add(producingRouteKey);
+
+		routing.consumingRoutes.add(new ConsumingRoute());
+		ConsumingRoute consumingRoute = routing.consumingRoutes.get(0);
+		consumingRoute.brokers.add(new Broker("host", 0));
+		consumingRoute.exchange = new Exchange("exchange", "direct", true, true, true, null);
+		consumingRoute.queue = new Queue("queue", true, true, true, true, null);
+		consumingRoute.routingKeys.add(consumingRouteKey);
+		
+		return routing;
+   }
 
 	@Test
 	public void Equals_should_return_true_for_equivelent_routes(){
-		assertTrue(referenceRoute.equals(equivelentRoute));
+		assertTrue(_referenceRoute.equals(_equivelentRoute));
 	}
 	
 	@Test
 	public void Equals_should_return_false_if_consuming_routes_differ(){
-		assertFalse(referenceRoute.equals(consumingRoutesNotEquivelent));
+		assertFalse(_referenceRoute.equals(_consumingRoutesNotEquivelent));
 	}
 	
 	@Test
 	public void Equals_should_return_false_if_producing_routes_differ(){
-		assertFalse(referenceRoute.equals(producingRoutesNotEquivelentRoute));
+		assertFalse(_referenceRoute.equals(_producingRoutesNotEquivelentRoute));
 	}
 	
 	@Test
 	public void Hashcodes_should_not_differ_for_equivelent_routes(){
-		assertEquals(referenceRoute.hashCode() , equivelentRoute.hashCode());
+		assertEquals(_referenceRoute.hashCode() , _equivelentRoute.hashCode());
 	}
 
 	@Test
 	public void Hashcodes_should_differ_if_consuming_routes_differ(){
-		assertNotEquals(referenceRoute.hashCode() , consumingRoutesNotEquivelent.hashCode());
+		assertNotEquals(_referenceRoute.hashCode() , _consumingRoutesNotEquivelent.hashCode());
 	}
 
 	@Test
 	public void Hashcodes_should_differ_if_producing_routes_differ(){
-		assertNotEquals(referenceRoute.hashCode() , producingRoutesNotEquivelentRoute.hashCode());
+		assertNotEquals(_referenceRoute.hashCode() , _producingRoutesNotEquivelentRoute.hashCode());
 	}
 }

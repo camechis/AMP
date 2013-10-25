@@ -24,6 +24,9 @@ namespace amp.utility
 
         public static bool Compare(IEnumerable left, IEnumerable right)
         {
+            if (left == null && right == null) return true;
+            if (left == null || right == null) return false;
+
             var l = left.Cast<object>().ToArray();
             var r = right.Cast<object>().ToArray();
 

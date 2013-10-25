@@ -6,45 +6,54 @@ import org.junit.*;
 
 import static org.junit.Assert.*;
 
+/** 
+*  These tests assert that equality and hashcode generation use value semantics
+*  not just in-so-far as properties have the same reference values but that 
+* properties themselves are compared using a value semantic.  
+*/
 public class AmqpBaseModelTests {
 
-	protected AmqpBaseModel referenceModel = new Model();
-	protected AmqpBaseModel equivelentModel = new Model();
-	protected AmqpBaseModel notEquivelentModel = new Model();
+	protected AmqpBaseModel _referenceModel;
+	protected AmqpBaseModel _equivelentModel;
+	protected AmqpBaseModel _notEquivelentModel;
 	
 	@Before
 	public void setup(){
 		
-		referenceModel.arguments = new HashMap<String,Object>();
-		referenceModel.arguments.put("1", "one");
+		_referenceModel = new TestModel();
+		_referenceModel.arguments.put("1", "one");
 
-		equivelentModel.arguments = new HashMap<String,Object>();
-		equivelentModel.arguments.put("1", "one");
+		_equivelentModel = new TestModel();
+		_equivelentModel.arguments.put("1", "one");
 
-		notEquivelentModel.arguments = new HashMap<String,Object>();
-		notEquivelentModel.arguments.put("1", "uno");
+		_notEquivelentModel = new TestModel();
+		_notEquivelentModel.arguments.put("1", "uno");
 
 	}
 
 	@Test
 	public void Equality_should_consider_argument_contents(){
-		assertTrue(referenceModel.equals(equivelentModel));
+		assertTrue(_referenceModel.equals(_equivelentModel));
 	}
 	
 	@Test
 	public void Equality_should_consider_argument_contents_not_equals(){
-		assertFalse(referenceModel.equals(notEquivelentModel));
+		assertFalse(_referenceModel.equals(_notEquivelentModel));
 	}
 	
 	@Test
 	public void Hashcodes_should_not_differ_if_noting_differs(){
-		assertEquals(referenceModel.hashCode() , equivelentModel.hashCode());
+		assertEquals(_referenceModel.hashCode() , _equivelentModel.hashCode());
 	}
 
 	@Test
 	public void Hashcodes_should_differ_if_argument_contents_differ(){
-		assertNotEquals(referenceModel.hashCode() , notEquivelentModel.hashCode());
+		assertNotEquals(_referenceModel.hashCode() , _notEquivelentModel.hashCode());
 	}
 
-	private static class Model extends AmqpBaseModel { }
+	private static class TestModel extends AmqpBaseModel {
+        public TestModel() {
+            super("test", true, true, true, new HashMap<String, Object>());
+        }
+	}
 }
