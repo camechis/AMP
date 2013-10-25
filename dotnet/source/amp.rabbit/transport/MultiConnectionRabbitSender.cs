@@ -62,8 +62,8 @@ namespace amp.rabbit.transport
             Exchange ex = route.Exchange;
             if (ex.ShouldDeclare)
             {
-                channel.ExchangeDeclare(ex.Name, ex.ExchangeType, ex.IsDurable, ex.IsAutoDelete,
-                    new Dictionary<string, object>(ex.Arguments));            }
+                channel.ExchangeDeclare(ex.Name, ex.ExchangeType, ex.IsDurable, ex.IsAutoDelete, ex.ArgumentsAsDictionary);
+            }
 
             foreach (string routingKey in route.RoutingKeys)
             {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using amp.utility;
 
@@ -29,6 +30,20 @@ namespace amp.rabbit.topology
         public bool ShouldDeclare { get; private set; }
         
         public IDictionary<string, object> Arguments { get; private set; }
+
+        /// <summary>
+        /// Returns the sames value as Arguments but as a non-generic Dictionary 
+        /// as required for use with the the RabbitMQ .Net client.
+        /// </summary>
+        public IDictionary ArgumentsAsDictionary
+        {
+            get
+            {
+                return Arguments == null
+                    ? null
+                    : Arguments as IDictionary ?? new Dictionary<string, object>(Arguments);
+            }
+        } 
 
         protected AmqpBaseModel(string name, bool isAutoDelete, bool isDurable,
             bool shouldDeclare,

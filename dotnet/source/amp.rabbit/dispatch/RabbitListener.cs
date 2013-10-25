@@ -91,9 +91,8 @@ namespace amp.rabbit.dispatch
                     var exchange = _consumingRoute.Exchange;
                     var queue = _consumingRoute.Queue;
                     channel.ExchangeDeclare(exchange.Name, exchange.ExchangeType, exchange.IsDurable,
-                        exchange.IsAutoDelete, new Dictionary<string, object>(exchange.Arguments));
-                    channel.QueueDeclare(queue.Name, queue.IsDurable, false, queue.IsAutoDelete,
-                        queue.Arguments == null ? null : new Dictionary<string,object>(queue.Arguments));
+                        exchange.IsAutoDelete, exchange.ArgumentsAsDictionary);
+                    channel.QueueDeclare(queue.Name, queue.IsDurable, false, queue.IsAutoDelete,queue.ArgumentsAsDictionary);
 
                     foreach (var routingKey in _consumingRoute.RoutingKeys)
                     {
