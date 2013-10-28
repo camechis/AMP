@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using amp.rabbit.topology;
 using Queue = amp.rabbit.topology.Queue;
 
 namespace amp.topology.client
 {
+    //TODO: inherit from SimpleTopologyService as in Java Code?
     /// <summary>
     /// Provides a route on the "amq.direct" exchange (which may only be a RabbitMQ     
     /// construct).  The implementation will not provide a queue name, assuming the     

@@ -1,6 +1,5 @@
 ﻿using System;
 using amp.rabbit.topology;
-using RabbitMQ.Client;
 
 namespace amp.rabbit.connection
 {

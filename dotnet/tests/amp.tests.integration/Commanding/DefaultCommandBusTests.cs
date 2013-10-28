@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net.Security;
 using System.Threading;
 using amp.commanding;
 using NUnit.Framework;

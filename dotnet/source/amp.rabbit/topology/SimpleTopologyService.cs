@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using amp.messaging;
-using cmf.bus;
 
 namespace amp.rabbit.topology
 {
