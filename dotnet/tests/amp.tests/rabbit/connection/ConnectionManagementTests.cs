@@ -53,6 +53,8 @@ namespace amp.tests.rabbit.connection
                     return model.Object;
                 });
 
+                connection.Setup(c => c.IsOpen).Returns(true);
+
                 return connection.Object;
             });
 
@@ -183,7 +185,7 @@ namespace amp.tests.rabbit.connection
                 _factory = factory;
             }
 
-            protected override IConnectionManager CreateConnectionManager(Exchange exchange)
+            protected override IConnectionManager CreateConnectionManager(Broker broker)
             {
                 return new ConnectionManager(_factory);    
             }

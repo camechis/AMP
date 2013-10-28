@@ -15,7 +15,6 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static cmf.eventing.patterns.streaming.StreamingEnvelopeConstants.*;
-import static java.util.Arrays.sort;
 
 /**
  * Specialized {@link cmf.bus.IRegistration} that handles the event by aggregating events from a common sequence

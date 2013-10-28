@@ -39,7 +39,7 @@ namespace amp.tests.integration.Rabbit
         {
             //var rabbitFactory = new Mock<ConnectionFactory>();
             var rabbitFactory = new ConnectionFactory();
-            _factory.ConfigureConnectionFactory(rabbitFactory, new Exchange());
+            _factory.ConfigureConnectionFactory(rabbitFactory, new Broker("test.com", 1234));
 
             Assert.That(rabbitFactory.UserName, Is.Not.Null);
             Assert.That(rabbitFactory.Password, Is.Not.Null);

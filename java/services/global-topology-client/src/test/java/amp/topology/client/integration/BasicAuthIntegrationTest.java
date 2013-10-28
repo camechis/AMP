@@ -13,10 +13,10 @@ import com.berico.test.TestProperties;
 import amp.rabbit.topology.RoutingInfo;
 import amp.topology.client.HttpRoutingInfoRetriever;
 import amp.topology.client.IRoutingInfoRetriever;
-import amp.topology.client.JsonRoutingInfoSerializer;
 import amp.topology.client.TestUtils;
 import amp.utility.http.BasicAuthHttpClientProvider;
 import amp.utility.http.HttpClientProvider;
+import amp.utility.serialization.GsonSerializer;
 
 public class BasicAuthIntegrationTest {
 
@@ -47,7 +47,7 @@ public class BasicAuthIntegrationTest {
 		HttpClientProvider provider = 
 				new BasicAuthHttpClientProvider(hostname, username, password);
 		
-		JsonRoutingInfoSerializer serializer = new JsonRoutingInfoSerializer();
+		GsonSerializer serializer = new GsonSerializer();
 		
 		IRoutingInfoRetriever routingInfoRetriever = 
 			new HttpRoutingInfoRetriever(provider, serviceUrlExpression, serializer);

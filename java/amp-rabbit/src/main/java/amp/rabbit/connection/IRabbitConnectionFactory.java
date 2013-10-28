@@ -1,12 +1,14 @@
 package amp.rabbit.connection;
 
+import amp.rabbit.topology.Broker;
 
-import cmf.bus.IDisposable;
+/**
+ * Factory that creates the managers for connection+channel generation 
+ * to the various route(s) needed by the client objects.
+ *
+ * @author jmccune
+ */
+public interface IRabbitConnectionFactory {
 
-import amp.rabbit.topology.Exchange;
-
-
-public interface IRabbitConnectionFactory extends IDisposable {
-
-	IConnectionManager getConnectionFor(Exchange exchange) throws Exception;
+	IConnectionManager getConnectionManagerFor(Broker broker) throws Exception;
 }
