@@ -23,9 +23,19 @@ public class DefaultApplicationExchangeProvider extends SimpleTopologyService im
 		super(clientProfile, new Broker(hostname, 5672));
 	}
 	
+	public DefaultApplicationExchangeProvider(String hostname, int port) {
+		
+		super(null, new Broker(hostname, port));
+	}
+
 	public DefaultApplicationExchangeProvider(String clientProfile, String hostname, int port) {
 		
 		super(clientProfile, new Broker(hostname, port));
+	}
+	
+	public DefaultApplicationExchangeProvider(String hostname, int port, String connectionStrategy) {
+		
+		super(null, new Broker(hostname, port, connectionStrategy));
 	}
 	
 	public DefaultApplicationExchangeProvider(String clientProfile, String hostname, int port, String connectionStrategy) {
@@ -33,9 +43,19 @@ public class DefaultApplicationExchangeProvider extends SimpleTopologyService im
 		super(clientProfile, new Broker(hostname, port, connectionStrategy));
 	}
 	
+	public DefaultApplicationExchangeProvider(Collection<Broker> brokers) {
+		
+		super(null, brokers);
+	}
+
 	public DefaultApplicationExchangeProvider(String clientProfile, Collection<Broker> brokers) {
 		
 		super(clientProfile, brokers);
+	}
+
+	public DefaultApplicationExchangeProvider(Broker... brokers) {
+		
+		super(null, brokers);
 	}
 
 	public DefaultApplicationExchangeProvider(String clientProfile, Broker... brokers) {

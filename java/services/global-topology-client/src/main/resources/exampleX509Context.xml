@@ -23,14 +23,9 @@
 	     to make sure the settings of the exchange match the exchange specified in this
 	     fallback provider. -->
     <bean id="fallbackProvider" class="amp.topology.client.DefaultApplicationExchangeProvider"
-          c:clientProfile=""
-          c:brokers-ref="brokers" />
+ 	      c:hostname="rabbit.openampere.com"
+	      c:port="5671" />
 
-    <util:list id="brokers" value-type="amp.rabbit.topology.Broker">
-	    <bean class="amp.rabbit.topology.Broker"
-	          c:hostname="rabbit.openampere.com"
-	          c:port="5671" />
-    </util:list>	
 	<bean id="topologyService" class="amp.topology.client.GlobalTopologyService" 
 		c:routingInfoRetriever-ref="routingInfoRetriever"
 		c:fallbackProvider-ref="fallbackProvider" />
