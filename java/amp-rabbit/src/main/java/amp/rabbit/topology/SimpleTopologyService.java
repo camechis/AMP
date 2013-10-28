@@ -12,7 +12,7 @@ public class SimpleTopologyService implements ITopologyService {
 	protected static long QUEUE_NUMBER = 0;
 	
 	Exchange exchangePrototype = Exchange.builder()
-			.name("amp.simple").type("topic").declare(true).build();
+			.name("amp.simple").type("topic").isAutoDelete(true).declare(true).build();
 	
 	Queue queuePrototype = Queue.builder()
 			.isAutoDelete(true).isDurable(false).isExclusive(true).declare(true).build();
