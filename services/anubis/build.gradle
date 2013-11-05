@@ -90,6 +90,10 @@ task rpm(type: Rpm) {
 		fileType = CONFIG | NOREPLACE
 		into '/etc/ampere/anubis'
 	}
+	from('keys') {
+		fileType = CONFIG | NOREPLACE
+		into '/etc/pki/ampere'
+	}
 	from('scripts/etc/default') {
 		fileType = CONFIG | NOREPLACE
 		into '/etc/default'
