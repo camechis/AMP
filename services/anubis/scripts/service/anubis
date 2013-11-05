@@ -16,7 +16,7 @@
 
 prog="anubis"
 config="/etc/ampere/$prog/anubis-x509Auth.yaml"
-JAR="/opt/ampere/$prog/anubis-3.2.1.jar"
+JAR="/opt/ampere/$prog/anubis-3.3.0-SNAPSHOT.jar"
 ARGS="server $config"
 serviceUser="anubis"
 serviceGroup="anubis"
