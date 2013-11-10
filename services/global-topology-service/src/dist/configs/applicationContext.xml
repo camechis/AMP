@@ -72,7 +72,7 @@
 	     There is an equivalent provider for SSL.
 	 -->
 	<bean id="authProvider" class="rabbitmq.httpclient.SslWithBasicAuthHttpClientProvider"
-	    c:username="${rmqAuthProvider.username:guest}" c:password="${rmqAuthProvider.password:guest}" c:keystore="${rmqAuthProvider.keystore:/root/certs/gts.newerarchive.archnet.mil.pfx}" c:keystorePassword="${rmqAuthProvider.keystorePwd:Berico123}" c:truststore="${rmqAuthProvider.truststore:/root/certs/gts.newerarchive.archnet.mil.jks}" c:truststorePassword="${rmqAuthProvider.truststorePwd:Berico123}"/>
+	    c:username="${rmqAuthProvider.username:guest}" c:password="${rmqAuthProvider.password:guest}" c:keystore="${rmqAuthProvider.keystore:/etc/pki/ampere/oamp-gts.jks}" c:keystorePassword="${rmqAuthProvider.keystorePwd:1qaz@WSX3edc$RFV}" c:truststore="${rmqAuthProvider.truststore:/etc/pki/ampere/truststore.jks}" c:truststorePassword="${rmqAuthProvider.truststorePwd:1qaz@WSX3edc$RFV}"/>
 
 	<bean id="rmqManagementService" class="rabbitmq.mgmt.RabbitMgmtService"
 	   init-method="initialize"
