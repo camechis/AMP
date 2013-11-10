@@ -91,6 +91,10 @@ task rpm(type: Rpm) {
 		into '/etc/rc.d/init.d'
 		fileMode=0775
 	}
+	from('keys') {
+		fileType = CONFIG | NOREPLACE
+		into '/etc/pki/ampere'
+	}
 }
 
 
