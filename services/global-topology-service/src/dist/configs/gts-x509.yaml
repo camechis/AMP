@@ -15,10 +15,10 @@ http:
     rootPath: /service/*
     connectorType: nonblocking+ssl
     ssl:
-        keyStore: /root/certs/gts.newerarchive.archnet.mil.jks
-        keyStorePassword: Berico123
-        trustStore: /root/certs/gts.newerarchive.archnet.mil.jks
-        trustStorePassword: Berico123
+        keyStore: /etc/pki/ampere/oamp-gts.jks
+        keyStorePassword: 1qaz@WSX3edc$RFV
+        trustStore: /etc/pki/ampere/truststore.jks
+        trustStorePassword: 1qaz@WSX3edc$RFV
         # When using Basic Auth, you will want these set to 'false',
         # and most certainly 'true' for x509 authentication.
         needClientAuth: true
