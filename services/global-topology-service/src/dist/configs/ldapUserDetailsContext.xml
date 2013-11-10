@@ -8,7 +8,7 @@
 
 
     <sec:ldap-server id="ldapServer"
-                     url="${ldap.url:ldap://dc01.archnet.mil:389/DC=archnet,DC=mil}"
+                     url="${ldap.url:ldap://dc01.openampere.com:389/DC=openampere,DC=com}"
                      manager-dn="${ldap.managerDn:CN=LDAP Bind Account,CN=Users,DC=openampere,DC=com}"
                      manager-password="${ldap.managerPwd:1qaz@WSX3edc$RFV}" />
 
