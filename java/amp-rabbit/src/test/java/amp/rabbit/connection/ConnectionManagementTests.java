@@ -210,7 +210,7 @@ public class ConnectionManagementTests {
 		}));
 	}
 
-    private void simulateChannelClosure(boolean initiatedByApplication) {
+    private void simulateChannelClosure(boolean initiatedByApplication) throws Exception{
     	
     	waitAtMost(250, TimeUnit.MILLISECONDS).untilCall(to(_channels).size(), is(1));
     	
