@@ -1,6 +1,6 @@
 def String[] modules = [
 	'amp-bus', 
-
+	'amp-bus-security'
 ]
 
 include modules
