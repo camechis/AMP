@@ -2,13 +2,4 @@ description="AMP Security Implementations"
 
 dependencies {
     compile project(":amp-bus")
-}   
-/*
-    <dependencies>
-        <dependency>
-            <groupId>amp</groupId>
-            <artifactId>amp.bus</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-
-*/
+}  
