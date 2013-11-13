@@ -8,7 +8,8 @@ def String[] projects = [
 	'amp-rabbit',
 	'services:amp-anubis-core',
 	'services:global-topology-client',
-	'services:global-event-log'
+	'services:global-event-log',
+	'extensions:amp-commons'
 ]
 
 include projects
