@@ -1,11 +1,10 @@
-description="AMP Command Channel API"
+description="AMP implementation of the CMF Event Bus"
+
 dependencies {
-    compile project(":amp-bus")
     compile project(":amp-messaging")
+    compile project(":amp-utility")
     compile "cmf:cmf.bus:${cmfVersion}"
-    compile "com.google.guava:guava:${guavaVersion}"
-    compile "com.google.code.findbugs:jsr305:2.0.1"
-    compile "com.google.code.gson:gson:${gsonVersion}"
+    compile "cmf:cmf.eventing:${cmfVersion}"
     compile "commons-codec:commons-codec:${commonsCodecVersion}"
     compile "commons-lang:commons-lang:${commonsLangVersion}"
     compile "joda-time:joda-time:${jodaTimeVersion}"
