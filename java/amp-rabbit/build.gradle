@@ -1,0 +1,21 @@
+description="RabbitMQ specific components of AMP"
+    
+dependencies {
+    compile project(":amp-bus")
+    compile project(":amp-utility")
+    compile project(":amp-commanding")
+    compile "cmf:cmf.bus:${cmfVersion}"
+    compile "com.rabbitmq:amqp-client:${rabbitmqVersion}"
+    compile "commons-codec:commons-codec:${commonsCodecVersion}"
+    compile "commons-lang:commons-lang:${commonsLangVersion}"
+    compile "joda-time:joda-time:${jodaTimeVersion}"
+}
+
+   
+            <groupId>amp</groupId>
+            <artifactId>amp.anubis.core</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+    
+
+
