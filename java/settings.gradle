@@ -1,11 +1,12 @@
-def String[] modules = [
+def String[] projects = [
 	'amp-bus', 
 	'amp-bus-security',
 	'amp-commanding',
 	'amp-messaging',
 	'amp-eventing',
 	'amp-utility',
-	'amp-rabbit'
+	'amp-rabbit',
+	'services:amp-anubis-core'
 ]
 
-include modules
+include projects
