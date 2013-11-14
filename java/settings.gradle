@@ -6,10 +6,12 @@ def String[] projects = [
 	'amp-eventing',
 	'amp-utility',
 	'amp-rabbit',
+	'amp.tests.integration',
 	'services:amp-anubis-core',
 	'services:global-topology-client',
 	'services:global-event-log',
-	'extensions:amp-commons'
+	'extensions:amp-commons',
+	'amp-examples:bus-gui-tester'
 ]
 
 include projects
