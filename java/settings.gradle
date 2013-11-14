@@ -11,7 +11,9 @@ def String[] projects = [
 	'services:global-topology-client',
 	'services:global-event-log',
 	'extensions:amp-commons',
-	'amp-examples:bus-gui-tester'
+	'amp-examples:bus-gui-tester',
+	//'amp-examples:service-adaptor',
+	'amp-examples:stream-common'
 ]
 
 include projects
