@@ -6,7 +6,7 @@ subprojects {
 		repositories {
 			mavenDeployer {
 				repository(url: "http://nexus.berico.us/content/repositories/releases/") {
-					authentication(userName: nexusUser, password: nexusPassword)
+					authentication(userName: mavenUser, password: mavenPassword)
 				}
 				pom.project {
 					name "${project.name}"
