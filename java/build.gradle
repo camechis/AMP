@@ -41,12 +41,13 @@ allprojects {
 	}
 }
 
-//apply from: file('gradle/maven.gradle')
+apply from: file('gradle/maven.gradle')
 //apply from: file('gradle/libraries.gradle')
 subprojects {
 	apply plugin: 'java'
 	apply plugin: 'eclipse'
 	apply plugin: 'idea'
+	
 
 	eclipse {
 		classpath {
