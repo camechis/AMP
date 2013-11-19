@@ -27,17 +27,17 @@ namespace amp.rabbit.dispatch
         protected volatile bool _shouldContinue;
         protected volatile bool _isRunning;
         protected ILog _log;
-        protected Exchange _exchange;
+        protected ConsumingRoute _consumingRoute;
         protected IConnectionManager _connectionManager;
         protected ManualResetEvent _startEvent;
         protected ManualResetEvent _stoppedListeningEvent;
         protected bool _connectionClosed;
 
 
-        public RabbitListener(IRegistration registration, Exchange exchange, IConnectionManager connectionManager)
+        public RabbitListener(IRegistration registration, ConsumingRoute route, IConnectionManager connectionManager)
         {
             _registration = registration;
-            _exchange = exchange;
+            _consumingRoute = route;
             _connectionManager = connectionManager;
             _connectionManager.ConnectionClosed += Handle_OnConnectionClosed;
             _connectionManager.ConnectionReconnected += Handle_OnConnectionReconnected;
@@ -59,8 +59,7 @@ namespace amp.rabbit.dispatch
             _isRunning = true;
             //Do actuall listening on a bacground thread.
             Thread listenerThread = new Thread(Listen);
-            listenerThread.Name = string.Format("{0} on {1}:{2}{3}", _exchange.QueueName, _exchange.HostName, _exchange.Port,
-                _exchange.VirtualHost);
+            listenerThread.Name = string.Format("Lisener for {0}", _consumingRoute.Queue.Name);
             listenerThread.Start();
         }
 
@@ -88,27 +87,32 @@ namespace amp.rabbit.dispatch
                     channel.ModelShutdown += Handle_OnModelShutdown;
 
                     // first, declare the exchange and queue
-                    channel.ExchangeDeclare(_exchange.Name, _exchange.ExchangeType, _exchange.IsDurable,
-                        _exchange.IsAutoDelete, _exchange.Arguments);
-                    channel.QueueDeclare(_exchange.QueueName, _exchange.IsDurable, false, _exchange.IsAutoDelete,
-                        _exchange.Arguments);
-                    channel.QueueBind(_exchange.QueueName, _exchange.Name, _exchange.RoutingKey, _exchange.Arguments);
+                    var exchange = _consumingRoute.Exchange;
+                    var queue = _consumingRoute.Queue;
+                    channel.ExchangeDeclare(exchange.Name, exchange.ExchangeType, exchange.IsDurable,
+                        exchange.IsAutoDelete, exchange.ArgumentsAsDictionary);
+                    channel.QueueDeclare(queue.Name, queue.IsDurable, false, queue.IsAutoDelete,queue.ArgumentsAsDictionary);
+
+                    foreach (var routingKey in _consumingRoute.RoutingKeys)
+                    {
+                        channel.QueueBind(queue.Name, exchange.Name, routingKey);
+                    }
 
                     // next, create a basic consumer
                     QueueingBasicConsumer consumer = new QueueingBasicConsumer(channel);
 
                     // and tell it to start consuming messages, storing the consumer tag
-                    string consumerTag = channel.BasicConsume(_exchange.QueueName, false, consumer);
+                    string consumerTag = channel.BasicConsume(queue.Name, false, consumer);
 
-                // signal the wait event that we've begun listening
-                _startEvent.Set();
+                    // signal the wait event that we've begun listening
+                    _startEvent.Set();
 
-                _log.Debug("Will now continuously listen for events using routing key: " + _exchange.RoutingKey);
-                while (_shouldContinue)
-                {
-                    try
+                    _log.Debug("Will now continuously listen for events using routing key(s): " + string.Join(", " , _consumingRoute.RoutingKeys));
+                    while (_shouldContinue)
                     {
-                        object result = null;
+                        try
+                        {
+                            object result = null;
 
                             if (false == consumer.Queue.Dequeue(100, out result))
                             {
@@ -149,6 +153,11 @@ namespace amp.rabbit.dispatch
                                 this.Raise_OnEnvelopeReceivedEvent(dispatcher);
                             }
                         }
+                        catch (EndOfStreamException)
+                        {
+                            // The consumer was closed.
+                            _shouldContinue = false;
+                        }
                         catch (AlreadyClosedException)
                         {
                             // The consumer was closed.
@@ -168,7 +177,7 @@ namespace amp.rabbit.dispatch
                     }
                     _log.Debug("No longer listening for events");
 
-                    try { channel.BasicCancel(consumerTag); }
+                    try { if(channel.IsOpen) channel.BasicCancel(consumerTag); }
                     catch (OperationInterruptedException) { }
                 }
             }

@@ -35,15 +35,15 @@ namespace amp.rabbit.connection
             _secureConnectionFactory = secureConnectionFactory;
         }
 
-        public override void ConfigureConnectionFactory(ConnectionFactory factory, Exchange exchange)
+        public override void ConfigureConnectionFactory(ConnectionFactory factory, Broker broker)
         {
             NamedToken token = GetNamedToken();
 
-            base.ConfigureConnectionFactory(factory, exchange);
+            base.ConfigureConnectionFactory(factory, broker);
 
             if (_secureConnectionFactory != null)
             {
-                _secureConnectionFactory.ConfigureConnectionFactory(factory, exchange);
+                _secureConnectionFactory.ConfigureConnectionFactory(factory, broker);
             }
 
             factory.AuthMechanisms = new AuthMechanismFactory[] { new PlainMechanismFactory() };

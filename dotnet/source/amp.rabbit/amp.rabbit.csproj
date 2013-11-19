@@ -66,7 +66,18 @@
     <Compile Include="connection\BasicConnectionFactory.cs" />
     <Compile Include="connection\CertificateConnectionFactory.cs" />
     <Compile Include="connection\ConnectionManager.cs" />
+    <Compile Include="connection\ConnectionManagerCache.cs" />
     <Compile Include="connection\IConnectionManager.cs" />
+    <Compile Include="connection\IConnectionManagerCache.cs" />
+    <Compile Include="connection\SslConnectionFactory.cs" />
+    <Compile Include="topology\AmqpBaseModel.cs" />
+    <Compile Include="topology\BaseRoute.cs" />
+    <Compile Include="topology\Broker.cs" />
+    <Compile Include="topology\ConsumingRoute.cs" />
+    <Compile Include="transport\MultiConnectionRabbitReceiver.cs" />
+    <Compile Include="transport\MultiConnectionRabbitSender.cs" />
+    <Compile Include="topology\ProducingRoute.cs" />
+    <Compile Include="topology\Queue.cs" />
     <Compile Include="transport\CommandableCache.cs" />
     <Compile Include="transport\IRoutingInfoCache.cs" />
     <Compile Include="transport\RabbitEnvelopeReceiver.cs" />
@@ -81,7 +92,6 @@
     <Compile Include="dispatch\RabbitListener.cs" />
     <Compile Include="topology\Exchange.cs" />
     <Compile Include="topology\ITopologyService.cs" />
-    <Compile Include="topology\RouteInfo.cs" />
     <Compile Include="topology\RoutingInfo.cs" />
     <Compile Include="topology\SimpleTopologyService.cs" />
     <Compile Include="topology\TopologyExtensions.cs" />

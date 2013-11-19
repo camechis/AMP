@@ -1,14 +1,11 @@
 package amp.rabbit.connection;
 
-import java.util.concurrent.ConcurrentHashMap;
-
-import cmf.bus.IDisposable;
-import com.rabbitmq.client.ConnectionFactory;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import amp.rabbit.topology.Exchange;
+import amp.rabbit.topology.Broker;
+
+import com.rabbitmq.client.ConnectionFactory;
 
 /**
  * Provides a lot of the boiler-plate functionality most Rabbit Connection Factories
@@ -17,106 +14,46 @@ import amp.rabbit.topology.Exchange;
  * is where most configuration like authentication is done). 
  *  
  * @author Richard Clayton (Berico Technologies)
+ * @author jmccune (Berico Technologies)
  *
  */
-public abstract class BaseConnectionFactory implements IRabbitConnectionFactory, IDisposable {
+public abstract class BaseConnectionFactory implements IRabbitConnectionFactory {
 
     protected Logger log;
-
-	public static int HEARTBEAT_INTERVAL = 2;
-
-	protected ConcurrentHashMap<Exchange, IConnectionManager> pooledManagers = new ConcurrentHashMap<Exchange, IConnectionManager>();
-	
 	/**
-	 * Create a new instance of the ChannelFactory using the "SameBrokerStrategy"
+	 * Create a new instance of the ConnectionFactory using the "SameBrokerStrategy"
 	 */
 	public BaseConnectionFactory() {
         log = LoggerFactory.getLogger(this.getClass());
 	}
-	
-	/**
-	 * Convenience method to allow setting of the heartbeat interval via DI container.
-	 * @param interval 
-	 */
-	public void setHeartbeatInterval(int interval){
-		HEARTBEAT_INTERVAL = interval;
-	}
-	
-	protected IConnectionManager createConnectionManager(Exchange exchange) throws Exception {
 
-        log.debug("Creating connection manager for exchange: {}", exchange.toString());
-
-		ConnectionFactory factory = new ConnectionFactory();
-
-		configureConnectionFactory(factory, exchange);
-		
-        return new ConnectionManager(factory);
-	}
-	
 	/**
 	 * Derived classes have the sole responsibility of configuring the RabbitConnectionFactory.
 	 * (however that is done: username/password, certificates, etc.).
 	 */
-	public void configureConnectionFactory(ConnectionFactory factory, Exchange exchange)  throws Exception {
+	protected void configureConnectionFactory(ConnectionFactory factory, Broker broker) 
+			throws Exception {
 
-        factory.setHost(exchange.getHostName());
-        factory.setPort(exchange.getPort());
-        factory.setVirtualHost(exchange.getVirtualHost());
+        factory.setHost(broker.getHostname());
+        factory.setPort(broker.getPort());
+        factory.setVirtualHost(broker.getVirtualHost());
 	}
-	
+
 	/**
-	 * Get the corresponding channel for the supplied Exchange.
-	 * This overload specifically pools channels depending on the 
-	 * ChannelEqualityStrategy. 
-	 * @param exchange Exchange configuration for the Channel
-	 * @return an AMQP Channel
+	 * Convenience method for DRY principle -- absolutely no difference between how we 
+	 * create a connection for a ConsumingRoute or a ProducingRoute.  Just use the BaseRoute.
+	 * @param broker
+	 * @return
+	 * @throws Exception
 	 */
-	@Override
-	public synchronized IConnectionManager getConnectionFor(Exchange exchange) throws Exception {
+	public IConnectionManager getConnectionManagerFor(Broker broker) throws Exception {
 		
-		log.trace("Getting connection manager for exchange: {}", exchange);
+        log.debug("Creating connection manager for broker: {}", broker);
+
+		ConnectionFactory factory = new ConnectionFactory();
+
+		configureConnectionFactory(factory, broker);
 		
-		IConnectionManager manager = null;
-		
-		if (pooledManagers.containsKey(exchange)){
-			
-			manager = pooledManagers.get(exchange);
-		}
-		else {
-			
-			manager = this.createConnectionManager(exchange);
-			
-			pooledManagers.put(exchange, manager);
-		}
-			
-		//TODO: Fixing soon...
-		//connection.addShutdownListener(new RabbitConnectionShutdownListener(this, exchange));
-			
-		return manager;
-	}
-	
-	/**
-	 * Remove the connection from the pool.
-	 * @param exchange Exchange of the active connection.
-	 * @return True if it was successfully removed.
-	 */
-	public boolean removeConnection(Exchange exchange){
-		
-		IConnectionManager connection = pooledManagers.remove(exchange);
-		
-		return connection != null;
-	}
-	
-	/**
-	 * Iterate over pooled connections, closing each connection.
-	 */
-	@Override
-	public void dispose() {
-		
-		for (IConnectionManager connection : this.pooledManagers.values()){
-				
-			connection.dispose();
-				
-		}
+        return new ConnectionManager(factory);
 	}
 }

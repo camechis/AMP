@@ -7,7 +7,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.util.EntityUtils;
 
 import amp.anubis.core.NamedToken;
-import amp.rabbit.topology.Exchange;
+import amp.rabbit.topology.Broker;
 import amp.utility.http.HttpClientProvider;
 import amp.utility.serialization.ISerializer;
 
@@ -20,7 +20,7 @@ public class TokenConnectionFactory extends BaseConnectionFactory {
     private final HttpClientProvider _httpClientFactory;
     private final String _anubisUri;
     private final ISerializer _serializer;
-    private final BaseConnectionFactory _secureChannelFactory;
+    private final BaseConnectionFactory _secureConnectionFactory;
 
     public TokenConnectionFactory(
             HttpClientProvider httpClientFactory,
@@ -33,24 +33,26 @@ public class TokenConnectionFactory extends BaseConnectionFactory {
             HttpClientProvider httpClientFactory,
             String anubisUri,
             ISerializer serializer,
-            BaseConnectionFactory secureChannelFactory) {
+            BaseConnectionFactory secureConnectionFactory) {
        _httpClientFactory = httpClientFactory;
        _anubisUri = anubisUri;
        _serializer = serializer;
-       _secureChannelFactory = secureChannelFactory;
+       _secureConnectionFactory = secureConnectionFactory;
     }
 
 
     @Override
-	public void configureConnectionFactory(ConnectionFactory factory, Exchange exchange) throws Exception {
+	public void configureConnectionFactory(ConnectionFactory factory, 
+			Broker broker) throws Exception {
         try {
 
             NamedToken token = this.getNamedToken();
 
-        	super.configureConnectionFactory(factory, exchange);
+        	super.configureConnectionFactory(factory, broker);
 
-        	if(_secureChannelFactory != null){
-        		_secureChannelFactory.configureConnectionFactory(factory, exchange);
+        	if(_secureConnectionFactory != null){
+        		_secureConnectionFactory.configureConnectionFactory(factory, 
+        				broker);
             }
             
             // set the username and password from the token
@@ -79,10 +81,5 @@ public class TokenConnectionFactory extends BaseConnectionFactory {
 
         // deserialize the named token and return it
         return _serializer.stringDeserialize(content, NamedToken.class);
-    }
-
-
-    @Override
-    public void dispose() {
     }
 }

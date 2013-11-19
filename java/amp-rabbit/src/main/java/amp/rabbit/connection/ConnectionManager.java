@@ -59,7 +59,7 @@ public class ConnectionManager implements IConnectionManager {
 	public void dispose() {
     	_isDisposed = true;
     	
-		if(_connection != null){
+		if(_connection != null && _connection.isOpen()){
 			try {
 				_connection.close();
 			} catch (IOException e) {

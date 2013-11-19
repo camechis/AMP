@@ -67,6 +67,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="rabbit\connection\ConnectionManagementTests.cs" />
     <Compile Include="messaging\NullHandler.cs" />
+    <Compile Include="rabbit\topology\AmqpBaseModelTests.cs" />
+    <Compile Include="rabbit\topology\BaseRouteTests.cs" />
+    <Compile Include="rabbit\topology\ConsumingRouteTests.cs" />
+    <Compile Include="rabbit\topology\ExchangeTests.cs" />
+    <Compile Include="rabbit\topology\RoutingInfoTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\source\amp.bus\amp.bus.csproj">

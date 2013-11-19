@@ -115,7 +115,7 @@ namespace amp.rabbit.connection
         {
             _isDisposed = true;
 
-            if (_connection != null)
+            if (_connection != null && _connection.IsOpen)
                 _connection.Close();
         }
     }
