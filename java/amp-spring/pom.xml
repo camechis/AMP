@@ -24,6 +24,35 @@
 			<artifactId>cmf.bus</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>cmf</groupId>
+			<artifactId>cmf.eventing</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>amp</groupId>
+			<artifactId>amp.utility</artifactId>
+			<version>${version}</version>
+		</dependency>
+		<dependency>
+			<groupId>amp</groupId>
+			<artifactId>amp.messaging</artifactId>
+			<version>${version}</version>
+		</dependency>
+		<dependency>
+			<groupId>amp</groupId>
+			<artifactId>amp.eventing</artifactId>
+			<version>${version}</version>
+		</dependency>
+		<dependency>
+			<groupId>amp</groupId>
+			<artifactId>amp.rabbit</artifactId>
+			<version>${version}</version>
+		</dependency>
+		<dependency>
+			<groupId>amp</groupId>
+			<artifactId>amp.topology.client</artifactId>
+			<version>${version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 		</dependency>
