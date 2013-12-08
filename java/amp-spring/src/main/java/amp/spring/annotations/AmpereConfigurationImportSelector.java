@@ -21,7 +21,7 @@ public class AmpereConfigurationImportSelector implements ImportSelector {
 		Assert.notNull(attributes, String.format(
 				"@%s is not present on importing class '%s' as expected",
 				EnableAmpere.class.getSimpleName(), metadata.getClassName()));
-		AmpereMode mode = (AmpereMode) attributes.get(getModeAttributeName());
+		AmpereConnectionMode mode = (AmpereConnectionMode) attributes.get(getModeAttributeName());
 		String [] imports = null;
 		switch (mode) {
 		case BASIC:
@@ -38,4 +38,5 @@ public class AmpereConfigurationImportSelector implements ImportSelector {
 		Assert.notNull(imports, String.format("Unknown mode: '%s'", mode));
 		return null;
 	}
+	
 }

@@ -11,5 +11,7 @@ import org.springframework.context.annotation.Import;
 @Target(ElementType.TYPE)
 @Import(AmpereConfigurationImportSelector.class)
 public @interface EnableAmpere {
-	AmpereMode mode() default AmpereMode.BASIC;
+	AmpereConnectionMode mode() default AmpereConnectionMode.BASIC;
+	Topology topology() default Topology.SIMPLE;
+	RoutingInfoCache cache() default RoutingInfoCache.SIMPLE;
 }

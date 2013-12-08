@@ -1,6 +1,6 @@
 package amp.spring.annotations;
 
-public enum AmpereMode {
+public enum AmpereConnectionMode {
 	BASIC,
 	SSL
 }
