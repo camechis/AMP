@@ -36,14 +36,14 @@ repositories {
      maven { url "http://repo.maven.apache.org/maven2" }
 }
 dependencies {
-    compile group: 'cmf', name: 'cmf.bus', version:'3.2.1'
-    compile group: 'cmf', name: 'cmf.eventing', version:'3.2.1'
-    compile group: 'amp', name: 'amp.bus', version:'3.2.1'
-    compile group: 'amp', name: 'amp.eventing', version:'3.2.1'
-    compile group: 'amp', name: 'amp.rabbit', version:'3.2.1'
-    compile group: 'amp', name: 'amp.bus.security', version:'3.2.1'
-    compile group: 'amp', name: 'amp.topology.client', version:'3.2.1'
-    compile group: 'amp', name: 'amp.anubis.core', version:'3.2.1'
+    compile group: 'cmf', name: 'cmf.bus', version:'3.3.0-SNAPSHOT'
+    compile group: 'cmf', name: 'cmf.eventing', version:'3.3.0-SNAPSHOT'
+    compile group: 'amp', name: 'amp.bus', version:'3.3.0-SNAPSHOT'
+    compile group: 'amp', name: 'amp.eventing', version:'3.3.0-SNAPSHOT'
+    compile group: 'amp', name: 'amp.rabbit', version:'3.3.0-SNAPSHOT'
+    compile group: 'amp', name: 'amp.bus.security', version:'3.3.0-SNAPSHOT'
+    compile group: 'amp', name: 'amp.topology.client', version:'3.3.0-SNAPSHOT'
+    compile group: 'amp', name: 'amp.anubis.core', version:'3.3.0-SNAPSHOT'
     compile group: 'com.google.guava', name: 'guava', version:'14.0.1'
     compile group: 'com.yammer.dropwizard', name: 'dropwizard-core', version:'0.6.1'
     compile group: 'com.berico', name: 'fallwizard', version:'1.1.1'

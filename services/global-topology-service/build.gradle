@@ -35,9 +35,9 @@ repositories {
 }
 dependencies {
     compile group: 'rabbitmq', name: 'mgmt', version:'3.2.0'
-    compile group: 'cmf', name: 'cmf.bus', version:'3.2.1'
-    compile group: 'amp', name: 'amp.bus', version:'3.2.1'
-    compile group: 'amp', name: 'amp.rabbit', version:'3.2.1'
+    compile group: 'cmf', name: 'cmf.bus', version:'3.3.0-SNAPSHOT'
+    compile group: 'amp', name: 'amp.bus', version:'3.3.0-SNAPSHOT'
+    compile group: 'amp', name: 'amp.rabbit', version:'3.3.0-SNAPSHOT'
     compile(group: 'org.springframework', name: 'spring-context', version:'3.2.2.RELEASE') {
 		exclude(module: 'commons-logging')
     }
