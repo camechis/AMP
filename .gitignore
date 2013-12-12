@@ -125,3 +125,6 @@ managed
 
 #Ignore nuget package files: those should be built as needed
 *.nupkg
+
+node_modules/
+
