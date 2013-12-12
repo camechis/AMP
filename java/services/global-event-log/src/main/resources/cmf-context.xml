@@ -25,7 +25,7 @@
     <bean id="JsonSerializationProcessor" class="amp.messaging.JsonSerializationProcessor" />
     
     <bean id="OutboundHeadersProcessor" class="amp.messaging.OutboundHeadersProcessor" 
-          c:userInfoRepository-ref="userInfoRepository"  />
+          p:userInfoRepo-ref="userInfoRepository"  />
 
     <bean id="userInfoRepository" class="amp.bus.security.InMemoryUserInfoRepository"
           c:mapping-ref="userMapping" />
