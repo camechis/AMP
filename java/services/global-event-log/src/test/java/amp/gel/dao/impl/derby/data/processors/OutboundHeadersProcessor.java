@@ -9,11 +9,15 @@ public class OutboundHeadersProcessor extends
 		amp.messaging.OutboundHeadersProcessor implements EventSequenceProcessor {
 
 	public OutboundHeadersProcessor() {
+		
 		this(new InMemoryUserInfoRepository(new HashMap<String, String>()));
 	}
 
 	public OutboundHeadersProcessor(IUserInfoRepository userInfoRepository) {
-		super(userInfoRepository);
+		
+		super();
+		
+		this.setUserInfoRepo(userInfoRepository);
 	}
 
 	public void restartEventSequence() {
