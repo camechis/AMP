@@ -1,6 +1,6 @@
 # Advanced Modular Platform (AMP)
 
-[![Build Status](https://travis-ci.org/Berico-Technologies/AMP.png?branch=master)](https://travis-ci.org/Berico-Technologies/AMP)
+[![Build Status](https://www.codeship.io/projects/ec3ab470-45c2-0131-2f24-36c050b0fd20/status)](https://www.codeship.io/projects/ec3ab470-45c2-0131-2f24-36c050b0fd20/status)
 
 AMP is many things, but all related to messaging:
 
