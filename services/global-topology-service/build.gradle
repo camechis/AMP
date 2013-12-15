@@ -99,6 +99,6 @@ task rpm(type: Rpm) {
 
 
 wrapper {
-	gradleVersion = '1.7'
+	gradleVersion = '1.9'
 }
 processResources.dependsOn(mimosaTask)
