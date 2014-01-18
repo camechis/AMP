@@ -14,11 +14,7 @@ public class ConfigurationTest {
 	public static void main(String[] args) {
 
 		AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext();
-		ctx.register(TokenAmpereConnectionConfig.class);
-		ctx.register(CommandableRoutingInfoCache.class);
-		ctx.register(GlobalTopologyConfig.class);
-		ctx.register(SSLHttpClientProviderConfig.class);
-	    ctx.register(AmpereConfig.class);
+		ctx.register(MyConfig.class);
 		ctx.refresh();
 
 	}
