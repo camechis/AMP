@@ -14,6 +14,7 @@ import cmf.bus.IEnvelopeReceiver;
 @Configuration
 public class CommandableRoutingInfoCache  implements RoutingInfoConfig{
 
+	//TODO configure cache expiration
 	private Long cacheExpiryInSeconds;
 	
 	private AmpereConnectionConfig connectionConfig;

@@ -33,6 +33,9 @@ public class AmpereConfig {
 
 	@Autowired
 	RoutingInfoConfig routingInfoConfig;
+	
+	@Autowired
+	AmpereConfigurer configurer;
 
 
 	@Bean
@@ -71,7 +74,7 @@ public class AmpereConfig {
 
 	@Bean
 	public IMessageProcessor OutBoundHeaderProcessor() {
-		return new OutboundHeadersProcessor(null);
+		return new OutboundHeadersProcessor();
 	}
 
 	@Bean
@@ -79,6 +82,9 @@ public class AmpereConfig {
 		List<IMessageProcessor> inBoundProcessors = new ArrayList<IMessageProcessor>();
 		inBoundProcessors.add(JsonEventSerializer());
 		inBoundProcessors.add(rpcFilter());
+		if( configurer != null ) {
+			configurer.configureInBoundProcessors(inBoundProcessors);
+		}
 		return inBoundProcessors;
 	}
 
@@ -88,6 +94,9 @@ public class AmpereConfig {
 		outBoundProcessors.add(JsonEventSerializer());
 		outBoundProcessors.add(OutBoundHeaderProcessor());
 		outBoundProcessors.add(rpcFilter());
+		if( configurer != null ) {
+			configurer.configureOutBoundProcessors(outBoundProcessors);
+		}
 		return outBoundProcessors;
 	}
 }
